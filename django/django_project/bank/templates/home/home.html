@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<link href='https://fonts.googleapis.com/css?family=open+sans' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lato:400,700"/>
+ {% load staticfiles %}
+<link rel="stylesheet" href="{% static 'css/animate.min.css' %}" />
+<link rel="stylesheet" href="{% static 'css/pratima.css' %}" />
+  
+<style>
+  
+ 
+
+  </style>
+</head>
+<body>						<!--   nav bar -->
+
+									  <nav class="navbar navbar-custom "role="navigation">
+											  <div class="container  text-center">
+											  <!--   header -->
+												<div class="navbar-header" id="brand">
+												<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#collapsenav">
+														<span class="icon-bar"></span>
+														<span class="icon-bar"></span>
+														<span class="icon-bar"></span>
+														</button>
+												  <a class="navbar-brand" href="/">
+												 <!--   <img alt="Brand" src="..."> -->
+												 Getmyvideo.Net....
+												  </a>
+												</div> 
+												<!--   item -->
+
+																	<div class="collapse navbar-collapse " id="collapsenav" >
+																			<ul class="nav navbar-nav">
+																				<!-- MATH -->
+																					 <li class="dropdown">
+																							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+																							<strong>Mathematics </strong><b class="caret"></b></a>
+																								<ul class="dropdown-menu">
+																								
+																								  <li><a href="#">Multiplication Table</a></li>
+																								  <li role="separator" class="divider"></li>    
+																								  <li><a href="#">Series</a></li>
+
+																								  <li role="separator" class="divider"></li>    
+																								  <li class="waves-effect"><a href="#">Days n Work</a></li>
+																								   <li role="separator" class="divider"></li>
+																								  <li class="waves-effect"><a href="#">Profit n Loss</a></li>
+																								   <li role="separator" class="divider"></li>
+																								  <li><a href="#">Boat & Stream</a></li>
+																								</ul>
+																					  </li>
+																					  
+																					  
+																					  <!-- REASONING -->
+																					  <li class="dropdown">
+																							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+																							Reasoning <b class="caret"></b></a>
+																								<ul class="dropdown-menu">
+																								
+																								  <li><a href="#">Blood Relation</a></li>
+																								  <li role="separator" class="divider"></li>    
+																								  <li><a href="#">Ranking and Direction</a></li>
+
+																								  <li role="separator" class="divider"></li>    
+																								  <li class="waves-effect"><a href="#">Coading Decoding</a></li>
+																								   <li role="separator" class="divider"></li>
+																								  <li class="waves-effect"><a href="#">Puzzle</a></li>
+																								   <li role="separator" class="divider"></li>
+																								  <li><a href="#">Input Output</a></li>
+																								</ul>
+																					  </li>
+																					  
+																					  
+																					  <!-- english -->
+																					  <li class="dropdown">
+																							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">English <b class="caret"></b></a>
+																								<ul class="dropdown-menu">
+																								
+																								  <li><a href="#">Error Correction</a></li>
+																								  <li role="separator" class="divider"></li>    
+																								  <li><a href="#">Close Test</a></li>
+
+																								  <li role="separator" class="divider"></li>    
+																								  <li class="waves-effect"><a href="#">Fill in the blank</a></li>
+																								   <li role="separator" class="divider"></li>
+																								  <li class="waves-effect"><a href="#">Vocabulary</a></li>
+																								   <li role="separator" class="divider"></li>
+																								  <li><a href="#">Editorial</a></li>
+																								</ul>
+																					  </li>
+																					  <!-- current affairs -->
+																					  <li class="dropdown">
+																							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Current affairs <b class="caret"></b></a>
+																								<ul class="dropdown-menu">
+																								
+																								  <li><a href="#">Daily Current Today</a></li>
+																								  <li role="separator" class="divider"></li>    
+																								  <li><a href="#">Static Gk</a></li>
+
+																								  <li role="separator" class="divider"></li>    
+																								  <li class="waves-effect"><a href="#">Banking Awerness</a></li>
+																								  
+																								</ul>
+																					  </li>
+																			  
+																			  </ul>
+																			<ul class="nav navbar-nav navbar-right">
+																					
+																					<li class="">
+																					<a href="#">
+																					<span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>&nbsp; Login </a>
+																					</li>
+																			</ul>
+																	</div>
+												
+											  </div>
+									</nav>
+					<!--   navbar end -->
+					
+					
+					
+					
+					<!--   carousel start -->
+					
+					 <section class="carousel-section">
+					   
+							<div id="myCarousel" class="carousel carousel-razon slide" data-ride="carousel">
+								<!-- Indicators -->
+									<ol class="carousel-indicators">
+									  <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+									  <li data-target="#myCarousel" data-slide-to="1"></li>
+									  <li data-target="#myCarousel" data-slide-to="2"></li>
+									</ol>
+								
+														<!-- Wrapper for slides -->
+														<div class="carousel-inner">
+																	{% for slide in slide %}
+																				{% if forloop.first %}
+																				<div class="active item">
+																			{% else %}
+																				<div class="item">
+																			{% endif %}
+																<div class="container">
+																			<div class="row">
+																				<div class="col-md-6 ">
+																				
+																							<div class="carousel-caption">
+																							
+																							
+																									<div class="carousel-text">
+																									 <h1 class="animated fadeInDownBig animation-delay-7 carousel-title">{{slide.upper_heading}}</h1>
+																									 <h2 class="animated fadeInDownBig animation-delay-5  crousel-subtitle">{{slide.yellow_heading}}</h2>
+																									
+																									 
+
+																											<ul class="list-unstyled carousel-list">
+																											   <li class="animated bounceInLeft animation-delay-11"><i class="fa fa-check"></i>{{slide.key_1}}</li>
+																											   <li class="animated bounceInLeft animation-delay-13"><i class="fa fa-check"></i>{{slide.key_2}}</li>
+																											   <li class="animated bounceInLeft animation-delay-15"><i class="fa fa-check"></i>{{slide.key_3}}</li>
+																										   </ul>							 
+																									</div>
+																						</div>
+																				</div>
+																				<div class="col-md-6 col-sm-5  carousel-img-wrap">
+																				
+																					<div class="carousel-img">
+																						<img src="{{slide.ca_image.url}}" class="img-responsive img-rounded animated bounceInUp animation-delay-3" alt="Image">
+																					</div>
+																				</div>
+																			</div>
+																		</div>
+															  </div>
+															  
+													<!-- carousel inner end -->
+																	{% endfor %}
+
+																		<!-- Left and right controls -->
+																		<a class="left carousel-control" href="#myCarousel" data-slide="prev">
+																		  <span class="glyphicon glyphicon-chevron-left" ></span>
+																		  <span class="sr-only">Previous</span>
+																		</a>
+																		<a class="right carousel-control" href="#myCarousel" data-slide="next">
+																		  <span class="glyphicon glyphicon-chevron-right"></span>
+																		  <span class="sr-only">Next</span>
+																		</a>
+										</div>
+													  
+					  
+					  
+					  
+					 </section >
+					 
+					 <!--   carousel end -->
+					 
+				<!-- belw slide -->
+				
+				
+			<div class="container">
+				<div class="row">
+					<div class="panel card1">
+					
+					
+					
+					
+					
+													<!-- notification  colm left start-->
+
+										<div class="col-md-3 nopadding">
+										
+											<div class="panel ">
+											  <div class="panel-heading" style="background-color:#cc0000;"><h3 style="color:#ffffff;padding:0px"><u>Latest Notification</u><h3></div>
+											  <div class="panel-body"><p><a href="https://www.w3schools.com/html/">Go to Currrent Affairs Section>></a></p></div>
+											</div>
+										
+										</div>
+						
+										<!-- notification end-->
+										
+										
+										
+										
+										
+										
+									<!-- Middle colmn start-->
+									
+									
+									
+						
+						<div class="col-md-6 nopadding" style=" border: 1px solid #dddddd;">
+							
+										<h3 class="card"style="text-align:center; color: #336699">Current Affairs Today</h3>
+										
+										<div class="panel nopadding ">
+										
+												<div class="panel-heading card">
+														<h4 ><strong>India protests Participation of Canada’s PM at ‘Khalsa Day’ <span class="glyphicon glyphicon-bookmark"span></strong></h4>
+												</div>
+																													
+														<hr></hr>
+														<div class="panel-body">
+														
+																		<p  style="font-size:20px;font-family: Times New Roman, Times, serif;font-color:black;"> India has protested ( fight against) the participation of Canadian Prime Minister Justin Trudeau at ‘Khalsa Day’ in Toronto that saw felicitation (facility) of Sikh separatist elements and featured Khalistani flags and posters of Jarnail Singh Bhindranwale. Mr. Trudeau has become the first Canadian PM to attend the ‘Khalsa Day’ event in a decade since Paul Martin in 2005. The Khalsa Day event was organised to mark the Sikh new year. The parade organised by the Ontario Sikhs and Gurdwara Council felicitated two 
+
+																		</p>
+																		
+																		
+																		<h4 style="text-align:left ;color:green"><b><u>Key points to Remember:</u></b></h4>
+																		
+																		
+																		<ul style="text-align:Left ">
+																
+																				<li><Strong>Start Date:</strong></li>
+																				<li><Strong>Last Date:</strong></li>
+																				
+																				<li><Strong>Eligibility:</strong></li>
+																				<li><Strong>age:</strong></li>
+																
+																			</ul>
+																			
+																		<p ><a href="https://www.w3schools.com/html/">Go to Currrent Affairs Section>></a></p>
+													</div>
+														
+											</div>
+
+											
+											
+											
+														
+															<div class="panel nonpadding ">
+										
+												<div class="panel-heading card">
+														<h4 ><strong>India protests Participation of Canada’s PM at ‘Khalsa Day’</strong></h4>
+												</div>
+																													
+														<hr></hr>
+														<div class="panel-body">
+														
+																		<p  style="font-size:20px;font-family: Times New Roman, Times, serif;font-color:black;"> India has protested ( fight against) the participation of Canadian Prime Minister Justin Trudeau at ‘Khalsa Day’ in Toronto that saw felicitation (facility) of Sikh separatist elements and featured Khalistani flags and posters of Jarnail Singh Bhindranwale. Mr. Trudeau has become the first Canadian PM to attend the ‘Khalsa Day’ event in a decade since Paul Martin in 2005. The Khalsa Day event was organised to mark the Sikh new year. The parade organised by the Ontario Sikhs and Gurdwara Council felicitated two 
+
+																		</p>
+																		
+																		
+																		<h4 style="text-align:left ;color:green"><b><u>Key points to Remember:</u></b></h4>
+																		
+																		
+																		<ul style="text-align:Left ">
+																
+																				<li><Strong>Start Date:</strong></li>
+																				<li><Strong>Last Date:</strong></li>
+																				
+																				<li><Strong>Eligibility:</strong></li>
+																				<li><Strong>age:</strong></li>
+																
+																			</ul>
+																			
+																		<p><a href="https://www.w3schools.com/html/">Go to Currrent Affairs Section>></a></p>
+													</div>
+														
+											</div>
+
+														
+														
+														
+														
+														
+														
+														
+															<div class="row card ">
+														<div class="col-md-9">
+														<h3 style="text-align:left; color: #336699"> Editorial from The hindu 
+														
+														<p > <i class="fa fa-calendar" aria-hidden="true"></i> Date : 19/05/2017 <p></div>
+														
+														<div class="col-md-3">
+														<img src="{% static "/the.png" %}" class="img-rounded" alt="Cinque Terre" width=104" height="86"> </h3>
+														
+														</div>
+														
+														</div>
+														
+														
+															
+						
+																				<div class="row">
+																																	<div class="col-md-6">
+					
+																
+																																	<div class="c-content">
+																																		<div class="c-header-blue">
+																																		   <h1 class="c-heading">PLETHORA (NOUN)</h1>
+																																		</div>
+																																		<div class="c-body">
+																																		  <p class="c-p">
+																																		  
+																																		  
+																																		  
+																																		  <h2 style="color:#424242;">He eagerly accepted the job because it came with a plethora of opportunities.</h2>
+																																		  
+																																				<h4 style="color:green">synonyms:	complain, carp, grumble, moan, grouse, grouch, whine, bleat, find fault with</h4>
+																																				
+																																			</p>
+																																		</div>
+																																		
+																																		<nav class="nav-tabs">
+																																			<ul class="nav nav-pills pull-left">
+																																				<li class="card-action"><a href="#">Link</a></li>
+																																			
+																																			</ul>
+																																			
+																																		</nav>
+																																			
+																																	</div>
+																																	</div>
+																																	
+																																	
+																																	
+																																	<div class="col-md-6">
+					
+																
+																																	<div class="c-content">
+																																		<div class="c-header-blue">
+																																		   <h1 class="c-heading">PLETHORA (NOUN)</h1>
+																																		</div>
+																																		<div class="c-body">
+																																		  <p class="c-p">
+																																		  
+																																		  
+																																		  
+																																		  <h2 style="color:#424242;">He eagerly accepted the job because it came with a plethora of opportunities.</h2>
+																																		  
+																																				<h4 style="color:green">synonyms:	complain, carp, grumble, moan, grouse, grouch, whine, bleat, find fault with</h4>
+																																				
+																																			</p>
+																																		</div>
+																																		
+																																		<nav class="nav-tabs">
+																																			<ul class="nav nav-pills pull-left">
+																																				<li class="card-action"><a href="#">Link</a></li>
+																																				
+																																			</ul>
+																																			
+																																		</nav>
+																																			
+																																	</div>
+																																	</div>
+																																	
+																						</div>											
+																										 <a class="c-heading" style=" text-align:right"href="https://www.w3schools.com/html/"><u>ReadMore->></u></a>								
+
+																									
+																								
+																							
+							<div class="row card ">
+														<div class="col-md-9">
+														<h3 style="text-align:left; color: #336699"> Editorial from The EconoiTimes 
+														
+														<p > <i class="fa fa-calendar" aria-hidden="true"></i> Date : 19/05/2017 <p></div>
+														
+														<div class="col-md-3">
+														<img src="{% static "/theet.png" %}" class="img-rounded" alt="Cinque Terre" width=104" height="86"> </h3>
+														
+														</div>
+														
+														</div>
+														
+															<div class="row">
+																																	<div class="col-md-6">
+					
+																
+																																	<div class="c-content">
+																																		<div class="c-header-red">
+																																		   <h1 class="c-heading">PLETHORA (NOUN)</h1>
+																																		</div>
+																																		<div class="c-body">
+																																		  <p class="c-p">
+																																		  
+																																		  
+																																		  
+																																		  <h2 style="color:#424242;">He eagerly accepted the job because it came with a plethora of opportunities.</h2>
+																																		  
+																																				<h4 style="color:green">synonyms:	complain, carp, grumble, moan, grouse, grouch, whine, bleat, find fault with</h4>
+																																				
+																																			</p>
+																																		</div>
+																																		
+																																		<nav class="nav-tabs">
+																																			<ul class="nav nav-pills pull-left">
+																																				<li class="card-action"><a href="#">Link</a></li>
+																																			
+																																			</ul>
+																																			
+																																		</nav>
+																																			
+																																	</div>
+																																	</div>
+																																	
+																																	
+																																	
+																																	<div class="col-md-6">
+					
+																
+																																	<div class="c-content">
+																																		<div class="c-header-red">
+																																		   <h1 class="c-heading">PLETHORA (NOUN)</h1>
+																																		</div>
+																																		<div class="c-body">
+																																		  <p class="c-p">
+																																		  
+																																		  
+																																		  
+																																		  <h2 style="color:#424242;">He eagerly accepted the job because it came with a plethora of opportunities.</h2>
+																																		  
+																																				<h4 style="color:green">synonyms:	complain, carp, grumble, moan, grouse, grouch, whine, bleat, find fault with</h4>
+																																				
+																																			</p>
+																																		</div>
+																																		
+																																		<nav class="nav-tabs">
+																																			<ul class="nav nav-pills pull-left">
+																																				<li class="card-action"><a href="#">Link</a></li>
+																																				
+																																			</ul>
+																																			
+																																		</nav>
+																																			
+																																	</div>
+																																	</div>
+																																	
+																						</div>	
+						
+						
+						
+						
+						
+						
+						
+						
+						
+						
+						
+						
+						
+						
+						</div>
+						
+						<!-- middle end-->
+						
+						
+						
+						
+						
+						
+						
+						<!-- recruitment r8 -->
+						
+						
+						
+						
+								
+														<div class="col-md-3 nopadding">
+														
+																<div class="panel-group ">
+																
+																
+																
+																		
+																			<div class="panel panel-info ">
+																				  <div class="panel-heading"><strong>Postal bank Recruitment 2017</strong>
+																					<img src="postal.png" class="img-thumbnail " alt="Image">
+																				  </div>
+																				  <div class="panel-body">
+																						
+																						<ul style="text-align:Left ">
+																						
+																							<li><Strong>Start Date:</strong></li>
+																							<li><Strong>Last Date:</strong></li>
+																							
+																							<li><Strong>Eligibility:</strong></li>
+																							<li><Strong>age:</strong></li>
+																						
+																						</ul>
+																						
+																						<a href="#"style="text-align:center"><h5>Click for Details<h5></a>
+																						<a href="#" style="text-align:center"><h5>Click here  to Apply<h5></a>
+																					
+																				  
+																				  
+																				  </div>
+																			</div>
+																			
+																			
+																			
+																			
+																			<div class="panel panel-info">
+																				  <div class="panel-heading"><strong>RBI Recruitment 2017 – 162 Officer Grade ‘B’, Medical Consultant & Director Posts
+
+																									Read more: RBI Recruitment 2017 - 162 Officer Grade 'B', Medical Consultant & Director Posts 
+																										</strong>
+																								<img src="rbi.jpeg" class="img-thumbnail " alt="Image">
+																				  </div>
+																				  <div class="panel-body">
+																						
+																						<ul style="text-align:Left ">
+																						
+																							<li><Strong>Start Date:</strong></li>
+																							<li><Strong>Last Date:</strong></li>
+																							
+																							<li><Strong>Eligibility:</strong></li>
+																							<li><Strong>age:</strong></li>
+																						
+																						</ul>
+																						
+																						<a href="#"style="text-align:center;padding:0px;"><h5>Click for Details<h5></a>
+																						<a href="#" style="text-align:center;padding:0px; margib-bottom=0px;"><h5>Click here  to Apply<h5></a>
+																					
+																				  
+																				  
+																				  </div>
+																			</div>
+																			
+																			
+																			
+																			<div class="panel panel-info">
+																			  <div class="panel-heading">Panel Header</div>
+																			  <div class="panel-body">Panel Content</div>
+																			</div>
+																	
+																	
+												</div>
+														
+										</div>
+										
+										
+										
+										<!-- notification r8 end-->
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+				
+						
+						
+						
+						
+										
+										
+										
+										
+										
+																		
+																													
+						
+						
+						
+						
+					</div><!-- panel cardd1-->
+					
+					
+					
+					
+									
+													
+
+				</div><!-- row end-->
+				
+				
+			</div>	<!-- container end-->
+				
+				
+	
+
+
+
+
+
+
+
+
+
+	
+					 
+
+<script type="text/javascript" >
+$(document).ready(function () {
+$('.navbar .dropdown').hover(function () {
+        $(this).find('.dropdown-menu').first().stop(true, true).slideDown(150);
+    }, function () {
+        $(this).find('.dropdown-menu').first().stop(true, true).slideUp(105)
+    });
+
+
+
+
+var showChar = 200;
+	var ellipsestext = "...";
+	var moretext = "Read more";
+	var lesstext = "less";
+	$('.more').each(function() {
+		var content = $(this).html();
+
+		if(content.length > showChar) {
+
+			var c = content.substr(0, showChar);
+			var h = content.substr(showChar-1, content.length - showChar);
+
+			var html = c + '<span class="moreelipses">'+ellipsestext+'</span>&nbsp;&nbsp;&nbsp;<a href="" class="morelink"><u>'+moretext+'</u></a></span>';
+
+			$(this).html(html);
+		}
+
+	});
+
+
+});
+
+</script>
+
+</body>
+</html>

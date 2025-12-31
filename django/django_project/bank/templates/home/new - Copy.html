@@ -1,0 +1,2250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>TutionPlus.com</title>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <meta content="" name="keywords"> 
+  <meta content="" name="description">
+     
+ 
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i|Raleway:300,400,500,700,800|Montserrat:300,400,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i|Raleway:300,400,500,700,800|Montserrat:300,400,700" rel="stylesheet">
+  
+	<!-- load static File --> 
+	 
+	 {% load staticfiles %}
+	 {% load static %}
+	 
+	 
+	  <!-- Favicons -->
+	  <link href="{% static 'img/favicon.png' %}" rel="icon">
+	  <link href="{% static 'img/apple-touch-icon.png' %}" rel="apple-touch-icon">
+	  
+	<link rel="stylesheet" href="{% static 'lib/bootstrap/css/bootstrap.min.css' %}" />
+	 
+	
+	
+	<link rel="stylesheet" href="{% static 'lib/font-awesome/css/font-awesome.min.css' %}" />
+	<link rel="stylesheet" href="{% static 'lib/animate/animate.min.css' %}" />
+	<link rel="stylesheet" href="{% static 'lib/ionicons/css/ionicons.min.css' %}" />
+	<link rel="stylesheet" href="{% static 'lib/owlcarousel/assets/owl.carousel.min.css' %}" />
+	<link rel="stylesheet" href="{% static 'lib/magnific-popup/magnific-popup.css' %}" />
+	<link rel="stylesheet" href="{% static 'lib/ionicons/css/ionicons.min.css' %}" />
+	
+	
+	<link rel="stylesheet" href="{% static 'newcss/style.css' %}" /> 
+  
+	
+</head>
+ 
+<body id="body">
+<style>
+	#testimonials .testimonial-item{
+	box-shadow:none;
+	
+	}
+	#mobile_on{
+		display:none;
+	}
+	@media (max-width: 420px){
+		#mobile_on {
+		display:block;
+		}
+	}
+	@media (min-width: 992px){
+		.container {
+		max-width: 1115px;
+			}
+	}
+	@media (min-width: 1200px){
+		.container {
+		max-width: 1273px;
+		}
+	}
+	
+	.list-group-item {
+    padding: 1.5px 8.3px;
+    font-size: 12px;
+		}
+		
+		a {
+    color: #246689;
+    font-weight: 600;
+    
+	}
+	.list_image{ 
+	margin-left: 15px; 
+	display: list-item; 
+	list-style-type: decimal; 
+	list-style-image: 
+	url(/static/icon/list.png); 
+	list-style-image:url(https://static.mediafire.com/images/icons/svg_dark/check_circle_green.svg);
+	margin-left:29px;
+	color:#8e2020;
+	}
+	.section-header h2 {
+    
+    padding-bottom: 4px;
+	}
+	.list-group {
+    margin-top:31px;
+	}
+	.show-hide {
+	max-height: 500px;
+	overflow: hidden;
+	transition: all 1s ease;
+	}
+	
+	.show-hide.expand {
+	max-height: 100%;
+	}
+	.show-hide1 {
+	max-height: 700px;
+	overflow: hidden;
+	transition: all 1s ease;
+	}
+	.show-hide1.expand {
+	max-height: 100%;
+	}
+	.table td, .table th {
+    font-size: 14px;
+	}
+</style>
+  <!--==========================
+    Header
+  ============================-->
+  <header id="header">
+    <div class="container">
+      <div id="logo" class="pull-left">
+        <h1><a href="#body" class="scrollto">Tution<span>Plus</span></a></h1>
+        <!-- Uncomment below if you prefer to use an image logo -->
+        <!-- <a href="#body"><img src="img/logo.png" alt="" title="" /></a>-->
+      </div>
+      <nav id="nav-menu-container">
+        <ul class="nav-menu">
+          <li class="menu-active"><a href="#body">Currentaffairs</a></li>
+          <li><a href="#about">Latest Jobs</a></li>
+          <li><a href="#services">Math Today</a></li>
+          <li><a href="#portfolio">The Hindu word</a></li>
+          <li><a href="#team">Reasoning</a></li>
+          <li class="menu-has-children"><a href="">GK</a>
+            <ul>
+              <li><a href="#">Drop Down 1</a></li>
+              <li><a href="#">Drop Down 3</a></li>
+              <li><a href="#">Drop Down 4</a></li>
+              <li><a href="#">Drop Down 5</a></li>
+            </ul>
+          </li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav><!-- #nav-menu-container -->
+    </div>
+  </header><!-- #header -->
+   <style>
+	/*--------------------------------------------------------------
+	copy from style.css
+	--------------------------------------------------------------*/
+	#intro {
+	  width: 100%; 
+	  height: 30vh;
+	  position: relative;
+	  background: url("https://www.mcqgk.com/static/img/intro-carousel/1.jpg") no-repeat;
+	  background-size: cover;
+	  background-size:100% 160%;
+	}
+	#intro .intro-content h2 {
+	  color: #0c2e8a;
+		margin-bottom: 30px;
+		font-size: 35px;
+		font-weight: 700;
+	}
+	#intro #intro-carousel::before {
+		content: '';
+		background-color: rgba(255, 255, 255, 0.7);
+		position: absolute;
+		height: 50%;
+		width: 100%;
+		top: 0;
+		right: 0;
+		left: 0;
+		bottom: 0;
+		z-index: 7;
+	}
+	
+	
+	.section-header h2 {
+    font-size: 27px;
+	font-size: 33px;
+	}
+
+	#services {
+	padding: 0px 0 0 0;
+	}
+	#testimonials {
+	padding: 0px 0;
+	}
+	#testimonials .owl-nav, #testimonials .owl-dots {
+	margin-top: -32px;
+	}
+	.btn-warning {
+    color: #0c2e8a;
+   /* background-color: #fff7e000;*/
+   /* border-color: #0a0cafc9;*/
+   color:#fff;
+	    float: right;
+    margin-top: 18px;
+    font-size: 20px;
+    font-weight: 600;
+	padding: .5px.75rem;
+	background-color: #EF8421;
+    border-color: #ffc10700;
+    box-shadow: 0 4px 0 0 #D37218;
+	font-size:17px;
+	background-color:#190d02;
+	color: #691c3b;
+	background-color: #f1f1f1;
+	
+}
+	
+  </style>
+    <!--  Intro Section carousel 
+  ============================-->
+   <style>
+    .carousel-inner img {
+      width: 100%;
+      height: 300px;
+  }
+
+   </style>
+  
+  
+<div id="demo" class="carousel slide" data-ride="carousel">
+  <!-- Indicators -->
+  <ul class="carousel-indicators">
+    <li data-target="#demo" data-slide-to="0" class="active"></li>
+    <li data-target="#demo" data-slide-to="1"></li>
+    <li data-target="#demo" data-slide-to="2"></li>
+  </ul>
+  
+  <!-- The slideshow -->
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img src="/media/media/demo1.jpg" alt="Los Angeles" width="1100" height="500">
+    </div>
+    <div class="carousel-item">
+      <img src="/media/media/demo2.jpg" alt="Chicago" width="1100" height="500">
+    </div>
+	
+    <div class="carousel-item">
+      <img src="/media/media/demo3.jpg" alt="New York" width="1100" height="500">
+    </div>
+	<div class="carousel-item">
+      <img src="/static/img/dm.jpg" alt="New York" width="1100" height="500">
+    </div>
+	<div class="carousel-item">
+      <img src="/static/img/dm1.jpg" alt="New York" width="1100" height="500"> 
+    </div>
+	<div class="carousel-item">
+      <img src="/static/img/dm2.jpg" alt="New York" width="1100" height="500"> 
+    </div>
+  </div>
+  
+  <!-- Left and right controls -->
+  <a class="carousel-control-prev" href="#demo" data-slide="prev">
+    <span class="carousel-control-prev-icon"></span>
+  </a>
+  <a class="carousel-control-next" href="#demo" data-slide="next">
+    <span class="carousel-control-next-icon"></span>
+  </a>
+</div>
+   
+<!-- #intro -->
+  
+  
+  <!-- tab Section
+    ============================-->
+	
+
+	 <!-- tab Section end
+    ============================-->
+  <!--==========================
+    Intro Section
+  ============================-->
+<section id="testimonials" class="wow fadeInUp" style="visibility: visible; animation-name: fadeInUp;">
+    <div class="container">
+		<div class="row">
+					<div id="" class=" col-sx-2 col-sm-2 col-md-2 col-lg-2 "> 		
+						<div class="section-header">
+							
+							<h2 style="color:#2379c5;font-size:20px"><strong style="color:#849818">Current Affairs </strong>2018 </h2>
+							
+							
+							
+						</div>
+						
+						<ul class="list-group">
+							   <li class="list-group-item active"></li>
+							    <li class="list-group-item active">Todays Top 10</li>
+							   
+								<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Business Economy Banking</a> </li>
+								
+								<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Environment</a></li>
+								<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Defence</a></li>
+									
+								<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Awards Honours</a></li>
+								<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Persons in News</a></li>
+								<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">International</a></li>
+								<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Awards Honours</a> </li>
+								
+								<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Sports</a></li>
+								<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Art Culture</a></li>
+									
+								<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Government Schemes</a></li>
+								<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">State</a></li>
+
+						  </ul>
+					 
+					</div> 
+					<div id="" class=" col-sx-10 col-sm-10 col-md-10 col-lg-10 " > 	
+					
+					<div class="section-header">
+							<h2><strong style="color:red;display:inline">Currentaffairs </strong>Today<span style="float:none;display:inline-block;">
+								 <ul class="nav-menu sf-js-enabled sf-arrows" id="mobile_on" style="touch-action: pan-y;">
+											<li class="menu-has-children"><a style="padding:0px;padding-right:22px" href="https://tutionplus.com/" class="sf-with-ul">Category</a>
+											<ul style="display: none;">
+											  <li><a href="https://tutionplus.com/#">Drop Down 1</a></li>
+											  <li><a href="https://tutionplus.com/#">Drop Down 3</a></li>
+											  <li><a href="https://tutionplus.com/#">Drop Down 4</a></li>
+											  <li><a href="https://tutionplus.com/#">Drop Down 5</a></li>
+											</ul>
+										  </li>
+										  
+									</ul></span>
+									<span>
+									<a type="link-button" href="/current-affairs/detail/current-affairs-today-studynote/01/" style="float:right;margin-top:10px" class="btn btn-warning"><i class="fa fa-home" aria-hidden="true"></i>
+                                    Read All<i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+									<a href="/current-affairs/mcq/current-affairs-December-2018/01/"type="link-button" style="float:right;margin-top:10px;margin-right:10px;" class="btn btn-warning"><i class="fa fa-home" aria-hidden="true"></i>
+                                    MCQ<i class="fa fa-arrow-right" aria-hidden="true"></i></a></span>
+							</h2>
+							<img src="https://mail.google.com/mail/u/0?ui=2&amp;ik=73250b9be6&amp;attid=0.1&amp;permmsgid=msg-a:r-224458978469940698&amp;th=168272cd6cb8f64d&amp;view=fimg&amp;sz=s0-l75-ft&amp;attbid=ANGjdJ-qmEMT8diXUcuX4MoAn276yIrfp-Mk1f0Qz0Fter-gLLIvFsUc9KrmTDaXa-skBkFfpt0J0sVH1SwcAV2CPkUw2TQNRxpELXWb1xkgNEVYPiKQDWKIE3cPxZc&amp;disp=emb&amp;realattid=ii_jqlzuiwp0" style="margin-top: -30px;">
+						</div>
+		 
+						<div class="owl-carousel testimonials-carousel"    > 
+							{% for slide in slide %}
+								<div class="testimonial-item" style="padding:0px 0px 0px 0px;margin:30px 0px;">
+								
+								<div class="card" style="width: 15rem;">
+											  <img height="148px"class="card-img-top" src="/media/{{slide.ca_img}}" alt="Card image cap">
+											  <div class="card-body">
+												<h5 class="card-title" style="height:100px;font-size:12px;font-weight:600;font-family:'proxima-nova-regular',sans-serif;margin-top:30px"><img src="/media/img/quote-sign-left.png" class="quote-sign-left" alt="">
+												{% autoescape off %} {{slide.upper_heading}}  {% endautoescape %}
+												<img src="/media/img/quote-sign-right.png" class="quote-sign-right" alt=""></h5>
+												
+												<a style=" background-color: transparent; color:#3f4ba2;float:right;
+													padding:4px;"><u>Details</u></a>
+											  </div>
+								</div>
+							</div>
+							{% endfor %}
+						</div> 
+						
+					</div>
+		</div> 	
+	</div>	
+			
+     
+    </section><!-- #intro -->
+  <main id="main">
+    <!--==========================
+      About Section
+    ============================-->
+	
+<!-- #about -->
+    <!--==========================
+      Services Section
+    ============================-->
+	  <!--==========================
+      job css
+    ============================-->
+	<style>
+	@media (max-width: 409px) and (min-width:60px) {
+	#jobimage{
+	    height: 82px;
+    width: 82px;
+		}
+	
+	
+	}
+	@media (max-width: 766px) and (min-width:410px) {
+		#jobimage{
+	    height: 92px;
+    width: 92px;
+		}
+		
+		
+	} 
+	@media (max-width:991px) and (min-width:767px) {
+	#jobimage{
+	    height: 112px;
+    width: 112px;
+		}
+	}
+	@media (max-width: 1600px) and (min-width: 992px) {
+	#jobimage{
+	    height: 132px;
+    width: 132px;
+		}
+	}
+/*--------------copied from style.css-------------*/
+#services .box {
+  padding: 8px;
+  margin-bottom: 16px; 
+  box-shadow: 10px 10px 15px rgba(73, 78, 92, 0.1);
+  background: #fff;
+  transition: 0.4s;
+}
+ #services .box .icon {
+    float: none;
+  
+    padding-bottom: 15px;
+  }
+  
+    @media (max-width: 1600px) and (min-width: 377px) { 
+  
+ #services .box .icon {
+    text-align: left;
+   }
+  }
+  /*--------------copied from style.css end-------------*/
+  
+  @media (max-width: 575px) and (min-width: 470px) { 
+		#jobdetatils{
+		margin-top: -70px;
+		}
+  }
+  
+  
+    @media (max-width: 469px) and (min-width: 377px) { 
+		#jobdetatils{
+			margin-left: 66px;
+			margin-top: -73px;
+			}
+	}
+  
+      @media (max-width: 376px) and (min-width: 100px) { 
+ #jobicon {
+    text-align: center;
+   }
+  }
+  
+   #services .box h4 {
+    margin-left: 36px;
+    font-size: 15px;
+	font-size:14px;
+    color: rebeccapurple;
+	color:#639933; 
+	color:#19250e;
+	
+	}
+  #services .box p {
+    margin-left: 42px;
+	font-size:12px;
+	}
+	
+	.section-header {
+    margin-bottom: -20px;
+	}
+ 
+  /*--------------copied from style.css  end-------------*/
+	</style> 
+	
+	  <!--==========================
+      job css end
+    ============================-->
+    <section id="services">
+      <div class="container">
+		<div class="row">
+			<div class=" col-sx-2 col-sm-2 col-md-2 col-lg-2 "> 
+				<div class="section-header">
+						
+							<h2 style="color:#2379c5;font-size:24px"><strong style="color:#849818">Job </strong>Category </h2>
+							
+							
+							
+						</div>
+						
+						<ul class="list-group">
+							   <li class="list-group-item active"></li>
+							    <li class="list-group-item active">Todays Job Top 10</li>
+							   
+								<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">BANK</a> </li>
+								
+								<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image"> Staff Selection</a></li>
+								<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Upsc</a></li>
+									
+								<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Railways</a></li>
+								<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">IBPS</a></li>
+								<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Other Govt. Job</a></li>
+								<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">State Job Online Form</a> </li>
+								
+								<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Admit Card </a></li>
+								<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Result</a></li>
+									
+								<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Upcoming Exam</a></li>
+								<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">All India Govt Job</a></li>
+
+						  </ul>
+			</div>
+			<div  class=" col-sx-10 col-sm-10 col-md-10 col-lg-10 "> 	
+					<div class="section-header" style="margin-bottom:-6px">
+							  <h2><strong style="color:red;display:inline">Latest Govt </strong>Job<span style="float:none;display:inline-block;">
+										 <ul class="nav-menu sf-js-enabled sf-arrows" id="mobile_on" style="touch-action: pan-y;">
+													<li class="menu-has-children"><a style="padding:0px;padding-right:22px" href="https://tutionplus.com/" class="sf-with-ul">Category</a>
+													<ul style="display: none;">
+													  <li><a href="https://tutionplus.com/#">Drop Down 1</a></li>
+													  <li><a href="https://tutionplus.com/#">Drop Down 3</a></li>
+													  <li><a href="https://tutionplus.com/#">Drop Down 4</a></li>
+													  <li><a href="https://tutionplus.com/#">Drop Down 5</a></li>
+													</ul>
+												  </li>
+												  
+											</ul></span><span><button type="button" style="float:right;margin-top:10px" class="btn btn-warning"><i class="fa fa-home" aria-hidden="true"></i>
+                                     More Jobs <i class="fa fa-arrow-right" aria-hidden="true"></i></button></span>
+							</h2>
+							<img src="https://mail.google.com/mail/u/0?ui=2&amp;ik=73250b9be6&amp;attid=0.1&amp;permmsgid=msg-a:r-224458978469940698&amp;th=168272cd6cb8f64d&amp;view=fimg&amp;sz=s0-l75-ft&amp;attbid=ANGjdJ-qmEMT8diXUcuX4MoAn276yIrfp-Mk1f0Qz0Fter-gLLIvFsUc9KrmTDaXa-skBkFfpt0J0sVH1SwcAV2CPkUw2TQNRxpELXWb1xkgNEVYPiKQDWKIE3cPxZc&amp;disp=emb&amp;realattid=ii_jqlzuiwp0" style="margin-top: -30px;">
+						</div>
+				 
+				 
+						<div class="row">
+							{% for job in job %}
+							  <div class="col-lg-6"> 
+								<div id="jobboxwow" class="box wow fadeInLeft" > 
+									<div class="row">
+										<div id="jobicon" class=" col-sx-3 col-sm-3 col-md-3 col-lg-3 "> 		
+										<img id="jobimage" src="/media/{{job.ca_img}}" class="testimonial-img" alt="mcqgk.com">
+									 
+										</div> 
+										<div id="jobdetatils" class=" col-sx-9 col-sm-9 col-md-9 col-lg-9 " > 	
+										 <h4>{{job.heading}}</h4>
+										<p id="jobdate">Last Date To Apply : <a style="color:red">{{job.last_day}}</a></p> 
+										<p id="jobapply">Apply Online : <a href="#">Click Here</a></p>
+										<p  id="jobweb">Official Website : <a href="#" >Click Here</a></p>   
+										</div> 	
+									</div>			   
+								</div>
+							  </div>
+							  {% endfor %}
+						</div>			
+			</div>			
+		</div>
+	</div><!-- CONTAINER  END-->
+    </section><!-- #services -->
+	
+<!--==========================
+    Math Section
+  ============================-->
+	<section id="testimonials" class="wow fadeInUp" style="visibility: visible; animation-name: fadeInUp;">
+		<div class="container">
+			<div class="row">
+				<div class=" col-sx-2 col-sm-2 col-md-2 col-lg-2 "> 
+					<div class="section-header">
+							
+							<h2 style="color:#2379c5;font-size:20px"><strong style="color:#849818">Math </strong>Chapters </h2>
+							
+							
+							
+						</div>
+						
+						
+						<ul class="list-group">
+							   <li class="list-group-item active"></li>
+							    <li class="list-group-item active">Todays Job Top 4</li>
+							   
+								<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Percentages</a> </li>
+								
+								<li class="list-group-item"><a href="https://tutionplus.com/math/boats-and-stream/1/" class="list_image">Boats-and-Stream</a></li>
+								<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Probability</a></li>
+									
+								<li class="list-group-item"><a href="https://tutionplus.com/math/alligation-and-mixture/1/" class="list_image">Alligation and Mixture</a></li>
+								<li class="list-group-item"><a href="https://www.tutionplus.com/math/compound-interest/1/" class="list_image">Compound  Interest</a></li>
+								<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Bar-Graph </a></li>
+								<li class="list-group-item"><a href="https://www.tutionplus.com/math/average/1/" class="list_image">Average</a> </li>
+								
+								<li class="list-group-item"><a href="https://www.tutionplus.com/math/profit-and-loss/1/" class="list_image">Profit and Loss </a></li>
+								<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Line Graph</a></li>
+									
+								<li class="list-group-item"><a href="" class="list_image">Pie Charts</a></li>
+								<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Permutation Combination</a></li>
+								<li class="list-group-item"><a href="https://www.tutionplus.com/math/volume_n_surface_area/1/" class="list_image">Volume &amp; Surface Area</a> </li>
+								<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Simple Interest</a> </li>
+								<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Time and Distance</a> </li>
+								<li class="list-group-item"><a href="https://www.tutionplus.com/math/pipe_cistern/1/" class="list_image">Pipe Cistern</a> </li>
+								<li class="list-group-item"><a href="https://www.tutionplus.com/math/time-and-work/1/" class="list_image">Time and Work</a> </li>
+								<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Partnership</a> </li>
+								<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Ratio and Proportion</a> </li>
+								<li class="list-group-item"><a href="https://www.tutionplus.com/math/problem_on_age/1/" class="list_image">Problem on Age</a> </li>
+								<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Simplification</a> </li>
+								<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Squre and Cube</a> </li>
+
+						  </ul>
+				</div>
+				<div  class=" col-sx-10 col-sm-10 col-md-10 col-lg-10 "> 
+					
+					<div class="section-header" style="margin-bottom:-6px">
+							  <h2><strong style="color:red;display:inline">Math </strong> Today<span style="float:none;display:inline-block;">
+										 <ul class="nav-menu sf-js-enabled sf-arrows" id="mobile_on" style="touch-action: pan-y;">
+													<li class="menu-has-children"><a style="padding:0px;padding-right:22px" href="https://tutionplus.com/" class="sf-with-ul">Category</a>
+													<ul style="display: none;">
+													  <li><a href="https://tutionplus.com/#">Drop Down 1</a></li>
+													  <li><a href="https://tutionplus.com/#">Drop Down 3</a></li>
+													  <li><a href="https://tutionplus.com/#">Drop Down 4</a></li>
+													  <li><a href="https://tutionplus.com/#">Drop Down 5</a></li>
+													</ul>
+												  </li>
+												  
+											</ul></span><span><button type="button" style="float:right;margin-top:10px" class="btn btn-warning"><i class="fa fa-home" aria-hidden="true"></i>
+                                     More <i class="fa fa-arrow-right" aria-hidden="true"></i></button></span>
+							</h2>
+						</div>
+					<div class="row"> 
+							
+								<!---- math -->
+							
+											{% if math != None %}
+													
+																							
+											{% for math in math %}
+									<div class="col-xs -2 col-sm-3 col-md-3 col-lg-3"> 
+											<div class="card" style=" width: 16rem;min-height:485px">
+													<img class="card-img-top" style="height:160px"
+													{% if forloop.counter == 1 %}
+													src="https://d3q9l1y9m11tje.cloudfront.net/blog/wp-content/uploads/2014/11/profitandloss.jpg"
+													
+													{% elif forloop.counter == 2 %}
+													src="https://i.ytimg.com/vi/ukx2b1bY-zQ/maxresdefault.jpg"
+													{% elif forloop.counter == 3 %}
+													src="https://i.ytimg.com/vi/xMqjtjHjY9I/maxresdefault.jpg"
+													{% elif forloop.counter == 4 %}
+													src="http://onlinepsa.in/wp-content/uploads/2015/09/Time-Speed-Distance-1.jpg"
+													{% endif %}										
+													alt="Card image cap">
+												<div class="card-body" style="padding:10px">
+														<p class="card-title" style="font-size:14px;font-weight:600;margin:0">{% autoescape off %}	{{math.question}} {% endautoescape %}</p>
+														<p class="card-text">
+											
+											
+																	<div class="radio radio-primary " >
+											
+											
+																		<div id="mathclockdiv{{forloop.counter}}" class="clockdiv"style="text-align:center;margin-right:0;float:right;display:none">
+																			<div>
+																			<span class="seconds"id="mathseconds{{forloop.counter}}"></span>
+																			<div class="smalltext" id="mathsmalltext{{forloop.counter}}">Seconds</div>
+																			</div>
+																		</div>
+																														
+																			
+																			<button id="mathtime{{forloop.counter}}" onClick="timer('mathclockdiv{{forloop.counter}}',{{math.time}},{{forloop.counter}}1,{{forloop.counter}}2,{{forloop.counter}}3,{{forloop.counter}}4,{{forloop.counter}}5,{{math.ans}},mathsolution{{forloop.counter}},{{forloop.counter}},'math',5)"style="text-align:center; color: red;background-color:rgb(36, 172, 98);background-color:#50d8af;background-color:transparent;border:1px solid greenyellow;font-weight:600;font-size:11px;margin-right:0;float:right;display:inline-block;" class="btn  btn-sm">Start now <i style="" class="fa fa-clock-o" aria-hidden="true"></i>  {{math.time}} S</button>
+																			<form >
+																				<div style="display: block"> 
+																					<input type="radio" name="radio1" id="{{forloop.counter}}1" value="option1">
+																					<label for="{{forloop.counter}}1">
+																							{{math.a}}
+																					</label>
+																					<div id="{{forloop.counter}}w1"style="display:none">
+																					<img src="{% static "/c.png" %}" class="img-rounded"> 
+																					</div>
+																					<div id="{{forloop.counter}}r1"style="display:none">
+																					<img src="{% static "/d.png" %}" class="img-rounded"> 
+																					</div>
+																				</div>
+																				<div style="display: block"> 
+																					<input type="radio" name="radio1" id="{{forloop.counter}}2" value="option1">
+																					 
+																					<label for="{{forloop.counter}}2">
+																						{{math.b}}
+																					</label>
+																					<div id="{{forloop.counter}}w2"style="text-align:center;display:none">
+																					<img src="{% static "/c.png" %}" class="img-rounded"> 
+																					</div>
+																					<div id="{{forloop.counter}}r2"style="text-align:center;display:none">
+																					<img src="{% static "/d1.png" %}" class="img-rounded"> 
+																					</div>
+																				
+																				</div>
+																				<div style="display: block"> 
+																					<input type="radio" name="radio1" id="{{forloop.counter}}3" value="option1">
+																					<label for="{{forloop.counter}}3">
+																						{{math.c}}
+																					</label>
+																					<div id="{{forloop.counter}}w3"style="text-align:center;display:none">
+																					<img src="{% static "/c.png" %}" class="img-rounded"> 
+																					</div>
+																					<div id="{{forloop.counter}}r3"style="text-align:center;display:none">
+																					<img src="{% static "/d1.png" %}" class="img-rounded"> 
+																					</div>	
+																				</div>
+																				<div style="display: block"> 
+																					<input type="radio" name="radio1" id="{{forloop.counter}}4" value="option1">
+																					<label for="{{forloop.counter}}4">
+																						{{math.d}}
+																					</label>
+																					<div id="{{forloop.counter}}w4"style="text-align:center;display:none">
+																					<img src="{% static "/c.png" %}" class="img-rounded"> 
+																					</div>
+																					<div id="{{forloop.counter}}r4"style="text-align:center;display:none">
+																					<img src="{% static "/d1.png" %}" class="img-rounded"> 
+																					</div>
+																				</div>
+																				<div style="display: block"> 
+																					
+																					 <input type="radio" name="radio1" id="{{forloop.counter}}5" value="option1">
+																					<label for="{{forloop.counter}}5" >
+																						{{math.e}}
+																					</label>
+																					<div id="{{forloop.counter}}w5"style="text-align:center;display:none">
+																					<img src="{% static "/c.png" %}" class="img-rounded"> 
+																					</div>
+																					<div id="{{forloop.counter}}r5"style="display:none;">
+																					<img src="{% static "/d.png" %}" class="img-rounded" > 
+																					</div>
+																				</div>
+																			</form>	
+																				
+																	</div></p>
+																	<div>
+																	<button id="mathsol{{forloop.counter}}"onclick="op({{forloop.counter}}1,{{forloop.counter}}2,{{forloop.counter}}3,{{forloop.counter}}4,
+																				{{forloop.counter}}5,{{math.ans}},mathsolution{{forloop.counter}},{{forloop.counter}},'mathsol_upper{{forloop.counter}}','math',5)" style="position:absolute;bottom:10px;text-align:center; color: #fff;background-color:#50d8af;background-color:#4D90FE;margin-right:0;float:left;display:inline-block;" type="submit" class="btn  btn-sm"> See Solutoins</button>
+																	<a href="https://tutionplus.com/#" style=" right:10px;position:absolute;bottom:10px;border:1px solid #007bff;font-size:13px;float:right;color:#3134a2;background-color:#007bff00" class="btn btn-primary">Practice Now!</a>
+																	</div>
+																	
+																 
+											
+																	<div id="mathsolution{{forloop.counter}}"style="margin-top:50px;;text-align:center;display:none">
+																										 
+																		<p  id="mathsol_upper{{forloop.counter}}"class="bg-info" style="text-align:center;"> <b>Correct<img src="{% static "/thh.png" %}" class="img-rounded" ></b> </p> 
+																		<p> <b>  Answer :</b></p> 
+																		<!-- <p class="bg-danger" style="display:inline"> Wrong
+																							<img src="{% static "/c.png" %}" class="img-rounded" id="{{forloop.counter}}w"style="display:none"> 
+																							
+																							
+																							<img src="{% static "/d.png" %}" class="img-rounded" id="{{forloop.counter}}r"style="display:none;"> 
+																							 </p><br></br> -->
+																	
+																		<div  style="font-family:'arial', sans-serif;font-size:17px;color:#000;display:inline;line-height: 1.42857;">
+																			{% autoescape off %}	{{math.solution}} {% endautoescape %} 
+																		</div>
+																	</div>
+												</div>
+											</div>
+											
+									</div>
+										{% endfor %}
+										<!--end palel-->
+											<!--<h4 style="color:#212121;text-align:right"><a href="https://www.w3schools.com/html/" style="color:#D50000"><u>Click to Practice More...>></u></a></h4> -->
+										{% endif %}
+								
+										
+
+							<!--math end -->
+							
+						</div>
+				</div>
+						
+						
+				</div><!-- row-->
+		</div><!--container end--> 
+	</section><!-- #Math sextion end -->
+<!--==========================
+    ENGLISH Section
+  ============================-->
+	<section id="testimonials" class="wow fadeInUp" style="margin-top: 20px; visibility: visible; animation-name: fadeInUp;">
+		<div class="container">
+			<div class="row">
+			
+				<div class=" col-sx-2 col-sm-2 col-md-2 col-lg-2 "> 
+					<div class="section-header">
+							
+							<h2 style="color:#2379c5;font-size:20px"><strong style="color:#849818">ENGLISH</strong> Chapters </h2>
+							
+							
+							
+						</div>
+						
+						<ul class="list-group">
+							   <li class="list-group-item active"></li>
+							    <li class="list-group-item active">Todays Job Top 4</li>
+							   
+								<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Percentage</a> </li>
+								
+								<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Boats-and-Stream</a></li>
+								<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Probability</a></li>
+									
+								<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Alligation and Mixture</a></li>
+								<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Compound Interest</a></li>
+								<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Bar-Graph </a></li>
+								<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Average</a> </li>
+								
+								<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Profit and Loss </a></li>
+								<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Line Graph</a></li>
+									
+								<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Pie Charts</a></li>
+								<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Permutation Combination</a></li>
+								<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Volume &amp; Surface Area</a> </li>
+								<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Simple Interest</a> </li>
+								<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Time and Distance</a> </li>
+								<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Pipe Cistern</a> </li>
+								<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Time and Work</a> </li>
+								<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Partnership</a> </li>
+								<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Ratio and Proportion</a> </li>
+								<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Problem on Age</a> </li>
+								<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Simplification</a> </li>
+								<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Squre and Cube</a> </li>
+
+						  </ul>
+				</div>
+				<div  class=" col-sx-8 col-sm-8 col-md-8 col-lg-8 "> 
+					
+					<div class="section-header" style="margin-bottom:-14px;">
+										<h2><strong style="color:red;display:inline">The Hindu Editorial </strong>Wordlist<span style="float:none;display:inline-block;">
+											 <ul id="mobile_on" class="nav-menu sf-js-enabled sf-arrows" style="touch-action: pan-y;">
+														<li class="menu-has-children"><a style="padding:0px;padding-right:22px" href="https://tutionplus.com/" class="sf-with-ul">Category</a>
+														<ul style="display: none;">
+														  <li><a href="https://tutionplus.com/#">Drop Down 1</a></li>
+														  <li><a href="https://tutionplus.com/#">Drop Down 3</a></li>
+														  <li><a href="https://tutionplus.com/#">Drop Down 4</a></li>
+														  <li><a href="https://tutionplus.com/#">Drop Down 5</a></li>
+														</ul>
+													  </li>
+													  
+												</ul></span>
+												<span><button type="button" style="float:right;margin-top:10px" class="btn btn-warning"><i class="fa fa-home" aria-hidden="true"></i>
+                                     More -<i class="fa fa-arrow-right" aria-hidden="true"></i></button></span>
+										</h2>
+							</div>
+					<div class="row"> 
+							<!-- word list 1 -->
+						<div class="eng ">
+								{% if word1 != None %}
+									<div class="panel panel-info " >
+										
+										
+											<div class=" " 
+												style="">
+												<p style="color:black;font-size:15px;margin-top:10px;text-align:justify" class="">
+											
+																										  
+												{% if header1 != None %}
+																										  
+												  {% for header1 in header1 %}
+												  {{header1.Heading_for_list1}}  
+																										  
+																										  
+											   <a class=""   target="_blank" style=" text-align:right;"href="{{header1.link}}"><u>Read more The Hindu->></u></a>  </p>
+												{% endfor %}
+												{% endif %} 
+											
+											</div>
+											<div class="panel panel-primary card ">
+											  <div class="panel-body show-hide1">
+												<div style="overflow-x:auto;">
+													<table class="table " >
+																<thead style="background:#4CAF50;color:black">
+																  <tr>
+																	<th><a style="color:#ffeded;font-size:15px">Word (form)</a></th>
+																	<th><a style="color:#ffeded;font-size:15px">synonym </a></th>
+																	<th><a style="color:#ffeded;font-size:15px">Example</a></th>
+																	<th><a style="color:#ffeded;font-size:15px">Image </a></th>
+																
+																  </tr>
+																</thead>
+																<tbody >
+
+																{% for words in word1 %}
+																  <tr>
+																	<td ><b style="color:blueviolet;text-transform:uppercase">{{words.word}} </b><br/> <br/><span style="font-size:14px">{{words.meaning}}</span></td>
+																	<td style="color:#105d10;font-weight:600" >{{words.synonym}}</td>
+																	<td> {% autoescape off %} {{words.example}} {% endautoescape %} </td>
+																<td><a href="#"><img width="110" height="110" src="/media/{{words.word_img}}" class="attachment-120x120 size-120x120 wp-post-image" alt="" scale="0"></a></td>
+																  </tr>  
+																	{% endfor %}
+															</tbody>
+															  </table>
+													</div>
+													
+											  </div>
+											  <button style="float:right"onclick="show_eng()" type="button" class="btn btn-link">Show more..<i class="fa fa-arrow-down" aria-hidden="true"></i></button>
+										</div>
+											
+										
+											
+											
+								</div> <!--first panel end--> 
+							<div class="section-header"style="margin-top:15px;">
+							 <!-- <h2>
+								<a 
+									href="/english/word/page/1/"
+									style="float:right;font-size:16px">
+									go to Wordlist page 
+									<i class="fa fa-arrow-right" aria-hidden="true"></i>
+								</a>
+								<span style="font-size:16px;float:right;text-align:right">
+										<i class="fa fa-home" aria-hidden="true"></i>
+								</span>
+							</h2> -->
+							 
+					</div>
+										{% endif %}
+												<!-- end word list 1 -->
+												<!-- word list 2 hindu-->
+												<!-- end word list 2 hiindu -->
+											<!-- economy word list 1 start -->
+											{% if word_e1 != None %}
+																	
+										<div class="panel panel-info  " >
+											
+												<div class="col-md-12 ">
+														<p >
+														<h3 style="text-align:left; color: #336699">  Editorial from The EconomicTimes 
+														<img style="text-align:right;float:right;"src="{% static "/theet.png" %}" class="img-rounded" alt="Cinque Terre" width=104" height="86">
+														<P>
+														
+														<b style="color:black;font-size:14px"> <i class="fa fa-calendar" aria-hidden="true"></i> Date :{{word_e1_day}} </b> </p>
+														</h3>
+												</div>
+									<div class="panel panel-primary ">
+										  <div class="c-header-color  card"><p class="c-heading">{% if header_e1 != None %}
+																									  {% for header_e1 in header_e1 %}
+																									  {{header_e1.Heading_for_list1}}  
+																									  
+																									  <a class="c-heading"  target="_blank" style=" text-align:right;font-size:16px"href="{{header_e1.link}}"><u>Read more The EconoiTimes->></u></a>
+																										{% endfor %}
+																									  {% endif %} 
+																									  </p>
+											
+										  </div>
+										  <div class="panel-body">
+												<div style="overflow-x:auto;">
+													<table class="table">
+																<thead>
+																  <tr>
+																	<th><a style="font-size:17px;font-family: 'PT Serif', serif;text-decoration:none;color:black">Word (form)</a></th>
+																	<th><a style="font-size:17px;font-family: 'PT Serif', serif;text-decoration:none;color:black">synonym </a></th>
+																	<th><a style="font-size:17px;font-family: 'PT Serif', serif;text-decoration:none;color:black">Example</a></th>
+																	<th><a style="font-size:17px;font-family: 'PT Serif', serif;text-decoration:none;color:black">Image </a></th>
+																
+																  </tr>
+															</thead>
+														<tbody>
+															{% for words in word_e1 %}
+																 <tr>
+																	<td ><b style="font-size:17px;font-family: 'PT Serif', serif;color:black; text-decoration:underline">{{words.word}} </b><br/> <br/><a style="font-size:17px; color:#1313de; text-decoration:none">{{words.meaning}}</a></td>
+																						<td><a style="font-size:17px; color:#105d10; text-decoration:none">{{words.synonym}}</a></td>
+																						<td><a style="font-size:17px; color:black; text-decoration:none">{{words.example}}.</b></td>
+																	<td><a href="#"><img width="150" height="150" src="/media/{{words.word_img}}" class="attachment-120x120 size-120x120 wp-post-image" alt="" scale="0"></a></td>
+																 </tr>  
+															{% endfor %}
+														</tbody>
+																
+													</table>
+												</div>
+											 <h4 style="color:#D50000;text-align:right"><a href="/english/word/page/1/" style="color:#D50000"> Continue...>></a></h4>
+										  </div>
+									</div>
+									
+							</div>
+									
+									
+							{% endif %}
+							
+							<!-- end economy 1 wordlist -->
+							<!--  economy 2 wordlist -->
+											
+							{% if word_e2 != None %}
+								<div class="row card nopadding">
+									<div class="col-md-9">
+									<h3 style="text-align:left; color: #336699"> Editorial from The EconomicTimes 
+									
+									<p ><b> <i class="fa fa-calendar" aria-hidden="true"></i> Date :{{word_e2_day}} </b> </p></div>
+									
+									<div class="col-md-3">
+									<img src="{% static "/theet.png" %}" class="img-rounded" alt="Cinque Terre" width=104" height="86"> </h3>
+									
+									</div>
+														
+								</div>
+											
+									<div class="panel panel-info" style="margin-top:0px;">
+										<div class="panel panel-primary card">
+											<div class="c-header-color"><p class="c-heading">{% if header_e2 != None %}
+														 {% for header_e2 in header_e2 %}
+														{{header_e2.Heading_for_list2}}  
+																											  
+														 <a class="c-heading"  target="_blank"style=" text-align:right"href="{{header_e2.link}}"><u>Read more The EconomicTimes->></u></a> 
+														 {% endfor %}
+														{% endif %} 
+														</p>
+											</div>
+											<div class="panel-body">
+												<div style="overflow-x:auto;">
+													<table class="table">
+																<thead>
+																  <tr>
+																	<th>Word</th>
+																	<th>Meaning</th>
+																	<th>synonym</th>
+																	
+																  </tr>
+																</thead>
+																<tbody>
+																  
+																{% for words in word_e2 %}
+																 <tr>
+																	<td><b>{{words.word}} </b><br/> <br/>{{words.meaning}}</td>
+																	<td><h4 style="color:green"> {{words.synonym}}</h4></td>
+																	<td><h2 style="color:#424242;">{{words.example}}He eagerly accepted the job because it came with a plethora of opportunities.</h2></td>
+																	<td><a href="#"><img width="150" height="150" src="/media/{{words.word_img}}" class="attachment-120x120 size-120x120 wp-post-image" alt="" scale="0"></a></td>
+																 </tr>  
+																{% endfor %}
+																</tbody>
+														</table>
+												</div>
+												<h4 style="color:#D50000;text-align:right"><a href="/english/word/page/1/" style="color:#D50000"> Continue...>></a></h4>
+										</div>
+									</div>
+								</div>
+									
+									
+								{% endif %}
+								<!-- end economy 2 wordlist end -->
+						</div>
+					</div><!--row end--> 
+														<!-- english -->
+							
+					</div><!--10 end--> 
+				
+					<div  class=" col-sx-2 col-sm-2 col-md-2 col-lg-2 ">
+</div>					
+						
+				</div><!-- row-->
+		</div><!--container end--> 
+	</section><!-- #ENGLISHsextion end -->	
+<!--==========================
+    reasoning Section
+  ============================-->
+	<section id="testimonials" style="margin-top: 20px; visibility: visible; animation-name: fadeInUp;" class="wow fadeInUp">
+		<div class="container">
+			<div class="row">
+					<div class=" col-sx-2 col-sm-2 col-md-2 col-lg-2 "> 
+						<div class="section-header">
+							  <h2 style="color:#2379c5;font-size:20px"><strong style="color:#849818">reasoning </strong>Chapters </h2>
+						</div>
+						<ul class="list-group">
+								   <li class="list-group-item active"></li>
+									<li class="list-group-item active">Todays Job Top 4</li>
+								   
+									<li class="list-group-item"><a href="https://tutionplus.com/reasoning/classification/1" class="list_image">Classification</a> </li>
+									
+									<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Alpha Numaric Symbol</a></li>
+									<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Coding Decoding</a></li>
+										
+									<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Fictious Symbol</a></li>
+									<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Ranking Test</a></li>
+									<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Inequality and Coded Inequality </a></li>
+									<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Input Output</a> </li>
+									 
+									<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Squere Puzzle </a></li>
+									<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Problem on Age</a></li>
+										
+									<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Blood Relation</a></li>
+									<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Syllogism</a></li>
+									<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Decision Making</a> </li>
+									<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Clock</a> </li>
+									<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Cause and Effect</a> </li>
+									<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Direction Test</a> </li>
+									<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Seating Arrangment</a> </li>
+									<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Coded Relationship</a> </li>
+									<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Flore Puzzle</a> </li>
+									<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Circle Puzzle</a> </li>
+									<li class="list-group-item"><a href="https://tutionplus.com/#" class="list_image">Arguments</a> </li>
+									
+
+							  </ul>
+					</div>
+					<div  class=" col-sx-10 col-sm-10 col-md-10 col-lg-10 "> 
+					
+							<div class="section-header" style="margin-bottom:20px;">
+										<h2><strong style="color:red;display:inline">Reasoning </strong>Today<span style="float:none;display:inline-block;">
+											 <ul class="nav-menu sf-js-enabled sf-arrows" id="mobile_on" style="touch-action: pan-y;">
+														<li class="menu-has-children"><a style="padding:0px;padding-right:22px" href="https://tutionplus.com/" class="sf-with-ul">Category</a>
+														<ul style="display: none;">
+														  <li><a href="https://tutionplus.com/#">Drop Down 1</a></li>
+														  <li><a href="https://tutionplus.com/#">Drop Down 3</a></li>
+														  <li><a href="https://tutionplus.com/#">Drop Down 4</a></li>
+														  <li><a href="https://tutionplus.com/#">Drop Down 5</a></li>
+														</ul>
+													  </li>
+													  
+												</ul></span>
+												
+												<span><button type="button" style="float:right;margin-top:10px" class="btn btn-warning"><i class="fa fa-home" aria-hidden="true"></i>
+                                     More -<i class="fa fa-arrow-right" aria-hidden="true"></i></button></span>
+										</h2>
+							</div>
+							<div class="row " > 
+							<!---- reasoning -->
+							
+											{% if reasoning != None %}
+													
+											{% for reasoning in reasoning %}
+									<div class="col-xs -12 col-sm-12 col-md-6 col-lg-6 "> 
+											<div class="card show-hide" style=" width: 100%;padding:9px">
+													<img class="card-img-top" style="height:160px"
+													{% if forloop.counter == 1 %}
+													src="https://examsbook.co.in/img/post/original/P52CReasoning-puzzle-questions-in-hindi.jpg"
+													
+													{% elif forloop.counter == 2 %}
+													src="https://3.bp.blogspot.com/-jmj1yIZOzT4/WlRZH2m3mBI/AAAAAAAAE0g/weFficWq730M6QB5BwBY5uOapnpdXbliQCLcBGAs/s1600/Reasoning-Quiz.jpg"
+													{% elif forloop.counter == 3 %}
+													src="https://i.ytimg.com/vi/xMqjtjHjY9I/maxresdefault.jpg"
+													{% elif forloop.counter == 4 %}
+													src="http://onlinepsa.in/wp-content/uploads/2015/09/Time-Speed-Distance-1.jpg"
+													{% endif %}										
+													alt="Card image cap">
+												<div class="card-body ">
+														<p class="card-title" style="font-size:14px;">{% autoescape off %}	{{reasoning.question}} {% endautoescape %}</p>
+														{% if reasoning.use_image == 0 %}
+														{% endif %}
+														<p class="card-text">
+											<!--================================ main body reasoning START -->
+											
+											{% if reasoning.question_part == '' %}
+								<div class="card-body ">
+											
+													<div id="reasoningclockdiv{{forloop.counter}}" class="clockdiv"style="text-align:center;margin-right:0;float:right;display:none">
+													  <div>
+														<span class="seconds"id="reasoningseconds{{forloop.counter}}"></span>
+														<div class="smalltext" id="reasoningsmalltext{{forloop.counter}}">Seconds</div>
+													  </div>
+													</div>
+												
+												<button id="reasoningtime{{forloop.counter}}" onClick="timer('reasoningclockdiv{{forloop.counter}}',{{reasoning.time}},'res{{forloop.counter}}1','res{{forloop.counter}}2','res{{forloop.counter}}3','res{{forloop.counter}}4','res{{forloop.counter}}5',{{reasoning.ans}},reasoningsolution{{forloop.counter}},'{{forloop.counter}}','reasoning',5)"
+
+
+														style="text-align:center; color: #fff;background-color:rgb(36, 172, 98);margin-right:0;float:right;display:inline-block;"  class="btn  btn-sm"
+														><i class="fa fa-clock-o" aria-hidden="true"></i>  Timer {{reasoning.time}} Sec
+												</button> 
+												<h4 style="text-align:left ;color:#F06292"><b><u>Options:</u></b></h4>
+							 
+												<div class="radio radio-primary " >
+													<form >
+														<div style="display: block"> 
+																												 
+															<input type="radio" name="radio1" id="res{{forloop.counter}}1" value="option1">
+															<label for="res{{forloop.counter}}1">
+																{{reasoning.a}}
+															</label>
+															<div id="res{{forloop.counter}}w1"style="display:none">
+															<img src="{% static "/c.png" %}" class="img-rounded"> 
+															</div>
+															<div id="res{{forloop.counter}}r1"style="display:none">
+															<img src="{% static "/d.png" %}" class="img-rounded"> 
+															</div>
+														</div>
+															
+														<div style="display: block"> 
+															<input type="radio" name="radio1" id="res{{forloop.counter}}2" value="option1">
+															 
+															<label for="res{{forloop.counter}}2">
+																{{reasoning.b}}
+															</label>
+															<div id="res{{forloop.counter}}w2"style="text-align:center;display:none">
+															<img src="{% static "/c.png" %}" class="img-rounded"> 
+															</div>
+															<div id="res{{forloop.counter}}r2"style="text-align:center;display:none">
+															<img src="{% static "/d1.png" %}" class="img-rounded"> 
+															</div>
+															
+														</div>
+														
+														<div style="display: block"> 
+																												 
+															<input type="radio" name="radio1" id="res{{forloop.counter}}3" value="option1">
+															<label for="res{{forloop.counter}}3">
+																{{reasoning.c}}
+															</label>
+															<div id="res{{forloop.counter}}w3"style="text-align:center;display:none">
+															<img src="{% static "/c.png" %}" class="img-rounded"> 
+															</div>
+															<div id="res{{forloop.counter}}r3"style="text-align:center;display:none">
+															<img src="{% static "/d1.png" %}" class="img-rounded"> 
+															</div>	
+														</div>
+															
+														<div style="display: block"> 
+															
+															 <input type="radio" name="radio1" id="res{{forloop.counter}}4" value="option1">
+															<label for="res{{forloop.counter}}4">
+																{{reasoning.d}}
+															</label>
+															<div id="res{{forloop.counter}}w4"style="text-align:center;display:none">
+															<img src="{% static "/c.png" %}" class="img-rounded"> 
+															</div>
+															<div id="res{{forloop.counter}}r4"style="text-align:center;display:none">
+															<img src="{% static "/d1.png" %}" class="img-rounded"> 
+															</div>
+														</div>
+														
+														<div style="display: block"> 
+															
+															 <input type="radio" name="radio1" id="res{{forloop.counter}}5" value="option1">
+															<label for="res{{forloop.counter}}5" >
+																{{reasoning.e}}
+															</label>
+															
+															
+															<div id="res{{forloop.counter}}w5"style="text-align:center;display:none">
+															<img src="{% static "/c.png" %}" class="img-rounded"> 
+															</div>
+															<div id="res{{forloop.counter}}r5"style="display:none;">
+															<img src="{% static "/d.png" %}" class="img-rounded" > 
+															</div>
+														</div>
+													</form>
+												</div>
+												<button 
+												id="reasoningsol{{forloop.counter}}"onclick=
+													"op('res{{forloop.counter}}1','res{{forloop.counter}}2','res{{forloop.counter}}3',
+													'res{{forloop.counter}}4','res{{forloop.counter}}5',{{reasoning.ans}},
+													reasoningsolution{{forloop.counter}},'res{{forloop.counter}}',
+													'reasoningsol_upper{{forloop.counter}}','reasoning',5)"
+												style="text-align:center; color: #fff;background-color:#4D90FE;margin-right:0;
+														float:left;display:inline-block;margin-top:16px" 
+												type="submit"
+												class="btn  btn-sm"> 
+												See Solutoins
+												</button> 
+								</div>			
+																					
+										<div id="reasoningsolution{{forloop.counter}}"style="text-align:center;display:none">
+										 
+												<p  id="reasoningsol_upper{{forloop.counter}}"class="bg-info" style="text-align:center;"> <b>Correct<img src="{% static "/thh.png" %}" class="img-rounded" ></b> </p> 
+												<p> <b>  Answer :</b></p> 
+												<div  style="font-family:'arial', sans-serif;font-size:17px;color:#000;display:inline;line-height: 1.42857;">
+														{% autoescape off %}	{{reasoning.solution}} {% endautoescape %} 
+												</div>
+										</div>
+
+													{%else%}
+													
+								<div class="card-body">
+											<div id="reasoningclockdiv{{forloop.counter}}" class="clockdiv"style="text-align:center;margin-right:0;float:right;display:none">
+												  <div>
+													<span class="seconds"id="reasoningseconds{{forloop.counter}}"></span>
+													<div class="smalltext" id="reasoningsmalltext{{forloop.counter}}">Seconds</div>
+												  </div>
+											</div>
+
+											<button id="reasoningtime{{forloop.counter}}"
+													onClick="timer('reasoningclockdiv{{forloop.counter}}',{{reasoning.time}},
+															'res{{forloop.counter}}1','res{{forloop.counter}}2',
+															'res{{forloop.counter}}3','res{{forloop.counter}}4','res{{forloop.counter}}5',
+															'{{reasoning.ans}}',reasoningsolution{{forloop.counter}},
+															'{{forloop.counter}}','ress',5)"
+													style="text-align:center; color: #fff;background-color:rgb(36, 172, 98);
+														   margin-right:0;float:right;display:inline-block;" 
+													class="btn  btn-sm">
+													<i class="fa fa-clock-o" aria-hidden="true"></i> 
+													Timer {{reasoning.time}} Sec
+											</button> 
+											<form  id="inside{{forloop.counter}}" class="radio radio-primary ">
+											</form>
+																
+									<script> 
+											var d='inside'+'{{forloop.counter}}'
+											var div = document.getElementById(d);
+										split_res('{{reasoning.question_part}}','{{reasoning.a}}','{{reasoning.b}}',
+										'{{reasoning.c}}','{{reasoning.d}}','{{reasoning.e}}',
+										'{{reasoning.f}}','{{reasoning.g}}','{{reasoning.h}}','{{reasoning.i}}',
+										'{{reasoning.j}}','{{reasoning.ans}}');
+										 function split_res(x,a,b,c,d,e,f,g,h,i,k,lp){
+										
+										//div.innerHTML = div.innerHTML ;
+												var arrayy = lp.split('///');
+												/*  var myarray_ = [];
+
+											  for (var i = 0; i < arrayy.length; ++i) {
+												  myarray_[i] = "whatever";
+											  }*/
+												var myarray = x.split('///');
+												var myarray_a = a.split('///');
+												var myarray_b = b.split('///');
+												var myarray_c = c.split('///');
+												var myarray_d = d.split('///');
+												var myarray_e = e.split('///');
+												if(f != ''){var myarray_f = f.split('///');}
+												if(g != ''){var myarray_g = g.split('///');}
+												if(h != ''){var myarray_h = h.split('///');}
+												if(i !=''){var myarray_i = i.split('///');}
+												
+												if(k !=''){var myarray_k = k.split("///");}
+
+												for(var i = 0; i <arrayy.length; i++)
+												{var header='<h5 style="text-align:left;padding:0px;color:rgb(0, 0, 0)"><b style="text-align:left;padding:0px;font-size:16px;">'+myarray[i]+'</b></h5>';
+												div.innerHTML = div.innerHTML + header;
+										
+												//document.write(header);
+												//var ap='myarray_'.concat(i.toString());
+												if(i==0){
+												for(var j = 0; j < 5; j++)
+												
+												{wr(myarray_a[j],j,i);}
+												}else if(i==1){
+												for(var j = 0; j < 5; j++)
+												
+												{wr(myarray_b[j],j,i);}
+												}else if(i==2){
+												for(var j = 0; j < 5; j++)
+												
+												{wr(myarray_c[j],j,i);}
+												}else if(i==3){
+												for(var j = 0; j < 5; j++)
+												
+												{wr(myarray_d[j],j,i);}
+												}else if(i==4){
+												for(var j = 0; j < 5; j++)
+												
+												{wr(myarray_e[j],j,i);}
+												}else if(i==5){
+												for(var j = 0; j < 5; j++)
+												
+												{wr(myarray_f[j],j,i);}
+												}else if(i==6){
+												for(var j = 0; j < 5; j++)
+												
+												{wr(myarray_g[j],j,i);}
+												}else if(i==7){
+												for(var j = 0; j < 5; j++)
+												
+												{wr(myarray_h[j],j,i);}
+												}else if(i==8){
+												for(var j = 0; j < 5; j++)
+												
+												{wr(myarray_i[j],j,i);}
+												}else if(i==9){
+												for(var j = 0; j < 5; j++)
+												
+												{wr(myarray_k[j],j,i);}
+												}
+													}
+													}
+															 
+															 function wr(s,j,i){
+															 var ss=s;
+															 var jj=j;
+															 
+															 if(jj==0){
+															 div.innerHTML = div.innerHTML + '<h4 style="text-align:left ;color:#F06292"><b><u>Options:</u></b></h4>'
+														;
+															 //document.write();	
+															 }
+															 
+															 var idd='ress'+(i.toString()).concat(j.toString());
+															 var w=idd+'w';
+															 var r=idd+'r';
+															 var radio='radio'+idd;
+															 var lebel='l'+idd;
+															 var opt='opt'+i.toString();
+															 
+															 var option = '<div style="display: block;padding:1px">'+'<input type="radio" name="'+opt+'" id='+idd+' value="'+opt+'">'+
+											'<label for="'+ idd +'" >'+
+											ss+
+											'</label>'+
+											'<div id="'+w+'"style="display:none">'+
+											'<img src="{% static "/c.png" %}" class="img-rounded"> '+
+											'</div>'+
+											'<div id="'+ r +'"style="display:none">'+
+											'<img src="{% static "/d.png" %}" class="img-rounded"/> '+
+											'</div>'+
+											'</div>';
+														//document.write(option);	 
+														
+														
+														div.innerHTML = div.innerHTML + option;
+															 
+															 if(jj== 4){
+															// alert(jj);
+																//div.innerHTML = div.innerHTML +'</form>';
+															//document.write('<hr></hr>');	
+															
+															 }
+															 }
+									</script>
+				
+																																					
+										<button id="reasoningsol{{forloop.counter}}"onclick=
+													"op('ress{{forloop.counter}}1','ress{{forloop.counter}}2',
+													'ress{{forloop.counter}}3','ress{{forloop.counter}}4','ress{{forloop.counter}}5',
+													'{{reasoning.ans}}',reasoningsolution{{forloop.counter}},'res{{forloop.counter}}',
+													'resssol_upper{{forloop.counter}}','ress',5)"
+												style="text-align:center; color: #fff;background-color:#4D90FE;margin-right:0;
+														float:left;display:inline-block;margin-top:16px" 
+												type="submit" 
+												class="btn  btn-sm"> 
+												See Solutoins
+										</button> 											
+																																					
+								</div><!-- card body end -->
+														
+									<div id="reasoningsolution{{forloop.counter}}"style="text-align:center;display:none">
+										<p  id="resssol_upper{{forloop.counter}}"class="bg-info" 
+										style="text-align:center;"> <b>Your score<img src="{% static "/thh.png" %}" 
+										class="img-rounded" ></b> </p> 
+										<p> 
+										<b>  Answer :</b>
+										</p> 
+										<div  style="font-family:'arial', sans-serif;font-size:17px;color:#000;display:inline;line-height: 1.42857;">
+											<a href="/reasoning/{{reasoning.new_id}}/"target="_blank"><b>Click here to view Solution</b></a>
+										</div>
+									</div>
+														
+										
+												{% endif %}
+										<!--=====================      END MAIN BODY REASONING====================-->
+
+																	
+																	</p>
+																	
+																	<a href="#" class="btn btn-primary">Practice Now!</a> 
+											
+																	<div id="reasoningsolution{{forloop.counter}}"style="text-align:center;display:none">
+																										 
+																		<p  id="reasoningsol_upper{{forloop.counter}}"class="bg-info" style="text-align:center;"> <b>Correct<img src="{% static "/thh.png" %}" class="img-rounded" ></b> </p> 
+																		<p> <b>  Answer :</b></p> 
+																		<!-- <p class="bg-danger" style="display:inline"> Wrong
+																							<img src="{% static "/c.png" %}" class="img-rounded" id="{{forloop.counter}}w"style="display:none"> 
+																							
+																							
+																							<img src="{% static "/d.png" %}" class="img-rounded" id="{{forloop.counter}}r"style="display:none;"> 
+																							 </p><br></br> -->
+																	
+																		<div  style="font-family:'arial', sans-serif;font-size:17px;color:#000;display:inline;line-height: 1.42857;">
+																			{% autoescape off %}	{{reasoning.solution}} {% endautoescape %} 
+																		</div>
+																	</div>
+												</div>
+											</div>
+											
+											
+									</div>
+										{% endfor %}
+										<!--end palel-->
+										
+											
+											
+											
+										{% endif %} 
+								
+										
+
+							<!--reasoning end -->
+						</div><!-- row reasoning-->
+						<button style="float:right"onclick="sh()" type="button" class="btn btn-link">Show more..</button>
+						<!--<h4 style="color:#212121;text-align:left;float:left"><a href="https://www.w3schools.com/html/" style="color:#D50000"><u>Click to Practice More...>></u></a></h4> -->
+					</div><!-- div 10 -->
+							
+			</div><!-- main row -->	
+		</div><!--container end--> 
+	</section><!-- #reasoning sextion end -->
+    <!--==========================
+      Clients Section
+    ============================-->
+    <section id="clients" class="wow fadeInUp">
+      <div class="container">
+        <div class="section-header">
+          <h2>Clients</h2>
+          <p>Sed tamen tempor magna labore dolore dolor sint tempor duis magna elit veniam aliqua esse amet veniam enim export quid quid veniam aliqua eram noster malis nulla duis fugiat culpa esse aute nulla ipsum velit export irure minim illum fore</p>
+        </div>
+        <div class="owl-carousel clients-carousel">
+          <img src="img/clients/client-1.png" alt="">
+          <img src="img/clients/client-2.png" alt="">
+          <img src="img/clients/client-3.png" alt="">
+          <img src="img/clients/client-4.png" alt="">
+          <img src="img/clients/client-5.png" alt="">
+          <img src="img/clients/client-6.png" alt="">
+          <img src="img/clients/client-7.png" alt="">
+          <img src="img/clients/client-8.png" alt="">
+        </div>
+      </div>
+    </section><!-- #clients -->
+    <!--==========================
+      Our Portfolio Section
+    ============================-->
+    <section id="portfolio" class="wow fadeInUp">
+      <div class="container">
+        <div class="section-header">
+          <h2>Our Portfolio</h2>
+          <p>Sed tamen tempor magna labore dolore dolor sint tempor duis magna elit veniam aliqua esse amet veniam enim export quid quid veniam aliqua eram noster malis nulla duis fugiat culpa esse aute nulla ipsum velit export irure minim illum fore</p>
+        </div>
+      </div>
+      <div class="container-fluid">
+        <div class="row no-gutters">
+          <div class="col-lg-3 col-md-4">
+            <div class="portfolio-item wow fadeInUp">
+              <a href="img/portfolio/1.jpg" class="portfolio-popup">
+                <img src="img/portfolio/1.jpg" alt="">
+                <div class="portfolio-overlay">
+                  <div class="portfolio-info"><h2 class="wow fadeInUp">Portfolio Item 1</h2></div>
+                </div>
+              </a>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-4">
+            <div class="portfolio-item wow fadeInUp">
+              <a href="img/portfolio/2.jpg" class="portfolio-popup">
+                <img src="img/portfolio/2.jpg" alt="">
+                <div class="portfolio-overlay">
+                  <div class="portfolio-info"><h2 class="wow fadeInUp">Portfolio Item 2</h2></div>
+                </div>
+              </a>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-4">
+            <div class="portfolio-item wow fadeInUp">
+              <a href="img/portfolio/3.jpg" class="portfolio-popup">
+                <img src="img/portfolio/3.jpg" alt="">
+                <div class="portfolio-overlay">
+                  <div class="portfolio-info"><h2 class="wow fadeInUp">Portfolio Item 3</h2></div>
+                </div>
+              </a>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-4">
+            <div class="portfolio-item wow fadeInUp">
+              <a href="img/portfolio/4.jpg" class="portfolio-popup">
+                <img src="img/portfolio/4.jpg" alt="">
+                <div class="portfolio-overlay">
+                  <div class="portfolio-info"><h2 class="wow fadeInUp">Portfolio Item 4</h2></div>
+                </div>
+              </a>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-4">
+            <div class="portfolio-item wow fadeInUp">
+              <a href="img/portfolio/5.jpg" class="portfolio-popup">
+                <img src="img/portfolio/5.jpg" alt="">
+                <div class="portfolio-overlay">
+                  <div class="portfolio-info"><h2 class="wow fadeInUp">Portfolio Item 5</h2></div>
+                </div>
+              </a>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-4">
+            <div class="portfolio-item wow fadeInUp">
+              <a href="img/portfolio/6.jpg" class="portfolio-popup">
+                <img src="img/portfolio/6.jpg" alt="">
+                <div class="portfolio-overlay">
+                  <div class="portfolio-info"><h2 class="wow fadeInUp">Portfolio Item 6</h2></div>
+                </div>
+              </a>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-4">
+            <div class="portfolio-item wow fadeInUp">
+              <a href="img/portfolio/7.jpg" class="portfolio-popup">
+                <img src="img/portfolio/7.jpg" alt="">
+                <div class="portfolio-overlay">
+                  <div class="portfolio-info"><h2 class="wow fadeInUp">Portfolio Item 7</h2></div>
+                </div>
+              </a>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-4">
+            <div class="portfolio-item wow fadeInUp">
+              <a href="img/portfolio/8.jpg" class="portfolio-popup">
+                <img src="img/portfolio/8.jpg" alt="">
+                <div class="portfolio-overlay">
+                  <div class="portfolio-info"><h2 class="wow fadeInUp">Portfolio Item 8</h2></div>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section><!-- #portfolio -->
+    <!--==========================
+      Testimonials Section
+    ============================-->
+<!-- #testimonials -->
+    <!--==========================
+      Call To Action Section
+    ============================-->
+    <section id="call-to-action" class="wow fadeInUp">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-9 text-center text-lg-left">
+            <h3 class="cta-title">Call To Action</h3>
+            <p class="cta-text"> Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+          </div>
+          <div class="col-lg-3 cta-btn-container text-center">
+            <a class="cta-btn align-middle" href="#">Call To Action</a>
+          </div>
+        </div>
+      </div>
+    </section><!-- #call-to-action -->
+    <!--==========================
+      Our Team Section
+    ============================-->
+    <section id="team" class="wow fadeInUp">
+      <div class="container">
+        <div class="section-header">
+          <h2>Our Team</h2>
+        </div>
+        <div class="row">
+          <div class="col-lg-3 col-md-6">
+            <div class="member">
+              <div class="pic"><img src="img/team-1.jpg" alt=""></div>
+              <div class="details">
+                <h4>Walter White</h4>
+                <span>Chief Executive Officer</span>
+                <div class="social">
+                  <a href=""><i class="fa fa-twitter"></i></a>
+                  <a href=""><i class="fa fa-facebook"></i></a>
+                  <a href=""><i class="fa fa-google-plus"></i></a>
+                  <a href=""><i class="fa fa-linkedin"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6">
+            <div class="member">
+              <div class="pic"><img src="img/team-2.jpg" alt=""></div>
+              <div class="details">
+                <h4>Sarah Jhinson</h4>
+                <span>Product Manager</span>
+                <div class="social">
+                  <a href=""><i class="fa fa-twitter"></i></a>
+                  <a href=""><i class="fa fa-facebook"></i></a>
+                  <a href=""><i class="fa fa-google-plus"></i></a>
+                  <a href=""><i class="fa fa-linkedin"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6">
+            <div class="member">
+              <div class="pic"><img src="img/team-3.jpg" alt=""></div>
+              <div class="details">
+                <h4>William Anderson</h4>
+                <span>CTO</span>
+                <div class="social">
+                  <a href=""><i class="fa fa-twitter"></i></a>
+                  <a href=""><i class="fa fa-facebook"></i></a>
+                  <a href=""><i class="fa fa-google-plus"></i></a>
+                  <a href=""><i class="fa fa-linkedin"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6">
+            <div class="member">
+              <div class="pic"><img src="img/team-4.jpg" alt=""></div>
+              <div class="details">
+                <h4>Amanda Jepson</h4>
+                <span>Accountant</span>
+                <div class="social">
+                  <a href=""><i class="fa fa-twitter"></i></a>
+                  <a href=""><i class="fa fa-facebook"></i></a>
+                  <a href=""><i class="fa fa-google-plus"></i></a>
+                  <a href=""><i class="fa fa-linkedin"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section><!-- #team -->
+    <!--==========================
+      Contact Section
+    ============================-->
+    <section id="contact" class="wow fadeInUp">
+      <div class="container">
+        <div class="section-header">
+          <h2>Contact Us</h2>
+          <p>Sed tamen tempor magna labore dolore dolor sint tempor duis magna elit veniam aliqua esse amet veniam enim export quid quid veniam aliqua eram noster malis nulla duis fugiat culpa esse aute nulla ipsum velit export irure minim illum fore</p>
+        </div>
+        <div class="row contact-info">
+          <div class="col-md-4">
+            <div class="contact-address">
+              <i class="ion-ios-location-outline"></i>
+              <h3>Address</h3>
+              <address>A108 Adam Street, NY 535022, USA</address>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="contact-phone">
+              <i class="ion-ios-telephone-outline"></i>
+              <h3>Phone Number</h3>
+              <p><a href="tel:+155895548855">+1 5589 55488 55</a></p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="contact-email">
+              <i class="ion-ios-email-outline"></i>
+              <h3>Email</h3>
+              <p><a href="mailto:info@example.com">info@example.com</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="container mb-4">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d22864.11283411948!2d-73.96468908098944!3d40.630720240038435!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c24fa5d33f083b%3A0xc80b8f06e177fe62!2sNew+York%2C+NY%2C+USA!5e0!3m2!1sen!2sbg!4v1540447494452" width="100%" height="380" frameborder="0" style="border:0" allowfullscreen></iframe>
+      </div>
+      <div class="container">
+        <div class="form">
+          <div id="sendmessage">Your message has been sent. Thank you!</div>
+          <div id="errormessage"></div>
+          <form action="" method="post" role="form" class="contactForm">
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" data-rule="minlen:4" data-msg="Please enter at least 4 chars" />
+                <div class="validation"></div>
+              </div>
+              <div class="form-group col-md-6">
+                <input type="email" class="form-control" name="email" id="email" placeholder="Your Email" data-rule="email" data-msg="Please enter a valid email" />
+                <div class="validation"></div>
+              </div>
+            </div>
+            <div class="form-group">
+              <input type="text" class="form-control" name="subject" id="subject" placeholder="Subject" data-rule="minlen:4" data-msg="Please enter at least 8 chars of subject" />
+              <div class="validation"></div>
+            </div>
+            <div class="form-group">
+              <textarea class="form-control" name="message" rows="5" data-rule="required" data-msg="Please write something for us" placeholder="Message"></textarea>
+              <div class="validation"></div>
+            </div>
+            <div class="text-center"><button type="submit">Send Message</button></div>
+          </form>
+        </div>
+      </div>
+    </section><!-- #contact -->
+  </main>
+  <!--==========================
+    Footer
+  ============================-->
+  <footer id="footer">
+    <div class="container">
+      <div class="copyright">
+        &copy; Copyright <strong>Reveal</strong>. All Rights Reserved
+      </div>
+      <div class="credits">
+        <!--
+          All the links in the footer should remain intact.
+          You can delete the links only if you purchased the pro version.
+          Licensing information: https://bootstrapmade.com/license/
+          Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/buy/?theme=Reveal
+        -->
+        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+      </div>
+    </div>
+  </footer><!-- #footer -->
+  <a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
+	 <!-- JavaScript Libraries --> 
+  <script type="text/javascript" src="{% static 'lib/jquery/jquery.min.js' %}"> </script>
+  <script type="text/javascript" src="{% static 'lib/jquery/jquery-migrate.min.js' %}"> </script>
+  <script type="text/javascript" src="{% static 'lib/bootstrap/js/bootstrap.bundle.min.js' %}"> </script>
+  <script type="text/javascript" src="{% static 'lib/easing/easing.min.js' %}"> </script>
+  <script type="text/javascript" src="{% static 'lib/superfish/hoverIntent.js' %}"> </script>
+  <script type="text/javascript" src="{% static 'lib/superfish/superfish.min.js' %}"> </script>
+  <script type="text/javascript" src="{% static 'lib/wow/wow.min.js' %}"> </script>
+  <script type="text/javascript" src="{% static 'lib/owlcarousel/owl.carousel.min.js' %}"> </script>
+  <script type="text/javascript" src="{% static 'lib/magnific-popup/magnific-popup.min.js' %}"> </script>
+  <script type="text/javascript" src="{% static 'lib/sticky/sticky.js' %}"> </script>
+  <!-- Contact Form JavaScript File -->
+  <script  src="{% static 'lib/contactform.js' %}"> </script>  
+  
+  
+    <!-- Template Main Javascript File -->
+	<script type="text/javascript">
+	//NOT EDIT......................................................................=======================================================
+		  jQuery(document).ready(function ($) {
+	  // Back to top button
+	  $(window).scroll(function () {
+		if ($(this).scrollTop() > 100) {
+		  $('.back-to-top').fadeIn('slow');
+		} else {
+		  $('.back-to-top').fadeOut('slow');
+		}
+	  });
+	  $('.back-to-top').click(function () {
+		$('html, body').animate({
+		  scrollTop: 0
+		}, 1500, 'easeInOutExpo');
+		return false;
+	  });
+	  // Stick the header at top on scroll
+	  $("#header").sticky({
+		topSpacing: 0,
+		zIndex: '50'
+	  });
+	  // Intro background carousel
+	  $("#intro-carousel").owlCarousel({
+		autoplay: true,
+		dots: false,
+		loop: true,
+		animateOut: 'fadeOut',
+		items: 1,
+		
+	  });
+	  // Initiate the wowjs animation library
+	  new WOW().init();
+	  // Initiate superfish on nav menu
+	  $('.nav-menu').superfish({
+		animation: {
+		  opacity: 'show'
+		},
+		speed: 400
+	  });
+	  // Mobile Navigation
+	  if ($('#nav-menu-container').length) {
+		var $mobile_nav = $('#nav-menu-container').clone().prop({
+		  id: 'mobile-nav'
+		});
+		$mobile_nav.find('> ul').attr({
+		  'class': '',
+		  'id': ''
+		});
+		$('body').append($mobile_nav);
+		$('body').prepend('<button type="button" id="mobile-nav-toggle"><i class="fa fa-bars"></i></button>');
+		$('body').append('<div id="mobile-body-overly"></div>');
+		$('#mobile-nav').find('.menu-has-children').prepend('<i class="fa fa-chevron-down"></i>');
+		$(document).on('click', '.menu-has-children i', function (e) {
+		  $(this).next().toggleClass('menu-item-active');
+		  $(this).nextAll('ul').eq(0).slideToggle();
+		  $(this).toggleClass("fa-chevron-up fa-chevron-down");
+		});
+		$(document).on('click', '#mobile-nav-toggle', function (e) {
+		  $('body').toggleClass('mobile-nav-active');
+		  $('#mobile-nav-toggle i').toggleClass('fa-times fa-bars');
+		  $('#mobile-body-overly').toggle();
+		});
+		$(document).click(function (e) {
+		  var container = $("#mobile-nav, #mobile-nav-toggle");
+		  if (!container.is(e.target) && container.has(e.target).length === 0) {
+			if ($('body').hasClass('mobile-nav-active')) {
+			  $('body').removeClass('mobile-nav-active');
+			  $('#mobile-nav-toggle i').toggleClass('fa-times fa-bars');
+			  $('#mobile-body-overly').fadeOut();
+			}
+		  }
+		});
+	  } else if ($("#mobile-nav, #mobile-nav-toggle").length) {
+		$("#mobile-nav, #mobile-nav-toggle").hide();
+	  }
+	  // Smooth scroll for the menu and links with .scrollto classes
+	  $('.nav-menu a, #mobile-nav a, .scrollto').on('click', function () {
+		if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
+		  var target = $(this.hash);
+		  if (target.length) {
+			var top_space = 0;
+			if ($('#header').length) {
+			  top_space = $('#header').outerHeight();
+			  if (!$('#header').hasClass('header-fixed')) {
+				top_space = top_space - 20;
+			  }
+			}
+			$('html, body').animate({
+			  scrollTop: target.offset().top - top_space
+			}, 1500, 'easeInOutExpo');
+			if ($(this).parents('.nav-menu').length) {
+			  $('.nav-menu .menu-active').removeClass('menu-active');
+			  $(this).closest('li').addClass('menu-active');
+			}
+			if ($('body').hasClass('mobile-nav-active')) {
+			  $('body').removeClass('mobile-nav-active');
+			  $('#mobile-nav-toggle i').toggleClass('fa-times fa-bars');
+			  $('#mobile-body-overly').fadeOut();
+			}
+			return false;
+		  }
+		}
+	  });
+	  // Porfolio - uses the magnific popup jQuery plugin
+	  $('.portfolio-popup').magnificPopup({
+		type: 'image',
+		removalDelay: 300,
+		mainClass: 'mfp-fade',
+		gallery: {
+		  enabled: true
+		},
+		zoom: {
+		  enabled: true,
+		  duration: 300,
+		  easing: 'ease-in-out',
+		  opener: function (openerElement) {
+			return openerElement.is('img') ? openerElement : openerElement.find('img');
+		  }
+		}
+	  });
+	  // Testimonials carousel (uses the Owl Carousel library)
+	  $(".testimonials-carousel").owlCarousel({
+		autoplay: true,
+		dots: true,
+		loop: true,
+		autoplayTimeout:5000,
+		slideSpeed:10000,
+		responsive: {
+		  0: {
+			items: 2
+		  },
+		  768: {
+			items: 4
+		  },
+		  900: {
+			items: 4
+		  }
+		}
+	  });
+	  // Clients carousel (uses the Owl Carousel library)
+	  $(".clients-carousel").owlCarousel({
+		autoplay: true,
+		dots: true,
+		loop: true,
+		responsive: {
+		  0: {
+			items: 2
+		  },
+		  768: {
+			items: 4
+		  },
+		  900: {
+			items: 6
+		  }
+		}
+	  });
+	});
+	
+	
+	
+	
+//====================================================================END NOT EDIT===============================================================================================================
+	
+//================================EDIT START===================================================================
+//.......math
+	function timer(c_id,t,r1,r2,r3,r4,r5,a,i,counter,flag,loop){
+	
+	var colckdiv_id=c_id;
+	alert(colckdiv_id);
+	var colckdiv_id_hash='#'.concat(c_id.toString());
+	var clock = document.getElementById(colckdiv_id);
+	//alert(clock);
+	
+	if(flag=='math'){var min='.mathminutes'.concat(counter.toString());
+	//alert(min);
+	var sec='.mathseconds'.concat(counter.toString());
+	var sec_id='#mathseconds'.concat(counter.toString());
+	var min_id='#mathminutes'.concat(counter.toString());
+	var smltext_id='#mathsmalltext'.concat(counter.toString());
+var upper_sol='mathsol_upper'.concat(counter.toString());
+  var minutesSpan = clock.querySelector(min);
+  var secondsSpan = clock.querySelector(sec);
+  var sol='mathsol'.concat(counter.toString());
+var solution_hash='#mathsolution'.concat(counter.toString());
+var timer_id='#mathtime'.concat(counter.toString());
+			}else if(flag=='reasoning'){
+			
+			
+			
+			var min='.reasoningminutes'.concat(counter.toString());
+	//alert(min);
+	var sec='.reasoningseconds'.concat(counter.toString());
+	var sec_id='#reasoningseconds'.concat(counter.toString());
+	var min_id='#reasoningminutes'.concat(counter.toString());
+	var smltext_id='#reasoningsmalltext'.concat(counter.toString());
+var upper_sol='reasoningsol_upper'.concat(counter.toString());
+  var minutesSpan = clock.querySelector(min);
+  var secondsSpan = clock.querySelector(sec);
+  var sol='reasoningsol'.concat(counter.toString());
+var solution_hash='#reasoningsolution'.concat(counter.toString());
+var timer_id='#reasoningtime'.concat(counter.toString());
+counter='res'+counter.toString();
+			}else if(flag=='ress'){
+			
+			
+			
+			var min='.reasoningminutes'.concat(counter.toString());
+	//alert(min);
+	var sec='.reasoningseconds'.concat(counter.toString());
+	var sec_id='#reasoningseconds'.concat(counter.toString());
+	var min_id='#reasoningminutes'.concat(counter.toString());
+	var smltext_id='#reasoningsmalltext'.concat(counter.toString());
+var upper_sol='resssol_upper'.concat(counter.toString());
+  var minutesSpan = clock.querySelector(min);
+  var secondsSpan = clock.querySelector(sec);
+  var sol='reasoningsol'.concat(counter.toString());
+var solution_hash='#reasoningsolution'.concat(counter.toString());
+var timer_id='#reasoningtime'.concat(counter.toString());
+counter='res'+counter.toString();
+			}
+	
+	
+//alert(timer_id);
+  document.getElementById(sol).disabled = true;
+  $(timer_id).toggle(500);
+  $(colckdiv_id_hash).toggle(500);
+var seconds_left = 80;
+/*var interval = setInterval(function() {
+    document.getElementById('seconds').innerHTML = --seconds_left;
+    if (seconds_left <= 0)
+    {
+       document.getElementById('seconds').innerHTML = "You are Ready!";
+       clearInterval(interval);
+    }
+}, 1000); */
+//new timer
+var fiveMinutes = t,
+        display = $(sec_id),
+		smalltext=$(smltext_id);
+		if($(solution_hash).is(':visible'))
+{
+$(solution_hash).toggle(500);
+}
+startTimer(fiveMinutes,display,smalltext,colckdiv_id_hash,timer_id,sol,solution_hash,r1,r2,r3,r4,r5,a,i,counter,upper_sol,flag,loop);
+	
+	}
+	
+	
+	function startTimer(duration, display,smalltext,colckdiv_id_hash,timer_id,sol,solution_hash,r1,r2,r3,r4,r5,a,i,counter,upper_sol,flag,loop) {
+    var timer = duration, minutes, seconds;
+	 
+  var s=  setInterval(function () {
+	var seconds_left = --duration;
+        minutes = parseInt(timer / 60, 10)
+        seconds = parseInt(timer % 60, 10);
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+				if(minutes<1){
+        display.text(minutes + ":" + seconds);
+		smalltext.text("seconds")
+        }
+        else{display.text(minutes + ":" + seconds);
+		smalltext.text("Minutes")
+		}
+		
+		if(seconds_left<=-1){clearInterval(s);
+		
+								op(r1,r2,r3,r4,r5,a,i,counter,upper_sol,flag,loop);
+								$(timer_id).toggle(500);
+								$(colckdiv_id_hash).toggle(500);
+								
+								//$(solution_hash).toggle(500);
+								document.getElementById(sol).disabled = false; 
+									}
+		
+        if (--timer < 0) {
+            timer = duration;
+        }
+    }, 1000);}
+	
+	
+	
+	function op(r1,r2,r3,r4,r5,a,i,counter,upper_sol,flag,loop){
+	var radio1 = r1;
+	var radio2=r2;
+	 var radio3=r3;
+	var radio4=r4;
+	var radio5=r5;
+	var ans=a;
+	var id=i;
+	
+	var count=counter;
+	var chk=count.toString().concat(ans.toString());
+	var r8=count.toString();
+	var right=r8.concat('r');
+	
+	
+	if(flag == 'math'|| flag=='reasoning'){
+	
+if(document.getElementById(radio1).checked || document.getElementById(radio2).checked || document.getElementById(radio3).checked || document.getElementById(radio4).checked || document.getElementById(radio5).checked ) {
+alert(flag);
+				if(document.getElementById(chk).checked){
+				var right_img= right.concat(chk.slice(-1)) ;
+				//alert(right_img);
+				var x = document.getElementById(right_img);
+				
+				//x.innerHTML="<img src=\"http://placehold.it/350x350\" width=\"400px\" height=\"150px\">";
+				var y = document.getElementById(upper_sol);
+				y.innerHTML="<b>Correct<img src=\"{% static "/thh.png" %}\" class=\"img-rounded\" >"
+				x.style.display = 'inline';
+				
+				//$(x).toggle(500); 
+				//var y = document.getElementById(right);
+				//y.style.display = 'inline';
+				}else if(document.getElementById(radio1).checked) {
+				var wrong_img= count.toString().concat('w'.concat('radio1'.slice(-1))) ;
+				var x = document.getElementById(wrong_img);
+				var y = document.getElementById(upper_sol);
+				y.innerHTML="<b>InCorrect<img src=\"{% static "/c.png" %}\" class=\"img-rounded\" >"
+				x.style.display = 'inline';
+				
+				}else if(document.getElementById(radio2).checked) {
+				var wrong_img= count.toString().concat('w'.concat('radio2'.slice(-1))) ;
+				var x = document.getElementById(wrong_img);
+				var y = document.getElementById(upper_sol);
+				y.innerHTML="<b>InCorrect<img src=\"{% static "/c.png" %}\" class=\"img-rounded\" >"
+				x.style.display = 'inline';
+				
+				}else if(document.getElementById(radio3).checked) {
+				var wrong_img= count.toString().concat('w'.concat('radio3'.slice(-1))) ;
+				var x = document.getElementById(wrong_img);
+				var y = document.getElementById(upper_sol);
+				y.innerHTML="<b>InCorrect<img src=\"{% static "/c.png" %}\" class=\"img-rounded\" >"
+				x.style.display = 'inline';
+				
+				}else if(document.getElementById(radio4).checked) {
+				var wrong_img= count.toString().concat('w'.concat('radio4'.slice(-1))) ;
+				var x = document.getElementById(wrong_img);
+				var y = document.getElementById(upper_sol);
+				y.innerHTML="<b>InCorrect<img src=\"{% static "/c.png" %}\" class=\"img-rounded\" >"
+				x.style.display = 'inline';
+				
+				}else if(document.getElementById(radio5).checked) {
+				var wrong_img= count.toString().concat('w'.concat('radio5'.slice(-1))) ;
+				var x = document.getElementById(wrong_img);
+				var y = document.getElementById(upper_sol);
+				y.innerHTML="<b>InCorrect<img src=\"{% static "/c.png" %}\" class=\"img-rounded\" >"
+				x.style.display = 'inline';
+				
+				}
+			
+					
+		}
+					
+					
+				else  {
+				///$(upper_sol).html("Hello World");
+				var x = document.getElementById(upper_sol);
+				x.style.fontWeight  = 'bold';
+				x.innerHTML="Not Attempted";
+						
+						}
+						
+						
+}else{var score=0;
+			var attempt=0;
+			if(flag== 'ress'){
+			}
+			else if (flag=='css'){
+			
+			}
+var array = ans.split('///');
+var max=array.length;
+//alert(flag);
+		for(i=0;i< array.length; i++){
+			
+			
+			
+			radio1=flag+i.toString()+'0';
+			radio2=flag+i.toString()+'1';
+			radio3=flag+i.toString()+'2';
+			radio4=flag+i.toString()+'3';
+			radio5=flag+i.toString()+'4';
+			
+			//alert(radio1+" "+radio2+''+radio3);
+			chk=flag+i.toString()+ (parseInt(array[i])-1).toString();
+			//alert("chk="+chk);
+			if(document.getElementById(radio1).checked || document.getElementById(radio2).checked || document.getElementById(radio3).checked || document.getElementById(radio4).checked || document.getElementById(radio5).checked ) {
+				attempt=1;
+				if(document.getElementById(chk).checked){
+				score=score+1;
+				var right_img= chk+'r' ;
+				//alert(right_img);
+				var x = document.getElementById(right_img);
+				
+				//x.innerHTML="<img src=\"http://placehold.it/350x350\" width=\"400px\" height=\"150px\">";
+				var y = document.getElementById(upper_sol);
+				y.innerHTML='<b style=\"font-size:18px;\">Your Score: &nbsp;&nbsp;  '+score.toString()+'/'+max.toString()+'&nbsp;&nbsp;<img src=\"{% static "/thh.png" %}\" class=\"img-rounded\" >'
+				x.style.display = 'inline';
+				
+				//$(x).toggle(500); 
+				//var y = document.getElementById(right);
+				//y.style.display = 'inline';
+				}else if(document.getElementById(radio1).checked) {
+				var wrong_img= flag+i.toString().concat(('radio0'.slice(-1)))+'w' ;
+				var x = document.getElementById(wrong_img);
+				
+				x.style.display = 'inline';
+				var y = document.getElementById(upper_sol);
+				y.innerHTML='<b style=\"font-size:18px;\">Your Score: &nbsp;&nbsp;  '+score.toString()+'/'+max.toString()+'&nbsp;&nbsp;<img src=\"{% static "/thh.png" %}\" class=\"img-rounded\" >'
+				
+				}else if(document.getElementById(radio2).checked) {
+				var wrong_img= flag+i.toString().concat(('radio1'.slice(-1)))+'w' ;
+				var x = document.getElementById(wrong_img);
+				
+				x.style.display = 'inline';
+				var y = document.getElementById(upper_sol);
+				y.innerHTML='<b style=\"font-size:18px;\">Your Score: &nbsp;&nbsp;  '+score.toString()+'/'+max.toString()+'&nbsp;&nbsp;<img src=\"{% static "/thh.png" %}\" class=\"img-rounded\" >'
+				
+				}else if(document.getElementById(radio3).checked) {
+				var wrong_img= flag+i.toString().concat(('radio2'.slice(-1)))+'w' ;
+				var x = document.getElementById(wrong_img);
+				
+				x.style.display = 'inline';
+				var y = document.getElementById(upper_sol);
+				y.innerHTML='<b style=\"font-size:18px;\">Your Score: &nbsp;&nbsp;  '+score.toString()+'/'+max.toString()+'&nbsp;&nbsp;<img src=\"{% static "/thh.png" %}\" class=\"img-rounded\" >'
+				
+				}else if(document.getElementById(radio4).checked) {
+				var wrong_img= flag+i.toString().concat(('radio3'.slice(-1)))+'w' ;
+				var x = document.getElementById(wrong_img);
+				
+				x.style.display = 'inline';
+				var y = document.getElementById(upper_sol);
+				y.innerHTML='<b style=\"font-size:18px;\">Your Score: &nbsp;&nbsp;  '+score.toString()+'/'+max.toString()+'&nbsp;&nbsp;<img src=\"{% static "/thh.png" %}\" class=\"img-rounded\" >'
+				
+				}else if(document.getElementById(radio5).checked) {
+				var wrong_img= flag+i.toString().concat(('radio4'.slice(-1)))+'w' ;
+				var x = document.getElementById(wrong_img);
+				
+				x.style.display = 'inline';
+				var y = document.getElementById(upper_sol);
+				y.innerHTML='<b style=\"font-size:18px;\">Your Score: &nbsp;&nbsp;  '+score.toString()+'/'+max.toString()+'&nbsp;&nbsp;<img src=\"{% static "/thh.png" %}\" class=\"img-rounded\" >'
+				
+				}
+			
+					
+		}
+					
+					
+				else  {
+				///$(upper_sol).html("Hello World");
+				if(attempt==0){
+				var x = document.getElementById(upper_sol);
+				x.style.fontWeight  = 'bold';
+				x.innerHTML="<b>Not Attempted</b>"; }
+						
+						}
+			
+					}//for end
+	}				
+						
+						
+						
+	$(id).toggle(500);
+	
+	}
+//.........math end 
+function sh(){
+$('.show-hide').addClass("expand");
+}
+function show_eng(){
+$('.show-hide1').addClass("expand");
+}
+//============================================EDIT END============================================================================	
+	
+	
+	</script>
+</body>
+</html>
+ 

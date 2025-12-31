@@ -1,0 +1,31 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{{ title }} | {{ _('Admin') }}{% endblock %}
+
+{% block branding %}
+<h1 id="site-name">
+  <a href="{% url 'admin:index' %}">
+    Har Har Mahadev
+  </a> <a style="font-size:13px;color:yellow;padding-left:20px" href="{% url 'admin:index' %}">
+   ( TutionPlus Womb )
+  </a>
+   
+</h1>
+
+
+{% endblock %}
+
+{% block nav-global %}{% endblock %}
+{% block extrastyle %}
+<style type="text/css">
+  #header{
+   
+	font-weight:600;
+	}
+	#branding h1, #branding h1 a:link, #branding h1 a:visited{
+    
+	font-weight:600;
+	color:#fff;
+	}
+</style>
+{% endblock %}

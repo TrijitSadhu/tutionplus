@@ -1,0 +1,2643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>McqGk.com</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  
+  
+<link href="https://fonts.googleapis.com/css?family=Arimo" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lato:400,700"/>
+  <link href='//fonts.googleapis.com/css?family=Cormorant Garamond' rel='stylesheet'>
+  <link href="https://fonts.googleapis.com/css?family=Noto+Sans" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Quattrocento+Sans" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Droid+Serif" rel="stylesheet">
+   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  
+  <link href="https://fonts.googleapis.com/css?family=PT+Serif" rel="stylesheet">
+
+ {% load staticfiles %}
+<link rel="stylesheet" href="{% static 'css/animate.min.css' %}" />
+<link rel="stylesheet" href="{% static 'css/h5.css' %}" />
+<link rel="stylesheet" href="{% static 'css/apple2.css' %}" />
+<link href="https://fonts.googleapis.com/css?family=Marck+Script" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Italianno" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=PT+Serif" rel="stylesheet">
+<style>
+
+.carousel-control.left {
+    
+    background-image: None;
+   
+    background-repeat: repeat-x;
+}
+
+.carousel-control.right {
+    
+    background-image: None;
+   
+    background-repeat: repeat-x;
+}
+.carousel-control {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 5%;
+    font-size: 20px;
+    color: #fff;
+    text-align: center;
+  /*  text-shadow: 0 1px 2px rgba(0,0,0,.6); */
+    background-color: rgba(0,0,0,0);
+    filter: alpha(opacity=50);
+    opacity: .5;
+}
+
+
+
+  .clockdiv{
+    font-family: sans-serif;
+    color: #fff;
+    display: inline-block;
+    font-weight: 100;
+    text-align: center;
+    font-size: 16px;
+}
+
+.clockdiv > div{
+    padding: 10px;
+    border-radius: 3px;
+    background: #00BF96;
+    display: inline-block;
+}
+
+.clockdiv div > span{
+    padding: 15px;
+    border-radius: 3px;
+    background: #00816A;
+    display: inline-block;
+}
+
+.smalltext{
+    padding-top: 5px;
+    font-size: 14px;
+}
+ 
+@media screen and (max-width: 768px) {
+   .eng  h2{
+        font-size:14px;
+    }
+	 .eng  h4{
+        font-size:14px;
+    }
+}
+
+
+.para{font-size:20px;
+font-family: 'Arimo', sans-serif;font-color:black;
+
+}
+@media screen and (max-width: 480px){
+.para {
+font-size:16px;
+font-family: 'Arimo', sans-serif;font-color:black;
+text-align:justify;
+padding:1px;
+}
+.rana{
+width:89%;
+}
+.key> li {
+    font-weight: 500;
+    line-height: 1.4em;
+    padding: 4px;
+    text-align: justify;
+    font-size: 16px;
+    color:#0A0D8A;
+}
+
+.c-heading {
+    display: block;
+text-align: justify; 
+  
+    margin-bottom: 14px;
+    margin-left: 0.5em;
+    border-bottom: 1px #2196F3;
+    color: #fff;
+	
+	font-family: 'Roboto Condensed', sans-serif;
+    font-size: 17px;
+
+
+    line-height: 1.42857;
+	
+	
+}
+
+
+}
+
+
+@media  (min-width:400px) and  (max-width:845px)  {
+    .carousel-control {
+    
+    width: 1%;
+  
+}
+
+}
+@media  (min-width:992px) and  (max-width:1070px)  {
+    .carousel-control {
+    
+    width: 1%;
+  
+}
+}
+@media  (min-width:1200px) and  (max-width:1240px)  {
+    .carousel-control {
+    
+    width: 1%;
+  
+}
+}
+
+@media  (min-width:1241px) and   (max-width:1276px)  {
+    .carousel-control {
+    
+    width: 2%;
+  
+}
+}​
+
+
+
+
+body{
+
+ font-family: 'Droid Serif', serif;
+ 
+ text-align: justify;
+font-family: 'PT Serif', serif;
+
+ 
+
+}
+ul {
+    list-style-image: url({% static "/a10.png" %});
+}
+
+.key> li {
+    /* font-weight: 500; */
+     line-height: 24px; 
+    margin:17px;
+    text-align: justify;
+    font-size: 16px;
+    color: #000;
+	/*padding:5px;*/
+	    color: #3e3e3e;
+   /* font-family: 'Droid Serif',serif; */
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 28px;
+    padding: 0 0 14px;
+	
+	
+	    
+	
+	/*color: #545454;*/
+	/*color : #19171d;*/
+	color:#000000;
+    /*font-family: 'Droid Serif',serif;*/
+	/*font-family:"Roboto", "Lucida Grande", Verdana, Arial, sans-serif;*/
+	font-family : Arial, Helvetica, Sans-Serif;
+    /*font-size: 16px;*/
+    /*font-weight: 600;*/
+	font-weight:500;
+	/*font-size: 15px;*/
+	font-size: 14px;
+    /*line-height: 31px;*/
+	line-height: 25px;
+	
+    padding: 0 0 0px;
+    margin: 12px;
+	
+}
+
+
+.pan {
+    padding: 11px 10px;
+    /* border-bottom: 1px solid rgba(82, 45, 108, 0); */
+    border-top-left-radius: 0px;
+    border-top-right-radius: 65px;
+}
+
+
+.cardd {
+    display: inline-block;
+    position: relative;
+    width: 100%;
+    /* border-radius: 38px; */
+/*    color: rgba(0, 0, 0, 0.84); */
+    background: #f3f3f3 none repeat scroll 0% 0%;
+    box-shadow: 0px 0px 0px rgba(0, 0, 0, 0.23), 0px 5px 10px rgba(0, 0, 0, 0.16);
+    margin: 0px;
+} 
+
+.list-group-item {
+    position: relative;
+    display: block;
+    padding: 4px 35px;
+    margin-bottom: -1px;
+    background-color: rgb(255, 255, 255);
+   /* border: none;*/
+}
+ul, menu, dir {
+    display: block;
+    list-style-type: disc;
+    -webkit-margin-before: 1em;
+    -webkit-margin-after: 1em;
+    -webkit-margin-start: 0px;
+    -webkit-margin-end: 0px;
+    -webkit-padding-start: 40px;
+    padding-left: 10px;
+}
+
+
+
+.panel {
+   border: none;
+  
+  
+}
+
+.panel-heading {
+    padding: 11px 10px;
+    /* border-bottom: 1px solid rgba(82, 45, 108, 0); */
+
+}
+.navbar-brand {
+    float: left;
+    height: 37px;
+   
+}
+.navbar-nav>li>a {
+    padding-top: 15px;
+    padding-bottom: 17px;
+    
+	
+}
+
+.navbar {
+    border: 0;
+ /*   border-radius: 1px; */
+    margin-bottom: 0px;
+    font-size: 11px;
+    letter-spacing: 4px;
+     background-color: #2f3239;
+    font-weight: 900;
+      
+}
+
+.navbar-custom .navbar-nav >li>a {
+    color: rgb(51, 103, 214);
+    background-color: #fff;
+    border: 0px solid #ddd;
+   /* border-radius: 15px; */
+}
+
+td, th, tr {
+    padding: 0;
+	text-align:start;
+}
+
+
+.c-heading {
+   
+    margin-bottom: 4px; 
+   
+}
+
+
+
+.carousel-list li {
+   
+	font-weight:500;
+	color:#fff;
+	font-size:14px;
+	letter-spacing:1px;
+	
+}
+.carousel-caption {
+   
+    text-shadow: 0 0px 0px rgba(0, 0, 0, 0);
+	text-shadow: none;
+}
+
+
+.menu >ul>li>a {
+color:#000e77;
+}
+
+
+
+
+
+.circle-tile {
+    margin-bottom: 30px;
+
+}
+
+.circle-tile {
+    margin-bottom: 1px;
+    text-align: center;
+}
+
+.circle-tile-heading {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    margin: 0 auto -40px;
+    border: 3px solid rgba(255,255,255,0.3);
+    border-radius: 100%;
+    color: #fff;
+    transition: all ease-in-out .3s;
+}
+
+
+
+
+
+.red {
+    background-color: #e74c3c;
+}
+
+
+
+/* -- Text Color Helper Classes */
+
+ 
+.text-red {
+    color: #e74c3c;
+}
+
+
+.text-faded {
+    color: rgba(255,255,255,0.7);
+}
+
+
+
+.circle-tile-heading .fa {
+    line-height: 80px;
+}
+
+.circle-tile-content {
+    padding-top: 35px;
+}
+.circle-tile-description {
+    text-transform: uppercase;
+}
+
+.text-faded {
+    color: rgba(255,255,255,0.7);
+}
+
+.circle-tile-number {
+    padding: 5px 0 15px;
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.circle-tile-footer {
+    display: block;
+    padding: 5px;
+    color: rgba(255,255,255,0.5);
+    background-color: rgba(0,0,0,0.1);
+    transition: all ease-in-out .3s;
+}
+
+.circle-tile-footer:hover {
+    text-decoration: none;
+    color: rgba(255,255,255,0.5);
+    background-color: rgba(0,0,0,0.2);
+}
+
+
+
+
+
+  </style>
+</head>
+<body style="background-color:#f3f3f3">
+<div >
+mcqgk.com
+</div>		
+
+ <nav class="navbar navbar-default" style="border-top: 4px solid #00ff9b;background-color:#ffffff">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    <b> <a class="navbar-brand" href="#" style="cursive; color:#000000">McqGk</a> </b>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav" style="text-align:center">
+      
+         <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Mathematics<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="#"> Multiplication Table</a></li>
+            <li><a href="#">Series</a></li>
+            
+            <li><a href="#">Days n Work</a></li>
+			 <li><a href="/math/profit_n_loss/1/">Profit n Loss</a></li>
+			  <li><a href="#">Boat & Stream</a></li>
+			 
+          </ul>
+        </li>
+
+
+
+    <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">English<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/error_correction/noun/1/">Error Correction</a></li>
+             <li><a href="/error_correction/noun/1/">Noune</a></li>
+            
+              <li><a href="/closetest/close/1/">Close Test</a></li>
+			 <li><a href="#">Fill in the blank</a></li>
+			  <li><a href="/english/word/page/1">Vocabulary</a></li>
+			  <li><a href="#">Editorial</a></li>
+          </ul>
+        </li>
+		
+		    <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Reasoning<span class="caret"></span></a>
+      						<ul class="dropdown-menu">
+																		
+																		  <li><a href="#">Blood Relation</a></li>
+																		 
+																		  <li><a href="#">Ranking and Direction</a></li>
+
+																	
+																		  <li ><a href="#">Coading Decoding</a></li>
+																		  
+																		  <li ><a href="#">Puzzle</a></li>
+																		  
+																		  <li><a href="#">Input Output</a></li>
+																		  
+																		  
+																		 
+																		  <li><a href="/reasoning/seating_arrangment/1/">seating_arrangment</a></li>
+																		</ul>
+        </li>
+		
+		    <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Current Affairs<span class="caret"></span></a>
+          			<ul class="dropdown-menu">
+																		
+																		  <li><a href="/ca/1/">Daily Current Today</a></li>
+																		
+																		  <li><a href="#">Static Gk</a></li>
+
+																		
+																		  <li class="waves-effect"><a href="#">Banking Awerness</a></li>
+																		  
+																		</ul>
+        </li>
+		
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+<li><a href="#"><span class="glyphicon glyphicon-th" aria-hidden="true"></span> Dashboard</a></li>
+     			
+																			<li class="dropdown">
+																					
+																							
+																											{% if user.is_authenticated %}
+																											<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ user.username }} <b class="caret"></b></a>
+																											
+														
+																															<ul class="dropdown-menu">
+																															<li><a href="/logout" >Logout</a></li>
+																															 <li role="separator" class="divider"></li> 
+																															<li><a href="/dashboard/{{ user.username }}"> Dash Board</a></li>
+																															
+																															
+																															</ul>
+																															
+																														{% else %}
+																														<a href="" data-toggle="modal" data-target="#myModal">
+																														<span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>&nbsp;
+																														   Log In<b class="caret"></b>
+																														   </a>
+																														
+																														{% endif %} 
+																														
+																			</li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+<style>
+html, body {
+  font-family: 'Lato', serif;  
+}
+
+.navbar-default {
+  font-size: 12px;
+  font-weight: 600;
+  background-color: #29487d;
+  padding:0px;
+  border: 0px;
+  border-radius: 0px;
+  /* box-shadow:inset 0 -1px 2px rgba(0,0,0,.24);*/
+}
+
+.navbar-default .navbar-nav>li>a {
+  color: #560bcb;
+}
+
+.navbar-default .navbar-nav>li>a:hover {
+  color: #cbf0ff;
+}
+
+.navbar-default .navbar-brand {
+  color: #002433;
+}
+
+.navbar-default .navbar-brand:hover {
+  color: #ffffff;
+  text-shadow: 1px -1px 8px #b3e9ff;
+}
+
+.navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:hover, .navbar-default .navbar-nav>.open>a:focus {
+  background-color: #004059;
+  color: white;
+}
+
+.navbar-default .navbar-toggle {
+  border: none;
+}
+
+.navbar-default .navbar-collapse, .navbar-default .navbar-form {
+  border: none;
+}
+
+.navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus {
+  background-color: #002433;
+}
+
+.navbar-default .navbar-toggle .icon-bar {
+  background-color: #ffffff;
+}
+
+.dropdown-menu {
+  background-color: #004059;
+  color: white;
+  border: 0px;
+  border-radius: 2px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.dropdown-menu>li>a {
+  background-color: #004059;
+  color: white;
+}
+
+.dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus {
+  background-color: #004059;
+  color:white;
+}
+
+.dropdown-menu .divider {
+    height: 1px;
+    margin: 9px 0;
+    overflow: hidden;
+    background-color: #003246;
+}
+
+.navbar-default .navbar-nav .open .dropdown-menu>li>a {
+    color: #ffffff;
+}
+
+@media (max-width: 767px) { 
+  .dropdown-menu>li>a {
+    background-color: #006b96;
+    color: #ffffff;
+  }
+  .dropdown-menu>li>a:hover {
+    color: #ffffff;
+  }
+  
+  .navbar-default .navbar-nav .open .dropdown-menu>li>a:focus, .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover {
+    color: #ffffff;
+    background-color: transparent;
+  }
+  
+  .dropdown-menu .divider {
+    height: 1px;
+    margin: 9px 0;
+    overflow: hidden;
+    background-color: #005577;
+  }
+} /* END Media Query */
+
+
+</style>
+
+			
+			
+																												<div id="myModal" class="modal fade mod" role="dialog">
+																									  <div class="modal-dialog ">
+
+																										<!-- Modal content-->
+																										<div class="modal-content"style="text-align:center">
+																										<div class="modal-header" style="background-color:#210080">
+																										  <div class="modal-header">
+																											<button type="button" class="close" data-dismiss="modal">&times;</button>
+																											<h1 class="modal-title" style="color:#fff"><i class="glyphicon glyphicon-thumbs-up"></i>Sign In / Sign Up</h1>
+																											</div>
+																										  </div>
+																										  <div class="modal-body"style="text-align:center">
+																																																																																					
+																																																																																					
+																																																																																					<ul class="nav nav-tabs" style="text-align:center">
+																																<li class="active" style="text-align:center"><a data-toggle="tab" href="#home">Sign In</a></li>
+																																<li style="text-align:center"><a data-toggle="tab" href="#menu1">Sign Up </a></li>
+																																
+																															
+																															  </ul>
+																											<div class="tab-content">
+																																<div id="home" class="tab-pane fade in active">
+																																  <h3>Sign In</h3>
+																																																																																																																																														{% block content %}
+																																																																																																																																														
+																																			  <form method="post" id="login" action="" >
+																																				
+																																			
+																																			   {% csrf_token %}
+																																				{{ login.as_p }}
+																																				<div id="below"></div>
+																																				<button class="btn btn-success "  style="color:green"type="submit">Sign In</button>
+																																			  </form>
+																																				
+
+
+																																</div>
+																																<div id="menu1" class="tab-pane fade">
+																																  <h3>Create an Account</h3>
+																																																																																																  
+																																			  <form method="post" id="signup">
+																																				
+																																			  
+																																			   {% csrf_token %}
+																																				{{ form.as_p}}
+																																				<img id="img_signup"style="position:relative;
+  
+    left:0;
+    right:0;
+    
+    margin:auto;display:none;text-align:center;float:center"height="50" width="90"src="/media/media/31.svg">
+																																				<div style="display:none"id="below_signup"></div>
+																																				<button type="submit">Sign up</button></div>
+																																			  </form>
+																																			{% endblock %}
+																																
+																															
+																																
+
+
+																												</div>
+																										  </div>
+																										  <div class="modal-footer">
+																											<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+																										  </div>
+																										</div>
+
+																									  </div>
+																									</div>
+			
+			
+			
+			
+			
+			
+			
+			
+
+					 <section class="carousel-section">
+					   
+							<div id="myCarousel" class="carousel carousel-razon slide" data-ride="carousel" data-interval="60000">
+								<!-- Indicators -->
+									<ol class="carousel-indicators">
+									  <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+									  <li data-target="#myCarousel" data-slide-to="1"></li>
+									  <li data-target="#myCarousel" data-slide-to="2"></li>
+									</ol>
+								
+									<!-- Wrapper for slides -->
+									<div class="carousel-inner">
+												{% for slide in slide %}
+															{% if forloop.first %}
+															<div class="active item">
+														{% else %}
+															<div class="item">
+														{% endif %}
+											<div class="container rana">
+														<div class="row">
+															<div class="col-xs-6 col-sm-6 col-md-6 nopadding">
+															
+																		<div class="carousel-caption nopadding">
+																		
+																		
+																				<div class="carousel-text" style="font-family: arial,sans-serif">
+															<a href="#{{forloop.counter}}link" id="back"> <h3 style="color:white"class="animated fadeInDownBig animation-delay-7 carousel-subtitle">{% autoescape off %} {{slide.upper_heading}} {% endautoescape %}</h3></a>
+															
+															
+																				
+																				 
+
+																						<ul class="list-unstyled carousel-list">
+																						   <li class="animated bounceInLeft animation-delay-11"><i class="fa fa-check"></i> {% autoescape off %}{{slide.key_1}} {% endautoescape %}</li>
+																						   <li class="animated bounceInLeft animation-delay-13"><i class="fa fa-check"></i> {% autoescape off %}{{slide.key_2}} {% endautoescape %}</li>
+																						   <li class="animated bounceInLeft animation-delay-15"><i class="fa fa-check"></i> {% autoescape off %}{{slide.key_3}} {% endautoescape %}</li>
+																						   
+																					   </ul>							 
+																				</div>
+																	</div>
+															</div>
+															<div class=" col-xs-6 col-sm-6 col-md-6   carousel-img-wrap nopadding">
+															
+																<div class="carousel-img">
+																	<img src="/media/{{ slide.ca_img}}" class="img-responsive center-block img-rounded animated bounceInUp animation-delay-3 " alt="Image">
+																</div>
+															</div>
+														</div>
+													</div>
+										  </div>
+												{% endfor %}
+
+									<!-- Left and right controls -->
+									<a class="left carousel-control" href="#myCarousel" data-slide="prev">
+									  <span class="glyphicon glyphicon-chevron-left" ></span>
+									  <span class="sr-only">Previous</span>
+									</a>
+									<a class="right carousel-control" href="#myCarousel" data-slide="next">
+									  <span class="glyphicon glyphicon-chevron-right"></span>
+									  <span class="sr-only">Next</span>
+									</a>
+							</div>
+								  
+					  </div>
+					  
+					  
+					 </section >
+					 
+					 
+					 
+				<!-- belw slide -->
+				
+				
+			<div class="container">
+			
+				<div class="row">
+					<div class="panel cardd ">
+						
+						
+						
+						
+						<div class="col-md-7 col-md-push-3 " style=" border: 1px solid #dddddd; background-color:#f3f3f3;padding-top:0px">
+						
+						
+						
+							
+										<h3 class="card"style="text-align:center;    border: 1px solid #dddddd; color: white;background-color:#0199ec;font-size:18px">Current Affairs Today  </h3> 
+										{% for slide in slide %}
+																			<div class="panel nopadding ">
+																			
+																			<div class="media cardd">
+  <div class="media-left">
+    <img src="/media/{{slide.ca_img}}" class="media-object" style="width:180px;height:120px;">
+  </div>
+  <div class="media-body" style="background-color:white">
+<h4 style=" display:inline-block;color:black;font-size:16px;padding-left:10px;padding-right:10px;padding-bottom:0px;font-weight:600" ><strong style="font-weight:600"> {% autoescape off %} {{slide.upper_heading}}  {% endautoescape %}</strong></h4> 
+
+	<button id="b" onClick="op('#{{forloop.counter}}dis_defence')" type="button" class="btn btn-warning btn-xs"style="float:right;color:#2e9fff;border:1px blue;"><b><i>Details</i></b><i class="fa fa-arrow-down" aria-hidden="true"></i>
+																</button>
+  </div>
+</div>
+																			
+																					
+																																						
+																							<hr class="hh"></hr>
+																							<div class="panel-body" id="{{forloop.counter}}dis_defence" style="font-weight:bold;display:none">
+																						<!--		<div class="paragraph_image" style="margin-right:30px;">
+															<a href=""><img width="150" height="150" src="/media/{{slide.ca_img}}" class="attachment-120x120 size-120x120 wp-post-image" alt="" scale="0"></a>
+														</div>
+											
+																											
+																											<p class="para" style=""> {{slide.paragraph}}</p>  -->
+																											<div style="background-color:rgb(248, 252, 255);"class="panel-heading  nopadding " id="{{forloop.counter}}link" >
+																					
+																				
+																				
+																				
+																						<button id="{{slide.new_id}}"
+
+																							
+																						style="text-align:center; color: #fff;background-color:#d9534f;margin-right:10px;float:right;display:inline-block;" type="submit" class="btn btn-danger btn-xs"
+																						{% if user.is_authenticated %}
+																						onClick="add('{{slide.new_id}}','{{slide.upper_heading}}','{{ user.username }}','/media/{{slide.ca_img}}')" 
+																						
+																						{% else %}
+																						
+																						data-toggle="modal" data-target="#myModal"
+																						
+																						{% endif %}
+																						
+																						><span class="glyphicon glyphicon-plus"></span> Add to notes</button> 
+																					</div>
+																											<h4 style="text-align:left ;"><b><u>Key points to Remember:</u></b></h4>
+																									
+																										{% autoescape off %}
+																											
+																											<ul style="text-align:None; " id="{{forloop.counter}}" class="key " >
+																									
+																												
+																									
+																												</ul>
+																											  {% endautoescape %}
+																												{% if slide.link != "" %}
+																												<p  style="text-align:right;padding-bottom:0px;" ><b>Read More From :</b></p>
+																												<div style="text-align:right;float:right" id="{{forloop.counter}}lk">
+																												
+																	
+																											</div>
+																											{% endif %}
+																																		<script>   key('{{slide.all_key_points|escapejs}}' );
+																																		
+																																		linkk('{{slide.link}}','{{slide.url}}');
+																																		
+																																		
+																																		 function key(a){
+
+																																				
+																																				var myarray = a.split('///');
+
+																																							for(var i = 0; i < myarray.length; i++)
+																																							{
+
+																																							var node=document.createElement("LI");
+																																	//var textnode=document.createTextNode(myarray[i]);
+																																							node.innerHTML =myarray[i];
+																																							document.getElementById("{{forloop.counter}}").appendChild(node);
+
+																																							}
+																																							 }
+																																							 
+																																							 
+																																							 function linkk(c,d){
+
+																																				
+																																				var myarrayy = c.split('///');
+																																				var url = d.split('///');
+
+																																							for(var i = 0; i < myarrayy.length; i++)
+																																							{
+
+																																							var a=document.createElement("a");
+																													a.setAttribute("style", "text-align:right; padding:2px");
+																													a.setAttribute('target', '_blank');
+
+																													 
+																									a.innerHTML = '<u><b>'+myarrayy[i] +'</u></b>';
+																																											a.href = url[i];
+
+																																						//a.setAttribute('href', 'google.com');
+																																							//node.appendChild(textnode);
+																																							document.getElementById("{{forloop.counter}}lk").appendChild(a);
+																																							
+																																
+
+																																							}
+																																							 } 
+
+																																		
+																																		</script>
+																											
+																									<p style="text-align:left;float:left;padding:0px" ><a style="color:#ff3333"href="/ca/1/">Read All Currrent Affairs->></a></p>		
+																						</div>
+																						
+																							
+																				</div>
+														{% endfor %}
+														
+														<!-- english-->
+														
+															
+						<!-- word list 1 -->
+						<div class="eng nopadding">
+				
+						
+																			{% if word1 != None %}
+																			<div class="panel panel-info nopadding" >
+																				<div class="col-md-12 nopadding">
+														<p >
+														<h3 style="text-align:left; color: #336699"> The Hindu Editorial Wordlist 
+														<img style="text-align:right;float:right;"src="{% static "/the.png" %}" class="img-rounded" alt="Cinque Terre" width=104" height="86">
+														<P>
+														
+														<b style="color:black;font-size:14px"> <i class="fa fa-calendar" aria-hidden="true"></i> Date :{{word1_day}} </b> </p>
+														
+														
+														 
+														</h3>
+														</div>
+																			
+										
+										
+																								<div class="panel panel-primary card ">
+																									  <div class="c-header-color "><p class="c-heading">{% if header1 != None %}
+																									  {% for header1 in header1 %}
+																									  {{header1.Heading_for_list1}}  
+																									   <a class="c-heading"   target="_blank" style=" text-align:right;font-size:16px"href="{{header1.link}}"><u>Read more The Hindu->></u></a>  </p>
+																										{% endfor %}
+																									  {% endif %} 
+																									  </div>
+																									  <div class="panel-body">
+																									<div style="overflow-x:auto;">
+																										<table class="table " >
+																													<thead>
+																													  <tr>
+																														<th><a style="font-size:17px;font-family: 'PT Serif', serif;text-decoration:none;color:black">Word (form)</a></th>
+																														<th><a style="font-size:17px;font-family: 'PT Serif', serif;text-decoration:none;color:black">synonym </a></th>
+																														<th><a style="font-size:17px;font-family: 'PT Serif', serif;text-decoration:none;color:black">Example</a></th>
+																														<th><a style="font-size:17px;font-family: 'PT Serif', serif;text-decoration:none;color:black">Image </a></th>
+																													
+																													  </tr>
+																													</thead>
+																													<tbody >
+																											
+																						
+																		
+																					{% for words in word1 %}
+																													  <tr>
+																														<td ><b style="font-size:17px;font-family: 'PT Serif', serif;color:black; text-decoration:underline">{{words.word}} </b><br/> <br/><a style="font-size:17px; color:#1313de; text-decoration:none">{{words.meaning}}</a></td>
+																														<td><a style="font-size:17px; color:#105d10; text-decoration:none">{{words.synonym}}</a></td>
+																														<td><a style="font-size:17px; color:black; text-decoration:none">{{words.example}}.</b></td>
+																													<td><a href="#"><img width="110" height="110" src="/media/{{words.word_img}}" class="attachment-120x120 size-120x120 wp-post-image" alt="" scale="0"></a></td>
+																													  </tr>  
+																													  	{% endfor %}
+																															
+																													  
+																														
+															 
+																													  
+																													 
+																													</tbody>
+																												  </table>
+																										</div>
+																										 <h4 style="color:#D50000;text-align:right"><a href="/english/word/page/1/" style="color:#D50000"> Continue...>></a></h4>
+																										
+																									  
+																									  
+																									  </div>
+																								</div>
+						
+																	</div>
+																	{% endif %}
+																							<!-- end word list 1 -->
+																													<!-- word list 2 hindu-->
+																				
+																													
+																												<!-- end word list 2 hiindu -->
+																												
+																												
+																												
+
+																												<!-- economy word list 1 start -->
+
+
+																	{% if word_e1 != None %}
+																	
+														
+															<div class="panel panel-info nopadding " >
+											
+										<div class="col-md-12 nopadding">
+														<p >
+														<h3 style="text-align:left; color: #336699">  Editorial from The EconomicTimes 
+														<img style="text-align:right;float:right;"src="{% static "/theet.png" %}" class="img-rounded" alt="Cinque Terre" width=104" height="86">
+														<P>
+														
+														<b style="color:black;font-size:14px"> <i class="fa fa-calendar" aria-hidden="true"></i> Date :{{word_e1_day}} </b> </p>
+														
+														
+														 
+														</h3>
+														</div>
+														
+														
+																	
+									<div class="panel panel-primary ">
+										  <div class="c-header-color  card"><p class="c-heading">{% if header_e1 != None %}
+																									  {% for header_e1 in header_e1 %}
+																									  {{header_e1.Heading_for_list1}}  
+																									  
+																									  <a class="c-heading"  target="_blank" style=" text-align:right;font-size:16px"href="{{header_e1.link}}"><u>Read more The EconoiTimes->></u></a>
+																										{% endfor %}
+																									  {% endif %} 
+																									  </p>
+											
+										  </div>
+										  <div class="panel-body">
+												<div style="overflow-x:auto;">
+											<table class="table">
+														<thead>
+																													  <tr>
+																														<th><a style="font-size:17px;font-family: 'PT Serif', serif;text-decoration:none;color:black">Word (form)</a></th>
+																														<th><a style="font-size:17px;font-family: 'PT Serif', serif;text-decoration:none;color:black">synonym </a></th>
+																														<th><a style="font-size:17px;font-family: 'PT Serif', serif;text-decoration:none;color:black">Example</a></th>
+																														<th><a style="font-size:17px;font-family: 'PT Serif', serif;text-decoration:none;color:black">Image </a></th>
+																													
+																													  </tr>
+																													</thead>
+														<tbody>
+														  
+																		{% for words in word_e1 %}
+																								 <tr>
+																									<td ><b style="font-size:17px;font-family: 'PT Serif', serif;color:black; text-decoration:underline">{{words.word}} </b><br/> <br/><a style="font-size:17px; color:#1313de; text-decoration:none">{{words.meaning}}</a></td>
+																														<td><a style="font-size:17px; color:#105d10; text-decoration:none">{{words.synonym}}</a></td>
+																														<td><a style="font-size:17px; color:black; text-decoration:none">{{words.example}}.</b></td>
+																									<td><a href="#"><img width="150" height="150" src="/media/{{words.word_img}}" class="attachment-120x120 size-120x120 wp-post-image" alt="" scale="0"></a></td>
+																								 </tr>  
+																											{% endfor %}
+																															
+														  
+														  
+														  
+														 
+														 
+														 
+														</tbody>
+														
+													  </table>
+													  </div>
+												
+											 <h4 style="color:#D50000;text-align:right"><a href="/english/word/page/1/" style="color:#D50000"> Continue...>></a></h4>
+											
+										  
+										  
+										  </div>
+									</div></div>
+									
+									
+									{% endif %}
+											<!-- end economy 1 wordlist -->
+											<!--  economy 2 wordlist -->
+											
+											{% if word_e2 != None %}
+											<div class="row card nopadding">
+														<div class="col-md-9">
+														<h3 style="text-align:left; color: #336699"> Editorial from The EconomicTimes 
+														
+														<p ><b> <i class="fa fa-calendar" aria-hidden="true"></i> Date :{{word_e2_day}} </b> <p></div>
+														
+														<div class="col-md-3">
+														<img src="{% static "/theet.png" %}" class="img-rounded" alt="Cinque Terre" width=104" height="86"> </h3>
+														
+														</div>
+														
+														</div>
+											
+											
+																	<div class="panel panel-info" style="margin-top:0px;">
+									<div class="panel panel-primary card">
+										  <div class="c-header-color"><p class="c-heading">{% if header_e2 != None %}
+																									  {% for header_e2 in header_e2 %}
+																									  {{header_e2.Heading_for_list2}}  
+																									  
+																									  <a class="c-heading"  target="_blank"style=" text-align:right"href="{{header_e2.link}}"><u>Read more The EconomicTimes->></u></a> 
+																									  {% endfor %}
+																									  {% endif %} 
+																									  </p>
+											
+										  </div>
+										  <div class="panel-body">
+												<div style="overflow-x:auto;">
+											<table class="table">
+														<thead>
+														  <tr>
+															<th>Word</th>
+															<th>Meaning</th>
+															<th>synonym</th>
+															
+														  </tr>
+														</thead>
+														<tbody>
+														  
+																		{% for words in word_e2 %}
+																								 <tr>
+																									<td><b>{{words.word}} </b><br/> <br/>{{words.meaning}}</td>
+																									<td><h4 style="color:green"> {{words.synonym}}</h4></td>
+																									<td><h2 style="color:#424242;">{{words.example}}He eagerly accepted the job because it came with a plethora of opportunities.</h2></td>
+																									<td><a href="#"><img width="150" height="150" src="/media/{{words.word_img}}" class="attachment-120x120 size-120x120 wp-post-image" alt="" scale="0"></a></td>
+																								 </tr>  
+																											{% endfor %}
+																															
+														  
+														  
+														  
+														 
+														 
+														 
+														</tbody>
+														
+													  </table>
+													  </div>
+												
+											 <h4 style="color:#D50000;text-align:right"><a href="/english/word/page/1/" style="color:#D50000"> Continue...>></a></h4>
+											
+										  
+										  
+										  </div>
+									</div></div>
+									
+									
+									{% endif %}
+											<!-- end economy 2 wordlist end -->
+														
+														
+														</div>
+														
+														<!-- english -->
+														
+														
+														<!-- math -->
+														{% if math != None %}
+														<div style="padding:20px; background-color:#3F51B5">
+						
+						<h2 style="color: #fff;font-family: 'PT Serif', serif;text-decoration:underline"> Impotent Math Excersise 20-may-2017</h2>
+					
+						</div>
+						
+						
+						<div class="sayan" style="background-color:white">
+						
+						<span style="padding-bottom:20px;">
+						
+						<img src="http://www.onlinecollege.org/wp-content/themes/onlinecollegeorg/assets/img/min/photos/degree_pages/scienceandmath.jpg" class="img-thumbnail center-block " alt="Cinque Terre" width="500" height="300"></span>
+						
+								</div>						
+													
+									{% for math in math %}
+									
+										<div class="panel nonpadding ">
+												
+												<div class="panel-heading card">
+									
+																		
+																		<h4>Profit and Loss: Solved Examples<p class="bg-info"> <b><i>Question {{forloop.counter}}: </i></b></p>  </h4>
+																		<div  style="font-family:'Roboto Condensed', sans-serif;font-size:17px;color:#000;display:inline;line-height: 1.42857;">
+																	{% autoescape off %}	{{math.question}} {% endautoescape %} </div>
+																{% if math.use_image == 0 %}
+														
+															
+															
+																
+																
+																
+																{% endif %}
+																
+															
+												</div>
+																													
+														
+														
+														<hr></hr>
+													<div class="panel-body">
+														<div id="mathclockdiv{{forloop.counter}}" class="clockdiv"style="text-align:center;margin-right:0;float:right;display:none">
+  
+															 
+															<!--  <div>
+																<span class="mathminutes"id="mathminutes"></span>
+																<div class="smalltext">Minutes</div>
+															  </div> 
+															  -->
+															  <div>
+																<span class="seconds"id="mathseconds{{forloop.counter}}"></span>
+																<div class="smalltext" id="mathsmalltext{{forloop.counter}}">Seconds</div>
+															  </div>
+															</div>
+																		
+																		<button id="mathtime{{forloop.counter}}" onClick="timer('mathclockdiv{{forloop.counter}}',{{math.time}},{{forloop.counter}}1,{{forloop.counter}}2,{{forloop.counter}}3,{{forloop.counter}}4,{{forloop.counter}}5,{{math.ans}},mathsolution{{forloop.counter}},{{forloop.counter}},'math',5)"
+
+																							
+																						style="text-align:center; color: #fff;background-color:rgb(36, 172, 98);margin-right:0;float:right;display:inline-block;"  class="btn  btn-sm"
+																						
+																						
+																						><i class="fa fa-clock-o" aria-hidden="true"></i>  Timer {{math.time}} Sec</button> 
+																		
+																		
+																		<h4 style="text-align:left ;color:#F06292"><b><u>Options:</u></b></h4>
+																		
+																	
+
+
+
+																							 
+																				<div class="radio radio-primary " >
+
+																		
+																 <form >
+												
+																																				<div style="display: block"> 
+																																		 
+																					<input type="radio" name="radio1" id="{{forloop.counter}}1" value="option1">
+																					<label for="{{forloop.counter}}1">
+																						{{math.a}}
+																					</label>
+																					<div id="{{forloop.counter}}w1"style="display:none">
+																					<img src="{% static "/c.png" %}" class="img-rounded"> 
+																					</div>
+																					<div id="{{forloop.counter}}r1"style="display:none">
+																					<img src="{% static "/d.png" %}" class="img-rounded"> 
+																					</div>
+																					</div>
+																					
+																					
+																					<div style="display: block"> 
+																					<input type="radio" name="radio1" id="{{forloop.counter}}2" value="option1">
+																					 
+																					<label for="{{forloop.counter}}2">
+																						{{math.b}}
+																					</label>
+																					<div id="{{forloop.counter}}w2"style="text-align:center;display:none">
+																					<img src="{% static "/c.png" %}" class="img-rounded"> 
+																					</div>
+																					<div id="{{forloop.counter}}r2"style="text-align:center;display:none">
+																					<img src="{% static "/d1.png" %}" class="img-rounded"> 
+																					</div>
+																					
+																				</div>
+																				
+																				
+																				<div style="display: block"> 
+																																		 
+																					<input type="radio" name="radio1" id="{{forloop.counter}}3" value="option1">
+																					<label for="{{forloop.counter}}3">
+																						{{math.c}}
+																					</label>
+																				<div id="{{forloop.counter}}w3"style="text-align:center;display:none">
+																					<img src="{% static "/c.png" %}" class="img-rounded"> 
+																					</div>
+																					<div id="{{forloop.counter}}r3"style="text-align:center;display:none">
+																					<img src="{% static "/d1.png" %}" class="img-rounded"> 
+																					</div>	
+																				</div>
+																					
+																					
+																					<div style="display: block"> 
+																					
+																					 <input type="radio" name="radio1" id="{{forloop.counter}}4" value="option1">
+																					<label for="{{forloop.counter}}4">
+																						{{math.d}}
+																					</label>
+																					<div id="{{forloop.counter}}w4"style="text-align:center;display:none">
+																					<img src="{% static "/c.png" %}" class="img-rounded"> 
+																					</div>
+																					<div id="{{forloop.counter}}r4"style="text-align:center;display:none">
+																					<img src="{% static "/d1.png" %}" class="img-rounded"> 
+																					</div>
+																					
+																				</div>
+																				
+																				<div style="display: block"> 
+																					
+																					 <input type="radio" name="radio1" id="{{forloop.counter}}5" value="option1">
+																					<label for="{{forloop.counter}}5" >
+																						{{math.e}}
+																					</label>
+																					
+																					
+																					<div id="{{forloop.counter}}w5"style="text-align:center;display:none">
+																					<img src="{% static "/c.png" %}" class="img-rounded"> 
+																					</div>
+																					<div id="{{forloop.counter}}r5"style="display:none;">
+																					<img src="{% static "/d.png" %}" class="img-rounded" > 
+																					</div>
+																					
+																					
+																				</div>
+																				
+																				
+																					</div>
+																					
+																			</form>
+																			
+																			<button 
+																		id="mathsol{{forloop.counter}}"onclick=
+	"op({{forloop.counter}}1,{{forloop.counter}}2,{{forloop.counter}}3,{{forloop.counter}}4,{{forloop.counter}}5,{{math.ans}},mathsolution{{forloop.counter}},{{forloop.counter}},'mathsol_upper{{forloop.counter}}','math',5)"
+																							
+																						style="text-align:center; color: #fff;background-color:#4D90FE;margin-right:0;float:left;display:inline-block;margin-top:16px" type="submit" class="btn  btn-sm"
+																						
+																						
+																						> See Solutoins</button> 
+																						
+																						
+																		
+																						
+													</div>			
+																		
+													
+													
+													
+													
+													
+													<div id="mathsolution{{forloop.counter}}"style="text-align:center;display:none">
+													 
+															<p  id="mathsol_upper{{forloop.counter}}"class="bg-info" style="text-align:center;"> <b>Correct<img src="{% static "/thh.png" %}" class="img-rounded" ></b> </p> 
+															<p> <b>  Answer :</b></p> 
+															<!-- <p class="bg-danger" style="display:inline"> Wrong
+																					<img src="{% static "/c.png" %}" class="img-rounded" id="{{forloop.counter}}w"style="display:none"> 
+																					
+																					
+																					<img src="{% static "/d.png" %}" class="img-rounded" id="{{forloop.counter}}r"style="display:none;"> 
+																					 </p><br></br> -->
+															
+																		<div  style="font-family:'arial', sans-serif;font-size:17px;color:#000;display:inline;line-height: 1.42857;">
+																	{% autoescape off %}	{{math.solution}} {% endautoescape %} </div>
+																
+																	
+																		</div>
+													</div>
+													
+													{% endfor %}
+													
+													
+													<!--end palel-->
+													<h4 style="color:#212121;text-align:right"><a href="https://www.w3schools.com/html/" style="color:#D50000"><u>Click to Practice More...>></u></a></h4>
+													
+													{% endif %}
+														<!--math end -->
+														
+														
+																									
+						
+						
+														
+														
+														
+														
+						
+						
+					
+						
+						
+						
+						{% if reasoning != None %}
+						
+						<div style="padding:20px; background-color:#3F51B5">
+						
+						<h2 style="color: white;font-family: 'PT Serif', serif;text-decoration:underline">  Todays Reasoning practice</h2>
+						
+						</div>
+						
+							<div class="sayan" style="background-color:white">
+						
+						
+						<span style="padding-bottom:20px;">
+						
+						<img src="{% static "/r.jpeg" %}" class="img-thumbnail center-block " alt="Cinque Terre" width="500" height="0"></span>
+						
+					
+						</div>
+					
+											
+									{% for reasoning in reasoning %}
+									
+										
+										<div class="panel nonpadding ">
+												
+												<div class="panel-heading card" style="text-align:justify">
+										
+																		
+																		<h4>Reasoning pratice with timer<p class="bg-info"> <b><i>Question {{forloop.counter}}: </i></b></p>  </h4>
+																		<div  style="font-family:'Roboto Condensed', sans-serif;font-size:17px;color:rgb(49, 103, 126);display:inline;line-height: 2.1;font-weight:bold">
+																	{% autoescape off %}	{{reasoning.question}} {% endautoescape %} </div>
+																{% if reasoning.use_image == 0 %}
+														
+															
+															
+																
+																
+																
+																{% endif %}
+																
+															
+												</div>
+																													
+														
+														
+														<hr></hr>
+														{% if reasoning.question_part == '' %}
+													<div class="panel-body">
+													
+															<div id="reasoningclockdiv{{forloop.counter}}" class="clockdiv"style="text-align:center;margin-right:0;float:right;display:none">
+  
+															 
+															<!--  <div>
+																<span class="reasoningminutes"id="reasoningminutes"></span>
+																<div class="smalltext">Minutes</div>
+															  </div> 
+															  -->
+															  <div>
+																<span class="seconds"id="reasoningseconds{{forloop.counter}}"></span>
+																<div class="smalltext" id="reasoningsmalltext{{forloop.counter}}">Seconds</div>
+															  </div>
+															</div>
+																		
+																		<button id="reasoningtime{{forloop.counter}}" onClick="timer('reasoningclockdiv{{forloop.counter}}',{{reasoning.time}},'res{{forloop.counter}}1','res{{forloop.counter}}2','res{{forloop.counter}}3','res{{forloop.counter}}4','res{{forloop.counter}}5',{{reasoning.ans}},reasoningsolution{{forloop.counter}},'{{forloop.counter}}','reasoning',5)"
+
+																							
+																						style="text-align:center; color: #fff;background-color:rgb(36, 172, 98);margin-right:0;float:right;display:inline-block;"  class="btn  btn-sm"
+																						
+																						
+																						><i class="fa fa-clock-o" aria-hidden="true"></i>  Timer {{reasoning.time}} Sec</button> 
+																		
+													<!--	<div id="clockdiv{{forloop.counter}}" class="clockdiv"style="text-align:center;margin-right:0;float:right;display:none">
+  
+															 <!--
+															  <div>
+																<span class="minutes"id="minutes"></span>
+																<div class="smalltext">Minutes</div>
+															  </div> 
+															 
+															  <div>
+																<span class="seconds{{forloop.counter}}"id="seconds{{forloop.counter}}"></span>
+																<div class="smalltext" id="smalltext{{forloop.counter}}">Seconds</div>
+															  </div>
+															</div>
+																		
+																		<button id="time{{forloop.counter}}" onClick="timer({{forloop.counter}},{{reasoning.time}},{{forloop.counter}}1,{{forloop.counter}}2,{{forloop.counter}}3,{{forloop.counter}}4,{{forloop.counter}}5,{{reasoning.ans}},solution{{forloop.counter}},{{forloop.counter}})"
+
+																							
+																						style="text-align:center; color: #fff;background-color:rgb(36, 172, 98);margin-right:0;float:right;display:inline-block;"  class="btn  btn-sm"
+																						
+																						
+																						><i class="fa fa-clock-o" aria-hidden="true"></i>  Timer {{reasoning.time}} Sec</button> -->
+																		
+																		
+																		<h4 style="text-align:left ;color:#F06292"><b><u>Options:</u></b></h4>
+																		
+																	
+
+
+
+																							 
+																				<div class="radio radio-primary " >
+
+																		
+																 <form >
+										
+																																				<div style="display: block"> 
+																																		 
+																					<input type="radio" name="radio1" id="res{{forloop.counter}}1" value="option1">
+																					<label for="res{{forloop.counter}}1">
+																						{{reasoning.a}}
+																					</label>
+																					<div id="res{{forloop.counter}}w1"style="display:none">
+																					<img src="{% static "/c.png" %}" class="img-rounded"> 
+																					</div>
+																					<div id="res{{forloop.counter}}r1"style="display:none">
+																					<img src="{% static "/d.png" %}" class="img-rounded"> 
+																					</div>
+																					</div>
+																					
+																					
+																					<div style="display: block"> 
+																					<input type="radio" name="radio1" id="res{{forloop.counter}}2" value="option1">
+																					 
+																					<label for="res{{forloop.counter}}2">
+																						{{reasoning.b}}
+																					</label>
+																					<div id="res{{forloop.counter}}w2"style="text-align:center;display:none">
+																					<img src="{% static "/c.png" %}" class="img-rounded"> 
+																					</div>
+																					<div id="res{{forloop.counter}}r2"style="text-align:center;display:none">
+																					<img src="{% static "/d1.png" %}" class="img-rounded"> 
+																					</div>
+																					
+																				</div>
+																				
+																				
+																				<div style="display: block"> 
+																																		 
+																					<input type="radio" name="radio1" id="res{{forloop.counter}}3" value="option1">
+																					<label for="res{{forloop.counter}}3">
+																						{{reasoning.c}}
+																					</label>
+																				<div id="res{{forloop.counter}}w3"style="text-align:center;display:none">
+																					<img src="{% static "/c.png" %}" class="img-rounded"> 
+																					</div>
+																					<div id="res{{forloop.counter}}r3"style="text-align:center;display:none">
+																					<img src="{% static "/d1.png" %}" class="img-rounded"> 
+																					</div>	
+																				</div>
+																					
+																					
+																					<div style="display: block"> 
+																					
+																					 <input type="radio" name="radio1" id="res{{forloop.counter}}4" value="option1">
+																					<label for="res{{forloop.counter}}4">
+																						{{reasoning.d}}
+																					</label>
+																					<div id="res{{forloop.counter}}w4"style="text-align:center;display:none">
+																					<img src="{% static "/c.png" %}" class="img-rounded"> 
+																					</div>
+																					<div id="res{{forloop.counter}}r4"style="text-align:center;display:none">
+																					<img src="{% static "/d1.png" %}" class="img-rounded"> 
+																					</div>
+																					
+																				</div>
+																				
+																				<div style="display: block"> 
+																					
+																					 <input type="radio" name="radio1" id="res{{forloop.counter}}5" value="option1">
+																					<label for="res{{forloop.counter}}5" >
+																						{{reasoning.e}}
+																					</label>
+																					
+																					
+																					<div id="res{{forloop.counter}}w5"style="text-align:center;display:none">
+																					<img src="{% static "/c.png" %}" class="img-rounded"> 
+																					</div>
+																					<div id="res{{forloop.counter}}r5"style="display:none;">
+																					<img src="{% static "/d.png" %}" class="img-rounded" > 
+																					</div>
+																					
+																					
+																				</div>
+																				
+																				
+																					
+																					
+																			</form>
+																			</div>
+																			<button 
+																		id="reasoningsol{{forloop.counter}}"onclick=
+	"op('res{{forloop.counter}}1','res{{forloop.counter}}2','res{{forloop.counter}}3','res{{forloop.counter}}4','res{{forloop.counter}}5',{{reasoning.ans}},reasoningsolution{{forloop.counter}},'res{{forloop.counter}}','reasoningsol_upper{{forloop.counter}}','reasoning',5)"
+																							
+																						style="text-align:center; color: #fff;background-color:#4D90FE;margin-right:0;float:left;display:inline-block;margin-top:16px" type="submit" class="btn  btn-sm"
+																						
+																						
+																						> See Solutoins</button> 
+																						
+																						
+																		
+																						
+													</div>			
+																		
+													
+													
+													
+													
+													
+													<div id="reasoningsolution{{forloop.counter}}"style="text-align:center;display:none">
+													 
+															<p  id="reasoningsol_upper{{forloop.counter}}"class="bg-info" style="text-align:center;"> <b>Correct<img src="{% static "/thh.png" %}" class="img-rounded" ></b> </p> 
+															<p> <b>  Answer :</b></p> 
+															<!-- <p class="bg-danger" style="display:inline"> Wrong
+																					<img src="{% static "/c.png" %}" class="img-rounded" id="{{forloop.counter}}w"style="display:none"> 
+																					
+																					
+																					<img src="{% static "/d.png" %}" class="img-rounded" id="{{forloop.counter}}r"style="display:none;"> 
+																					 </p><br></br> -->
+															
+																		<div  style="font-family:'arial', sans-serif;font-size:17px;color:#000;display:inline;line-height: 1.42857;">
+																	{% autoescape off %}	{{reasoning.solution}} {% endautoescape %} </div>
+																
+																	
+																		</div>
+													
+													{%else%}
+																	<div class="panel-body">
+														<div id="reasoningclockdiv{{forloop.counter}}" class="clockdiv"style="text-align:center;margin-right:0;float:right;display:none">
+  
+															 
+															<!--  <div>
+																<span class="reasoningminutes"id="reasoningminutes"></span>
+																<div class="smalltext">Minutes</div>
+															  </div> 
+															  -->
+															  <div>
+																<span class="seconds"id="reasoningseconds{{forloop.counter}}"></span>
+																<div class="smalltext" id="reasoningsmalltext{{forloop.counter}}">Seconds</div>
+															  </div>
+															</div>
+																		
+																		<button id="reasoningtime{{forloop.counter}}" onClick="timer('reasoningclockdiv{{forloop.counter}}',{{reasoning.time}},'res{{forloop.counter}}1','res{{forloop.counter}}2','res{{forloop.counter}}3','res{{forloop.counter}}4','res{{forloop.counter}}5','{{reasoning.ans}}',reasoningsolution{{forloop.counter}},'{{forloop.counter}}','ress',5)"
+
+																							
+																						style="text-align:center; color: #fff;background-color:rgb(36, 172, 98);margin-right:0;float:right;display:inline-block;"  class="btn  btn-sm"
+																						
+																						
+																						><i class="fa fa-clock-o" aria-hidden="true"></i>  Timer {{reasoning.time}} Sec</button> 
+																						<!-- <form >
+										
+																																				<div style="display: block"> 
+																																		 
+																					<input type="radio" name="radio1" id="{{forloop.counter}}1" value="option1"/>
+																					<label id="{{forloop.counter}}1">
+																						{{reasoning.a}}
+																					</label>
+																					<div id="{{forloop.counter}}w1"style="display:none">
+																					<img src="{% static "/c.png" %}" class="img-rounded"> 
+																					</div>
+																					<div id="{{forloop.counter}}r1"style="display:none">
+																					<img src="{% static "/d.png" %}" class="img-rounded"> 
+																					</div>
+																					</div>
+																				</form>-->
+									
+													
+													<form  id="inside{{forloop.counter}}" class="radio radio-primary ">
+													
+													
+													
+													</form>
+													
+													
+													<script> 
+													var d='inside'+'{{forloop.counter}}'
+var div = document.getElementById(d);
+								split_res('{{reasoning.question_part}}','{{reasoning.a}}','{{reasoning.b}}','{{reasoning.c}}','{{reasoning.d}}','{{reasoning.e}}','{{reasoning.f}}','{{reasoning.g}}','{{reasoning.h}}','{{reasoning.i}}','{{reasoning.j}}','{{reasoning.ans}}');
+																																		
+																																		
+																																		
+																																		 function split_res(x,a,b,c,d,e,f,g,h,i,k,lp){
+																																		
+																																		//div.innerHTML = div.innerHTML ;
+																																				var arrayy = lp.split('///');
+																																				/*  var myarray_ = [];
+
+																																			  for (var i = 0; i < arrayy.length; ++i) {
+																																				  myarray_[i] = "whatever";
+																																			  }*/
+																																				var myarray = x.split('///');
+																																				var myarray_a = a.split('///');
+																																				var myarray_b = b.split('///');
+																																				var myarray_c = c.split('///');
+																																				var myarray_d = d.split('///');
+																																				var myarray_e = e.split('///');
+																																				if(f != ''){var myarray_f = f.split('///');}
+																																				if(g != ''){var myarray_g = g.split('///');}
+																																				if(h != ''){var myarray_h = h.split('///');}
+																																				if(i !=''){var myarray_i = i.split('///');}
+																																				
+																																				if(k !=''){var myarray_k = k.split("///");}
+
+																																							for(var i = 0; i <arrayy.length; i++)
+																																							{var header='<h5 style="text-align:left;padding:0px;color:rgb(0, 0, 0)"><b style="text-align:left;padding:0px;font-size:16px;">'+myarray[i]+'</b></h5>';
+																																							div.innerHTML = div.innerHTML + header;
+																																					
+																																							//document.write(header);
+																																							//var ap='myarray_'.concat(i.toString());
+																																							if(i==0){
+																																							for(var j = 0; j < 5; j++)
+																																							
+																																							{wr(myarray_a[j],j,i);}
+																																							}else if(i==1){
+																																							for(var j = 0; j < 5; j++)
+																																							
+																																							{wr(myarray_b[j],j,i);}
+																																							}else if(i==2){
+																																							for(var j = 0; j < 5; j++)
+																																							
+																																							{wr(myarray_c[j],j,i);}
+																																							}else if(i==3){
+																																							for(var j = 0; j < 5; j++)
+																																							
+																																							{wr(myarray_d[j],j,i);}
+																																							}else if(i==4){
+																																							for(var j = 0; j < 5; j++)
+																																							
+																																							{wr(myarray_e[j],j,i);}
+																																							}else if(i==5){
+																																							for(var j = 0; j < 5; j++)
+																																							
+																																							{wr(myarray_f[j],j,i);}
+																																							}else if(i==6){
+																																							for(var j = 0; j < 5; j++)
+																																							
+																																							{wr(myarray_g[j],j,i);}
+																																							}else if(i==7){
+																																							for(var j = 0; j < 5; j++)
+																																							
+																																							{wr(myarray_h[j],j,i);}
+																																							}else if(i==8){
+																																							for(var j = 0; j < 5; j++)
+																																							
+																																							{wr(myarray_i[j],j,i);}
+																																							}else if(i==9){
+																																							for(var j = 0; j < 5; j++)
+																																							
+																																							{wr(myarray_k[j],j,i);}
+																																							}
+																																							
+	
+
+																																							
+																																							
+																																								
+																																							
+																																							}
+																																						
+																																							
+																																							 }
+																																							 
+																																							 
+																																							 function wr(s,j,i){
+																																							 var ss=s;
+																																							 var jj=j;
+																																							 
+																																							 if(jj==0){
+																																							 div.innerHTML = div.innerHTML + '<h4 style="text-align:left ;color:#F06292"><b><u>Options:</u></b></h4>'
+																																						;
+																																							 //document.write();	
+																																							 }
+																																							 
+																																							 var idd='ress'+(i.toString()).concat(j.toString());
+																																							 var w=idd+'w';
+																																							 var r=idd+'r';
+																																							 var radio='radio'+idd;
+																																							 var lebel='l'+idd;
+																																							 var opt='opt'+i.toString();
+																																							 
+																																							 var option = 
+																																				
+																															'<div style="display: block;padding:1px">'+'<input type="radio" name="'+opt+'" id='+idd+' value="'+opt+'">'+
+																																			'<label for="'+ idd +'" >'+
+																																			ss+
+																																			'</label>'+
+																																			'<div id="'+w+'"style="display:none">'+
+																																			'<img src="{% static "/c.png" %}" class="img-rounded"> '+
+																																			'</div>'+
+																																			'<div id="'+ r +'"style="display:none">'+
+																																			'<img src="{% static "/d.png" %}" class="img-rounded"/> '+
+																																			'</div>'+
+																																			'</div>';
+																																						//document.write(option);	 
+																																						
+																																						
+																																						div.innerHTML = div.innerHTML + option;
+																																							 
+																																							 if(jj== 4){
+																																							// alert(jj);
+																																							 	//div.innerHTML = div.innerHTML +'</form>';
+																																							//document.write('<hr></hr>');	
+																																							
+																																							 }
+																																							 }
+
+																																		
+																																		</script>
+	
+																																		
+																					<button 
+																		id="reasoningsol{{forloop.counter}}"onclick=
+	"op('ress{{forloop.counter}}1','ress{{forloop.counter}}2','ress{{forloop.counter}}3','ress{{forloop.counter}}4','ress{{forloop.counter}}5','{{reasoning.ans}}',reasoningsolution{{forloop.counter}},'res{{forloop.counter}}','resssol_upper{{forloop.counter}}','ress',5)"
+																							
+																						style="text-align:center; color: #fff;background-color:#4D90FE;margin-right:0;float:left;display:inline-block;margin-top:16px" type="submit" class="btn  btn-sm"
+																						
+																						
+																						> See Solutoins</button> 											
+																																		
+											</div><!-- pnel body end -->
+											
+											
+											<div id="reasoningsolution{{forloop.counter}}"style="text-align:center;display:none">
+													 
+															<p  id="resssol_upper{{forloop.counter}}"class="bg-info" style="text-align:center;"> <b>Your score<img src="{% static "/thh.png" %}" class="img-rounded" ></b> </p> 
+															<p> <b>  Answer :</b></p> 
+															<!-- <p class="bg-danger" style="display:inline"> Wrong
+																					<img src="{% static "/c.png" %}" class="img-rounded" id="{{forloop.counter}}w"style="display:none"> 
+																					
+																					
+																					<img src="{% static "/d.png" %}" class="img-rounded" id="{{forloop.counter}}r"style="display:none;"> 
+																					 </p><br></br> -->
+															
+																		<div  style="font-family:'arial', sans-serif;font-size:17px;color:#000;display:inline;line-height: 1.42857;">
+																		<a href="/reasoning/{{reasoning.new_id}}/"target="_blank"><b>Click here to view Solution</b></a>
+																	 </div>
+																
+																	
+																		</div>
+											
+							
+													{% endif %}
+													
+													
+													
+													
+													
+						
+						</div><!-- pnel end -->
+						{% endfor %}
+						{% endif %}
+						<!--  end reasoning-->
+						
+						
+						<!-- close -->
+						
+							
+														
+														
+													
+						
+					
+														
+														
+						<hr></hr>
+						
+						{% if reasoning != None %}
+						
+						<div class="sayan" style="background-color:white">
+						
+						<span style="padding-bottom:20px;">
+						<p ><b style="color: #000;float:left">  Todays Cloze Test</b> <b style="float:right"><i class="fa fa-calendar" aria-hidden="true"></i> Date : <script> document.write(new Date().toDateString()); </script> </b><p> 
+						<img src="{% static "/cl.png" %}" class="img-thumbnail center-block " alt="Cinque Terre" width="500" height="0"></span>
+														</div>
+														
+														{% for close in close %}
+									
+									
+												
+												<div class="panel-heading card">
+									
+																		
+																		
+																		<div  style="font-family:'Roboto Condensed', sans-serif;font-size:17px;color:#000;display:inline;line-height: 1.42857;">
+																	{% autoescape off %}	{{close.question}} {% endautoescape %} </div>
+														
+																<a 
+																		id="{{forloop.counter}}"onclick=
+	""
+																							
+																						style="text-align:center; color: #fff;background-color:#4D90FE;margin-right:0;float:right;display:inline-block;margin-top:16px" type="submit" class="btn  btn-sm"
+																						href="/closetest/close/{{close.page}}/"
+																						target="_blank"
+																						
+																						> Read More>></a> 	
+															
+												</div>
+														{% endfor %}
+														
+														{% endif %}
+														
+						<!-- close end -->
+						
+													<div id="disqus_thread"style="padding:5px"></div>
+							<script>
+
+							/**
+							*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+							*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+							/*
+							var disqus_config = function () {
+							this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+							this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+							};
+							*/
+							(function() { // DON'T EDIT BELOW THIS LINE
+							var d = document, s = d.createElement('script');
+							s.src = 'https://getmyvideo-net.disqus.com/embed.js';
+							s.setAttribute('data-timestamp', +new Date());
+							(d.head || d.body).appendChild(s);
+							})();
+							</script>
+							<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+						</div><!--  div 7 end -->
+						
+						<div class="col-md-3 col-md-pull-7 nopadding">
+							<div class="panel nopadding">
+							<div class="rana" style="background-color:#f3f3f3">
+							
+							
+							
+							
+								<div class="panel-heading ssss" style=" background-color:#5b4282"><h3 style="color:white;padding:0px;font-size:19px"><u>Current Affairs Category</u><h3></div>
+							
+							
+							
+							
+							
+							</div>
+								<div class="panel-body nopadding">
+								<div class="menu">
+																			 <ul class="nav nav-pills nav-stacked">
+              
+                <li><a href="/current/Science_Techonlogy/1"><i class="fa fa-list-alt fa-fw"></i>Science And Techonlogy </a></li>
+				<hr style="border-color:#85ff85"></hr>
+                <li><a href="/current/National/1"><i class="fa fa-file-o fa-fw"></i>National</a></li>
+                <hr style="border-color:#85ff85"></hr>
+                <li><a href="/current/State/1" ><i class="fa fa-bar-chart-o fa-fw"></i>State</a></li>
+				<hr style="border-color:#85ff85"></hr>
+                <li><a href="/current/International/1"><i class="fa fa-table fa-fw"></i>International</a></li>
+				<hr style="border-color:#85ff85"></hr>
+                <li><a href="/current/Business_Economy_Banking/1"><i class="fa fa-tasks fa-fw"></i>Business Economy Banking</a></li>
+				<hr style="border-color:#85ff85"></hr>
+                <li><a href="/current/Environment/1"><i class="fa fa-calendar fa-fw"></i>Environment</a></li>
+				<hr style="border-color:#85ff85"></hr>
+                <li><a href="/current/Defence/1"><i class="fa fa-book fa-fw"></i>Defence</a></li>
+				<hr style="border-color:#85ff85"></hr>
+                <li><a href="/current/Persons_in_News/1 in news"><i class="fa fa-pencil fa-fw"></i>Persons in News</a></li>
+				<hr style="border-color:#85ff85"></hr>
+                <li><a href="/current/Awards_Honours/1 "><i class="fa fa-cogs fa-fw"></i>Awards Honours</a></li>
+		        <hr style="border-color:#85ff85"></hr>
+				 <li><a href="/current/Sports/1"><i class="fa fa-cogs fa-fw"></i>Sports</a></li>
+				 <hr style="border-color:#85ff85"></hr>
+				  <li><a href="/current/Art_Culture/1"><i class="fa fa-cogs fa-fw"></i>art culture</a></li>
+				  <hr style="border-color:#85ff85"></hr>
+				  <li><a href="/current/Government_Schemes/1"><i class="fa fa-cogs fa-fw"></i>Government Schemes</a></li>
+            </ul>
+						
+</div>
+						</div>
+									</div>	
+									
+									
+									
+									
+									<div class="panel nopadding">
+							<div class="panel-heading pan  card" style="background-color:rgb(40, 96, 154);"><h3 style="color:#ffffff;padding:0px"><u>Current Affairs Category</u><h3></div>
+								<div class="panel-body nopadding">
+																			 <ul class="nav nav-pills nav-stacked">
+              
+               <li><a style="color:#003563text-decoration:underline-on-hover" href="/">Gods and service tax</a></li>
+																			<li><a style="color:#003563" href="/ca/1/">modi visits us </a></li>
+																			<li><a style="color:#003563" href="/job/home/all/1/">jobs home</a></li>
+																			<li><a  style="color:#003563" href="/english/word/page/1/">English</a></li>
+																			<li><a  style="color:#003563" href="/">Home</a></li>
+																			<li><a  style="color:#003563"href="/ca/1/">Current Affairs </a></li>
+																			<li><a  style="color:#003563"href="/job/home/all/1/">jobs home</a></li>
+																			<li><a  style="color:#003563" href="/english/word/page/1/">English</a></li>
+																			<li><a  style="color:#003563" href="/">Home</a></li>
+																			<li><a  style="color:#003563" href="/ca/1/">Current Affairs </a></li>
+																			<li><a  style="color:#003563" href="/job/home/all/1/">jobs home</a></li>
+																			<li><a style="color:#003563" href="/english/word/page/1/">English</a></li>
+																			<li><a style="color:#003563" href="/">Home</a></li>
+																			<li><a style="color:#003563" href="/ca/1/">Current Affairs </a></li>
+																			<li><a  style="color:#003563"href="/job/home/all/1/">jobs home</a></li>
+																			<li><a style="color:#003563" href="/english/word/page/1/">English</a></li>
+            </ul>
+										</div>
+									</div>	
+						</div><!--  div 3 end -->
+						
+						
+						
+						
+						
+						
+						
+						<div class="col-md-2 nopadding">
+					  <div class="circle-tile">
+                            <a href="#">
+                                <div class="circle-tile-heading red">
+                                    <i class="fa fa-bell fa-fw fa-3x" style="font-size:30px" ></i>
+                                </div>
+                            </a>
+                            <div class="circle-tile-content red">
+                                
+                                <div class="circle-tile-number text-faded" style="color:white">
+                                   LATEST GOVT JOB
+                                    <span id="sparklineC"></span>
+                                </div>
+                                <a href="#" class="circle-tile-footer">More Info <i class="fa fa-chevron-circle-right"></i></a>
+                            </div>
+                        </div>
+						<hr style="color:red"></hr>
+								<div class="panel-group ">
+								
+								{% for job in job %}
+									<div class="panel panel-info card ">
+									<img src="/media/{{job.ca_img}}" class=" card " width="100%" alt="Image"/>
+										  <div  style="text-align:center;color:#666"><strong>{{job.heading}} </strong>
+											
+										  </div>
+										  <div class="panel-body">
+												
+												<ul style="text-align:Left ">
+												
+													<li><Strong>Start Date:{{job.first_day}}</strong></li>
+													<li><Strong>Last Date:{{job.last_day}}</strong></li>
+													
+													
+												
+												</ul>
+												
+												<a href="/job/home/all/1/"style="text-align:center"><h5>Click for Details job <img width="25" height="25" src="/media/123.gif" alt="" scale="0" style="float:none"/> <h5></a>
+											
+											
+										  
+										  
+										  </div>
+									</div>
+									 
+									
+									<!-- if panel end -->
+									{% endfor %}
+									
+									
+									
+						
+								</div>
+						
+						</div>
+						
+				</div>
+
+				</div>
+				
+				
+ 
+			</div>	
+				
+				
+	
+
+ <div class="footer-bottom">
+
+	<div class="container">
+
+		<div class="row">
+
+			<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+
+				<div class="copyright">
+
+					© 2017, studypoint.in, All rights reserved
+
+				</div>
+
+			</div>
+
+			<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+
+				<div class="design">
+
+					 <a href="#">studyplus.in </a> |  <a target="_blank" href="http://www.webenlance.com">contact us @getsuccess@gmail.com</a>
+
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>
+
+</div>   
+
+
+
+
+
+
+
+	<script id="dsq-count-scr" src="//getmyvideo-net.disqus.com/count.js" async></script>
+					 
+
+<script type="text/javascript" >
+$(document).ready(function () {
+$('.navbar .dropdown').hover(function () {
+        $(this).find('.dropdown-menu').first().stop(true, true).slideDown(150);
+    }, function () {
+        $(this).find('.dropdown-menu').first().stop(true, true).slideUp(105);
+    });
+
+
+
+
+var showChar = 200;
+	var ellipsestext = "...";
+	var moretext = "Read more";
+	var lesstext = "less";
+	$('.more').each(function() {
+		var content = $(this).html();
+
+		if(content.length > showChar) {
+
+			var c = content.substr(0, showChar);
+			var h = content.substr(showChar-1, content.length - showChar);
+
+			var html = c + '<span class="moreelipses">'+ellipsestext+'</span>&nbsp;&nbsp;&nbsp;<a href="" class="morelink"><u>'+moretext+'</u></a></span>';
+
+			$(this).html(html);
+		}
+
+	});
+	
+	
+	
+	
+	//..........................
+	
+	
+		 $("#signup").submit(function (ev)
+	 {
+					var x = document.getElementById('img_signup');
+										var y = document.getElementById('below_signup');
+
+								y.innerHTML=""
+
+				x.style.display = 'block';		
+						
+							ev.preventDefault();
+		$.ajax({
+            type : 'POST',
+            url: '{% url 'bank:signup' %}',
+			
+			async: true,
+			
+           data  : $(this).serialize(),
+            success: function (response) 
+			{var r=response;
+			
+			if(r == "true")
+				{
+				x.style.display = 'none';	
+				y.style.display = 'inline';	
+				$('#below_signup').html("<b>Confirmation Email has been sent</b>");
+				}
+				else{
+				x.style.display = 'none';	
+				y.style.display = 'inline';	
+				$('#below_signup').html("<b>"+response+"</b>");
+				}
+         
+				// window.location = response.r;
+
+            },
+			 error: function (data) { 
+			 x.style.display = 'none';	
+				y.style.display = 'inline';	
+			 
+			 $('#below_signup').html("<b>please retry or check url</b>"+data);
+			 
+			 }
+        });
+
+        
+    });
+
+	
+	
+	//.........................
+	
+		//..........................
+	
+	
+
+
+	
+	
+	//.........................
+	
+	
+	
+	
+
+
+});
+
+
+
+
+		 $("#login").submit(function (ev)
+	 {
+							
+			ev.preventDefault();			
+							
+		$.ajax({
+            type : 'POST',
+            url: '{% url 'bank:login' %}',
+			
+			
+           data  : $(this).serialize(),
+            success: function (response) 
+			{
+			var r=response;
+				if(r == "true")
+				{
+				window.location = window.location;
+				}
+				else{
+				$('#below').html("<b>"+response+"</b>");
+				}
+
+            },
+			 error: function (data) { $('#below').html("<b>please 55 or check url</b>");
+			
+			 }
+        });
+
+        
+    });
+	
+function add(id,upper,username,img_url) {
+var link_id=id;
+var uname=username;
+var heading=upper;
+var im=img_url;
+//$('#myModal').modal('toggle');
+
+	$.ajax({
+            type : 'POST',
+            url: '{% url 'bank:add' %}',
+			
+			
+           data: {link: link_id, user_name: uname,head:heading,im_url:im,csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()},
+            success: function (response) 
+			{
+			var r=response;
+				if(r == "success")
+				{
+				document.getElementById(link_id).innerHTML ="Added Successfully ";
+				}
+				else{
+				//$('#below').html("<b>"+response+"</b>");
+				document.getElementById(link_id).innerHTML = response;
+				}
+
+            },
+			 error: function (data) { $('#link_id').html("<b>please 55 or check url</b>");
+			
+			 }
+        });
+    
+}
+
+
+
+
+//.......math
+
+
+	function timer(c_id,t,r1,r2,r3,r4,r5,a,i,counter,flag,loop){
+	
+	var colckdiv_id=c_id;
+	alert(colckdiv_id);
+	var colckdiv_id_hash='#'.concat(c_id.toString());
+	var clock = document.getElementById(colckdiv_id);
+	//alert(clock);
+	
+	if(flag=='math'){var min='.mathminutes'.concat(counter.toString());
+	//alert(min);
+	var sec='.mathseconds'.concat(counter.toString());
+	var sec_id='#mathseconds'.concat(counter.toString());
+	var min_id='#mathminutes'.concat(counter.toString());
+	var smltext_id='#mathsmalltext'.concat(counter.toString());
+var upper_sol='mathsol_upper'.concat(counter.toString());
+  var minutesSpan = clock.querySelector(min);
+  var secondsSpan = clock.querySelector(sec);
+  var sol='mathsol'.concat(counter.toString());
+var solution_hash='#mathsolution'.concat(counter.toString());
+
+var timer_id='#mathtime'.concat(counter.toString());
+			}else if(flag=='reasoning'){
+			
+			
+			
+			var min='.reasoningminutes'.concat(counter.toString());
+	//alert(min);
+	var sec='.reasoningseconds'.concat(counter.toString());
+	var sec_id='#reasoningseconds'.concat(counter.toString());
+	var min_id='#reasoningminutes'.concat(counter.toString());
+	var smltext_id='#reasoningsmalltext'.concat(counter.toString());
+var upper_sol='reasoningsol_upper'.concat(counter.toString());
+  var minutesSpan = clock.querySelector(min);
+  var secondsSpan = clock.querySelector(sec);
+  var sol='reasoningsol'.concat(counter.toString());
+var solution_hash='#reasoningsolution'.concat(counter.toString());
+
+var timer_id='#reasoningtime'.concat(counter.toString());
+counter='res'+counter.toString();
+
+
+
+			}else if(flag=='ress'){
+			
+			
+			
+			var min='.reasoningminutes'.concat(counter.toString());
+	//alert(min);
+	var sec='.reasoningseconds'.concat(counter.toString());
+	var sec_id='#reasoningseconds'.concat(counter.toString());
+	var min_id='#reasoningminutes'.concat(counter.toString());
+	var smltext_id='#reasoningsmalltext'.concat(counter.toString());
+var upper_sol='resssol_upper'.concat(counter.toString());
+  var minutesSpan = clock.querySelector(min);
+  var secondsSpan = clock.querySelector(sec);
+  var sol='reasoningsol'.concat(counter.toString());
+var solution_hash='#reasoningsolution'.concat(counter.toString());
+
+var timer_id='#reasoningtime'.concat(counter.toString());
+counter='res'+counter.toString();
+
+
+
+			}
+	
+	
+
+
+//alert(timer_id);
+  document.getElementById(sol).disabled = true;
+  $(timer_id).toggle(500);
+  $(colckdiv_id_hash).toggle(500);
+var seconds_left = 80;
+/*var interval = setInterval(function() {
+    document.getElementById('seconds').innerHTML = --seconds_left;
+
+    if (seconds_left <= 0)
+    {
+       document.getElementById('seconds').innerHTML = "You are Ready!";
+       clearInterval(interval);
+    }
+}, 1000); */
+
+//new timer
+var fiveMinutes = t,
+        display = $(sec_id),
+		smalltext=$(smltext_id);
+		if($(solution_hash).is(':visible'))
+{
+$(solution_hash).toggle(500);
+}
+startTimer(fiveMinutes,display,smalltext,colckdiv_id_hash,timer_id,sol,solution_hash,r1,r2,r3,r4,r5,a,i,counter,upper_sol,flag,loop);
+
+
+
+	
+	}
+	
+	
+	function startTimer(duration, display,smalltext,colckdiv_id_hash,timer_id,sol,solution_hash,r1,r2,r3,r4,r5,a,i,counter,upper_sol,flag,loop) {
+    var timer = duration, minutes, seconds;
+	 
+  var s=  setInterval(function () {
+	var seconds_left = --duration;
+        minutes = parseInt(timer / 60, 10)
+        seconds = parseInt(timer % 60, 10);
+
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+				if(minutes<1){
+        display.text(minutes + ":" + seconds);
+		smalltext.text("seconds")
+        }
+        else{display.text(minutes + ":" + seconds);
+		smalltext.text("Minutes")
+		}
+		
+		if(seconds_left<=-1){clearInterval(s);
+		
+								op(r1,r2,r3,r4,r5,a,i,counter,upper_sol,flag,loop);
+								$(timer_id).toggle(500);
+								$(colckdiv_id_hash).toggle(500);
+								
+								//$(solution_hash).toggle(500);
+								document.getElementById(sol).disabled = false; 
+									}
+		
+
+        if (--timer < 0) {
+            timer = duration;
+        }
+    }, 1000);}
+	
+	
+	
+	function op(r1,r2,r3,r4,r5,a,i,counter,upper_sol,flag,loop){
+	var radio1 = r1;
+	var radio2=r2;
+	 var radio3=r3;
+	var radio4=r4;
+	var radio5=r5;
+	var ans=a;
+	var id=i;
+	
+	var count=counter;
+	var chk=count.toString().concat(ans.toString());
+	var r8=count.toString();
+	var right=r8.concat('r');
+	
+	
+	if(flag == 'math'|| flag=='reasoning'){
+	
+if(document.getElementById(radio1).checked || document.getElementById(radio2).checked || document.getElementById(radio3).checked || document.getElementById(radio4).checked || document.getElementById(radio5).checked ) {
+alert(flag);
+
+				if(document.getElementById(chk).checked){
+				var right_img= right.concat(chk.slice(-1)) ;
+				//alert(right_img);
+				var x = document.getElementById(right_img);
+				
+
+				//x.innerHTML="<img src=\"http://placehold.it/350x350\" width=\"400px\" height=\"150px\">";
+				var y = document.getElementById(upper_sol);
+				y.innerHTML="<b>Correct<img src=\"{% static "/thh.png" %}\" class=\"img-rounded\" >"
+				x.style.display = 'inline';
+				
+				//$(x).toggle(500); 
+				//var y = document.getElementById(right);
+				//y.style.display = 'inline';
+				}else if(document.getElementById(radio1).checked) {
+				var wrong_img= count.toString().concat('w'.concat('radio1'.slice(-1))) ;
+				var x = document.getElementById(wrong_img);
+				var y = document.getElementById(upper_sol);
+				y.innerHTML="<b>InCorrect<img src=\"{% static "/c.png" %}\" class=\"img-rounded\" >"
+				x.style.display = 'inline';
+				
+				}else if(document.getElementById(radio2).checked) {
+				var wrong_img= count.toString().concat('w'.concat('radio2'.slice(-1))) ;
+				var x = document.getElementById(wrong_img);
+				var y = document.getElementById(upper_sol);
+				y.innerHTML="<b>InCorrect<img src=\"{% static "/c.png" %}\" class=\"img-rounded\" >"
+				x.style.display = 'inline';
+				
+				}else if(document.getElementById(radio3).checked) {
+				var wrong_img= count.toString().concat('w'.concat('radio3'.slice(-1))) ;
+				var x = document.getElementById(wrong_img);
+				var y = document.getElementById(upper_sol);
+				y.innerHTML="<b>InCorrect<img src=\"{% static "/c.png" %}\" class=\"img-rounded\" >"
+				x.style.display = 'inline';
+				
+				}else if(document.getElementById(radio4).checked) {
+				var wrong_img= count.toString().concat('w'.concat('radio4'.slice(-1))) ;
+				var x = document.getElementById(wrong_img);
+				var y = document.getElementById(upper_sol);
+				y.innerHTML="<b>InCorrect<img src=\"{% static "/c.png" %}\" class=\"img-rounded\" >"
+				x.style.display = 'inline';
+				
+				}else if(document.getElementById(radio5).checked) {
+				var wrong_img= count.toString().concat('w'.concat('radio5'.slice(-1))) ;
+				var x = document.getElementById(wrong_img);
+				var y = document.getElementById(upper_sol);
+				y.innerHTML="<b>InCorrect<img src=\"{% static "/c.png" %}\" class=\"img-rounded\" >"
+				x.style.display = 'inline';
+				
+				}
+			
+					
+		}
+					
+					
+				else  {
+
+				///$(upper_sol).html("Hello World");
+				var x = document.getElementById(upper_sol);
+				x.style.fontWeight  = 'bold';
+				x.innerHTML="Not Attempted";
+						
+						}
+						
+						
+}else{var score=0;
+			var attempt=0;
+			if(flag== 'ress'){
+			}
+			else if (flag=='css'){
+			
+			}
+
+var array = ans.split('///');
+var max=array.length;
+//alert(flag);
+		for(i=0;i< array.length; i++){
+			
+			
+			
+			radio1=flag+i.toString()+'0';
+			radio2=flag+i.toString()+'1';
+			radio3=flag+i.toString()+'2';
+			radio4=flag+i.toString()+'3';
+			radio5=flag+i.toString()+'4';
+			
+			//alert(radio1+" "+radio2+''+radio3);
+			chk=flag+i.toString()+ (parseInt(array[i])-1).toString();
+			//alert("chk="+chk);
+			if(document.getElementById(radio1).checked || document.getElementById(radio2).checked || document.getElementById(radio3).checked || document.getElementById(radio4).checked || document.getElementById(radio5).checked ) {
+
+				attempt=1;
+
+				if(document.getElementById(chk).checked){
+				score=score+1;
+				var right_img= chk+'r' ;
+				//alert(right_img);
+				var x = document.getElementById(right_img);
+				
+
+				//x.innerHTML="<img src=\"http://placehold.it/350x350\" width=\"400px\" height=\"150px\">";
+				var y = document.getElementById(upper_sol);
+				y.innerHTML='<b style=\"font-size:18px;\">Your Score: &nbsp;&nbsp;  '+score.toString()+'/'+max.toString()+'&nbsp;&nbsp;<img src=\"{% static "/thh.png" %}\" class=\"img-rounded\" >'
+				x.style.display = 'inline';
+				
+				//$(x).toggle(500); 
+				//var y = document.getElementById(right);
+				//y.style.display = 'inline';
+				}else if(document.getElementById(radio1).checked) {
+				var wrong_img= flag+i.toString().concat(('radio0'.slice(-1)))+'w' ;
+				var x = document.getElementById(wrong_img);
+				
+				x.style.display = 'inline';
+				var y = document.getElementById(upper_sol);
+				y.innerHTML='<b style=\"font-size:18px;\">Your Score: &nbsp;&nbsp;  '+score.toString()+'/'+max.toString()+'&nbsp;&nbsp;<img src=\"{% static "/thh.png" %}\" class=\"img-rounded\" >'
+				
+				}else if(document.getElementById(radio2).checked) {
+				var wrong_img= flag+i.toString().concat(('radio1'.slice(-1)))+'w' ;
+				var x = document.getElementById(wrong_img);
+				
+				x.style.display = 'inline';
+				var y = document.getElementById(upper_sol);
+				y.innerHTML='<b style=\"font-size:18px;\">Your Score: &nbsp;&nbsp;  '+score.toString()+'/'+max.toString()+'&nbsp;&nbsp;<img src=\"{% static "/thh.png" %}\" class=\"img-rounded\" >'
+				
+				}else if(document.getElementById(radio3).checked) {
+				var wrong_img= flag+i.toString().concat(('radio2'.slice(-1)))+'w' ;
+				var x = document.getElementById(wrong_img);
+				
+				x.style.display = 'inline';
+				var y = document.getElementById(upper_sol);
+				y.innerHTML='<b style=\"font-size:18px;\">Your Score: &nbsp;&nbsp;  '+score.toString()+'/'+max.toString()+'&nbsp;&nbsp;<img src=\"{% static "/thh.png" %}\" class=\"img-rounded\" >'
+				
+				}else if(document.getElementById(radio4).checked) {
+				var wrong_img= flag+i.toString().concat(('radio3'.slice(-1)))+'w' ;
+				var x = document.getElementById(wrong_img);
+				
+				x.style.display = 'inline';
+				var y = document.getElementById(upper_sol);
+				y.innerHTML='<b style=\"font-size:18px;\">Your Score: &nbsp;&nbsp;  '+score.toString()+'/'+max.toString()+'&nbsp;&nbsp;<img src=\"{% static "/thh.png" %}\" class=\"img-rounded\" >'
+				
+				}else if(document.getElementById(radio5).checked) {
+				var wrong_img= flag+i.toString().concat(('radio4'.slice(-1)))+'w' ;
+				var x = document.getElementById(wrong_img);
+				
+				x.style.display = 'inline';
+				var y = document.getElementById(upper_sol);
+				y.innerHTML='<b style=\"font-size:18px;\">Your Score: &nbsp;&nbsp;  '+score.toString()+'/'+max.toString()+'&nbsp;&nbsp;<img src=\"{% static "/thh.png" %}\" class=\"img-rounded\" >'
+				
+				}
+			
+					
+		}
+					
+					
+				else  {
+
+				///$(upper_sol).html("Hello World");
+				if(attempt==0){
+				var x = document.getElementById(upper_sol);
+				x.style.fontWeight  = 'bold';
+				x.innerHTML="<b>Not Attempted</b>"; }
+						
+						}
+			
+
+
+					}//for end
+
+	}				
+						
+						
+						
+	$(id).toggle(500);
+	
+	}
+
+//.........math end
+function op(i){
+	var id=i;
+	$(id).toggle(500);
+	
+	}
+
+</script>
+
+</body>
+</html>

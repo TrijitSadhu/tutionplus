@@ -1,0 +1,3706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>McqGk.com</title>
+  <meta charset="utf-8"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+  
+<link href="https://fonts.googleapis.com/css?family=Arimo" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lato:400,700"/> 
+  <link href='//fonts.googleapis.com/css?family=Cormorant Garamond' rel='stylesheet'>
+  <link href="https://fonts.googleapis.com/css?family=Noto+Sans" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Quattrocento+Sans" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet"> 
+  <link href="https://fonts.googleapis.com/css?family=Droid+Serif" rel="stylesheet">
+   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  
+  <link href="https://fonts.googleapis.com/css?family=PT+Serif" rel="stylesheet">
+<link rel="stylesheet" href="font-awesome-animation.min.css">
+
+<link href="https://fonts.googleapis.com/css?family=Rokkitt:300,400,500&amp;subset=latin-ext,vietnamese" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Quicksand:300,400,500,700" rel="stylesheet">
+ <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+ {% load staticfiles %}
+<link rel="stylesheet" href="{% static 'css/animate.min.css' %}" />
+<link rel="stylesheet" href="{% static 'css/h21.css' %}" />
+<link rel="stylesheet" href="{% static 'css/apple2.css' %}" />
+<link href="https://fonts.googleapis.com/css?family=Marck+Script" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Italianno" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=PT+Serif" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Yantramanav:400,500" rel="stylesheet">
+
+<link href="https://fonts.googleapis.com/css?family=Rubik:400,500,700" rel="stylesheet">  
+
+<link rel="stylesheet" href="font-awesome-animation.min.css">
+<script src="//platform-api.sharethis.com/js/sharethis.js#property=5b6b2b85b1029a001122114b&product=sticky-share-buttons"></script>
+<style> 
+
+b {
+font-weight:600;
+color:#3e3eb7;
+}
+.media-right, .media>.pull-right {
+    padding-left: 0px;
+}
+.y  :before {
+font-family: FontAwesome;
+    
+    font-weight: normal;
+   
+   content: "\f078";
+   float: right;
+   font-size : 11px ;
+   font-style: normal;
+   padding-left:2px;
+   text-decoration:none;
+  
+   
+   transition: all 0.5s;
+   
+}
+.y.active :before {
+	-webkit-transform: rotate(180deg);
+	-moz-transform: rotate(180deg);
+	transform: rotate(180deg);
+	
+} 
+.x, .x:active{
+	display:block;
+	padding:15px;
+  color:#555;
+  font-size:16px;
+  font-weight:bold;
+	text-transform:uppercase;
+	letter-spacing:1px;
+  word-spacing:3px;
+	text-decoration:none;
+}
+.x  :before {
+   font-family: 'Glyphicons Halflings';
+   content: "\e114";
+   font-size:21px;
+   font-weight:200;
+   padding-left:2px;
+   float: right;
+   transition: all 0.5s;
+}
+.x.active :before {
+	-webkit-transform: rotate(180deg);
+	-moz-transform: rotate(180deg);
+	transform: rotate(180deg);
+	
+} 
+
+
+.x :hover{
+background:#fff;
+color:blue;
+}
+
+.today_heading{
+display:inline-block;color: #000;
+font-size:14px;
+padding-left:10px;
+
+ padding-bottom:0px;
+
+font-family: 'Droid Serif', serif;;
+font-weight:500;
+
+margin: 16px 0px 7px;
+    line-height: 1.42857;
+}
+
+.today_img{
+width:180px;height:107px;padding:0px;
+}
+
+.current_h3{
+		 color: #04173c;
+		 margin-top:-4px;
+		 margin-bottom:-21px;
+	font-family: Quicksand,sans-serif;
+			letter-spacing: 5px;
+			display: block;
+			text-align: center;
+			font-weight:600;
+		  padding: 0px 5% 38px 8%;
+		
+
+
+ }
+
+  @media  (max-width:400px)  {
+    .today_heading {
+                    font-size:15px;
+					padding:0px;
+					margin:3px 0px 3px;
+					line-height:18px;
+					padding-left:4px
+					}
+	.media-right, .media>.pull-right
+					{
+					padding-left: 0px;
+					}
+	.today_img{
+					width:160px;
+					padding-top:0px; 
+					}
+	.col-md-7{
+					padding:0px;
+					}
+	.current_h3{ margin-top:53px;
+				font-size:19px;
+				text-transform:none;
+				font-weight:500;
+				}
+}
+.hh {
+    width: auto;
+    margin: 0 0px;
+    border: 1px solid #a3a3ea;
+}
+
+
+  .clockdiv{
+    font-family: sans-serif;
+    color: #fff;
+    display: inline-block;
+    font-weight: 100;
+    text-align: center;
+    font-size: 16px;
+}
+
+.clockdiv > div{
+    padding: 10px;
+    border-radius: 3px;
+    background: #00BF96;
+    display: inline-block;
+}
+
+.clockdiv div > span{
+    padding: 15px;
+    border-radius: 3px;
+    background: #00816A;
+    display: inline-block;
+}
+
+.smalltext{
+    padding-top: 5px;
+    font-size: 14px;
+}
+ 
+@media screen and (max-width: 768px) {
+   .eng  h2{
+        font-size:14px;
+    }
+	 .eng  h4{
+        font-size:14px;
+    }
+}
+
+
+}
+@media screen and (max-width: 480px){
+
+.rana{
+width:89%;
+}
+.key> li {
+    font-weight: 500;
+    line-height: 1.4em;
+    padding: 4px;
+    text-align: justify;
+    font-size: 16px; 
+    color:#0A0D8A;
+}
+
+.c-heading {
+    display: block;
+text-align: justify; 
+  margin-bottom: 14px;
+    margin-left: 0.5em;
+    border-bottom: 1px #2196F3;
+    color: #fff;
+	font-family: 'Roboto Condensed', sans-serif;
+    font-size: 17px;
+ line-height: 1.42857;	
+}
+
+}
+
+body{
+font-family: 'Droid Serif', serif;
+    
+font-family: 'PT Serif', serif;
+
+}
+
+.key> li {
+    line-height: 24px;
+    margin: 17px;
+    text-align: initial;
+    font-size: 16px;
+    color: #3e3e3e;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 28px;
+    padding: 0 0 14px;
+    color: #000000;
+    font-family: 'open sans',arial,helvetica,sans-serif;
+    font-weight: 400;
+    font-size: 18px;
+    color: #000;
+    line-height: 26px;
+    padding: 0 2px 20px;
+    margin: 1px;
+    /* border-bottom: 1px solid #ddd; */
+}
+.key> li {
+    line-height: 24px;
+    margin: 17px;
+    text-align: initial;
+    font-size: 16px;
+    color: #3e3e3e;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 28px;
+    padding: 0 0 14px;
+    color: #000000;
+    font-family: "Roboto", "Lucida Grande", Verdana, Arial, sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    color: #000;
+    line-height: 26px;
+    padding: 0 2px 0px;
+    margin: 1px;
+    /* border-bottom: 1px solid #ddd; */
+}
+.key {
+     line-height: 24px; 
+    margin:17px;
+    text-align: justify;
+    font-size: 16px;
+    color: #3e3e3e;
+   font-size: 14px;
+    font-weight: 400;
+    line-height: 28px;
+    padding: 0 0 14px;
+	color:#000000;
+  font-family:"Roboto", "Lucida Grande", Verdana, Arial, sans-serif;
+	font-weight:400;
+	font-size: 13px;
+  color: #212121;
+	line-height: 24px;
+	 padding: 0 4px 0px;
+    margin: 10px;	
+	    margin-right: 0;
+}
+
+.key> li {
+    line-height: 24px;
+    margin: 17px;
+    text-align: initial;
+    font-size: 16px;
+    color: #3e3e3e;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 28px;
+    padding: 0 0 14px;
+    color: #000000;
+    font-family: "Verdana",Georgia,Serif;
+    font-weight: 400;
+    font-size: 13px;
+    color: #000;
+    line-height: 26px;
+    padding: 0 2px 0px;
+    margin: 1px;
+    /* border-bottom: 1px solid #ddd; */
+}
+.cardd {
+    display: inline-block;
+    position: relative;
+    width: 100%;
+margin: 0px;
+} 
+
+.list-group-item {
+    position: relative;
+    display: block;
+ 
+    margin-bottom: -1px;
+    background-color: rgb(255, 255, 255);
+   
+}
+
+.panel {
+   border: none;
+  
+}
+
+
+.navbar-brand {
+    float: left;
+    height: 37px;
+   
+}
+.navbar-nav>li>a {
+    padding-top: 6px;
+    padding-bottom:2px;
+	padding-right:5px;
+	
+	letter-spacing:0px;
+    
+	
+}
+
+.navbar {
+    border: 0;
+ 
+    margin-bottom: 0px;
+    font-size: 11px;
+    letter-spacing: 4px;
+     background-color: #2f3239;
+    font-weight: 900;
+      
+}
+
+.navbar-custom .navbar-nav >li>a {
+    color: rgb(51, 103, 214);
+    background-color: #fff;
+    border: 0px solid #ddd;
+  
+}
+
+td, th, tr {
+    padding: 0;
+	text-align:start;
+}
+.c-heading {
+   
+    margin-bottom: 4px; 
+   
+}
+.menu >ul>li>a {
+color:#000e77;
+}
+.navbar-default {
+  font-size: 12px;
+  font-weight: 600;
+  background-color: #7a9dff;
+  padding:0px;
+  border: 0px;
+  border-radius: 0px;
+ 
+}
+
+.navbar-default .navbar-nav>li>a {
+ font-size:15px;
+ color:#ffffffab;
+ color:#376063;
+ color:#51dee8;
+ font-family: 'Droid Serif', serif;
+  display:inline-flex;
+  
+}
+
+.navbar-default .navbar-nav>li>a:hover {
+  color: #f56019;
+}
+
+
+
+.navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:hover, .navbar-default .navbar-nav>.open>a:focus {
+  background-color: #004059;
+  color: white;
+}
+
+.navbar-default .navbar-toggle {
+  border: none;
+}
+
+.navbar-default .navbar-collapse, .navbar-default .navbar-form {
+  border: none;
+}
+
+.navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus {
+  background-color: #002433;
+}
+
+.navbar-default .navbar-toggle .icon-bar {
+  background-color: #ffffff;
+}
+
+.dropdown-menu {
+  background-color: #004059;
+  color: white;
+  border: 0px;
+  border-radius: 2px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.dropdown-menu>li>a {
+  background-color: #004059;
+  color: white;
+}
+
+.dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus {
+  background-color: #004059;
+  color:white;
+}
+
+.dropdown-menu .divider {
+    height: 1px;
+    margin: 9px 0;
+    overflow: hidden;
+    background-color: #003246;
+}
+
+.navbar-default .navbar-nav .open .dropdown-menu>li>a {
+    color: #ffffff;
+}
+
+@media (max-width: 767px) { 
+  .dropdown-menu>li>a {
+    background-color: #006b96;
+    color: #ffffff;
+  }
+  .dropdown-menu>li>a:hover {
+    color: #ffffff;
+  }
+  
+  .navbar-default .navbar-nav .open .dropdown-menu>li>a:focus, .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover {
+    color: #ffffff;
+    background-color: transparent;
+  }
+  
+  .dropdown-menu .divider {
+    height: 1px;
+    margin: 9px 0;
+    overflow: hidden;
+    background-color: #005577;
+  }
+} 
+
+.panel-group .panel {
+    padding-left: 0px;
+	padding-right:0px;
+	padding-top:0px;
+	border:0px solid cyan;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin: 4px 0px 17px;
+}
+
+
+@-webkit-keyframes burst {
+  0% {
+    opacity: 2.6;
+  }
+
+  50% {
+    -webkit-transform: scale(1.8);
+    transform: scale(1.8);
+    opacity: 20;
+  }
+
+  100% {
+    opacity: 20;
+  }
+}
+
+@keyframes burst {
+
+  0% {
+    opacity:20.6;
+  }
+
+  50% {
+    -webkit-transform: scale(1.8);
+    -ms-transform: scale(1.8);
+    transform: scale(1.8);
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 20;
+  }
+}
+
+.faa-burst.animated, 
+.faa-burst.animated-hover:hover,
+.faa-parent.animated-hover:hover > .faa-burst {
+  -webkit-animation: burst 2s infinite linear;
+  animation: burst 2s infinite linear;
+}
+.list-group-item {
+padding-bottom: 3px;
+padding-top: 8px;
+}
+.list-group{
+border: 1px solid #f5f5f5;
+}
+#bdl :hover{
+border-left:5px solid blue;
+}
+	
+			
+			
+.tab .nav-tabs li{
+    float: none;
+    display: inline-block;
+    position: relative;
+}
+.tab .nav-tabs li a{
+    font-size: 14px;
+    font-weight: 600;
+    background: none;
+ color: #fff;
+   font-family: Quicksand,sans-serif;
+    border: none;
+    padding: 6px 10px;
+  
+    transition: all 0.5s ease 0s;
+}
+.tab .nav-tabs li a:hover{
+ 
+    color: green;
+    border: none;
+}
+.tab .nav-tabs li.active a,
+.tab .nav-tabs li.active a:focus,
+.tab .nav-tabs li.active a:hover{
+    border: none;
+
+    color: white;
+	background:#133b5a;
+}
+li > a, li > a {
+  text-decoration: none;
+  color: rgba(0,0,0,.4);
+  z-index: 1;
+}
+
+li > a:before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 3px;
+  bottom: 0;
+  left: 0;
+  background: #9CF5A6;
+  visibility: hidden;
+  border-radius: 5px;
+  transform: scaleX(0);
+  transition: .25s linear;
+}
+li > a:hover:before,
+li > a:focus:before {
+  visibility: visible;
+  transform: scaleX(1);
+}
+.tab .tab-content{
+    font-size: 14px;
+    color: #686868;
+    line-height: 25px;
+    text-align: left;
+    padding: 5px 20px;
+}
+.tab .tab-content h3{
+    font-size: 22px;
+    color: #5b5a5a;
+}
+@media only screen and (max-width: 480px){
+    .tab .nav-tabs{
+        border-radius: 10px;
+    }
+    .tab .nav-tabs li{
+        width: 100%;
+        text-align: center;
+        margin-bottom: 5px;
+    }
+}
+		
+.content1 .content1-overlay {
+  background-color: rgba(0,0,0,0.5);
+  position: absolute;
+  height: 99%;
+  width: 100%;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  opacity: 0;
+  -webkit-transition: all 0.4s ease-in-out 0s;
+  -moz-transition: all 0.4s ease-in-out 0s;
+  transition: all 0.4s ease-in-out 0s;
+}
+
+.content1:hover .content1-overlay{
+  opacity: 1;
+}
+
+
+
+.content1 .overlay1 {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  overflow: hidden;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  filter: alpha(opacity=0);
+  background-color: rgba(244,67,54,.7);
+  -webkit-transition: all 0.4s cubic-bezier(0.88,-0.99, 0, 1.81);
+  transition: all 0.4s cubic-bezier(0.88,-0.99, 0, 1.81);
+}
+
+
+
+.content1 h2 {
+  text-transform: uppercase;
+  color: #fff;
+  text-align: center;
+  position: relative;
+  font-size: 17px;
+  background: rgba(0,0,0,0.6);
+  -webkit-transform: translatey(-100px);
+  -ms-transform: translatey(-100px);
+  transform: translatey(-100px);
+  -webkit-transition: all 0.4s cubic-bezier(0.88,-0.99, 0, 1.81);
+  transition: all 0.4s cubic-bezier(0.88,-0.99, 0, 1.81);
+  padding: 10px;
+}
+
+.content1 a.info {
+  text-decoration: none;
+  display: inline-block;
+  text-transform: uppercase;
+  color: #fff;
+  border: 1px solid #fff;
+  background-color: transparent;
+  opacity: 0;
+  filter: alpha(opacity=0);
+  -webkit-transition: all 0.4s ease;
+  transition: all 0.4s ease;
+  margin: 50px 0 0;
+  padding: 7px 14px;
+}
+
+.content1 a.info:hover {
+  box-shadow: 0 0 5px #fff;
+}
+
+.content1:hover img {
+  -ms-transform: scale(1.2);
+  -webkit-transform: scale(1.2);
+  transform: scale(1.2);
+}
+
+.content1:hover .overlay1 {
+  opacity: 1;
+  filter: alpha(opacity=100);
+}
+
+.content1:hover h2,.content1:hover a.info {
+  opacity: 1;
+  filter: alpha(opacity=100);
+  -ms-transform: translatey(0);
+  -webkit-transform: translatey(0);
+  transform: translatey(0);
+}
+
+.content1:hover a.info {
+  -webkit-transition-delay: .2s;
+  transition-delay: .2s;
+}
+
+/* carousel */
+#quote-carousel 
+{
+  padding: 0 10px 30px 10px;
+ 
+}
+
+/* Control buttons  */
+#quote-carousel .carousel-control
+{
+  background: none;
+  color: #ccd1de;
+  font-size: 2.3em;
+  text-shadow: none;
+  margin-top: 30px;
+}
+/* Previous button  */
+#quote-carousel .carousel-control.left 
+{
+  left: -12px;
+}
+/* Next button  */
+#quote-carousel .carousel-control.right 
+{
+  right: -12px !important;
+}
+/* Changes the position of the indicators */
+#quote-carousel .carousel-indicators 
+{
+  right: 50%;
+  top: auto;
+  bottom: 0px;
+  margin-right: -19px;
+}
+/* Changes the color of the indicators */
+#quote-carousel .carousel-indicators li 
+{
+  background: #c0c0c0;
+}
+#quote-carousel .carousel-indicators .active 
+{
+  background: #333333;
+}
+#quote-carousel img
+{
+  width: 250px;
+  height: 100px
+}
+/* End carousel */
+
+.item blockquote {
+    border-left: none; 
+    margin: 0;
+}
+
+.item blockquote img {
+    margin-bottom: 10px;
+}
+
+.item blockquote p:before {
+    content: "\f10d";
+    font-family: 'Fontawesome';
+    float: left;
+    margin-right: 10px;
+}
+
+
+
+/**
+  MEDIA QUERIES
+*/
+
+/* Small devices (tablets, 768px and up) */
+@media (min-width: 768px) { 
+    #quote-carousel 
+    {
+      margin-bottom: 0;
+      padding: 0 40px 30px 40px;
+    }
+    
+}
+
+/* Small devices (tablets, up to 768px) */
+@media (max-width: 768px) { 
+    
+    /* Make the indicators larger for easier clicking with fingers/thumb on mobile */
+    
+    #quote-carousel .carousel-indicators {
+        bottom: -20px !important;  
+    }
+    #quote-carousel .carousel-indicators li {
+        display: inline-block;
+        margin: 0px 5px;
+        width: 15px;
+        height: 15px;
+    }
+    #quote-carousel .carousel-indicators li.active {
+        margin: 0px 5px;
+        width: 20px;
+        height: 20px;
+    }
+}
+
+p{
+
+font-family: 'Helvetica', 'Arial', sans-serif;
+line-height: 1.42857143;
+    color: #8a6a6a;
+	font-size:17.5px;}
+	
+	
+	.col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9 {
+    position: relative;
+    min-height: 1px;
+    padding-right: 15px;
+    padding-left: 1px;
+}
+a.list-group-item, button.list-group-item {
+    color: #000;
+}
+
+blockquote {
+    padding: 0px 2px;
+  
+}
+
+
+
+	.col-centered {
+					float: none;
+					margin: 0 auto;
+				}
+				
+				.carousel-control { 
+					width: 8%;
+					width: 0px;
+				}
+				.carousel-control.left,
+				.carousel-control.right { 
+					margin-right: 40px;
+					margin-left: 32px; 
+					background-image: none;
+					opacity: 1;
+				}
+				.carousel-control > a > span {
+					color: white;
+					  font-size: 29px !important;
+				}
+				
+				.carousel-col { 
+					position: relative; 
+					min-height: 1px; 
+					padding: 5px; 
+					float: left;
+					padding-left:2px ;
+					padding-right: 2px;
+					border: 1px solid #ddd;
+					margin-right: 2px;
+					
+				 }
+				
+				 .active > div { display:none; }
+				 .active > div:first-child { display:block; }
+				
+				/*xs*/
+				@media (max-width: 767px) {
+				  .carousel-inner .active.left { left: -50%; }
+				  .carousel-inner .active.right { left: 50%; }
+					.carousel-inner .next        { left:  50%; }
+					.carousel-inner .prev		     { left: -50%; }
+				  .carousel-col                { width: 50%; }
+					.active > div:first-child + div { display:block; }
+				}
+				
+				/*sm*/
+				@media (min-width: 768px) and (max-width: 991px) {
+				  .carousel-inner .active.left { left: -50%; }
+				  .carousel-inner .active.right { left: 50%; }
+					.carousel-inner .next        { left:  50%; }
+					.carousel-inner .prev		     { left: -50%; }
+				  .carousel-col                { width: 100%; }
+					.active > div:first-child + div { display:block; }
+				}
+				
+				/*md*/
+				@media (min-width: 992px) and (max-width: 1199px) {
+				  .carousel-inner .active.left { left: -33%; }
+				  .carousel-inner .active.right { left: 33%; }
+					.carousel-inner .next        { left:  33%; }
+					.carousel-inner .prev		     { left: -33%; }
+				  .carousel-col                { width: 100%; }
+					.active > div:first-child + div { display:block; }
+				  .active > div:first-child + div + div { display:block; }
+				}
+				
+				/*lg*/
+				@media (min-width: 1200px) {
+				  .carousel-inner .active.left { left: -25%; }
+				  .carousel-inner .active.right{ left:  25%; }
+					.carousel-inner .next        { left:  25%; }
+					.carousel-inner .prev		     { left: -25%; }
+				  .carousel-col                { width: 100%; }
+					.active > div:first-child + div { display:block; }
+				  .active > div:first-child + div + div { display:block; }
+					.active > div:first-child + div + div + div { display:block; }
+				}
+				
+				.block {
+					width: 306px;
+					height: 230px;
+				}
+				
+			.item_below_text{ position: absolute;
+																bottom: 6px;
+														
+															 background: linear-gradient(to top,#000,transparent);
+															background: #00000082;
+																width: 100%;
+															   color: white;}
+															   
+															   
+															   
+															   
+		ul, menu, dir {
+ 
+ 
+
+}													   
+  </style>
+</head> 
+<body >
+<style>
+.MultiCarousel { float: left; overflow: hidden; padding: 0px; width: 100%; position:relative; }
+    .MultiCarousel .MultiCarousel-inner { transition: 1s ease all; float: left; }
+        .MultiCarousel .MultiCarousel-inner .item { float: left;}
+        .MultiCarousel .MultiCarousel-inner .item > div {
+
+		    text-align: center;
+    padding: 0px;
+    margin: 10px;
+    background: #fff;
+    color: #666;
+    
+		
+		}
+    .MultiCarousel .leftLst, .MultiCarousel .rightLst { position:absolute; border-radius:50%;top:calc(50% - 20px); }
+    .MultiCarousel .leftLst { left:0; }
+    .MultiCarousel .rightLst { right:0; }
+    
+        .MultiCarousel .leftLst.over, .MultiCarousel .rightLst.over { pointer-events: none; background:#ccc; }
+</style>
+
+	
+    <!-- multi  -->
+<div class="container-fluid" style="background:#fff;padding-left:1px;padding-right:1px;margin-top:1px;   "> 
+
+
+
+
+
+<div class="row" style="background:#fff;padding-left:10px;padding-right:10px">
+		<div class="MultiCarousel" data-items="1,3,5,6" data-slide="5" id="MultiCarousel" style="
+		width: 100%;
+		margin-top: -7px; " data-interval="1000">
+            <div class="MultiCarousel-inner" style="background:#fff;width: 10560px;">
+			
+			 {% for first_slide in first_slide %}
+                <div class="item">
+                    <div class="pad15">
+                        <p class="lead"> <img width="100px" height="100px" src="/media/{{ first_slide.back_image}}" alt="loading" class="slide_image"></p>
+                        <p>₹ 1</p>
+                        <p>₹ 6000</p>
+                        <p>50% off</p>
+                    </div>
+                </div>
+				
+				{% endfor %}
+        	
+                <div class="item" >
+						<div class="pad15">
+							<div class="carousel-col">
+										<div  id="cats" style=" background-image: url({% static "/cloze44.jpg" %})"">
+				
+											<div class="item_below_text" >
+							<h4  style="color: white;font-size: 20px">Cloze Test</h4>
+												</div> 
+												<div class="middle">
+												<div class="text">Click</div>
+													  </div>
+										</div> 
+									</div>
+						</div>
+					</div>
+
+					<div class="item" >
+							<div class="pad15">
+								<div class="carousel-col">
+											<div  id="cats" style=" background-image: url({% static "/job44.jpg" %})"">
+					
+												<div class="item_below_text" >
+								<h4  style="color: white;font-size: 20px">Live Gov Job </h4>
+													</div> 
+													<div class="middle">
+													<div class="text">Click</div>
+														  </div>
+											</div> 
+										</div>
+							</div>
+						</div>
+					<div class="item" >
+							<div class="pad15">
+								<div class="carousel-col">
+											<div  id="cats" style=" background-image: url({% static "/101.jpg" %})">
+					
+												<div class="item_below_text" >
+								<h4  style="color: white;font-size: 20px"> Mathematics </h4>
+													</div> 
+													<div class="middle">
+													<div class="text">Click</div>
+														  </div>
+											</div> 
+										</div>
+							</div>
+						</div>
+
+
+						<div class="item" >
+								<div class="pad15">
+									<div class="carousel-col">
+												<div  id="cats" style=" background-image: url({% static "/d2.jpg" %})">
+						
+													<div class="item_below_text" >
+									<h4  style="color: white;font-size: 20px"> English Editorial </h4>
+														</div> 
+														<div class="middle">
+														<div class="text">Click</div>
+															  </div>
+												</div> 
+											</div>
+								</div>
+							</div>
+<div class="item" >
+										<div class="pad15">
+											<div class="carousel-col">
+														<div  id="cats" style=" background-image: url('http://ks3historygames.co.uk/wp-content/uploads/2015/12/norman_conquest-310x310.jpg')">
+								
+															<div class="item_below_text" >
+											<h4  style="color: white;font-size: 20px">History </h4>
+																</div> 
+																<div class="middle">
+																<div class="text">Click</div>
+																	  </div>
+														</div> 
+													</div>
+										</div>
+									</div>
+
+
+							<div class="item" >
+									<div class="pad15">
+										<div class="carousel-col">
+													<div  id="cats" style=" background-image: url({% static "/reas44.jpg" %})"">
+							
+														<div class="item_below_text" >
+										<h4  style="color: white;font-size: 20px"> Reasoning </h4>
+															</div> 
+															<div class="middle">
+															<div class="text">Click</div>
+																  </div>
+													</div> 
+												</div>
+									</div>
+								</div>
+								<div class="item" >
+											<div class="pad15">
+												<div class="carousel-col">
+								<div  id="cats" style=" background-image: url('https://www.rajras.in/wp-content/uploads/2016/10/CurrentAffairs-1.png')">
+									
+																<div class="item_below_text" >
+												<h4  style="color: white;font-size: 20px"> Read All Current Affairs </h4>
+																	</div> 
+																	<div class="middle">
+																	<div class="text">Click</div>
+																		  </div>
+															</div> 
+														</div>
+											</div>
+										</div>
+
+								
+
+     
+             
+            </div>
+            <button style="background-color: white;
+			padding: 20px;
+			box-shadow: 0 6px 10px rgba(0, 0, 0, 0.23), 0 10px 30px rgba(0, 0, 0, 0.19);
+			border-radius: 50%;
+			color: white;" class="btn btn-primary leftLst"><i style="font-size: 20px;color: #864b4b"  class="fa fa-chevron-left" aria-hidden="true"></i></button>
+            <button style="background-color: white;
+			padding: 20px;
+			box-shadow: 0 6px 10px rgba(0, 0, 0, 0.23), 0 10px 30px rgba(0, 0, 0, 0.19);
+			border-radius: 50%;
+			color: white; " class="btn btn-primary rightLst"><i style="font-size: 20px;color: #864b4b" class="fa fa-chevron-right" aria-hidden="true"></i></button>
+        </div>
+	</div><!-- row cont --> 
+</div><!-- end cont --> 
+	<div class='row' style="">
+		<nav class="navbar navbar-default" style="height:25px;
+		min-height:5px;background-color:transparent">
+		  <div class="container-fluid">
+		   <!-- <div class="navbar-header">
+			  <a class="navbar-brand" href="#">McqGk.com..</a>
+			</div>-->
+			
+			 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-3" aria-expanded="false">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			  </button>
+			  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-3">
+		   <ul class="nav navbar-nav navbar-right">
+			  <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+			  <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+			</ul>
+			</div>
+		  </div>
+		</nav> 
+		<div class=' col-md-2'>
+		<img id="lohomcq" src="/media/media/logo1.jpg" style="margin-top:-29px;height:50px;weight:50px;padding-left:20px;">
+		<span style="letter-spacing:2px;font-weight:600;font-family: Quicksand,sans-serif;font-size:20px">cq<span style="color: #f56019;font-size:40px">G</span>k</span>
+		
+		</div>
+			<div class=' col-md-8'>
+			  <div class="carousel slide" data-ride="carousel" id="quote-carousel">
+				<!-- Bottom Carousel Indicators -->
+				<ol class="carousel-indicators">
+				  <li data-target="#quote-carousel" data-slide-to="0" class="active"></li>
+				  <li data-target="#quote-carousel" data-slide-to="1"></li>
+				  <li data-target="#quote-carousel" data-slide-to="2"></li>
+				</ol>
+				
+				<!-- Carousel Slides / Quotes -->
+				<div class="carousel-inner">
+				
+				
+				
+				<div class="carousel-inner">
+														{% for slide in slide %}
+																	{% if forloop.first %}
+																	<div class="active item">
+																{% else %}
+																	<div class="item">
+																{% endif %}
+																
+																<blockquote>
+					  <div class="row">
+						<div class="col-sm-3 text-center">
+						  <img class="img-circle" src="/media/{{ slide.ca_img}}" style="width: 100px;height:100px;">
+					   
+						</div>
+						<div class="col-sm-9">
+						  <p>{% autoescape off %} {{slide.upper_heading}} {% endautoescape %}</p>
+						  <small>Someone famous</small>
+						</div>
+					  </div>
+					</blockquote>
+																
+																</div>
+																
+																{% endfor %}
+				
+				 
+				</div>
+				
+				<!-- Carousel Buttons Next/Prev -->
+				<a data-slide="prev" href="#quote-carousel" class="left carousel-control"><i class="fa fa-chevron-left"></i></a>
+				<a data-slide="next" href="#quote-carousel" class="right carousel-control"><i class="fa fa-chevron-right"></i></a>
+			  </div>                          
+			</div>
+		  </div> </div></div>
+		
+		
+		
+		
+		
+		 <nav class="navbar navbar-default" style="background-color:#5f2f2f;min-height:20px ;border-bottom:3px solid #f4af2c">
+		  <div class="container-fluid">
+		  
+		  <h4 style="float:right;border-radius:4px;box-shadow: 0 0 15px rgba(0,0,0,.1);padding-top: 6px; font-family: Quicksand,sans-serif;height:20px; width:377px;padding-left:18px;margin-right:30px;    margin-bottom: 0px;
+			margin-top: 0px;">
+		<span style="letter-spacing:0px;font-size:15px;color:#f56019;font-weight:400" >My Account </span>
+		&nbsp <span style="font-size:18px;color:#555;font-weight:500" > | </span>&nbsp
+		
+		<span aria-hidden="true" style="font-weight:500 ;font-size:16px;letter-spacing:0px;font-family: Quicksand,sans-serif;color:#0d6bb9"><i class="fa fa-table" aria-hidden="true"></i> Dashboard
+				
+													<li class="dropdown" style="float:right ;padding-right:10px">
+																							
+																									
+																													{% if user.is_authenticated %}
+																													<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" style="color:#0d6bb9;letter-spacing:0px;" aria-expanded="false">{{ user.username }} <b class="caret"></b></a>
+																													
+																
+																																	<ul class="dropdown-menu">
+																																	<li><a href="/logout" >Logout</a></li>
+																																	 <li role="separator" class="divider"></li> 
+																																	<li><a href="/dashboard/{{ user.username }}"> Dash Board</a></li>
+																																	
+																																	
+																																	</ul>
+																																	
+																																{% else %}
+																																<a href="" data-toggle="modal" data-target="#myModal">
+																																<span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>&nbsp;
+																																   Log In<b class="caret"></b>
+																																   </a>
+																																
+																																{% endif %} 
+																																
+																					</li>  
+																					</h4>
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+			  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			  </button>
+		  
+		
+		
+		
+			</div>
+		
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+			
+			
+			  <ul class="nav navbar-nav" style="text-align:center">
+			  
+			 
+				 <li class="dropdown">
+				  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="">Mathematics &nbsp <span style="font-size:18px;color:#555;font-weight:500" > | </span>&nbsp </a>
+				  <ul class="dropdown-menu">
+					<li><a href="#"> Multiplication Table</a></li>
+					<li><a href="#">Series</a></li>
+					
+					<li><a href="#">Days n Work</a></li>
+					 <li><a href="/math/profit_n_loss/1/">Profit n Loss</a></li>
+					  <li><a href="#">Boat & Stream</a></li>
+					 
+				  </ul>
+				</li>
+		
+		
+		
+			<li class="dropdown">
+				  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">English&nbsp <span style="font-size:18px;color:#555;font-weight:500" > | </span>&nbsp</a>
+				  <ul class="dropdown-menu">
+					<li><a href="/error_correction/noun/1/">Error Correction</a></li>
+					 <li><a href="/error_correction/noun/1/">Noune</a></li>
+					
+					  <li><a href="/closetest/close/1/">Close Test</a></li>
+					 <li><a href="#">Fill in the blank</a></li>
+					  <li><a href="/english/word/page/1">Vocabulary</a></li>
+					  <li><a href="#">Editorial</a></li>
+				  </ul>
+				</li>
+				
+					<li class="dropdown">
+				  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Reasoning&nbsp <span style="font-size:18px;color:#555;font-weight:500" > | </span>&nbsp</a>
+									  <ul class="dropdown-menu">
+																				
+																				  <li><a href="#">Blood Relation</a></li>
+																				 
+																				  <li><a href="#">Ranking and Direction</a></li>
+		
+																			
+																				  <li ><a href="#">Coading Decoding</a></li>
+																				  
+																				  <li ><a href="#">Puzzle</a></li>
+																				  
+																				  <li><a href="#">Input Output</a></li>
+																				  
+																				  
+																				 
+																				  <li><a href="/reasoning/seating_arrangment/1/">seating_arrangment</a></li>
+																				</ul>
+				</li>
+				
+					<li class="dropdown">
+				  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Current Affairs&nbsp <span style="font-size:18px;color:#555;font-weight:500" > | </span>&nbsp</span></a>
+							  <ul class="dropdown-menu">
+																				
+																				  <li><a href="/ca/1/">Daily Current Today</a></li>
+																				
+																				  <li><a href="#">Static Gk</a></li>
+		
+																				
+																				  <li class="waves-effect"><a href="#">Banking Awerness</a></li>
+																				  
+																				</ul>
+				</li>
+				
+				<li class="dropdown">
+				  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">General Studies&nbsp <span style="font-size:18px;color:#555;font-weight:500" > | </span>&nbsp</a>
+				  <ul class="dropdown-menu">
+					<li><a href="/gk/history/"> History</a></li>
+					<li><a href="/gk/geography/">Geography</a></li>
+					
+					<li><a href="/gk/constitution/">Constitution</a></li>
+					 <li><a href="/gk/economics">Economics</a></li>
+					  <li><a href="gk/physics">physics</a></li>
+					  <li><a href="gk/chemistry">Chemistry</a></li>
+					  <li><a href="gk/biology">Biology</a></li>
+					
+				  </ul>
+				</li>
+				
+						
+							
+							
+				
+			  </ul>
+		   
+			</div><!-- /.navbar-collapse -->
+		  </div><!-- /.container-fluid -->
+		</nav>
+		
+
+
+			
+			
+																												<div id="myModal" class="modal fade mod" role="dialog">
+																									  <div class="modal-dialog ">
+
+																										<!-- Modal content-->
+																										<div class="modal-content"style="text-align:center">
+																										<div class="modal-header" style="background-color:#210080">
+																										  <div class="modal-header">
+																											<button type="button" class="close" data-dismiss="modal">&times;</button>
+																											<h1 class="modal-title" style="color:#fff"><i class="glyphicon glyphicon-thumbs-up"></i>Sign In / Sign Up</h1>
+																											</div>
+																										  </div>
+																										  <div class="modal-body"style="text-align:center">
+																																																																																					
+																																																																																					
+																																																																																					<ul class="nav nav-tabs" style="text-align:center">
+																																<li class="active" style="text-align:center"><a data-toggle="tab" href="#home">Sign In</a></li>
+																																<li style="text-align:center"><a data-toggle="tab" href="#menu1">Sign Up </a></li>
+																																
+																															
+																															  </ul>
+																											<div class="tab-content">
+																																<div id="home" class="tab-pane fade in active">
+																																  <h3>Sign In</h3>
+																																																																																																																																														{% block content %}
+																																																																																																																																														
+																																			  <form method="post" id="login" action="" >
+																																				
+																																			
+																																			   {% csrf_token %}
+																																				{{ login.as_p }}
+																																				<div id="below"></div>
+																																				<button class="btn btn-success "  style="color:green"type="submit">Sign In</button>
+																																			  </form>
+																																				
+
+
+																																</div>
+																																<div id="menu1" class="tab-pane fade">
+																																  <h3>Create an Account</h3>
+																																																																																																  
+																																			  <form method="post" id="signup">
+																																				
+																																			  
+																																			   {% csrf_token %}
+																																				{{ form.as_p}}
+																											<img id="img_signup"style="position:relative;left:0;right:0;margin:auto;display:none;text-align:center;float:center"height="50" width="90"src="/media/media/31.svg">
+																																	<div style="display:none"id="below_signup"></div>
+																																	<button type="submit">Sign up</button></div>
+																																	</form>
+																																			{% endblock %}
+																																
+																															
+																																
+
+
+																												</div>
+																										  </div>
+																										  <div class="modal-footer">
+																											<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+																										  </div>
+																										</div>
+
+																									  </div>
+																									</div>
+			
+
+
+<div class="container-fluid">
+
+
+	<!--           this not mine   -->
+	
+ 
+
+
+			 <style>
+				  
+		
+		#dogs:hover{
+			background-color: rgba(0,0,0,.6);
+		}
+		.middle {
+		  transition: .5s ease;
+		  opacity: 0.4;
+		  position: absolute;
+		  top: 50%;
+		  left: 50%;
+		  background-color: rgba(0,0,0,.6);
+		  transform: translate(-50%, -50%);
+		  -ms-transform: translate(-50%, -50%);
+		  text-align: center;
+		}
+		
+		
+		.text {
+		  background-color:rgba(0,0,0,.6);
+		  color: white;
+		  font-size: 16px;
+		  padding: 4px 19px;
+		}
+		#cats:hover {
+			background-color: rgba(0,0,0,.6);
+		
+		}
+		
+		#cats:hover .middle {
+		  opacity: 1;
+		  
+		}
+		
+				 #cats{
+				   
+					 background-size: 100% 100%;
+					 height: 152px; 
+					 width: 100%;  opacity: 0.9;
+					
+				}
+		#dogs{
+		
+				border: 1px solid #ddd;
+				padding: 4px;
+			
+		}
+				 </style>	
+
+
+
+
+			<div class="container" style="    " >
+
+
+				<div class="row">
+					<div class="panel cardd " style="box-shadow:0 0px 1px 0 rgba(0,0,0,.16), 0 15px 41px 0 rgba(0,0,0,.12)">
+			
+						<div class="col-md-7 col-md-push-3  " style="  background-color:#fff;padding-top:0px;margin-top:15px">
+						
+					 <div class="tab" role="tabpanel" style="margin-top:-20px;">
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs" role="tablist" style="    background: #133b5a;
+    box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12);
+
+
+">
+                    <li class="active"><a  style="border-radius:0px" id="section11" href="#Section1" aria-controls="home" role="tab" data-toggle="tab">Current Affairs Today</a></li>
+                    <li  ><a style="border-radius:0px" id="section12" href="#english_the" >English Editorial</a></li>
+                    <li ><a  style="border-radius:0px"  id="section13" href="#foot12" >Maths</a></li>
+                    <li ><a style="border-radius:0px"  id="section14" href="#Section4" aria-controls="messages" role="tab" data-toggle="tab">Reasoning</a></li>
+					  <li><a  style="border-radius:0px"  id="section15" href="#Section4" aria-controls="messages" role="tab" data-toggle="tab">Close Test</a></li>
+					
+					
+                </ul>
+				
+				<h2 style="text-align:center;font-size:2.5em;color:black">Current Affairs Top 10</h2>
+                <!-- Tab panes -->
+      
+            </div>
+			
+	
+						
+						
+													<div id="current_affairs_today" style="padding-top:25px ">
+										
+										
+										{% for slide in slide %}
+																			<div   class="panel nopadding " style="margin-bottom:10px;border:px solid #bce8f1;box-shadow:0 0px 0px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12);">
+																			<div  id="dets1" class="media cardd"  >
+  <div class="media-right"  > 
+    <img class="today_img" src="/media/{{slide.ca_img}}" class="media-object" style=""/>
+  </div>
+  <div class="media-body" style="background-color:white">
+<h4  class="today_heading" style=" "> {% autoescape off %} {{slide.upper_heading}}  {% endautoescape %}</h4> 
+ 
+<button id="b" onClick="op('#{{forloop.counter}}dis_defence',1)" type="button" class="btn btn-warning btn-xs y"style=" float: right;
+   color:#9265ff;
+   
+   box-shadow:none;
+    font-weight: 600;
+    letter-spacing: 2px;
+    font-size: 11px;
+    line-height: 11px;
+    padding: 7px 24px;
+   
+	border:0px;">
+<b id="dets2"style=" font-weight:500; font-family: Quicksand,sans-serif;" >Details</b> 
+ </button>
+
+  </div>
+</div>  
+																			
+																			
+
+
+																									
+																																						
+																							
+																							<div class="panel-body" id="{{forloop.counter}}dis_defence" style="font-weight:bold;display:none">
+																						
+																											<div style="background-color:rgb(248, 252, 255);"class="panel-heading  nopadding " id="{{forloop.counter}}link" >
+																					
+																				
+																				
+																				
+														<button id="{{slide.new_id}}"style="text-align:center; color: #fff;background-color:#d9534f;margin-right:10px;float:right;display:inline-block;" type="submit" class="btn btn-danger btn-xs"
+																						{% if user.is_authenticated %}
+																						onClick="add('{{slide.new_id}}','{{slide.upper_heading}}','{{ user.username }}','/media/{{slide.ca_img}}')" 
+																						
+																						{% else %}
+																						
+																						data-toggle="modal" data-target="#myModal"
+																						
+																						{% endif %}
+																						
+																						><span class="glyphicon glyphicon-plus"></span> Add to notes</button> 
+																					</div>
+																											<h4 style="text-align:left ;"><b><u>Key points to Remember:</u></b></h4>
+																									
+																										{% autoescape off %}
+																											
+																											<ul style="text-align:None;" id="{{forloop.counter}}" class="key " >
+																									
+																												
+																									
+																												</ul>
+																											  {% endautoescape %}
+																												{% if slide.link != "" %}
+																												<p  style="text-align:right;padding-bottom:0px;" ><b>News Paper Link :</b></p>
+																												<div style="text-align:right;float:right" id="{{forloop.counter}}lk">
+																												
+																	
+																											</div>
+																											{% endif %}
+														<script>   key('{{slide.all_key_points|escapejs}}' );
+																																		
+																		linkk('{{slide.link}}','{{slide.url}}');
+																																		
+																																		
+																					function key(a){
+
+																			var suvo_found=0;																	
+																			var myarray = a.split('///');
+
+																				for(var i = 0; i < myarray.length; i++)
+																					{
+																					
+																					if (suvo_found==0){
+																if(myarray[i].indexOf("<suvo>")==-1){
+																			if(myarray[i].indexOf("<rinku>")==-1){
+																								var node=document.createElement("LI");
+																								//var textnode=document.createTextNode(myarray[i]);
+																								node.innerHTML =myarray[i];
+																								document.getElementById("{{forloop.counter}}").appendChild(node);
+																												
+																												}
+																												
+																											else{
+																												var node=document.createElement("div");
+																												node.setAttribute("class", "key");
+																												node.innerHTML =myarray[i];
+																												document.getElementById("{{forloop.counter}}").appendChild(node);
+																												}
+																												
+																													
+																											
+																											
+																									}else{
+																												
+																												suvo_found=1;
+																							var node=document.createElement("div");
+																					
+																					node.setAttribute("style", "font-size:18px;padding:16px");	
+																					//node.setAttribute("onclick", "op_next(\'#{{forloop.counter}}_next_ul\',1)");
+																					node.innerHTML =myarray[i];
+																					
+	var button_gk_related = '<span><button id="b" onClick="op_next(\'#{{forloop.counter}}_next_ul\',1)" type="button" class="btn btn-warning btn-xs y"style="box-shadow: 0 6px 10px rgba(0, 0, 0, 0.23), 0 10px 30px rgba(0, 0, 0, 0.19);float:right;color:white;border:0px blue;background:#2DB9F2;font-weight:400;letter-spacing:2px;font-size:13px;line-height:11px;padding:7px 10px;border-radius:0px"><b style="font-weight:400;font-style:italic" ></b> Related Gk </button></span>';
+																					node.innerHTML +=button_gk_related;
+																					node.innerHTML +='<div  class=" key " id="{{forloop.counter}}_next_ul" style="display:none"></div>';
+																					document.getElementById("{{forloop.counter}}").appendChild(node);
+																																																														
+																									}
+																									
+																									}else{
+																									
+																									
+																									var node=document.createElement("LI");
+																				
+																								node.innerHTML =myarray[i];
+																						document.getElementById("{{forloop.counter}}_next_ul").appendChild(node);
+																									
+																									
+																									
+																									
+																									}
+
+																}
+																	 }
+																																							 
+																																							 
+																		 function linkk(c,d){
+
+																																				
+																						var myarrayy = c.split('///');
+																			var url = d.split('///');
+
+																			for(var i = 0; i < myarrayy.length; i++)
+																	{
+
+																var a=document.createElement("a");
+																			a.setAttribute("style", "text-align:right; padding:2px");
+																		a.setAttribute('target', '_blank');
+
+																													 
+																									a.innerHTML = '<u><b>'+myarrayy[i] +'</u></b>';
+																								a.href = url[i];
+
+																										//a.setAttribute('href', 'google.com');
+																									//node.appendChild(textnode);
+																				document.getElementById("{{forloop.counter}}lk").appendChild(a);
+																											
+																																
+
+																											}
+																			 } 
+
+																																		
+																																		</script>
+																											
+																									<p style="text-align:left;float:left;padding:0px" ><a style="color:#ff3333"href="/ca/1/">Read All Currrent Affairs->></a></p>		
+																						</div>
+																						
+																							
+																				</div>
+														{% endfor %}
+														</div>
+														
+														<!-- english-->
+														
+													<!--	<h3 class="current_h3" style="color:#0057ff"> Editorial Word List  </h3>--> 
+														
+														 <button id="b" onClick="op('#english_the',0)" type="button" class="x"style="float:right;color:#fff;border:12px solid #fff;background:#f05f70;font-weight:400;letter-spacing:2px;font-size:15px;line-height:11px;border-radius:10px;width:100%;padding:10px;margin-bottom:10px"><b>English Editorial</b>  </button>
+														<div id="english_the" style="display:none;padding:12px;">
+															
+						<!-- word list 1 -->
+						<div class="eng nopadding">
+				
+						
+																			{% if word1 != None %}
+																			<div class="panel panel-info nopadding" >
+																				<div class="col-md-12 nopadding">
+													
+														<h3 style="text-align:left; color: #336699"> The Hindu Editorial Wordlist 
+														<img style="text-align:right;float:right;"src="{% static "/the.png" %}" class="img-rounded" alt="Cinque Terre" width=104" height="86">
+														<P>
+														
+														<b style="color:black;font-size:14px"> <i class="fa fa-calendar" aria-hidden="true"></i> Date :{{word1_day}} </b> </p>
+														
+													
+														 
+														</h3>
+														</div>
+																			
+										
+										
+																								<div class="panel panel-primary card ">
+																									  <div class="c-header-color " style="
+
+																									  border: 2px solid #fff;
+    box-shadow: 0 0 3px #ccc; "><p style="font-size: 17px" class="c-heading">
+																									  	<img  style="      border: 2px solid #ddd;
+    box-shadow: 0 0 3px #ece8e8; width: 20%;height: 80px;float:right;margin-left:10px" src="/media/media/logo1.jpg"/>
+																									  
+																									  {% if header1 != None %}
+																									  
+																									  {% for header1 in header1 %}
+																									  {{header1.Heading_for_list1}}  
+																									  
+																									  
+																									   <a class="c-heading"   target="_blank" style=" text-align:right;font-size:16px"href="{{header1.link}}"><u>Read more The Hindu->></u></a>  </p>
+																										{% endfor %}
+																									  {% endif %} 
+																									  </div>
+																									  <div class="panel-body">
+																									<div style="overflow-x:auto;">
+																										<table class="table " >
+																													<thead>
+																													  <tr>
+																														<th><a style="font-size:17px;font-family: 'PT Serif', serif;text-decoration:none;color:black">Word (form)</a></th>
+																														<th><a style="font-size:17px;font-family: 'PT Serif', serif;text-decoration:none;color:black">synonym </a></th>
+																														<th><a style="font-size:17px;font-family: 'PT Serif', serif;text-decoration:none;color:black">Example</a></th>
+																														<th><a style="font-size:17px;font-family: 'PT Serif', serif;text-decoration:none;color:black">Image </a></th>
+																													
+																													  </tr>
+																													</thead>
+																													<tbody >
+																											
+																						
+																		
+																					{% for words in word1 %}
+																													  <tr>
+																														<td ><b style="font-size:17px;font-family: 'PT Serif', serif;color:black; text-decoration:underline">{{words.word}} </b><br/> <br/><a style="font-size:17px; color:#1313de; text-decoration:none">{{words.meaning}}</a></td>
+																														<td><a style="font-size:17px; color:#105d10; text-decoration:none">{{words.synonym}}</a></td>
+																														<td><a style="font-size:17px; color:black; text-decoration:none"> {% autoescape off %} {{words.example}} {% endautoescape %}    </b></td>
+																													<td><a href="#"><img width="110" height="110" src="/media/{{words.word_img}}" class="attachment-120x120 size-120x120 wp-post-image" alt="" scale="0"></a></td>
+																													  </tr>  
+																													  	{% endfor %}
+																															
+																													  
+																														
+															 
+																													  
+																													 
+																													</tbody>
+																												  </table>
+																										</div>
+																										 <h4 style="color:#D50000;text-align:right"><a href="/english/word/page/1/" style="color:#D50000"> Continue...>></a></h4>
+																										
+																									  
+																									  
+																									  </div>
+																								</div>
+						
+																	</div>
+																	{% endif %}
+																							<!-- end word list 1 -->
+																													<!-- word list 2 hindu-->
+																				
+																													
+																												<!-- end word list 2 hiindu -->
+																												
+																												
+																												
+
+																												<!-- economy word list 1 start -->
+
+
+																	{% if word_e1 != None %}
+																	
+														
+															<div class="panel panel-info nopadding " >
+											
+										<div class="col-md-12 nopadding">
+														<p >
+														<h3 style="text-align:left; color: #336699">  Editorial from The EconomicTimes 
+														<img style="text-align:right;float:right;"src="{% static "/theet.png" %}" class="img-rounded" alt="Cinque Terre" width=104" height="86">
+														<P>
+														
+														<b style="color:black;font-size:14px"> <i class="fa fa-calendar" aria-hidden="true"></i> Date :{{word_e1_day}} </b> </p>
+														
+														
+														 
+														</h3>
+														</div>
+														
+														
+																	
+									<div class="panel panel-primary ">
+										  <div class="c-header-color  card"><p class="c-heading">{% if header_e1 != None %}
+																									  {% for header_e1 in header_e1 %}
+																									  {{header_e1.Heading_for_list1}}  
+																									  
+																									  <a class="c-heading"  target="_blank" style=" text-align:right;font-size:16px"href="{{header_e1.link}}"><u>Read more The EconoiTimes->></u></a>
+																										{% endfor %}
+																									  {% endif %} 
+																									  </p>
+											
+										  </div>
+										  <div class="panel-body">
+												<div style="overflow-x:auto;">
+											<table class="table">
+														<thead>
+																													  <tr>
+																														<th><a style="font-size:17px;font-family: 'PT Serif', serif;text-decoration:none;color:black">Word (form)</a></th>
+																														<th><a style="font-size:17px;font-family: 'PT Serif', serif;text-decoration:none;color:black">synonym </a></th>
+																														<th><a style="font-size:17px;font-family: 'PT Serif', serif;text-decoration:none;color:black">Example</a></th>
+																														<th><a style="font-size:17px;font-family: 'PT Serif', serif;text-decoration:none;color:black">Image </a></th>
+																													
+																													  </tr>
+																													</thead>
+														<tbody>
+														  
+																		{% for words in word_e1 %}
+																								 <tr>
+																									<td ><b style="font-size:17px;font-family: 'PT Serif', serif;color:black; text-decoration:underline">{{words.word}} </b><br/> <br/><a style="font-size:17px; color:#1313de; text-decoration:none">{{words.meaning}}</a></td>
+																														<td><a style="font-size:17px; color:#105d10; text-decoration:none">{{words.synonym}}</a></td>
+																														<td><a style="font-size:17px; color:black; text-decoration:none">{{words.example}}.</b></td>
+																									<td><a href="#"><img width="150" height="150" src="/media/{{words.word_img}}" class="attachment-120x120 size-120x120 wp-post-image" alt="" scale="0"></a></td>
+																								 </tr>  
+																											{% endfor %}
+																															
+														  
+														  
+														  
+														 
+														 
+														 
+														</tbody>
+														
+													  </table>
+													  </div>
+												
+											 <h4 style="color:#D50000;text-align:right"><a href="/english/word/page/1/" style="color:#D50000"> Continue...>></a></h4>
+											
+										  
+										  
+										  </div>
+									</div></div>
+									
+									
+									{% endif %}
+											<!-- end economy 1 wordlist -->
+											<!--  economy 2 wordlist -->
+											
+											{% if word_e2 != None %}
+											<div class="row card nopadding">
+														<div class="col-md-9">
+														<h3 style="text-align:left; color: #336699"> Editorial from The EconomicTimes 
+														
+														<p ><b> <i class="fa fa-calendar" aria-hidden="true"></i> Date :{{word_e2_day}} </b> <p></div>
+														
+														<div class="col-md-3">
+														<img src="{% static "/theet.png" %}" class="img-rounded" alt="Cinque Terre" width=104" height="86"> </h3>
+														
+														</div>
+														
+														</div>
+											
+											
+																	<div class="panel panel-info" style="margin-top:0px;">
+									<div class="panel panel-primary card">
+										  <div class="c-header-color"><p class="c-heading">{% if header_e2 != None %}
+																									  {% for header_e2 in header_e2 %}
+																									  {{header_e2.Heading_for_list2}}  
+																									  
+																									  <a class="c-heading"  target="_blank"style=" text-align:right"href="{{header_e2.link}}"><u>Read more The EconomicTimes->></u></a> 
+																									  {% endfor %}
+																									  {% endif %} 
+																									  </p>
+											
+										  </div>
+										  <div class="panel-body">
+												<div style="overflow-x:auto;">
+											<table class="table">
+														<thead>
+														  <tr>
+															<th>Word</th>
+															<th>Meaning</th>
+															<th>synonym</th>
+															
+														  </tr>
+														</thead>
+														<tbody>
+														  
+																		{% for words in word_e2 %}
+																								 <tr>
+																									<td><b>{{words.word}} </b><br/> <br/>{{words.meaning}}</td>
+																									<td><h4 style="color:green"> {{words.synonym}}</h4></td>
+																									<td><h2 style="color:#424242;">{{words.example}}He eagerly accepted the job because it came with a plethora of opportunities.</h2></td>
+																									<td><a href="#"><img width="150" height="150" src="/media/{{words.word_img}}" class="attachment-120x120 size-120x120 wp-post-image" alt="" scale="0"></a></td>
+																								 </tr>  
+																											{% endfor %}
+																															
+														  
+														  
+														  
+														 
+														 
+														 
+														</tbody>
+														
+													  </table>
+													  </div>
+												
+											 <h4 style="color:#D50000;text-align:right"><a href="/english/word/page/1/" style="color:#D50000"> Continue...>></a></h4>
+											
+										  
+										  
+										  </div>
+									</div></div>
+									
+									
+									{% endif %}
+											<!-- end economy 2 wordlist end -->
+														
+														
+														</div>
+														</div>
+														<!-- english -->
+														
+														
+														<!-- math -->
+														 <button id="b" onClick="op('#math_the',0)" type="button" class="x"style="float:right;color:#fff;border:12px solid #fff;background:#2e9fff;font-weight:400;letter-spacing:2px;font-size:15px;line-height:11px;border-radius:10px;width:100%;padding:10px;margin-bottom:20px"><b>math for competitive exam</b>  </button>
+														 <div id="math_the" style="display:none;padding:12px;">
+														{% if math != None %}
+														
+														<div style="padding:20px; background-color:#3F51B5">
+						
+						<h2 style="color: #fff;font-family: 'PT Serif', serif;text-decoration:underline"> Impotent Math Excersise 20-may-2017</h2>
+					
+						</div>
+						 
+						
+						<div class="sayan" style="background-color:white">
+						
+						<span style="padding-bottom:20px;">
+						
+						<img src="" class="img-thumbnail center-block " alt="Cinque Terre" width="500" height="300"></span>
+						
+								</div>						
+													
+									{% for math in math %}
+									
+										<div class="panel nonpadding ">
+												
+												<div class="panel-heading card">
+									
+																		
+																		<h4>Profit and Loss: Solved Examples<p class="bg-info"> <b><i>Question {{forloop.counter}}: </i></b></p>  </h4>
+																		<div  style="font-family:'Roboto Condensed', sans-serif;font-size:17px;color:#000;display:inline;line-height: 1.42857;">
+																	{% autoescape off %}	{{math.question}} {% endautoescape %} </div>
+																{% if math.use_image == 0 %}
+														
+															
+															
+																
+																
+																
+																{% endif %}
+																
+															
+												</div>
+																													
+														
+														
+														<hr></hr>
+													<div class="panel-body">
+														<div id="mathclockdiv{{forloop.counter}}" class="clockdiv"style="text-align:center;margin-right:0;float:right;display:none">
+  
+															 
+															<!--  <div>
+																<span class="mathminutes"id="mathminutes"></span>
+																<div class="smalltext">Minutes</div>
+															  </div> 
+															  -->
+															  <div>
+																<span class="seconds"id="mathseconds{{forloop.counter}}"></span>
+																<div class="smalltext" id="mathsmalltext{{forloop.counter}}">Seconds</div>
+															  </div>
+															</div>
+																		
+																		<button id="mathtime{{forloop.counter}}" onClick="timer('mathclockdiv{{forloop.counter}}',{{math.time}},{{forloop.counter}}1,{{forloop.counter}}2,{{forloop.counter}}3,{{forloop.counter}}4,{{forloop.counter}}5,{{math.ans}},mathsolution{{forloop.counter}},{{forloop.counter}},'math',5)"
+
+																							
+																						style="text-align:center; color: #fff;background-color:rgb(36, 172, 98);margin-right:0;float:right;display:inline-block;"  class="btn  btn-sm"
+																						
+																						
+																						><i class="fa fa-clock-o" aria-hidden="true"></i>  Timer {{math.time}} Sec</button> 
+																		
+																		
+																		<h4 style="text-align:left ;color:#F06292"><b><u>Options:</u></b></h4>
+																		
+																	
+
+
+
+																							 
+																				<div class="radio radio-primary " >
+
+																		
+																 <form >
+												
+																																				<div style="display: block"> 
+																																		 
+																					<input type="radio" name="radio1" id="{{forloop.counter}}1" value="option1">
+																					<label for="{{forloop.counter}}1">
+																						{{math.a}}
+																					</label>
+																					<div id="{{forloop.counter}}w1"style="display:none">
+																					<img src="{% static "/c.png" %}" class="img-rounded"> 
+																					</div>
+																					<div id="{{forloop.counter}}r1"style="display:none">
+																					<img src="{% static "/d.png" %}" class="img-rounded"> 
+																					</div>
+																					</div>
+																					
+																					
+																					<div style="display: block"> 
+																					<input type="radio" name="radio1" id="{{forloop.counter}}2" value="option1">
+																					 
+																					<label for="{{forloop.counter}}2">
+																						{{math.b}}
+																					</label>
+																					<div id="{{forloop.counter}}w2"style="text-align:center;display:none">
+																					<img src="{% static "/c.png" %}" class="img-rounded"> 
+																					</div>
+																					<div id="{{forloop.counter}}r2"style="text-align:center;display:none">
+																					<img src="{% static "/d1.png" %}" class="img-rounded"> 
+																					</div>
+																					
+																				</div>
+																				
+																				
+																				<div style="display: block"> 
+																																		 
+																					<input type="radio" name="radio1" id="{{forloop.counter}}3" value="option1">
+																					<label for="{{forloop.counter}}3">
+																						{{math.c}}
+																					</label>
+																				<div id="{{forloop.counter}}w3"style="text-align:center;display:none">
+																					<img src="{% static "/c.png" %}" class="img-rounded"> 
+																					</div>
+																					<div id="{{forloop.counter}}r3"style="text-align:center;display:none">
+																					<img src="{% static "/d1.png" %}" class="img-rounded"> 
+																					</div>	
+																				</div>
+																					
+																					
+																					<div style="display: block"> 
+																					
+																					 <input type="radio" name="radio1" id="{{forloop.counter}}4" value="option1">
+																					<label for="{{forloop.counter}}4">
+																						{{math.d}}
+																					</label>
+																					<div id="{{forloop.counter}}w4"style="text-align:center;display:none">
+																					<img src="{% static "/c.png" %}" class="img-rounded"> 
+																					</div>
+																					<div id="{{forloop.counter}}r4"style="text-align:center;display:none">
+																					<img src="{% static "/d1.png" %}" class="img-rounded"> 
+																					</div>
+																					
+																				</div>
+																				
+																				<div style="display: block"> 
+																					
+																					 <input type="radio" name="radio1" id="{{forloop.counter}}5" value="option1">
+																					<label for="{{forloop.counter}}5" >
+																						{{math.e}}
+																					</label>
+																					
+																					
+																					<div id="{{forloop.counter}}w5"style="text-align:center;display:none">
+																					<img src="{% static "/c.png" %}" class="img-rounded"> 
+																					</div>
+																					<div id="{{forloop.counter}}r5"style="display:none;">
+																					<img src="{% static "/d.png" %}" class="img-rounded" > 
+																					</div>
+																					
+																					
+																				</div>
+																				
+																				
+																					</div>
+																					
+																			</form>
+																			
+																			<button 
+																		id="mathsol{{forloop.counter}}"onclick=
+	"op({{forloop.counter}}1,{{forloop.counter}}2,{{forloop.counter}}3,{{forloop.counter}}4,{{forloop.counter}}5,{{math.ans}},mathsolution{{forloop.counter}},{{forloop.counter}},'mathsol_upper{{forloop.counter}}','math',5)"
+																							
+																						style="text-align:center; color: #fff;background-color:#4D90FE;margin-right:0;float:left;display:inline-block;margin-top:16px" type="submit" class="btn  btn-sm"
+																						
+																						
+																						> See Solutoins</button> 
+																						
+																						
+																		
+																						
+													</div>			
+																		
+													
+													
+													
+													
+													
+													<div id="mathsolution{{forloop.counter}}"style="text-align:center;display:none">
+													 
+															<p  id="mathsol_upper{{forloop.counter}}"class="bg-info" style="text-align:center;"> <b>Correct<img src="{% static "/thh.png" %}" class="img-rounded" ></b> </p> 
+															<p> <b>  Answer :</b></p> 
+															<!-- <p class="bg-danger" style="display:inline"> Wrong
+																					<img src="{% static "/c.png" %}" class="img-rounded" id="{{forloop.counter}}w"style="display:none"> 
+																					
+																					
+																					<img src="{% static "/d.png" %}" class="img-rounded" id="{{forloop.counter}}r"style="display:none;"> 
+																					 </p><br></br> -->
+															
+																		<div  style="font-family:'arial', sans-serif;font-size:17px;color:#000;display:inline;line-height: 1.42857;">
+																	{% autoescape off %}	{{math.solution}} {% endautoescape %} </div>
+																
+																	
+																		</div>
+													</div>
+													
+													{% endfor %}
+													
+													
+													<!--end palel-->
+													<h4 style="color:#212121;text-align:right"><a href="https://www.w3schools.com/html/" style="color:#D50000"><u>Click to Practice More...>></u></a></h4>
+													
+													{% endif %}
+													
+													</div>
+														<!--math end -->
+														
+														
+																									
+						
+						
+														
+														
+														
+												 <button id="b" onClick="op('#reasoning_the',0)" type="button" class="x"style="float:right;color:#fff;border:12px solid #fff;background:#ff9b51;font-weight:400;letter-spacing:2px;font-size:15px;line-height:11px;border-radius:10px;width:100%;padding:10px;margin-bottom:20px"><b>Reasoning for competitive exam</b>  </button>		
+						
+						
+					<div id="reasoning_the" style="display:none;padding:12px;">
+						
+						
+						
+						{% if reasoning != None %}
+						
+						<div style="padding:20px; background-color:##19398A">
+						
+						<h2 style="color: white;font-family: 'PT Serif', serif;text-decoration:underline">  Todays Reasoning practice</h2>
+						
+						</div>
+						
+							<div class="sayan" style="background-color:white">
+						
+						
+						<span style="padding-bottom:20px;">
+						
+						<img src="{% static "/r.jpeg" %}" class="img-thumbnail center-block " alt="Cinque Terre" width="500" height="0"></span>
+						
+					
+						</div>
+					
+											
+									{% for reasoning in reasoning %}
+									
+										
+										<div class="panel nonpadding ">
+												
+												<div class="panel-heading card" style="text-align:justify">
+										
+																		
+																		<h4>Reasoning pratice with timer<p class="bg-info"> <b><i>Question {{forloop.counter}}: </i></b></p>  </h4>
+																		<div  style="font-family:'Roboto Condensed', sans-serif;font-size:17px;color:rgb(49, 103, 126);display:inline;line-height: 2.1;font-weight:bold">
+																	{% autoescape off %}	{{reasoning.question}} {% endautoescape %} </div>
+																{% if reasoning.use_image == 0 %}
+														
+															
+															
+																
+																
+																
+																{% endif %}
+																
+															
+												</div>
+																													
+														
+														
+														<hr></hr>
+														{% if reasoning.question_part == '' %}
+													<div class="panel-body">
+													
+															<div id="reasoningclockdiv{{forloop.counter}}" class="clockdiv"style="text-align:center;margin-right:0;float:right;display:none">
+  
+															 
+															<!--  <div>
+																<span class="reasoningminutes"id="reasoningminutes"></span>
+																<div class="smalltext">Minutes</div>
+															  </div> 
+															  -->
+															  <div>
+																<span class="seconds"id="reasoningseconds{{forloop.counter}}"></span>
+																<div class="smalltext" id="reasoningsmalltext{{forloop.counter}}">Seconds</div>
+															  </div>
+															</div>
+																		
+																		<button id="reasoningtime{{forloop.counter}}" onClick="timer('reasoningclockdiv{{forloop.counter}}',{{reasoning.time}},'res{{forloop.counter}}1','res{{forloop.counter}}2','res{{forloop.counter}}3','res{{forloop.counter}}4','res{{forloop.counter}}5',{{reasoning.ans}},reasoningsolution{{forloop.counter}},'{{forloop.counter}}','reasoning',5)"
+
+																							
+																						style="text-align:center; color: #fff;background-color:rgb(36, 172, 98);margin-right:0;float:right;display:inline-block;"  class="btn  btn-sm"
+																						
+																						
+																						><i class="fa fa-clock-o" aria-hidden="true"></i>  Timer {{reasoning.time}} Sec</button> 
+																		
+													<!--	<div id="clockdiv{{forloop.counter}}" class="clockdiv"style="text-align:center;margin-right:0;float:right;display:none">
+  
+															 <!--
+															  <div>
+																<span class="minutes"id="minutes"></span>
+																<div class="smalltext">Minutes</div>
+															  </div> 
+															 
+															  <div>
+																<span class="seconds{{forloop.counter}}"id="seconds{{forloop.counter}}"></span>
+																<div class="smalltext" id="smalltext{{forloop.counter}}">Seconds</div>
+															  </div>
+															</div>
+																		
+																		<button id="time{{forloop.counter}}" onClick="timer({{forloop.counter}},{{reasoning.time}},{{forloop.counter}}1,{{forloop.counter}}2,{{forloop.counter}}3,{{forloop.counter}}4,{{forloop.counter}}5,{{reasoning.ans}},solution{{forloop.counter}},{{forloop.counter}})"
+
+																							
+																						style="text-align:center; color: #fff;background-color:rgb(36, 172, 98);margin-right:0;float:right;display:inline-block;"  class="btn  btn-sm"
+																						
+																						
+																						><i class="fa fa-clock-o" aria-hidden="true"></i>  Timer {{reasoning.time}} Sec</button> -->
+																		
+																		
+																		<h4 style="text-align:left ;color:#F06292"><b><u>Options:</u></b></h4>
+																		
+																	
+
+
+
+																							 
+																				<div class="radio radio-primary " >
+
+																		
+																 <form >
+										
+																																				<div style="display: block"> 
+																																		 
+																					<input type="radio" name="radio1" id="res{{forloop.counter}}1" value="option1">
+																					<label for="res{{forloop.counter}}1">
+																						{{reasoning.a}}
+																					</label>
+																					<div id="res{{forloop.counter}}w1"style="display:none">
+																					<img src="{% static "/c.png" %}" class="img-rounded"> 
+																					</div>
+																					<div id="res{{forloop.counter}}r1"style="display:none">
+																					<img src="{% static "/d.png" %}" class="img-rounded"> 
+																					</div>
+																					</div>
+																					
+																					
+																					<div style="display: block"> 
+																					<input type="radio" name="radio1" id="res{{forloop.counter}}2" value="option1">
+																					 
+																					<label for="res{{forloop.counter}}2">
+																						{{reasoning.b}}
+																					</label>
+																					<div id="res{{forloop.counter}}w2"style="text-align:center;display:none">
+																					<img src="{% static "/c.png" %}" class="img-rounded"> 
+																					</div>
+																					<div id="res{{forloop.counter}}r2"style="text-align:center;display:none">
+																					<img src="{% static "/d1.png" %}" class="img-rounded"> 
+																					</div>
+																					
+																				</div>
+																				
+																				
+																				<div style="display: block"> 
+																																		 
+																					<input type="radio" name="radio1" id="res{{forloop.counter}}3" value="option1">
+																					<label for="res{{forloop.counter}}3">
+																						{{reasoning.c}}
+																					</label>
+																				<div id="res{{forloop.counter}}w3"style="text-align:center;display:none">
+																					<img src="{% static "/c.png" %}" class="img-rounded"> 
+																					</div>
+																					<div id="res{{forloop.counter}}r3"style="text-align:center;display:none">
+																					<img src="{% static "/d1.png" %}" class="img-rounded"> 
+																					</div>	
+																				</div>
+																					
+																					
+																					<div style="display: block"> 
+																					
+																					 <input type="radio" name="radio1" id="res{{forloop.counter}}4" value="option1">
+																					<label for="res{{forloop.counter}}4">
+																						{{reasoning.d}}
+																					</label>
+																					<div id="res{{forloop.counter}}w4"style="text-align:center;display:none">
+																					<img src="{% static "/c.png" %}" class="img-rounded"> 
+																					</div>
+																					<div id="res{{forloop.counter}}r4"style="text-align:center;display:none">
+																					<img src="{% static "/d1.png" %}" class="img-rounded"> 
+																					</div>
+																					
+																				</div>
+																				
+																				<div style="display: block"> 
+																					
+																					 <input type="radio" name="radio1" id="res{{forloop.counter}}5" value="option1">
+																					<label for="res{{forloop.counter}}5" >
+																						{{reasoning.e}}
+																					</label>
+																					
+																					
+																					<div id="res{{forloop.counter}}w5"style="text-align:center;display:none">
+																					<img src="{% static "/c.png" %}" class="img-rounded"> 
+																					</div>
+																					<div id="res{{forloop.counter}}r5"style="display:none;">
+																					<img src="{% static "/d.png" %}" class="img-rounded" > 
+																					</div>
+																					
+																					
+																				</div>
+																				
+																				
+																					
+																					
+																			</form>
+																			</div>
+																			<button 
+																		id="reasoningsol{{forloop.counter}}"onclick=
+	"op('res{{forloop.counter}}1','res{{forloop.counter}}2','res{{forloop.counter}}3','res{{forloop.counter}}4','res{{forloop.counter}}5',{{reasoning.ans}},reasoningsolution{{forloop.counter}},'res{{forloop.counter}}','reasoningsol_upper{{forloop.counter}}','reasoning',5)"
+																							
+																						style="text-align:center; color: #fff;background-color:#4D90FE;margin-right:0;float:left;display:inline-block;margin-top:16px" type="submit" class="btn  btn-sm"
+																						
+																						
+																						> See Solutoins</button> 
+																						
+																						
+																		
+																						
+													</div>			
+																		
+													
+													
+													
+													
+													
+													<div id="reasoningsolution{{forloop.counter}}"style="text-align:center;display:none">
+													 
+															<p  id="reasoningsol_upper{{forloop.counter}}"class="bg-info" style="text-align:center;"> <b>Correct<img src="{% static "/thh.png" %}" class="img-rounded" ></b> </p> 
+															<p> <b>  Answer :</b></p> 
+															<!-- <p class="bg-danger" style="display:inline"> Wrong
+																					<img src="{% static "/c.png" %}" class="img-rounded" id="{{forloop.counter}}w"style="display:none"> 
+																					
+																					
+																					<img src="{% static "/d.png" %}" class="img-rounded" id="{{forloop.counter}}r"style="display:none;"> 
+																					 </p><br></br> -->
+															
+																		<div  style="font-family:'arial', sans-serif;font-size:17px;color:#000;display:inline;line-height: 1.42857;">
+																	{% autoescape off %}	{{reasoning.solution}} {% endautoescape %} </div>
+																
+																	
+																		</div>
+													
+													{%else%}
+																	<div class="panel-body">
+														<div id="reasoningclockdiv{{forloop.counter}}" class="clockdiv"style="text-align:center;margin-right:0;float:right;display:none">
+  
+															 
+															<!--  <div>
+																<span class="reasoningminutes"id="reasoningminutes"></span>
+																<div class="smalltext">Minutes</div>
+															  </div> 
+															  -->
+															  <div>
+																<span class="seconds"id="reasoningseconds{{forloop.counter}}"></span>
+																<div class="smalltext" id="reasoningsmalltext{{forloop.counter}}">Seconds</div>
+															  </div>
+															</div>
+																		
+																		<button id="reasoningtime{{forloop.counter}}" onClick="timer('reasoningclockdiv{{forloop.counter}}',{{reasoning.time}},'res{{forloop.counter}}1','res{{forloop.counter}}2','res{{forloop.counter}}3','res{{forloop.counter}}4','res{{forloop.counter}}5','{{reasoning.ans}}',reasoningsolution{{forloop.counter}},'{{forloop.counter}}','ress',5)"
+
+																							
+																						style="text-align:center; color: #fff;background-color:rgb(36, 172, 98);margin-right:0;float:right;display:inline-block;"  class="btn  btn-sm"
+																						
+																						
+																						><i class="fa fa-clock-o" aria-hidden="true"></i>  Timer {{reasoning.time}} Sec</button> 
+																						<!-- <form >
+										
+																																				<div style="display: block"> 
+																																		 
+																					<input type="radio" name="radio1" id="{{forloop.counter}}1" value="option1"/>
+																					<label id="{{forloop.counter}}1">
+																						{{reasoning.a}}
+																					</label>
+																					<div id="{{forloop.counter}}w1"style="display:none">
+																					<img src="{% static "/c.png" %}" class="img-rounded"> 
+																					</div>
+																					<div id="{{forloop.counter}}r1"style="display:none">
+																					<img src="{% static "/d.png" %}" class="img-rounded"> 
+																					</div>
+																					</div>
+																				</form>-->
+									
+													
+													<form  id="inside{{forloop.counter}}" class="radio radio-primary ">
+													
+													
+													
+													</form>
+													
+													
+													<script> 
+													var d='inside'+'{{forloop.counter}}'
+var div = document.getElementById(d);
+								split_res('{{reasoning.question_part}}','{{reasoning.a}}','{{reasoning.b}}','{{reasoning.c}}','{{reasoning.d}}','{{reasoning.e}}','{{reasoning.f}}','{{reasoning.g}}','{{reasoning.h}}','{{reasoning.i}}','{{reasoning.j}}','{{reasoning.ans}}');
+																																		
+																																		
+																																		
+																																		 function split_res(x,a,b,c,d,e,f,g,h,i,k,lp){
+																																		
+																																		//div.innerHTML = div.innerHTML ;
+																																				var arrayy = lp.split('///');
+																																				/*  var myarray_ = [];
+
+																																			  for (var i = 0; i < arrayy.length; ++i) {
+																																				  myarray_[i] = "whatever";
+																																			  }*/
+																																				var myarray = x.split('///');
+																																				var myarray_a = a.split('///');
+																																				var myarray_b = b.split('///');
+																																				var myarray_c = c.split('///');
+																																				var myarray_d = d.split('///');
+																																				var myarray_e = e.split('///');
+																																				if(f != ''){var myarray_f = f.split('///');}
+																																				if(g != ''){var myarray_g = g.split('///');}
+																																				if(h != ''){var myarray_h = h.split('///');}
+																																				if(i !=''){var myarray_i = i.split('///');}
+																																				
+																																				if(k !=''){var myarray_k = k.split("///");}
+
+																																							for(var i = 0; i <arrayy.length; i++)
+																																							{var header='<h5 style="text-align:left;padding:0px;color:rgb(0, 0, 0)"><b style="text-align:left;padding:0px;font-size:16px;">'+myarray[i]+'</b></h5>';
+																																							div.innerHTML = div.innerHTML + header;
+																																					
+																																							//document.write(header);
+																																							//var ap='myarray_'.concat(i.toString());
+																																							if(i==0){
+																																							for(var j = 0; j < 5; j++)
+																																							
+																																							{wr(myarray_a[j],j,i);}
+																																							}else if(i==1){
+																																							for(var j = 0; j < 5; j++)
+																																							
+																																							{wr(myarray_b[j],j,i);}
+																																							}else if(i==2){
+																																							for(var j = 0; j < 5; j++)
+																																							
+																																							{wr(myarray_c[j],j,i);}
+																																							}else if(i==3){
+																																							for(var j = 0; j < 5; j++)
+																																							
+																																							{wr(myarray_d[j],j,i);}
+																																							}else if(i==4){
+																																							for(var j = 0; j < 5; j++)
+																																							
+																																							{wr(myarray_e[j],j,i);}
+																																							}else if(i==5){
+																																							for(var j = 0; j < 5; j++)
+																																							
+																																							{wr(myarray_f[j],j,i);}
+																																							}else if(i==6){
+																																							for(var j = 0; j < 5; j++)
+																																							
+																																							{wr(myarray_g[j],j,i);}
+																																							}else if(i==7){
+																																							for(var j = 0; j < 5; j++)
+																																							
+																																							{wr(myarray_h[j],j,i);}
+																																							}else if(i==8){
+																																							for(var j = 0; j < 5; j++)
+																																							
+																																							{wr(myarray_i[j],j,i);}
+																																							}else if(i==9){
+																																							for(var j = 0; j < 5; j++)
+																																							
+																																							{wr(myarray_k[j],j,i);}
+																																							}
+																																							
+	
+
+																																							
+																																							
+																																								
+																																							
+																																							}
+																																						
+																																							
+																																							 }
+																																							 
+																																							 
+																																							 function wr(s,j,i){
+																																							 var ss=s;
+																																							 var jj=j;
+																																							 
+																																							 if(jj==0){
+																																							 div.innerHTML = div.innerHTML + '<h4 style="text-align:left ;color:#F06292"><b><u>Options:</u></b></h4>'
+																																						;
+																																							 //document.write();	
+																																							 }
+																																							 
+																																							 var idd='ress'+(i.toString()).concat(j.toString());
+																																							 var w=idd+'w';
+																																							 var r=idd+'r';
+																																							 var radio='radio'+idd;
+																																							 var lebel='l'+idd;
+																																							 var opt='opt'+i.toString();
+																																							 
+																																							 var option = 
+																																				
+																															'<div style="display: block;padding:1px">'+'<input type="radio" name="'+opt+'" id='+idd+' value="'+opt+'">'+
+																																			'<label for="'+ idd +'" >'+
+																																			ss+
+																																			'</label>'+
+																																			'<div id="'+w+'"style="display:none">'+
+																																			'<img src="{% static "/c.png" %}" class="img-rounded"> '+
+																																			'</div>'+
+																																			'<div id="'+ r +'"style="display:none">'+
+																																			'<img src="{% static "/d.png" %}" class="img-rounded"/> '+
+																																			'</div>'+
+																																			'</div>';
+																																						//document.write(option);	 
+																																						
+																																						
+																																						div.innerHTML = div.innerHTML + option;
+																																							 
+																																							 if(jj== 4){
+																																							// alert(jj);
+																																							 	//div.innerHTML = div.innerHTML +'</form>';
+																																							//document.write('<hr></hr>');	
+																																							
+																																							 }
+																																							 }
+
+																																		
+																																		</script>
+	
+																																		
+																					<button 
+																		id="reasoningsol{{forloop.counter}}"onclick=
+	"op('ress{{forloop.counter}}1','ress{{forloop.counter}}2','ress{{forloop.counter}}3','ress{{forloop.counter}}4','ress{{forloop.counter}}5','{{reasoning.ans}}',reasoningsolution{{forloop.counter}},'res{{forloop.counter}}','resssol_upper{{forloop.counter}}','ress',5)"
+																							
+																						style="text-align:center; color: #fff;background-color:#4D90FE;margin-right:0;float:left;display:inline-block;margin-top:16px" type="submit" class="btn  btn-sm"
+																						
+																						
+																						> See Solutoins</button> 											
+																																		
+											</div><!-- pnel body end -->
+											
+											
+											<div id="reasoningsolution{{forloop.counter}}"style="text-align:center;display:none">
+													 
+															<p  id="resssol_upper{{forloop.counter}}"class="bg-info" style="text-align:center;"> <b>Your score<img src="{% static "/thh.png" %}" class="img-rounded" ></b> </p> 
+															<p> <b>  Answer :</b></p> 
+															<!-- <p class="bg-danger" style="display:inline"> Wrong
+																					<img src="{% static "/c.png" %}" class="img-rounded" id="{{forloop.counter}}w"style="display:none"> 
+																					
+																					
+																					<img src="{% static "/d.png" %}" class="img-rounded" id="{{forloop.counter}}r"style="display:none;"> 
+																					 </p><br></br> -->
+															
+																		<div  style="font-family:'arial', sans-serif;font-size:17px;color:#000;display:inline;line-height: 1.42857;">
+																		<a href="/reasoning/{{reasoning.new_id}}/"target="_blank"><b>Click here to view Solution</b></a>
+																	 </div>
+																
+																	
+																		</div>
+											
+							
+													{% endif %}
+													
+													
+													
+													
+													
+						
+						</div><!-- pnel end -->
+						{% endfor %}
+						{% endif %}
+						
+						</div>
+						<!--  end reasoning-->
+						
+						
+						<!-- close -->
+						
+							
+														
+														
+													
+						
+					
+														
+														
+						<hr></hr>
+						<button id="b" onClick="op('#close_the',0)" type="button" class="x"style="float:right;color:#fff;border:12px solid #fff;background:#765ff0;font-weight:400;letter-spacing:2px;font-size:15px;line-height:11px;border-radius:10px;width:100%;padding:10px;margin-bottom:20px"><b>Close Test for govt exam</b>  </button>
+						<div id="close_the" style="display:none;padding:12px;">
+						{% if close != None %}
+						
+						<div class="sayan" style="background-color:white">
+						
+						<span style="padding-bottom:20px;">
+						<p ><b style="color: #000;float:left">  Todays Cloze Test</b> <b style="float:right"><i class="fa fa-calendar" aria-hidden="true"></i> Date : <script> document.write(new Date().toDateString()); </script> </b><p> 
+						<img src="{% static "/cl.png" %}" class="img-thumbnail center-block " alt="Cinque Terre" width="500" height="0"></span>
+														</div>
+														
+														{% for close in close %}
+									
+									
+												
+												<div class="panel-heading card">
+									
+																		
+																		
+																		<div  style="font-family:'Roboto Condensed', sans-serif;font-size:17px;color:#000;display:inline;line-height: 1.42857;">
+																	{% autoescape off %}	{{close.question}} {% endautoescape %} </div>
+														
+																<a 
+																		id="{{forloop.counter}}"onclick=
+	""
+																							
+																						style="text-align:center; color: #fff;background-color:#4D90FE;margin-right:0;float:right;display:inline-block;margin-top:16px" type="submit" class="btn  btn-sm"
+																						href="/closetest/close/{{close.page}}/"
+																						target="_blank"
+																						
+																						> Read More>></a> 	
+															
+												</div>
+														{% endfor %}
+														
+														{% endif %}
+														</div>
+														
+						<!-- close end -->
+						
+													<div id="disqus_thread"style="padding:5px;"></div> 
+							<script>
+
+							/**
+							*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+							*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+							/*
+							var disqus_config = function () {
+							this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+							this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+							};
+							*/
+							(function() { // DON'T EDIT BELOW THIS LINE
+							var d = document, s = d.createElement('script');
+							s.src = 'https://getmyvideo-net.disqus.com/embed.js';
+							s.setAttribute('data-timestamp', +new Date());
+							(d.head || d.body).appendChild(s);
+							})();
+							</script>
+							<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+						</div><!--  div 7 end -->
+						
+						<div class="col-md-3  col-md-pull-7 " style="margin-top:2px">
+						
+						     <div class="offer" style="text-align:center">
+			
+						</div>
+						
+				
+              
+						<div class="panel panel-info">
+                <div class="panel-heading" style=" background:linear-gradient(to bottom, #0d7ec0 0, #38a6e2 100%)">
+                    <h3 class="panel-title" style="font-weight:500;font-size:17px;font-family: Quicksand,sans-serif;color: #fff;">
+                <i class="fa fa-list-ul" aria-hidden="true"></i>          Current Affairs Category</h3>
+                </div>
+                <ul id="bdl"  style="    border-left:6px solid #675e5b;-webkit-margin-before: 0em;
+    -webkit-margin-after: 0em;" class="list-group">
+                     <a  href="#" class="list-group-item">State </a>
+                    <a href="http://www.jquery2dotnet.com/2013/12/cool-simple-css-drop-down-menu.html" class="list-group-item ">International</a>
+                    <a href="#" class="list-group-item">Business Economy Banking</a>
+                    <a href="#" class="list-group-item" style="border">Environmen</a>
+                    <a href="#" class="list-group-item">Defence</a>
+					    <a href="#" class="list-group-item ">Persons in News</a>
+                    <a href="#" class="list-group-item " >Awards Honours</a>
+                    <a href="#" class="list-group-item ">Sports</a>
+					<a href="#" class="list-group-item ">art culture</a>
+                    <a href="#" class="list-group-item ">Government Schemes</a>
+					<a href="#" class="list-group-item ">art culture</a>
+                    <a href="#" class="list-group-item ">Government Schemes</a>
+                </ul> 
+            </div>	
+			
+
+							<div class="panel nopadding">
+							
+							
+							<div class="rana" style="background-color:#f3f3f3">
+							
+							
+					
+								
+							
+							
+							
+							
+							
+							</div>
+					
+									</div>	
+									
+									
+									
+													
+					<h3 class="card"style="text-align:center;    border: 1px solid #dddddd; color: white;background-color:#5b4282;font-size: 18px;padding-bottom:10px;padding-top:10px;margin-top:0px;margin-bottom:7px;background-image: url(static/css/p1.png);">Current Affairs Category  <i class="fa fa-codepen	
+" style="font-size:19px;color:white"></i> </h3> 
+							<div class="panel nopadding">
+							<div class="rana" style="background-color:#f3f3f3">
+							
+							
+					
+								
+							
+							
+							
+							
+							
+							</div>
+								<div class="panel-body nopadding">
+								<div class="menu">
+																			 <ul class="nav nav-pills nav-stacked">
+              					<li><a  href="/ca/1/"> <i class="glyphicon glyphicon-hand-right"></i>&nbsp Science And Techonlogy </a></li>
+																						<hr style="border-color:#eee"></hr>
+																			<li><a  href="/job/home/all/1/"> <i class="glyphicon glyphicon-hand-right"></i>&nbsp National</a></li>
+																			<hr style="border-color:#eee"></hr>
+																			<li><a   href="/english/word/page/1/"> <i class="glyphicon glyphicon-hand-right"></i>&nbsp State</a></li>
+																			<hr style="border-color:#eee"></hr>
+																			<li><a   href="/"><i class="glyphicon glyphicon-hand-right"></i>&nbsp International</a></li>
+																			<hr style="border-color:#eee"></hr>
+																			<li><a  href="/ca/1/"> <i class="glyphicon glyphicon-hand-right"></i>&nbsp Business Economy Banking </a></li>
+																			<hr style="border-color:#eee"></hr>
+																			<li><a href="/job/home/all/1/"> <i class="glyphicon glyphicon-hand-right"></i>&nbsp Environmen</a></li>
+																			<hr style="border-color:#eee"></hr>
+																			<li><a  href="/english/word/page/1/"> <i class="glyphicon glyphicon-hand-right"></i>&nbsp Defence</a></li>
+																			<hr style="border-color:#eee"></hr>
+																			<li><a  href="/"> <i class="glyphicon glyphicon-hand-right"></i>&nbsp Persons in News</a></li>
+																			<hr style="border-color:#eee"></hr>
+																			<li><a   href="/ca/1/"> <i class="glyphicon glyphicon-hand-right"></i>&nbsp Awards Honours </a></li>
+																			<hr style="border-color:#eee"></hr>
+																			<li><a  href="/job/home/all/1/"> <i class="glyphicon glyphicon-hand-right"></i>&nbsp Sports</a></li>
+																			<hr style="border-color:#eee"></hr>
+																			<li><a  href="/english/word/page/1/"><i class="glyphicon glyphicon-hand-right"></i>&nbsp art culture</a></li>
+																			<hr style="border-color:#eee"></hr>
+																			<li><a href="/"> <i class="glyphicon glyphicon-hand-right"></i>&nbsp Government Schemes</a></li>
+																			
+            </ul>
+						
+</div>
+						</div>
+									</div>	
+									
+					
+									
+									
+										<h3 class="card"style="text-align:center;    border: 1px solid #dddddd; color: white;background-color:#5b4282;font-size: 18px;padding-bottom:10px;padding-top:10px;margin-top:0px;margin-bottom:7px;background-image: url(static/css/p1.png);">Current Affairs Category  <i class="fa fa-codepen	
+" style="font-size:19px;color:white"></i> </h3> 
+							<div class="panel nopadding">
+							<div class="rana" style="background-color:#f3f3f3">
+							
+							
+					
+								
+							
+							
+							
+							
+							
+							</div>
+								<div class="panel-body nopadding">
+								<div class="menu">
+																			 <ul class="nav nav-pills nav-stacked">
+              
+              																			<li><a  href="/ca/1/"> <b><i class="glyphicon glyphicon-hand-right"></i>&nbsp modi visits us </b></a></li>
+																						<hr style="border-color:#85ff85"></hr>
+																			<li><a  href="/job/home/all/1/"> <b><i class="glyphicon glyphicon-hand-right"></i>&nbsp jobs home</b></a></li>
+																			<hr style="border-color:#85ff85"></hr>
+																			<li><a   href="/english/word/page/1/"> <b><i class="glyphicon glyphicon-hand-right"></i>&nbsp English</b></a></li>
+																			<hr style="border-color:#85ff85"></hr>
+																			<li><a   href="/"><b><i class="glyphicon glyphicon-hand-right"></i>&nbsp Home</b></a></li>
+																			<hr style="border-color:#85ff85"></hr>
+																			<li><a  href="/ca/1/"> <b><i class="glyphicon glyphicon-hand-right"></i>&nbsp Current Affairs</b> </a></li>
+																			<hr style="border-color:#85ff85"></hr>
+																			<li><a href="/job/home/all/1/"> <b><i class="glyphicon glyphicon-hand-right"></i>&nbspjobs home</b></a></li>
+																			<hr style="border-color:#85ff85"></hr>
+																			<li><a  href="/english/word/page/1/"> <b><i class="glyphicon glyphicon-hand-right"></i>&nbsp English</b></a></li>
+																			<hr style="border-color:#85ff85"></hr>
+																			<li><a  href="/"> <b><i class="glyphicon glyphicon-hand-right"></i>&nbsp Home</b></a></li>
+																			<hr style="border-color:#85ff85"></hr>
+																			<li><a   href="/ca/1/"> <b><i class="glyphicon glyphicon-hand-right"></i>&nbsp Current Affairs </b></a></li>
+																			<hr style="border-color:#85ff85"></hr>
+																			<li><a  href="/job/home/all/1/"> <b><i class="glyphicon glyphicon-hand-right"></i>&nbsp jobs home</b></a></li>
+																			<hr style="border-color:#85ff85"></hr>
+																			<li><a  href="/english/word/page/1/"><b><i class="glyphicon glyphicon-hand-right"></i>&nbsp English</b></a></li>
+																			<hr style="border-color:#85ff85"></hr>
+																			<li><a href="/"> <b><i class="glyphicon glyphicon-hand-right"></i>&nbsp Home</b></a></li>
+																			<hr style="border-color:#85ff85"></hr>
+																			<li><a  href="/ca/1/"><b><i class="glyphicon glyphicon-hand-right"></i>&nbsp Current Affairs </b></a></li>
+																			<hr style="border-color:#85ff85"></hr>
+																			<li><a  href="/job/home/all/1/"><b><i class="glyphicon glyphicon-hand-right"></i>&nbsp jobs home</b></a></li>
+																			<hr style="border-color:#85ff85"></hr>
+																			<li><a  href="/english/word/page/1/"> <b><i class="glyphicon glyphicon-hand-right"></i>&nbspEnglish</b></a></li>
+            </ul>
+						
+</div>
+						</div>
+									</div>	
+									
+									
+									
+					
+						</div><!--  div 3 end -->
+						
+						
+						
+						
+						
+						
+						
+						<div class="col-md-2 nopadding" style="margin-top:2px;height:100px">
+						
+										        <div class="row " style="padding-left: 14px;
+    padding-right: 14px;  padding-bottom:10px">
+                        
+       
+	
+                        <div class="col-sm-12 "  style="            font-family: Quicksand,sans-serif;
+						text-align:center;
+    font-weight: 500;
+    line-height: 35px;
+    font-size: 19px;
+    height: 36px;
+    background: #F44336;
+    /* background: rgba(255,219,77,1); */
+    background: -moz-linear-gradient(top, rgba(255,219,77,1) 0%, rgba(255,219,77,1) 35%, rgba(255,206,10,1) 44%, rgba(255,206,10,1) 100%);
+    background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(255,219,77,1)), color-stop(35%, rgba(255,219,77,1)), color-stop(44%, rgba(255,206,10,1)), color-stop(100%, rgba(255,206,10,1)));
+    /* background: -webkit-linear-gradient(top, rgba(255,219,77,1)0%, rgba(255,219,77,1) 35%, rgba(255,206,10,1) 44%, rgba(255,206,10,1) 100%); */
+    background: -o-linear-gradient(top, rgba(255,219,77,1) 0%, rgba(255,219,77,1) 35%, rgba(255,206,10,1) 44%, rgba(255,206,10,1) 100%);
+    background: -ms-linear-gradient(top, rgba(255,219,77,1) 0%, rgba(255,219,77,1) 35%, rgba(255,206,10,1) 44%, rgba(255,206,10,1) 100%);
+    /* background: linear-gradient(to bottom, rgba(255,219,77,1) 0%, rgba(255,219,77,1) 35%, rgba(255,206,10,1) 44%, rgba(255,206,10,1) 100%); */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffdb4d', endColorstr='#ffce0a', GradientType=0 );
+    color: #def0ff;">
+                         <span style=""> Live job</span> <i class='fa fa-dot-circle-o faa-burst animated fa-4x' style=" color: wheat; font-size:14px"></i>
+                        </div>
+                    </div>
+						
+						<hr style="color:red"></hr>
+					 
+								<div class="panel-group ">
+								
+			
+								{% for job in job %}
+					 
+								
+							
+							
+							
+	<div class="panel panel-info card " style="box-shadow:0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12)" >
+										  
+									<section class="content1" style="background-size:100% 100%;height:150px; background-image:url(/media/{{job.ca_img}}">
+									 <div class="content1-overlay"></div>
+									  <div style="background: linear-gradient(to bottom,#000,transparent);
+    background-image: linear-gradient(rgb(0, 0, 0), transparent);
+    background-position-x: initial;
+    background-position-y: initial;
+    background-size: initial;
+    background-repeat-x: initial;
+    background-repeat-y: initial;
+    background-attachment: initial;
+    background-origin: initial;
+    background-clip: initial;
+    background-color: initial;color:white">
+									  <div style="padding:5px; font-weight:500; text-decoration:none;  font-family: Quicksand,sans-serif">
+									  
+									  <li>Start Date: <Strong>{{job.first_day}}</strong></li>
+													<li>Last Date:  <Strong>{{job.last_day}}</strong></li>
+									  
+									  </div>
+									  </div>
+									  
+					
+									   <div class="overlay1">
+           <h2 style="font-family: Quicksand,sans-serif;font-size:13px;font-weight:500">{{job.heading}} </h2>
+         <a href="/job/home/all/1/"style="text-align:center;"><h5 style="color:rgb(232, 50, 133);border:2px solid white;font-weight:500;font-size:12px;margin-left: 20px;
+    margin-right: 20px;
+    color: white;font-family: Quicksand,sans-serif;background: rgba(0,0,0,.6); ">Click for Details job  <h5></a>
+											
+        </div>
+									  
+									  </section>
+											
+												  <hr>
+									
+									</div>
+									 
+									
+									<!-- if panel end -->
+									{% endfor %}
+									
+									
+									
+						
+								</div>
+						
+						</div>
+						
+				</div>
+
+				</div>
+				
+				
+ 
+			</div>	
+				
+				
+	
+
+ <div id="foot12" class="footer-bottom">
+
+	<div class="container">
+
+		<div class="row">
+
+			<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+
+				<div class="copyright">
+
+					© 2018, studypoint.in, All rights reserved
+
+				</div>
+
+			</div>
+
+			<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+
+				<div class="design">
+
+					 <a href="#">studyplus.in </a> |  <a target="_blank" href="http://www.webenlance.com">contact us @getsuccess@gmail.com</a>
+
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>
+
+</div>   
+
+
+
+
+
+
+
+	<script id="dsq-count-scr" src="//getmyvideo-net.disqus.com/count.js" async></script>
+					 
+
+<script type="text/javascript" >
+$(document).ready(function () {
+
+	
+	// multicol
+	    var itemsMainDiv = ('.MultiCarousel');
+    var itemsDiv = ('.MultiCarousel-inner');
+    var itemWidth = "";
+
+    $('.leftLst, .rightLst').click(function () {
+        var condition = $(this).hasClass("leftLst");
+        if (condition)
+            click(0, this);
+        else
+            click(1, this)
+    });
+
+    ResCarouselSize();
+
+
+
+
+    $(window).resize(function () {
+        ResCarouselSize();
+    });
+
+    //this function define the size of the items
+    function ResCarouselSize() {
+        var incno = 0;
+        var dataItems = ("data-items");
+        var itemClass = ('.item');
+        var id = 0;
+        var btnParentSb = '';
+        var itemsSplit = '';
+        var sampwidth = $(itemsMainDiv).width();
+        var bodyWidth = $('body').width();
+        $(itemsDiv).each(function () {
+            id = id + 1;
+            var itemNumbers = $(this).find(itemClass).length;
+            btnParentSb = $(this).parent().attr(dataItems);
+            itemsSplit = btnParentSb.split(',');
+            $(this).parent().attr("id", "MultiCarousel" + id);
+
+
+            if (bodyWidth >= 1200) {
+                incno = itemsSplit[3];
+                itemWidth = sampwidth / incno;
+            }
+            else if (bodyWidth >= 992) {
+                incno = itemsSplit[2];
+                itemWidth = sampwidth / incno;
+            }
+            else if (bodyWidth >= 768) {
+                incno = itemsSplit[1];
+                itemWidth = sampwidth / incno;
+            }
+            else {
+                incno = itemsSplit[0];
+                itemWidth = sampwidth / incno;
+            }
+            $(this).css({ 'transform': 'translateX(0px)', 'width': itemWidth * itemNumbers });
+            $(this).find(itemClass).each(function () {
+                $(this).outerWidth(itemWidth);
+            });
+
+            $(".leftLst").addClass("over");
+            $(".rightLst").removeClass("over");
+
+        });
+    }
+
+
+    //this function used to move the items
+    function ResCarousel(e, el, s) {
+        var leftBtn = ('.leftLst');
+        var rightBtn = ('.rightLst');
+        var translateXval = '';
+        var divStyle = $(el + ' ' + itemsDiv).css('transform');
+        var values = divStyle.match(/-?[\d\.]+/g);
+        var xds = Math.abs(values[4]);
+        if (e == 0) {
+            translateXval = parseInt(xds) - parseInt(itemWidth * s);
+            $(el + ' ' + rightBtn).removeClass("over");
+
+            if (translateXval <= itemWidth / 2) {
+                translateXval = 0;
+                $(el + ' ' + leftBtn).addClass("over");
+            }
+        }
+        else if (e == 1) {
+            var itemsCondition = $(el).find(itemsDiv).width() - $(el).width();
+            translateXval = parseInt(xds) + parseInt(itemWidth * s);
+            $(el + ' ' + leftBtn).removeClass("over");
+
+            if (translateXval >= itemsCondition - itemWidth / 2) {
+                translateXval = itemsCondition;
+                $(el + ' ' + rightBtn).addClass("over");
+            }
+        }
+        $(el + ' ' + itemsDiv).css('transform', 'translateX(' + -translateXval + 'px)');
+    }
+
+    //It is used to get some elements from btn
+    function click(ell, ee) {
+        var Parent = "#" + $(ee).parent().attr("id");
+        var slide = $(Parent).attr("data-slide");
+        ResCarousel(ell, Parent, slide);
+    }
+	//end multi
+
+
+
+
+$('#quote-carousel').carousel({
+    pause: true,
+    interval: 3000,
+  });
+$(".rotate").click(function(){
+ $(this).toggleClass("down")  ; 
+})
+$('.navbar .dropdown').hover(function () {
+        $(this).find('.dropdown-menu').first().stop(true, true).slideDown(150);
+    }, function () {
+        $(this).find('.dropdown-menu').first().stop(true, true).slideUp(105);
+    });
+
+
+
+
+var showChar = 200;
+	var ellipsestext = "...";
+	var moretext = "Read more";
+	var lesstext = "less";
+	$('.more').each(function() {
+		var content = $(this).html();
+
+		if(content.length > showChar) {
+
+			var c = content.substr(0, showChar);
+			var h = content.substr(showChar-1, content.length - showChar);
+
+			var html = c + '<span class="moreelipses">'+ellipsestext+'</span>&nbsp;&nbsp;&nbsp;<a href="" class="morelink"><u>'+moretext+'</u></a></span>';
+
+			$(this).html(html);
+		}
+
+	});
+	
+	
+	
+	
+	//..........................
+	
+	
+		 $("#signup").submit(function (ev)
+	 {
+					var x = document.getElementById('img_signup');
+										var y = document.getElementById('below_signup');
+
+								y.innerHTML=""
+
+				x.style.display = 'block';		
+						
+							ev.preventDefault();
+		$.ajax({
+            type : 'POST',
+            url: '{% url 'bank:signup' %}',
+			
+			async: true,
+			
+           data  : $(this).serialize(),
+            success: function (response) 
+			{var r=response;
+			
+			if(r == "true")
+				{
+				x.style.display = 'none';	
+				y.style.display = 'inline';	
+				$('#below_signup').html("<b>Confirmation Email has been sent</b>");
+				}
+				else{
+				x.style.display = 'none';	
+				y.style.display = 'inline';	
+				$('#below_signup').html("<b>"+response+"</b>");
+				}
+         
+				// window.location = response.r;
+
+            },
+			 error: function (data) { 
+			 x.style.display = 'none';	
+				y.style.display = 'inline';	
+			 
+			 $('#below_signup').html("<b>please retry or check url</b>"+data);
+			 
+			 }
+        });
+
+        
+    });
+
+	
+	
+	//.........................
+	
+		//..........................
+	
+	
+
+
+	
+	
+	//.........................
+	
+	
+	
+	
+
+
+});
+
+
+
+
+		 $("#login").submit(function (ev)
+	 {
+							
+			ev.preventDefault();			
+							
+		$.ajax({
+            type : 'POST',
+            url: '{% url 'bank:login' %}',
+			
+			
+           data  : $(this).serialize(),
+            success: function (response) 
+			{
+			var r=response;
+				if(r == "true")
+				{
+				window.location = window.location;
+				}
+				else{
+				$('#below').html("<b>"+response+"</b>");
+				}
+
+            },
+			 error: function (data) { $('#below').html("<b>please 55 or check url</b>");
+			
+			 }
+        });
+
+        
+    });
+	
+function add(id,upper,username,img_url) {
+var link_id=id;
+var uname=username;
+var heading=upper;
+var im=img_url;
+//$('#myModal').modal('toggle');
+
+	$.ajax({
+            type : 'POST',
+            url: '{% url 'bank:add' %}',
+			
+			
+           data: {link: link_id, user_name: uname,head:heading,im_url:im,csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()},
+            success: function (response) 
+			{
+			var r=response;
+				if(r == "success")
+				{
+				document.getElementById(link_id).innerHTML ="Added Successfully ";
+				}
+				else{
+				//$('#below').html("<b>"+response+"</b>");
+				document.getElementById(link_id).innerHTML = response;
+				}
+
+            },
+			 error: function (data) { $('#link_id').html("<b>please 55 or check url</b>");
+			
+			 }
+        });
+    
+}
+
+
+
+
+//.......math
+
+
+	function timer(c_id,t,r1,r2,r3,r4,r5,a,i,counter,flag,loop){
+	
+	var colckdiv_id=c_id;
+	alert(colckdiv_id);
+	var colckdiv_id_hash='#'.concat(c_id.toString());
+	var clock = document.getElementById(colckdiv_id);
+	//alert(clock);
+	
+	if(flag=='math'){var min='.mathminutes'.concat(counter.toString());
+	//alert(min);
+	var sec='.mathseconds'.concat(counter.toString());
+	var sec_id='#mathseconds'.concat(counter.toString());
+	var min_id='#mathminutes'.concat(counter.toString());
+	var smltext_id='#mathsmalltext'.concat(counter.toString());
+var upper_sol='mathsol_upper'.concat(counter.toString());
+  var minutesSpan = clock.querySelector(min);
+  var secondsSpan = clock.querySelector(sec);
+  var sol='mathsol'.concat(counter.toString());
+var solution_hash='#mathsolution'.concat(counter.toString());
+
+var timer_id='#mathtime'.concat(counter.toString());
+			}else if(flag=='reasoning'){
+			
+			
+			
+			var min='.reasoningminutes'.concat(counter.toString());
+	//alert(min);
+	var sec='.reasoningseconds'.concat(counter.toString());
+	var sec_id='#reasoningseconds'.concat(counter.toString());
+	var min_id='#reasoningminutes'.concat(counter.toString());
+	var smltext_id='#reasoningsmalltext'.concat(counter.toString());
+var upper_sol='reasoningsol_upper'.concat(counter.toString());
+  var minutesSpan = clock.querySelector(min);
+  var secondsSpan = clock.querySelector(sec);
+  var sol='reasoningsol'.concat(counter.toString());
+var solution_hash='#reasoningsolution'.concat(counter.toString());
+
+var timer_id='#reasoningtime'.concat(counter.toString());
+counter='res'+counter.toString();
+
+
+
+			}else if(flag=='ress'){
+			
+			
+			
+			var min='.reasoningminutes'.concat(counter.toString());
+	//alert(min);
+	var sec='.reasoningseconds'.concat(counter.toString());
+	var sec_id='#reasoningseconds'.concat(counter.toString());
+	var min_id='#reasoningminutes'.concat(counter.toString());
+	var smltext_id='#reasoningsmalltext'.concat(counter.toString());
+var upper_sol='resssol_upper'.concat(counter.toString());
+  var minutesSpan = clock.querySelector(min);
+  var secondsSpan = clock.querySelector(sec);
+  var sol='reasoningsol'.concat(counter.toString());
+var solution_hash='#reasoningsolution'.concat(counter.toString());
+
+var timer_id='#reasoningtime'.concat(counter.toString());
+counter='res'+counter.toString();
+
+
+
+			}
+	
+	
+
+
+//alert(timer_id);
+  document.getElementById(sol).disabled = true;
+  $(timer_id).toggle(500);
+  $(colckdiv_id_hash).toggle(500);
+var seconds_left = 80;
+/*var interval = setInterval(function() {
+    document.getElementById('seconds').innerHTML = --seconds_left;
+
+    if (seconds_left <= 0)
+    {
+       document.getElementById('seconds').innerHTML = "You are Ready!";
+       clearInterval(interval);
+    }
+}, 1000); */
+
+//new timer
+var fiveMinutes = t,
+        display = $(sec_id),
+		smalltext=$(smltext_id);
+		if($(solution_hash).is(':visible'))
+{
+$(solution_hash).toggle(500);
+}
+startTimer(fiveMinutes,display,smalltext,colckdiv_id_hash,timer_id,sol,solution_hash,r1,r2,r3,r4,r5,a,i,counter,upper_sol,flag,loop);
+
+
+
+	
+	}
+	
+	
+	function startTimer(duration, display,smalltext,colckdiv_id_hash,timer_id,sol,solution_hash,r1,r2,r3,r4,r5,a,i,counter,upper_sol,flag,loop) {
+    var timer = duration, minutes, seconds;
+	 
+  var s=  setInterval(function () {
+	var seconds_left = --duration;
+        minutes = parseInt(timer / 60, 10)
+        seconds = parseInt(timer % 60, 10);
+
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+				if(minutes<1){
+        display.text(minutes + ":" + seconds);
+		smalltext.text("seconds")
+        }
+        else{display.text(minutes + ":" + seconds);
+		smalltext.text("Minutes")
+		}
+		
+		if(seconds_left<=-1){clearInterval(s);
+		
+								op(r1,r2,r3,r4,r5,a,i,counter,upper_sol,flag,loop);
+								$(timer_id).toggle(500);
+								$(colckdiv_id_hash).toggle(500);
+								
+								//$(solution_hash).toggle(500);
+								document.getElementById(sol).disabled = false; 
+									}
+		
+
+        if (--timer < 0) {
+            timer = duration;
+        }
+    }, 1000);}
+	
+	
+	
+	function op(r1,r2,r3,r4,r5,a,i,counter,upper_sol,flag,loop){
+	var radio1 = r1;
+	var radio2=r2;
+	 var radio3=r3;
+	var radio4=r4;
+	var radio5=r5;
+	var ans=a;
+	var id=i;
+	
+	var count=counter;
+	var chk=count.toString().concat(ans.toString());
+	var r8=count.toString();
+	var right=r8.concat('r');
+	
+	
+	if(flag == 'math'|| flag=='reasoning'){
+	
+if(document.getElementById(radio1).checked || document.getElementById(radio2).checked || document.getElementById(radio3).checked || document.getElementById(radio4).checked || document.getElementById(radio5).checked ) {
+alert(flag);
+
+				if(document.getElementById(chk).checked){
+				var right_img= right.concat(chk.slice(-1)) ;
+				//alert(right_img);
+				var x = document.getElementById(right_img);
+				
+
+				//x.innerHTML="<img src=\"http://placehold.it/350x350\" width=\"400px\" height=\"150px\">";
+				var y = document.getElementById(upper_sol);
+				y.innerHTML="<b>Correct<img src=\"{% static "/thh.png" %}\" class=\"img-rounded\" >"
+				x.style.display = 'inline';
+				
+				//$(x).toggle(500); 
+				//var y = document.getElementById(right);
+				//y.style.display = 'inline';
+				}else if(document.getElementById(radio1).checked) {
+				var wrong_img= count.toString().concat('w'.concat('radio1'.slice(-1))) ;
+				var x = document.getElementById(wrong_img);
+				var y = document.getElementById(upper_sol);
+				y.innerHTML="<b>InCorrect<img src=\"{% static "/c.png" %}\" class=\"img-rounded\" >"
+				x.style.display = 'inline';
+				
+				}else if(document.getElementById(radio2).checked) {
+				var wrong_img= count.toString().concat('w'.concat('radio2'.slice(-1))) ;
+				var x = document.getElementById(wrong_img);
+				var y = document.getElementById(upper_sol);
+				y.innerHTML="<b>InCorrect<img src=\"{% static "/c.png" %}\" class=\"img-rounded\" >"
+				x.style.display = 'inline';
+				
+				}else if(document.getElementById(radio3).checked) {
+				var wrong_img= count.toString().concat('w'.concat('radio3'.slice(-1))) ;
+				var x = document.getElementById(wrong_img);
+				var y = document.getElementById(upper_sol);
+				y.innerHTML="<b>InCorrect<img src=\"{% static "/c.png" %}\" class=\"img-rounded\" >"
+				x.style.display = 'inline';
+				
+				}else if(document.getElementById(radio4).checked) {
+				var wrong_img= count.toString().concat('w'.concat('radio4'.slice(-1))) ;
+				var x = document.getElementById(wrong_img);
+				var y = document.getElementById(upper_sol);
+				y.innerHTML="<b>InCorrect<img src=\"{% static "/c.png" %}\" class=\"img-rounded\" >"
+				x.style.display = 'inline';
+				
+				}else if(document.getElementById(radio5).checked) {
+				var wrong_img= count.toString().concat('w'.concat('radio5'.slice(-1))) ;
+				var x = document.getElementById(wrong_img);
+				var y = document.getElementById(upper_sol);
+				y.innerHTML="<b>InCorrect<img src=\"{% static "/c.png" %}\" class=\"img-rounded\" >"
+				x.style.display = 'inline';
+				
+				}
+			
+					
+		}
+					
+					
+				else  {
+
+				///$(upper_sol).html("Hello World");
+				var x = document.getElementById(upper_sol);
+				x.style.fontWeight  = 'bold';
+				x.innerHTML="Not Attempted";
+						
+						}
+						
+						
+}else{var score=0;
+			var attempt=0;
+			if(flag== 'ress'){
+			}
+			else if (flag=='css'){
+			
+			}
+
+var array = ans.split('///');
+var max=array.length;
+//alert(flag);
+		for(i=0;i< array.length; i++){
+			
+			
+			
+			radio1=flag+i.toString()+'0';
+			radio2=flag+i.toString()+'1';
+			radio3=flag+i.toString()+'2';
+			radio4=flag+i.toString()+'3';
+			radio5=flag+i.toString()+'4';
+			
+			//alert(radio1+" "+radio2+''+radio3);
+			chk=flag+i.toString()+ (parseInt(array[i])-1).toString();
+			//alert("chk="+chk);
+			if(document.getElementById(radio1).checked || document.getElementById(radio2).checked || document.getElementById(radio3).checked || document.getElementById(radio4).checked || document.getElementById(radio5).checked ) {
+
+				attempt=1;
+
+				if(document.getElementById(chk).checked){
+				score=score+1;
+				var right_img= chk+'r' ;
+				//alert(right_img);
+				var x = document.getElementById(right_img);
+				
+
+				//x.innerHTML="<img src=\"http://placehold.it/350x350\" width=\"400px\" height=\"150px\">";
+				var y = document.getElementById(upper_sol);
+				y.innerHTML='<b style=\"font-size:18px;\">Your Score: &nbsp;&nbsp;  '+score.toString()+'/'+max.toString()+'&nbsp;&nbsp;<img src=\"{% static "/thh.png" %}\" class=\"img-rounded\" >'
+				x.style.display = 'inline';
+				
+				//$(x).toggle(500); 
+				//var y = document.getElementById(right);
+				//y.style.display = 'inline';
+				}else if(document.getElementById(radio1).checked) {
+				var wrong_img= flag+i.toString().concat(('radio0'.slice(-1)))+'w' ;
+				var x = document.getElementById(wrong_img);
+				
+				x.style.display = 'inline';
+				var y = document.getElementById(upper_sol);
+				y.innerHTML='<b style=\"font-size:18px;\">Your Score: &nbsp;&nbsp;  '+score.toString()+'/'+max.toString()+'&nbsp;&nbsp;<img src=\"{% static "/thh.png" %}\" class=\"img-rounded\" >'
+				
+				}else if(document.getElementById(radio2).checked) {
+				var wrong_img= flag+i.toString().concat(('radio1'.slice(-1)))+'w' ;
+				var x = document.getElementById(wrong_img);
+				
+				x.style.display = 'inline';
+				var y = document.getElementById(upper_sol);
+				y.innerHTML='<b style=\"font-size:18px;\">Your Score: &nbsp;&nbsp;  '+score.toString()+'/'+max.toString()+'&nbsp;&nbsp;<img src=\"{% static "/thh.png" %}\" class=\"img-rounded\" >'
+				
+				}else if(document.getElementById(radio3).checked) {
+				var wrong_img= flag+i.toString().concat(('radio2'.slice(-1)))+'w' ;
+				var x = document.getElementById(wrong_img);
+				
+				x.style.display = 'inline';
+				var y = document.getElementById(upper_sol);
+				y.innerHTML='<b style=\"font-size:18px;\">Your Score: &nbsp;&nbsp;  '+score.toString()+'/'+max.toString()+'&nbsp;&nbsp;<img src=\"{% static "/thh.png" %}\" class=\"img-rounded\" >'
+				
+				}else if(document.getElementById(radio4).checked) {
+				var wrong_img= flag+i.toString().concat(('radio3'.slice(-1)))+'w' ;
+				var x = document.getElementById(wrong_img);
+				
+				x.style.display = 'inline';
+				var y = document.getElementById(upper_sol);
+				y.innerHTML='<b style=\"font-size:18px;\">Your Score: &nbsp;&nbsp;  '+score.toString()+'/'+max.toString()+'&nbsp;&nbsp;<img src=\"{% static "/thh.png" %}\" class=\"img-rounded\" >'
+				
+				}else if(document.getElementById(radio5).checked) {
+				var wrong_img= flag+i.toString().concat(('radio4'.slice(-1)))+'w' ;
+				var x = document.getElementById(wrong_img);
+				
+				x.style.display = 'inline';
+				var y = document.getElementById(upper_sol);
+				y.innerHTML='<b style=\"font-size:18px;\">Your Score: &nbsp;&nbsp;  '+score.toString()+'/'+max.toString()+'&nbsp;&nbsp;<img src=\"{% static "/thh.png" %}\" class=\"img-rounded\" >'
+				
+				}
+			
+					
+		}
+					
+					
+				else  {
+
+				///$(upper_sol).html("Hello World");
+				if(attempt==0){
+				var x = document.getElementById(upper_sol);
+				x.style.fontWeight  = 'bold';
+				x.innerHTML="<b>Not Attempted</b>"; }
+						
+						}
+			
+
+
+					}//for end
+
+	}				
+						
+						
+						
+	$(id).toggle(500);
+	
+	}
+
+//.........math end
+function op(i,j){
+	var id=i;
+	
+	if(j===1){
+	$(id).toggle(500);
+	}else{
+	$(id).toggle("slide");
+	  //$(id).fadeOut("slow");
+	//$(id).toggle(500);
+	}
+	
+	}
+	
+	function op_next(i,j){
+	var id=i;
+	
+	if(j===1){
+	$(id).toggle(500);
+	}else{
+	$(id).toggle("slide");
+	  //$(id).fadeOut("slow");
+	//$(id).toggle(500);
+	}
+	
+	}
+function carousal(i){
+	var id1=i.toString() +'car_head';
+	var id2=i.toString() +'car_ul';
+	var id3=i.toString() +'car_btn';
+var x1 = document.getElementById(id1);
+var x2 = document.getElementById(id2);
+var x3 = document.getElementById(id3);
+//alert(id2);
+	if(x2.style.display == 'none'){
+				 $(x1).animate({fontSize: "14px" },200 );
+				 //$( x2 ).slideUp( 300 ).delay( 800 ).fadeIn( 400 );
+				 
+				//x2.style.display = 'block';
+			//$( x2 ).fadeIn( 500 );	
+			$( x2 ).delay( 300 ).fadeIn( 100 );
+			
+			document.getElementById(id3).onclick = function (){alert('foo');};
+
+			
+				}
+	//$(id).toggle(500);
+	  $(x3).html("go");
+	}
+	 
+	  
+	
+	 
+	 
+	 
+	 $(".x").click(function(){
+ $(this).toggleClass("active")  ; 
+})
+	$(".y").click(function(){
+ $(this).toggleClass("active")  ; 
+}) 
+	 
+	 
+
+	 
+	 
+
+</script>
+
+</body>
+</html>
+  

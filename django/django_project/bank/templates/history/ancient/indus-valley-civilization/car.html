@@ -1,0 +1,4022 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>McqGk.com</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+  
+<link href="https://fonts.googleapis.com/css?family=Arimo" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lato:400,700"/>
+  <link href='//fonts.googleapis.com/css?family=Cormorant Garamond' rel='stylesheet'>
+  <link href="https://fonts.googleapis.com/css?family=Noto+Sans" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Quattrocento+Sans" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Droid+Serif" rel="stylesheet">
+   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  
+  <link href="https://fonts.googleapis.com/css?family=PT+Serif" rel="stylesheet">
+<link rel="stylesheet" href="font-awesome-animation.min.css">
+
+<link href="https://fonts.googleapis.com/css?family=Rokkitt:300,400,500&amp;subset=latin-ext,vietnamese" rel="stylesheet">
+
+
+ {% load staticfiles %}
+<link rel="stylesheet" href="{% static 'css/animate.min.css' %}" />
+<link rel="stylesheet" href="{% static 'css/h10.css' %}" />
+<link rel="stylesheet" href="{% static 'css/apple2.css' %}" />
+<link href="https://fonts.googleapis.com/css?family=Marck+Script" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Italianno" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=PT+Serif" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Yantramanav:400,500" rel="stylesheet">
+
+
+
+
+
+<style>
+
+
+.media-right, .media>.pull-right {
+    padding-left: 0px;
+}
+.y  :before {
+font-family: FontAwesome;
+    
+    font-weight: normal;
+   
+   content: "\f078";
+   float: right;
+   font-size:11px;
+   font-style: normal;
+   padding-left:2px;
+   text-decoration:none;
+  
+   
+   transition: all 0.5s;
+   
+}
+.y.active :before {
+	-webkit-transform: rotate(180deg);
+	-moz-transform: rotate(180deg);
+	transform: rotate(180deg);
+	
+} 
+.x, .x:active{
+	display:block;
+	padding:15px;
+  color:#555;
+  font-size:16px;
+  font-weight:bold;
+	text-transform:uppercase;
+	letter-spacing:1px;
+  word-spacing:3px;
+	text-decoration:none;
+}
+.x  :before {
+   font-family: 'Glyphicons Halflings';
+   content: "\e114";
+   font-size:21px;
+   font-weight:200;
+   padding-left:2px;
+   float: right;
+   transition: all 0.5s;
+}
+.x.active :before {
+	-webkit-transform: rotate(180deg);
+	-moz-transform: rotate(180deg);
+	transform: rotate(180deg);
+	
+} 
+
+
+.x :hover{
+background:#fff;
+color:blue;
+}
+.button_mobile {
+	-moz-box-shadow: 0px 0px 0px 0px #3dc21b;
+	-webkit-box-shadow: 0px 0px 0px 0px #3dc21b;
+	box-shadow: 0px 0px 0px 0px #3dc21b;
+
+	background-color:#2414fc;
+	-moz-border-radius:1px;
+	-webkit-border-radius:1px;
+	border-radius:1px;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:16px;
+	padding:16px 31px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #2f6627;
+	text-align:center;
+	width:100%;
+	padding:10px;
+	border-radius:10px;
+}
+.button_mobile:hover {
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #5cbf2a), color-stop(1, #44c767));
+	background:-moz-linear-gradient(top, #5cbf2a 5%, #44c767 100%);
+	background:-webkit-linear-gradient(top, #5cbf2a 5%, #44c767 100%);
+	background:-o-linear-gradient(top, #5cbf2a 5%, #44c767 100%);
+	background:-ms-linear-gradient(top, #5cbf2a 5%, #44c767 100%);
+	background:linear-gradient(to bottom, #5cbf2a 5%, #44c767 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#5cbf2a', endColorstr='#44c767',GradientType=0);
+	background-color:#5cbf2a;
+}
+.button_mobile:active {
+	position:relative;
+	top:1px;
+}
+
+.today_heading{
+display:inline-block;color:#222;font-size:19px;padding-left:10px;padding-right:10px;padding-bottom:0px;font-weight:400;font-family:Rokkitt, serif;padding:0px 32px 0px 16px;margin:16px 0px 7px;line-height:24px;
+}
+
+.today_img{
+width:180px;height:107px;padding:5px;
+}
+
+.current_h3{
+		text-align:center;    border: 4px solid #2db9f2; color: #04173c;background-color:#fff;font-size:18px;margin-top:33px;margin-bottom:-32px;border-radius:2px; background: #fff;z-index:1;font-family: Montserrat;
+			letter-spacing: 5px;
+			display: block;
+			text-align: center;
+			font-size: 24px;
+			text-transform: uppercase;
+			font-weight: 200;
+			
+		  padding: 0px 5% 38px 8%;
+		 position: relative;
+
+		  -webkit-transform: translateY(-50%);
+		  -ms-transform: translateY(-50%);
+		  transform: translateY(-50%);
+  
+
+  text-shadow: #c0c0c0 -1px 1px 0, #c2c2c2 -2px 2px 0, #c3c3c3 -3px 3px 0, #c5c5c5 -4px 4px 0, #c6c6c6 -5px 5px 0, #c8c8c8 -6px 6px 0, #c9c9c9 -7px 7px 0, #cbcbcb -8px 8px 0, #ccc -9px 9px 0, #cecece -10px 10px 0, #cfcfcf -11px 11px 0, #d1d1d1 -12px 12px 0, #d2d2d2 -13px 13px 0, #d4d4d4 -14px 14px 0, #d5d5d5 -15px 15px 0, #d7d7d7 -16px 16px 0, #d8d8d8 -17px 17px 0, #dadada -18px 18px 0, #dbdbdb -19px 19px 0, #ddd -20px 20px 0, #dfdfdf -21px 21px 0, #e0e0e0 -22px 22px 0, #e2e2e2 -23px 23px 0, #e3e3e3 -24px 24px 0, #e5e5e5 -25px 25px 0, #e6e6e6 -26px 26px 0, #e8e8e8 -27px 27px 0, #e9e9e9 -28px 28px 0, #ebebeb -29px 29px 0, #ececec -30px 30px 0, #eee -31px 31px 0, #efefef -32px 32px 0, #f1f1f1 -33px 33px 0, #f2f2f2 -34px 34px 0, #f4f4f4 -35px 35px 0, #f5f5f5 -36px 36px 0, #f7f7f7 -37px 37px 0, #f8f8f8 -38px 38px 0, #fafafa -39px 39px 0, #fbfbfb -40px 40px 0, #fdfdfd -41px 41px 0, #fff -42px 42px 0;}
+
+  @media  (max-width:400px)  {
+    .today_heading {
+                    font-size:15px;
+					padding:0px;
+					margin:3px 0px 3px;
+					line-height:18px;
+					padding-left:4px
+					}
+	.media-right, .media>.pull-right
+					{
+					padding-left: 0px;
+					}
+	.today_img{
+					width:160px;
+					padding-top:0px; 
+					}
+	.col-md-7{
+					padding:0px;
+					}
+	.current_h3{ margin-top:53px;
+				font-size:19px;
+				text-transform:none;
+				font-weight:500;
+				}
+}
+.hh {
+    width: auto;
+    margin: 0 0px;
+    border: 1px solid #a3a3ea;
+}
+.carousel-control.left {
+    
+    background-image: None;
+   
+    background-repeat: repeat-x;
+}
+
+.carousel-control.right {
+    
+    background-image: None;
+   
+    background-repeat: repeat-x;
+}
+.carousel-control {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 5%;
+    font-size: 20px;
+    color: #fff;
+    text-align: center;
+  /*  text-shadow: 0 1px 2px rgba(0,0,0,.6); */
+    background-color: rgba(0,0,0,0);
+    filter: alpha(opacity=50);
+    opacity: .5;
+}
+
+
+
+  .clockdiv{
+    font-family: sans-serif;
+    color: #fff;
+    display: inline-block;
+    font-weight: 100;
+    text-align: center;
+    font-size: 16px;
+}
+
+.clockdiv > div{
+    padding: 10px;
+    border-radius: 3px;
+    background: #00BF96;
+    display: inline-block;
+}
+
+.clockdiv div > span{
+    padding: 15px;
+    border-radius: 3px;
+    background: #00816A;
+    display: inline-block;
+}
+
+.smalltext{
+    padding-top: 5px;
+    font-size: 14px;
+}
+ 
+@media screen and (max-width: 768px) {
+   .eng  h2{
+        font-size:14px;
+    }
+	 .eng  h4{
+        font-size:14px;
+    }
+}
+
+
+.para{font-size:20px;
+font-family: 'Arimo', sans-serif;font-color:black;
+
+}
+@media screen and (max-width: 480px){
+.para {
+font-size:16px;
+font-family: 'Arimo', sans-serif;font-color:black;
+text-align:justify;
+padding:1px;
+}
+.rana{
+width:89%;
+}
+.key> li {
+    font-weight: 500;
+    line-height: 1.4em;
+    padding: 4px;
+    text-align: justify;
+    font-size: 16px;
+    color:#0A0D8A;
+}
+
+.c-heading {
+    display: block;
+text-align: justify; 
+  
+    margin-bottom: 14px;
+    margin-left: 0.5em;
+    border-bottom: 1px #2196F3;
+    color: #fff;
+	
+	font-family: 'Roboto Condensed', sans-serif;
+    font-size: 17px;
+
+
+    line-height: 1.42857;
+	
+	
+}
+
+
+}
+
+
+@media  (min-width:400px) and  (max-width:845px)  {
+    .carousel-control {
+    
+    width: 1%;
+  
+}
+
+}
+@media  (min-width:992px) and  (max-width:1070px)  {
+    .carousel-control {
+    
+    width: 1%;
+  
+}
+}
+@media  (min-width:1200px) and  (max-width:1240px)  {
+    .carousel-control {
+    
+    width: 1%;
+  
+}
+}
+
+@media  (min-width:1241px) and   (max-width:1276px)  {
+    .carousel-control {
+    
+    width: 2%;
+  
+}
+}​
+
+
+
+
+body{
+
+ font-family: 'Droid Serif', serif;
+ 
+ text-align: justify;
+font-family: 'PT Serif', serif;
+
+ 
+
+}
+ul {
+    list-style-image: url({% static "/a10.png" %});
+}
+
+.key> li {
+    /* font-weight: 500; */
+     line-height: 24px; 
+    margin:17px;
+    text-align: justify;
+    font-size: 16px;
+    
+	/*padding:5px;*/
+	    color: #3e3e3e;
+   /* font-family: 'Droid Serif',serif; */
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 28px;
+    padding: 0 0 14px;
+	
+	
+	    
+	
+	/*color: #545454;*/
+	/*color : #19171d;*/
+	color:#000000;
+    /*font-family: 'Droid Serif',serif;*/
+	font-family:"Roboto", "Lucida Grande", Verdana, Arial, sans-serif;
+	/*font-family : Arial, Helvetica, Sans-Serif;*/
+	/*font-family:BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,sans-serif;*/
+    /*font-size: 16px;*/
+    /*font-weight: 600;*/
+	font-weight:400;
+	/*font-size: 15px;*/
+	font-size: 13px;
+    /*line-height: 31px;*/
+	color: #212121;
+	line-height: 24px;
+	/*font-family:'Lato', serif;*/
+    padding: 0 4px 0px;
+    margin: 12px;
+	
+}
+
+
+.pan {
+    padding: 11px 10px;
+    /* border-bottom: 1px solid rgba(82, 45, 108, 0); */
+    border-top-left-radius: 0px;
+    border-top-right-radius: 65px;
+}
+
+
+.cardd {
+    display: inline-block;
+    position: relative;
+    width: 100%;
+    /* border-radius: 38px; */
+/*    color: rgba(0, 0, 0, 0.84); */
+   
+       
+
+    margin: 0px;
+} 
+
+.list-group-item {
+    position: relative;
+    display: block;
+    padding: 4px 35px;
+    margin-bottom: -1px;
+    background-color: rgb(255, 255, 255);
+   /* border: none;*/
+}
+ul, menu, dir {
+    display: block;
+    list-style-type: disc;
+    -webkit-margin-before: 1em;
+    -webkit-margin-after: 1em;
+    -webkit-margin-start: 0px;
+    -webkit-margin-end: 0px;
+    -webkit-padding-start: 40px;
+    padding-left: 10px;
+}
+
+
+
+.panel {
+   border: none;
+  
+  
+}
+
+.panel-heading {
+    padding: 11px 10px;
+    /* border-bottom: 1px solid rgba(82, 45, 108, 0); */
+
+}
+.navbar-brand {
+    float: left;
+    height: 37px;
+   
+}
+.navbar-nav>li>a {
+    padding-top: 15px;
+    padding-bottom: 17px;
+	padding-right:5px;
+	
+	letter-spacing:0px;
+    
+	
+}
+
+.navbar {
+    border: 0;
+ /*   border-radius: 1px; */
+    margin-bottom: 0px;
+    font-size: 11px;
+    letter-spacing: 4px;
+     background-color: #2f3239;
+    font-weight: 900;
+      
+}
+
+.navbar-custom .navbar-nav >li>a {
+    color: rgb(51, 103, 214);
+    background-color: #fff;
+    border: 0px solid #ddd;
+   /* border-radius: 15px; */
+}
+
+td, th, tr {
+    padding: 0;
+	text-align:start;
+}
+
+
+.c-heading {
+   
+    margin-bottom: 4px; 
+   
+}
+
+
+
+.carousel-list li {
+   
+	font-weight:500;
+	color:#ffffffe8;
+	color:#cbffca;
+	color:#d2ffd1;
+	font-size:15px;
+	letter-spacing:1px;
+
+	
+}
+.carousel-caption {
+   
+    text-shadow: 0 0px 0px rgba(0, 0, 0, 0);
+	text-shadow: none;
+}
+
+
+.menu >ul>li>a {
+color:#000e77;
+}
+
+
+
+
+
+.circle-tile {
+    margin-bottom: 30px;
+
+}
+
+.circle-tile {
+    margin-bottom: 1px;
+    text-align: center;
+}
+
+.circle-tile-heading {
+    position: relative;
+    width: 60px;
+    height: 50px;
+    margin: 0 auto -40px;
+    border: 3px solid rgba(255,255,255,0.3);
+    border-radius: 100%;
+    color: #fff;
+    transition: all ease-in-out .3s;
+	
+}
+
+
+
+
+
+.red {
+    background-color: #e74c3c;
+}
+
+
+
+/* -- Text Color Helper Classes */
+
+ 
+.text-red {
+    color: #e74c3c;
+}
+
+
+.redl {
+    background-color:#de322f;
+}
+
+ .dark-blue {
+    background-color: #34495e;
+}
+
+
+
+.blue {
+    background-color: #2980b9;
+}
+
+.orange {
+    background-color: #f39c12;
+}
+
+.red {
+    background-color: #e74c3c;
+}
+
+.purple {
+    background-color: #8e44ad;
+}
+
+.dark-gray {
+    background-color: #7f8c8d;
+}
+
+.gray {
+    background-color: #95a5a6;
+}
+
+.light-gray {
+    background-color: #bdc3c7;
+}
+
+.yellow {
+    background-color: #f1c40f;
+}
+
+/* -- Text Color Helper Classes */
+
+ .text-dark-blue {
+    color: #34495e;
+}
+
+.text-green {
+    color: #16a085;
+}
+
+.text-blue {
+    color: #2980b9;
+}
+
+.text-orange {
+    color: #f39c12;
+}
+
+.text-red {
+    color: #e74c3c;
+}
+
+.text-purple {
+    color: #8e44ad;
+}
+
+.text-faded {
+    color: rgba(255,255,255,0.7);
+}
+
+
+
+
+
+
+
+
+.text-faded {
+    color: rgba(255,255,255,0.7);
+}
+
+
+
+.circle-tile-heading .fa {
+    line-height: 47px;
+}
+
+.circle-tile-content {
+    padding-top: 35px;
+}
+.circle-tile-description {
+    text-transform: uppercase;
+}
+
+.text-faded {
+    color: rgba(255,255,255,0.7);
+}
+
+.circle-tile-number {
+    padding: 0px 0 15px;
+    font-size: 23px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.circle-tile-footer {
+    display: block;
+    padding: 2px;
+    color: rgba(255,255,255,0.5);
+    background-color: rgba(0,0,0,0.1);
+    transition: all ease-in-out .3s;
+}
+
+.circle-tile-footer:hover {
+    text-decoration: none;
+    color: rgba(255,255,255,0.5);
+    background-color: rgba(0,0,0,0.2);
+}
+
+
+
+/* BELL */
+@keyframes ring {
+	0%{transform:rotate(-15deg)}
+	2%{transform:rotate(15deg)}
+	4%{transform:rotate(-18deg)}
+	6%{transform:rotate(18deg)}
+	8%{transform:rotate(-22deg)}
+	10%{transform:rotate(22deg)}
+	12%{transform:rotate(-18deg)}
+	14%{transform:rotate(18deg)}
+	16%{transform:rotate(-12deg)}
+	18%{transform:rotate(12deg)}
+	20%,100%{transform:rotate(0deg)}
+}
+.faa-ring.animated,
+.faa-ring.animated-hover:hover,
+.faa-parent.animated-hover:hover > .faa-ring {
+	animation: ring 2s ease infinite;
+	transform-origin-x: 50%;
+	transform-origin-y: 0px;
+	transform-origin-z: initial;
+}
+.faa-ring.animated.faa-fast,
+.faa-ring.animated-hover.faa-fast:hover,
+.faa-parent.animated-hover:hover > .faa-ring.faa-fast {
+	animation: ring 1s ease infinite;
+}
+.faa-ring.animated.faa-slow,
+.faa-ring.animated-hover.faa-slow:hover,
+.faa-parent.animated-hover:hover > .faa-ring.faa-slow {
+	animation: ring 3s ease infinite;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.btnb {
+  border-radius: 2px;
+  border: 0;
+  transition: .2s ease-out;
+  color: #fff;
+padding:7px;
+font-size:15px;
+margin-top:4px;
+margin-left:14px;
+letter-spacing:2px;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+}
+
+.btnb:hover {
+  color: #fff;
+  box-shadow: 0 5px 11px 0 rgba(0, 0, 0, 0.18), 0 4px 15px 0 rgba(0, 0, 0, 0.15);
+}
+
+.btnb:active, .btn:focus, .btn.active {
+  outline: 0;
+  color: #fff;
+}
+
+
+
+/*Default*/
+.btnb-default {
+  background: #2BBBAD;
+}
+.btnb-default:hover, .btn-default:focus {
+  background-color: #30cfc0 !important;
+}
+
+.btnb-default.active {
+  background-color: #186860 !important;
+}
+
+
+
+
+
+.navbar-default {
+  font-size: 12px;
+  font-weight: 600;
+  background-color: #29487d;
+  padding:0px;
+  border: 0px;
+  border-radius: 0px;
+  /* box-shadow:inset 0 -1px 2px rgba(0,0,0,.24);*/
+}
+
+.navbar-default .navbar-nav>li>a {
+  color: #560bcb;
+  display:inline-flex;
+  
+}
+
+.navbar-default .navbar-nav>li>a:hover {
+  color: #cbf0ff;
+}
+
+.navbar-default .navbar-brand {
+  color: #002433;
+}
+
+.navbar-default .navbar-brand:hover {
+  color: #ffffff;
+  text-shadow: 1px -1px 8px #b3e9ff;
+}
+
+.navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:hover, .navbar-default .navbar-nav>.open>a:focus {
+  background-color: #004059;
+  color: white;
+}
+
+.navbar-default .navbar-toggle {
+  border: none;
+}
+
+.navbar-default .navbar-collapse, .navbar-default .navbar-form {
+  border: none;
+}
+
+.navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus {
+  background-color: #002433;
+}
+
+.navbar-default .navbar-toggle .icon-bar {
+  background-color: #ffffff;
+}
+
+.dropdown-menu {
+  background-color: #004059;
+  color: white;
+  border: 0px;
+  border-radius: 2px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.dropdown-menu>li>a {
+  background-color: #004059;
+  color: white;
+}
+
+.dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus {
+  background-color: #004059;
+  color:white;
+}
+
+.dropdown-menu .divider {
+    height: 1px;
+    margin: 9px 0;
+    overflow: hidden;
+    background-color: #003246;
+}
+
+.navbar-default .navbar-nav .open .dropdown-menu>li>a {
+    color: #ffffff;
+}
+
+@media (max-width: 767px) { 
+  .dropdown-menu>li>a {
+    background-color: #006b96;
+    color: #ffffff;
+  }
+  .dropdown-menu>li>a:hover {
+    color: #ffffff;
+  }
+  
+  .navbar-default .navbar-nav .open .dropdown-menu>li>a:focus, .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover {
+    color: #ffffff;
+    background-color: transparent;
+  }
+  
+  .dropdown-menu .divider {
+    height: 1px;
+    margin: 9px 0;
+    overflow: hidden;
+    background-color: #005577;
+  }
+} /* END Media Query */
+
+
+
+
+.btn-outlined {
+    border-radius: 0;
+    -webkit-transition: all 0.3s;
+       -moz-transition: all 0.3s;
+            transition: all 0.3s;
+}
+.btn-outlined.btn-primary {
+    background: none;
+    border: 3px solid #428bca;
+    color: #428bca;
+}
+.btn-outlined.btn-primary:hover,
+.btn-outlined.btn-primary:active {
+    color: #FFF;
+    background: #428bca;
+    border-color: #428bca:
+}
+
+.btn-outlined.btn-success {
+    background: none;
+    border: 3px solid #5cb85c;
+    color: #5cb85c;
+}
+.btn-outlined.btn-success:hover,
+.btn-outlined.btn-success:active {
+    color: #FFF;
+    background: #47a447;
+}
+
+.btn-outlined.btn-info {
+    background: none;
+    border: 3px solid #5bc0de;
+    color: #5bc0de;
+}
+.btn-outlined.btn-info:hover,
+.btn-outlined.btn-info:active {
+    color: #FFF;
+    background: #39b3d7;
+}
+
+.btn-outlined.btn-warning {
+    background: none;
+    border: 3px solid #f0ad4e;
+    color: #f0ad4e;
+}
+.btn-outlined.btn-warning:hover,
+.btn-outlined.btn-warning:active {
+    color: #FFF;
+    background: #ed9c28;
+}
+
+.btn-outlined.btn-danger {
+    background: none;
+    border: 3px solid #d9534f;
+    color: #d9534f;
+}
+.btn-outlined.btn-danger:hover,
+.btn-outlined.btn-danger:active {
+    color: #FFF;
+    background: #d2322d;
+}
+
+
+
+.panel-group .panel {
+   
+    padding-left: 10px;
+	padding-right:10px;
+	padding-top:10px;
+	border:1px solid cyan;
+}
+
+
+
+
+
+
+									
+									.buttonab {
+  display: inline-block;
+  font-family: "Montserrat", "Trebuchet MS", Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  position: relative;
+  padding: 5px 5px;
+  padding-right: 4.7em;
+  background: #009ED8;
+  border: none;
+  color: white;
+  transition: .2s;
+}
+.buttonab:before,
+.buttonab:after {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  padding-top: inherit;
+  padding-bottom: inherit;
+  width: 2.8em;
+  content: "\00a0";
+  font-family: 'FontAwesome', sans-serif;
+  font-size: 1.2em;
+  text-align: center;
+  transition: .2s;
+  transform-origin: 50% 60%;
+}
+.buttonab:before {
+  background: rgba(0, 0, 0, 0.1);
+}
+.buttonab:hover {
+  background: #0079a5;
+}
+.buttonab:active,
+.button:focus {
+  background: #002e3f;
+  outline: none;
+}
+.buttonab {
+  min-width: 15em;
+}
+									
+									
+									
+								.arrow {
+  background: background: rgba(54,146,231,1);
+background: -moz-linear-gradient(top, rgba(54,146,231,1) 0%, rgba(54,146,231,1) 34%, rgba(26,116,219,1) 44%, rgba(26,116,219,1) 100%);
+background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(54,146,231,1)), color-stop(34%, rgba(54,146,231,1)), color-stop(44%, rgba(26,116,219,1)), color-stop(100%, rgba(26,116,219,1)));
+background: -webkit-linear-gradient(top, rgba(54,146,231,1) 0%, rgba(54,146,231,1) 34%, rgba(26,116,219,1) 44%, rgba(26,116,219,1) 100%);
+background: -o-linear-gradient(top, rgba(54,146,231,1) 0%, rgba(54,146,231,1) 34%, rgba(26,116,219,1) 44%, rgba(26,116,219,1) 100%);
+background: -ms-linear-gradient(top, rgba(54,146,231,1) 0%, rgba(54,146,231,1) 34%, rgba(26,116,219,1) 44%, rgba(26,116,219,1) 100%);
+background: linear-gradient(to bottom, rgba(54,146,231,1) 0%, rgba(54,146,231,1) 34%, rgba(26,116,219,1) 44%, rgba(26,116,219,1) 100%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3692e7', endColorstr='#1a74db', GradientType=0 );
+Copy text;
+}
+.arrow:hover {
+  background: #fe2f22;
+}
+.arrow:active,
+.arrow:focus {
+  background: #b90c01;
+}
+.arrow:after {
+  content: "\F054";
+}
+.arrow:hover:after {
+  -webkit-animation: bounceright .3s alternate ease infinite;
+  animation: bounceright .3s alternate ease infinite;
+}	
+									
+									
+
+									
+									
+									
+									
+
+.wrap {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+
+
+/*gk*/
+
+.buttongk {
+  width: 220px;
+ 
+  font-family: 'Roboto', sans-serif;
+  font-size: 19px;
+
+  letter-spacing: 2.5px;
+  font-weight: 500;
+  color: #fff;
+  background-color:#16a085;
+  border: none;
+  border-radius: 1px;
+  box-shadow:0px 8px 15px rgba(22, 28, 35, 0.84);
+  transition: all 0.3s ease 0s;
+  cursor: pointer;
+  outline: none;
+  padding:2px;
+  }
+
+.buttongk:hover {
+  background-color: #16a085;
+  box-shadow: 0px 15px 20px rgba(46, 229, 157, 0.4);
+  color: #fff;
+  transform: translateY(-7px);
+}
+
+/*ca*/
+
+.buttonca {
+  width: 220px;
+ 
+  font-family: 'Roboto', sans-serif;
+  font-size: 19px;
+
+  letter-spacing: 2.5px;
+  font-weight: 500;
+  color: #fff;
+  background-color: #6a1b9a;
+  border: none;
+  border-radius: 1px;
+  box-shadow:0px 8px 15px rgba(22, 28, 35, 0.84);
+  transition: all 0.3s ease 0s;
+  cursor: pointer;
+  outline: none;
+  padding:2px;
+  }
+
+.buttonca:hover {
+  background-color: #16a085;
+  box-shadow: 0px 15px 20px rgba(46, 229, 157, 0.4);
+  color: #fff;
+  transform: translateY(-7px);
+}
+
+
+/*en*/
+
+.buttonen {
+  width: 220px;
+ 
+  font-family: 'Roboto', sans-serif;
+  font-size: 19px;
+
+  letter-spacing: 2.5px;
+  font-weight: 500;
+  color: #fff;
+  background-color: #2980b9;
+  border: none;
+  border-radius: 1px;
+  box-shadow:0px 8px 15px rgba(22, 28, 35, 0.84);
+  transition: all 0.3s ease 0s;
+  cursor: pointer;
+  outline: none;
+  padding:2px;
+  }
+
+.buttonen:hover {
+  background-color: #16a085;
+  box-shadow: 0px 15px 20px rgba(46, 229, 157, 0.4);
+  color: #fff;
+  transform: translateY(-7px);
+}
+
+
+/*mt*/
+
+.buttonmt {
+  width: 220px;
+ 
+  font-family: 'Roboto', sans-serif;
+  font-size: 19px;
+
+  letter-spacing: 2.5px;
+  font-weight: 500;
+  color: #fff;
+  background-color:#8e44ad;
+  border: none;
+  border-radius: 1px;
+  box-shadow:0px 8px 15px rgba(22, 28, 35, 0.84);
+  transition: all 0.3s ease 0s;
+  cursor: pointer;
+  outline: none;
+  padding:2px;
+  }
+
+.buttonmt:hover {
+  background-color: #16a085;
+  box-shadow: 0px 15px 20px rgba(46, 229, 157, 0.4);
+  color: #fff;
+  transform: translateY(-7px);
+}
+
+
+/*go*/
+
+.buttongo {
+  width: 220px;
+ 
+  font-family: 'Roboto', sans-serif;
+  font-size: 19px;
+
+  letter-spacing: 2.5px;
+  font-weight: 500;
+  color: #fff;
+  background-color: #455556;
+  border: none;
+  border-radius: 1px;
+  box-shadow:0px 8px 15px rgba(22, 28, 35, 0.84);
+  transition: all 0.3s ease 0s;
+  cursor: pointer;
+  outline: none;
+  padding:2px;
+  }
+
+.buttongo:hover {
+  background-color: #16a085;
+  box-shadow: 0px 15px 20px rgba(46, 229, 157, 0.4);
+  color: #fff;
+  transform: translateY(-7px);
+}
+
+
+/*hs*/
+
+.buttonhs {
+  width: 220px;
+ 
+  font-family: 'Roboto', sans-serif;
+  font-size: 19px;
+
+  letter-spacing: 2.5px;
+  font-weight: 500;
+  color: #fff;
+  background-color: #f1c40f;
+  border: none;
+  border-radius: 1px;
+  box-shadow:0px 8px 15px rgba(22, 28, 35, 0.84);
+  transition: all 0.3s ease 0s;
+  cursor: pointer;
+  outline: none;
+  padding:2px;
+  }
+
+.buttonhs:hover {
+  background-color: #16a085;
+  box-shadow: 0px 15px 20px rgba(46, 229, 157, 0.4);
+  color: #fff;
+  transform: translateY(-7px);
+}
+
+
+/*gs*/
+
+.buttongs {
+  width: 220px;
+ 
+  font-family: 'Roboto', sans-serif;
+  font-size: 19px;
+
+  letter-spacing: 2.5px;
+  font-weight: 500;
+  color: #fff;
+  background-color: #34495e;
+  border: none;
+  border-radius: 1px;
+  box-shadow:0px 8px 15px rgba(22, 28, 35, 0.84);
+  transition: all 0.3s ease 0s;
+  cursor: pointer;
+  outline: none;
+  padding:5px;
+  }
+
+.buttongs:hover {
+  background-color: #16a085;
+  box-shadow: 0px 15px 20px rgba(46, 229, 157, 0.4);
+  color: #fff;
+  transform: translateY(-7px);
+}
+
+
+
+/*bg*/
+
+
+.buttonbg {
+  width: 220px;
+ 
+  font-family: 'Roboto', sans-serif;
+  font-size: 19px;
+
+  letter-spacing: 2.5px;
+  font-weight: 500;
+  color: #fff;
+  background-color: #e74c3c;
+  border: none;
+  border-radius: 1px;
+  box-shadow:0px 8px 15px rgba(22, 28, 35, 0.84);
+  transition: all 0.3s ease 0s;
+  cursor: pointer;
+  outline: none;
+  padding:2px;
+  }
+
+.buttonbg:hover {
+  background-color: #16a085;
+  box-shadow: 0px 15px 20px rgba(46, 229, 157, 0.4);
+  color: #fff;
+  transform: translateY(-7px);
+}
+
+
+/*rs*/
+
+
+
+.buttonrs {
+  width: 220px;
+ 
+  font-family: 'Roboto', sans-serif;
+  font-size: 19px;
+
+  letter-spacing: 2.5px;
+  font-weight: 500;
+  color: #fff;
+  background-color:#ec3a4f;
+  border: none;
+  border-radius: 1px;
+  box-shadow:0px 8px 15px rgba(22, 28, 35, 0.84);
+  transition: all 0.3s ease 0s;
+  cursor: pointer;
+  outline: none;
+  padding:2px;
+  }
+
+.buttonrs:hover {
+  background-color: #16a085;
+  box-shadow: 0px 15px 20px rgba(46, 229, 157, 0.4);
+  color: #fff;
+  transform: translateY(-7px);
+}
+
+
+/*ct*/
+
+.buttonct {
+  width: 220px;
+ 
+  font-family: 'Roboto', sans-serif;
+  font-size: 19px;
+
+  letter-spacing: 2.5px;
+  font-weight: 500;
+  color: #fff;
+  background-color: #00838f;
+  border: none;
+  border-radius: 1px;
+  box-shadow:0px 8px 15px rgba(22, 28, 35, 0.84);
+  transition: all 0.3s ease 0s;
+  cursor: pointer;
+  outline: none;
+  padding:2px;
+  }
+
+.buttonct:hover {
+  background-color: #16a085;
+  box-shadow: 0px 15px 20px rgba(46, 229, 157, 0.4);
+  color: #fff;
+  transform: translateY(-7px);
+}
+
+
+.buttonjo {
+  width: 184px;
+ 
+  font-family: 'Roboto', sans-serif;
+  font-size: 15px;
+
+  letter-spacing: 2.5px;
+  font-weight: 500;
+  color: #fff;
+  background-color: #de322f;
+  border: none;
+  border-radius: 1px;
+  box-shadow:0px 8px 15px rgba(22, 28, 35, 0.84);
+  transition: all 0.3s ease 0s;
+  cursor: pointer;
+  outline: none;
+  padding:5px;
+  }
+
+.buttonjo:hover {
+  background-color: #16a085;
+  box-shadow: 0px 15px 20px rgba(46, 229, 157, 0.4);
+  color: #fff;
+  transform: translateY(-7px);
+}
+
+
+
+
+
+
+
+
+
+.red {
+    background-color: #e74c3c;
+}
+
+
+
+/* -- Text Color Helper Classes */
+
+ 
+.text-red {
+    color: #e74c3c;
+}
+
+
+
+
+ .pink {
+    background-color: #d26a77;
+}
+
+
+
+ .black {
+    background-color:#2da4af;
+}
+
+
+
+ .dark-blue {
+    background-color: #5c7c9c;
+}
+
+.green {
+    background-color: #48C9B0;
+}
+
+.blue {
+    background-color: #5DADE2;
+}
+
+.orange {
+    background-color:#A569BD;
+}
+
+.red {
+    background-color: #EC7063;
+}
+
+.purple {
+    background-color: #c27ae0;
+}
+
+.dark-gray {
+    background-color: #7f8c8d;
+}
+
+.gray {
+    background-color: #95a5a6;
+}
+
+.light-gray {
+    background-color: #bdc3c7;
+}
+
+.yellow {
+    background-color: #e0c866;
+}
+
+/* -- Text Color Helper Classes */
+
+ .text-dark-blue {
+    color: #34495e;
+}
+
+.text-green {
+    color: #16a085;
+}
+
+.text-blue {
+    color: #2980b9;
+}
+
+.text-orange {
+    color: #f39c12;
+}
+
+.text-red {
+    color: #e74c3c;
+}
+
+.text-purple {
+    color: #8e44ad;
+}
+
+.text-faded {
+    color: rgba(255,255,255,0.7);
+}
+
+
+						.btn-outline {
+    background-color: transparent;
+    color: inherit;
+    transition: all .5s;
+}
+
+.btn-primary.btn-outline {
+    color: #428bca;
+}
+
+.btn-success.btn-outline {
+    color: #5cb85c;
+}
+
+.btn-info.btn-outline {
+    color: #5bc0de;
+}
+
+.btn-warning.btn-outline {
+    color: #f0ad4e;
+}
+
+.btn-danger.btn-outline {
+    color: white;
+	border-color:white;
+
+}
+
+.btn-primary.btn-outline:hover,
+.btn-success.btn-outline:hover,
+.btn-info.btn-outline:hover,
+.btn-warning.btn-outline:hover,
+.btn-danger.btn-outline:hover {
+    color: #fff;
+}
+		
+
+
+
+.offer:hover {
+    -webkit-transform: scale(1.1); 
+    -moz-transform: scale(1.1); 
+    -ms-transform: scale(1.1); 
+    -o-transform: scale(1.1); 
+    transform:rotate scale(1.1); 
+    -webkit-transition: all 0.4s ease-in-out; 
+-moz-transition: all 0.4s ease-in-out; 
+-o-transition: all 0.4s ease-in-out;
+transition: all 0.4s ease-in-out;
+    }		
+			
+
+
+.buttonjob {
+      text-align:center;
+      margin:0 auto;
+      margin-top:5px;
+      height:24px;
+      width:160px;
+      padding:4px;  
+      background:tomato;
+   /*  -webkit-animation: bounce 0.75s infinite; */
+}
+
+
+@-webkit-keyframes buttonjob {
+        0% {
+    transform: scale(1,1) translate(0px, 0px);
+  }
+  
+  30%{
+    transform: scale(1,0.8) translate(0px, 10px); 
+  }
+
+  75%{
+    transform: scale(1,1.1) translate(0px, -25px); 
+  }
+  
+ 100% {
+    transform: scale(1,1) translate(0px, 0px);
+  }
+}
+
+
+
+
+
+
+
+.job_img {
+
+height:100px;
+
+width:190px;
+
+}
+.gs_img {
+
+height:95%;
+
+width:100%;
+
+}
+
+
+
+
+
+
+
+
+
+.flash-button{
+	background:#ff005e;
+padding:7px;
+font-size:15px;
+margin-top:4px;
+margin-left:14px;
+letter-spacing:2px;
+	color:#fff;
+	border:none;
+	border-radius:5px;
+	
+	animation-name: flash;
+	animation-duration: 1s;
+	animation-timing-function: linear;
+	animation-iteration-count: infinite;
+
+	//Firefox 1+
+	-webkit-animation-name: flash;
+	-webkit-animation-duration: 1s;
+	-webkit-animation-timing-function: linear;
+	-webkit-animation-iteration-count: infinite;
+
+	//Safari 3-4
+	-moz-animation-name: flash;
+	-moz-animation-duration: 1s;
+	-moz-animation-timing-function: linear;
+	-moz-animation-iteration-count: infinite;
+}
+
+@keyframes flash {  
+    0% { opacity: 1.0; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1.0; }
+}
+
+//Firefox 1+
+@-webkit-keyframes flash {  
+    0% { opacity: 1.0; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1.0; }
+}
+
+//Safari 3-4
+@-moz-keyframes flash {  
+    0% { opacity: 1.0; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1.0; }
+}
+
+
+
+  </style>
+</head>
+<body style="background-color:#EDF1F5;">
+
+ <nav class="navbar navbar-default" style="background-color:#ffffff;border-bottom:10px solid rgb(237, 241, 245);border-top: 4px solid #00ff9b;  ">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+  
+
+<b> <a class="navbar-brand" href="#" style="cursive; color:#000000;font-size:30px;">McqGk</a> </b>
+
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+	
+	
+	
+	
+
+	
+      <ul class="nav navbar-nav" style="text-align:center">
+	  
+	 
+         <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Mathematics<i class="fa fa-angle-double-down	
+" style="font-size:20px;color:red;display:inline-block"></i></a>
+          <ul class="dropdown-menu">
+            <li><a href="#"> Multiplication Table</a></li>
+            <li><a href="#">Series</a></li>
+            
+            <li><a href="#">Days n Work</a></li>
+			 <li><a href="/math/profit_n_loss/1/">Profit n Loss</a></li>
+			  <li><a href="#">Boat & Stream</a></li>
+			 
+          </ul>
+        </li>
+
+
+
+    <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">English<i class="fa fa-angle-double-down	
+" style="font-size:20px;color:red;display:inline-block"></i></a>
+          <ul class="dropdown-menu">
+            <li><a href="/error_correction/noun/1/">Error Correction</a></li>
+             <li><a href="/error_correction/noun/1/">Noune</a></li>
+            
+              <li><a href="/closetest/close/1/">Close Test</a></li>
+			 <li><a href="#">Fill in the blank</a></li>
+			  <li><a href="/english/word/page/1">Vocabulary</a></li>
+			  <li><a href="#">Editorial</a></li>
+          </ul>
+        </li>
+		
+		    <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Reasoning<i class="fa fa-angle-double-down	
+" style="font-size:20px;color:red;display:inline-block"></i></a>
+      						<ul class="dropdown-menu">
+																		
+																		  <li><a href="#">Blood Relation</a></li>
+																		 
+																		  <li><a href="#">Ranking and Direction</a></li>
+
+																	
+																		  <li ><a href="#">Coading Decoding</a></li>
+																		  
+																		  <li ><a href="#">Puzzle</a></li>
+																		  
+																		  <li><a href="#">Input Output</a></li>
+																		  
+																		  
+																		 
+																		  <li><a href="/reasoning/seating_arrangment/1/">seating_arrangment</a></li>
+																		</ul>
+        </li>
+		
+		    <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Current Affairs<i class="fa fa-angle-double-down	
+" style="font-size:20px;color:red;display:inline-block"></i></span></a>
+          			<ul class="dropdown-menu">
+																		
+																		  <li><a href="/ca/1/">Daily Current Today</a></li>
+																		
+																		  <li><a href="#">Static Gk</a></li>
+
+																		
+																		  <li class="waves-effect"><a href="#">Banking Awerness</a></li>
+																		  
+																		</ul>
+        </li>
+		
+		<li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">General Studies<i class="fa fa-angle-double-down	
+" style="font-size:20px;color:red;display:inline-block"></i></a>
+          <ul class="dropdown-menu">
+            <li><a href="/gk/history/"> History</a></li>
+            <li><a href="/gk/geography/">Geography</a></li>
+            
+            <li><a href="/gk/constitution/">Constitution</a></li>
+			 <li><a href="/gk/economics">Economics</a></li>
+			  <li><a href="gk/physics">physics</a></li>
+			  <li><a href="gk/chemistry">Chemistry</a></li>
+			  <li><a href="gk/biology">Biology</a></li>
+			
+          </ul>
+        </li>
+		
+		
+		         <button type="button" class="flash-button">Mock Test</button>
+					
+					
+					<style>
+				
+
+					</style>
+					
+					
+		
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+<li><a href="#"><span class="glyphicon glyphicon-th" aria-hidden="true"></span> Dashboard</a></li>
+     			
+																			<li class="dropdown">
+																					
+																							
+																											{% if user.is_authenticated %}
+																											<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ user.username }} <b class="caret"></b></a>
+																											
+														
+																															<ul class="dropdown-menu">
+																															<li><a href="/logout" >Logout</a></li>
+																															 <li role="separator" class="divider"></li> 
+																															<li><a href="/dashboard/{{ user.username }}"> Dash Board</a></li>
+																															
+																															
+																															</ul>
+																															
+																														{% else %}
+																														<a href="" data-toggle="modal" data-target="#myModal">
+																														<span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>&nbsp;
+																														   Log In<b class="caret"></b>
+																														   </a>
+																														
+																														{% endif %} 
+																														
+																			</li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+<style>
+
+
+
+
+
+
+
+</style>
+
+			
+			
+																												<div id="myModal" class="modal fade mod" role="dialog">
+																									  <div class="modal-dialog ">
+
+																										<!-- Modal content-->
+																										<div class="modal-content"style="text-align:center">
+																										<div class="modal-header" style="background-color:#210080">
+																										  <div class="modal-header">
+																											<button type="button" class="close" data-dismiss="modal">&times;</button>
+																											<h1 class="modal-title" style="color:#fff"><i class="glyphicon glyphicon-thumbs-up"></i>Sign In / Sign Up</h1>
+																											</div>
+																										  </div>
+																										  <div class="modal-body"style="text-align:center">
+																																																																																					
+																																																																																					
+																																																																																					<ul class="nav nav-tabs" style="text-align:center">
+																																<li class="active" style="text-align:center"><a data-toggle="tab" href="#home">Sign In</a></li>
+																																<li style="text-align:center"><a data-toggle="tab" href="#menu1">Sign Up </a></li>
+																																
+																															
+																															  </ul>
+																											<div class="tab-content">
+																																<div id="home" class="tab-pane fade in active">
+																																  <h3>Sign In</h3>
+																																																																																																																																														{% block content %}
+																																																																																																																																														
+																																			  <form method="post" id="login" action="" >
+																																				
+																																			
+																																			   {% csrf_token %}
+																																				{{ login.as_p }}
+																																				<div id="below"></div>
+																																				<button class="btn btn-success "  style="color:green"type="submit">Sign In</button>
+																																			  </form>
+																																				
+
+
+																																</div>
+																																<div id="menu1" class="tab-pane fade">
+																																  <h3>Create an Account</h3>
+																																																																																																  
+																																			  <form method="post" id="signup">
+																																				
+																																			  
+																																			   {% csrf_token %}
+																																				{{ form.as_p}}
+																											<img id="img_signup"style="position:relative;left:0;right:0;margin:auto;display:none;text-align:center;float:center"height="50" width="90"src="/media/media/31.svg">
+																																	<div style="display:none"id="below_signup"></div>
+																																	<button type="submit">Sign up</button></div>
+																																	</form>
+																																			{% endblock %}
+																																
+																															
+																																
+
+
+																												</div>
+																										  </div>
+																										  <div class="modal-footer">
+																											<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+																										  </div>
+																										</div>
+
+																									  </div>
+																									</div>
+			
+			
+			
+			
+			
+			
+			
+			
+
+					 <section class="carousel-section" style="margin-top:2px;background-image:url(static/css/001.jpg)">
+					   
+							<div id="myCarousel" class="carousel carousel-razon slide" data-ride="carousel" data-interval="60000" style="background-color:rgba(36, 176, 236, 0.0);">
+								<!-- Indicators -->
+						
+								
+									<!-- Wrapper for slides -->
+									<div class="carousel-inner">
+												{% for slide in slide %}
+															{% if forloop.first %}
+															<div class="active item">
+														{% else %}
+															<div class="item">
+														{% endif %}
+											<div class="container rana"">
+														<div class="row"">
+															<div class="col-xs-6 col-sm-7 col-md-7 " style="">
+															
+																		<div class="carousel-caption nopadding">
+																		
+																		
+														<div class="carousel-text" style="font-family: arial,sans-serif">
+				<a href="#{{forloop.counter}}link" id="back"> <h3 id="{{forloop.counter}}car_head" style="font-weight:400;border:0px solid #fff;color:#000;background:rgba(255, 42, 99, 0.0);padding:20px;color:#000;font-size:32px; text-decoration:none; padding-left:10px;"class="animated fadeInDownBig animation-delay-7 carousel-subtitle">{% autoescape off %} {{slide.upper_heading}} {% endautoescape %}</h3></a>
+															<div style="color:white;font-weight:bold">Top 3 Points :- 
+															
+															<button id="{{forloop.counter}}car_btn" onClick="carousal('{{forloop.counter}}')" type="button" class="btn btn-warning btn-xs"style="float:right;color:#6b91ff;border:0px blue;background:#c8ff80;font-weight:400;letter-spacing:2px;font-size:11px;line-height:11px;padding:7px 24px;border-radius:0px"><b><i style="font-weight:400" >Show...</i></b> </button>
+																				</div>
+																				 
+
+														<ul id="{{forloop.counter}}car_ul"class="list-unstyled carousel-list"style="display:none;list-style-image: url('/static/cc16.png');padding-left:26px;font-family:'Rokkitt', serif;box-shadow:rgb(1, 153, 236) 15px 2px 33px;border:0px solid #ddd;background:rgba(36, 102, 202, 0.81)"  >
+																						 
+																						 			   			   <li class="animated bounceInLeft animation-delay-11"  style="padding-left:6px;padding-bottom:6px;"> {% autoescape off %}{{slide.key_1}} {% endautoescape %}</li>
+																						   <li class="animated bounceInLeft animation-delay-13"style="padding-left:6px;padding-bottom:6px;" > {% autoescape off %}{{slide.key_2}} {% endautoescape %}</li>
+																						   <li class="animated bounceInLeft animation-delay-15" style="padding-left:6px;padding-bottom:6px;">{% autoescape off %}{{slide.key_3}} {% endautoescape %}</li>
+																						   
+																					   </ul>							 
+																				</div>
+																	</div>
+															</div>
+															<div class=" col-xs-6 col-sm-5 col-md-5   carousel-img-wrap ">
+															
+																<div class="carousel-img">
+																	<img src="/media/{{ slide.ca_img}}" class="img-responsive center-block img-rounded animated bounceInUp animation-delay-3 " alt="Image">
+																</div>
+															</div>
+														</div>
+													</div>
+										  </div>
+												{% endfor %}
+
+									<!-- Left and right controls -->
+									<a class="left carousel-control"style="background:#ff4d4d47" href="#myCarousel" data-slide="prev">
+									  <span class="glyphicon glyphicon-chevron-left"style="color:blue" ></span>
+									  <span class="sr-only">Previous</span>
+									</a>
+									<a class="right carousel-control" href="#myCarousel" data-slide="next">
+									  <span class="glyphicon glyphicon-chevron-right"style="color:blue"></span>
+									  <span class="sr-only">Next</span>
+									</a>
+							</div>
+								  
+					  </div>
+					  
+					  
+					 </section >
+					 
+					 
+					 
+				<!-- belw slide -->
+				
+				
+			<div class="container" >
+	
+				<div class="row">
+					<div class="panel cardd ">
+		
+						
+						
+						<div class="col-md-7 col-md-push-3  " style="  background-color:#f3f3f3;padding-top:0px;margin-top:15px">
+						
+						
+<!-- <a href="#" style="float:right;margin-bottom:10px;"class="button_mobile">Current Affairs <i class="fa fa-angle-down" style="font-size:24px;padding-left:3px;float:right"></i> </a> -->
+
+
+							
+										<h3 class="current_h3"> Current Affairs Today   </h3> 
+										<div id="current_affairs_today" >
+										
+										
+										{% for slide in slide %}
+																			<div class="panel nopadding " style="margin-bottom:10px;border:2px solid #bce8f1">
+																			<div class="media cardd"  >
+  <div class="media-right"  >
+    <img class="today_img" src="/media/{{slide.ca_img}}" class="media-object" style=""/>
+  </div>
+  <div class="media-body" style="background-color:white">
+<h4  class="today_heading" style=" "> {% autoescape off %} {{slide.upper_heading}}  {% endautoescape %}</h4> 
+<a style="padding-left:15px;color:#757575;font-size:11px">  <i class="fa fa-calendar"  style="color:#e89797"aria-hidden="true"></i>  &nbsp 20-4-2018 .</a>
+<button id="b" onClick="op('#{{forloop.counter}}dis_defence',1)" type="button" class="btn btn-warning btn-xs y"style="float:right;color:#fff;border:0px blue;background:#fc8c14;font-weight:400;letter-spacing:2px;font-size:11px;line-height:11px;padding:7px 24px;border-radius:0px"><b style="font-weight:400;font-style:italic" >Details</b>  </button>
+
+  </div>
+</div> 
+																			
+																			
+
+
+																									
+																																						
+																							
+																							<div class="panel-body" id="{{forloop.counter}}dis_defence" style="font-weight:bold;display:none">
+																						
+																											<div style="background-color:rgb(248, 252, 255);"class="panel-heading  nopadding " id="{{forloop.counter}}link" >
+																					
+																				
+																				
+																				
+														<button id="{{slide.new_id}}"style="text-align:center; color: #fff;background-color:#d9534f;margin-right:10px;float:right;display:inline-block;" type="submit" class="btn btn-danger btn-xs"
+																						{% if user.is_authenticated %}
+																						onClick="add('{{slide.new_id}}','{{slide.upper_heading}}','{{ user.username }}','/media/{{slide.ca_img}}')" 
+																						
+																						{% else %}
+																						
+																						data-toggle="modal" data-target="#myModal"
+																						
+																						{% endif %}
+																						
+																						><span class="glyphicon glyphicon-plus"></span> Add to notes</button> 
+																					</div>
+																											<h4 style="text-align:left ;"><b><u>Key points to Remember:</u></b></h4>
+																									
+																										{% autoescape off %}
+																											
+																											<ul style="text-align:None;" id="{{forloop.counter}}" class="key " >
+																									
+																												
+																									
+																												</ul>
+																											  {% endautoescape %}
+																												{% if slide.link != "" %}
+																												<p  style="text-align:right;padding-bottom:0px;" ><b>Read More From :</b></p>
+																												<div style="text-align:right;float:right" id="{{forloop.counter}}lk">
+																												
+																	
+																											</div>
+																											{% endif %}
+																																		<script>   key('{{slide.all_key_points|escapejs}}' );
+																																		
+																																		linkk('{{slide.link}}','{{slide.url}}');
+																																		
+																																		
+																																		 function key(a){
+
+																																				
+																																				var myarray = a.split('///');
+
+																																							for(var i = 0; i < myarray.length; i++)
+																																							{
+
+																																							var node=document.createElement("LI");
+																																	//var textnode=document.createTextNode(myarray[i]);
+																																							node.innerHTML =myarray[i];
+																																							document.getElementById("{{forloop.counter}}").appendChild(node);
+
+																																							}
+																																							 }
+																																							 
+																																							 
+																																							 function linkk(c,d){
+
+																																				
+																																				var myarrayy = c.split('///');
+																																				var url = d.split('///');
+
+																																							for(var i = 0; i < myarrayy.length; i++)
+																																							{
+
+																																							var a=document.createElement("a");
+																													a.setAttribute("style", "text-align:right; padding:2px");
+																													a.setAttribute('target', '_blank');
+
+																													 
+																									a.innerHTML = '<u><b>'+myarrayy[i] +'</u></b>';
+																																											a.href = url[i];
+
+																																						//a.setAttribute('href', 'google.com');
+																																							//node.appendChild(textnode);
+																																							document.getElementById("{{forloop.counter}}lk").appendChild(a);
+																																							
+																																
+
+																																							}
+																																							 } 
+
+																																		
+																																		</script>
+																											
+																									<p style="text-align:left;float:left;padding:0px" ><a style="color:#ff3333"href="/ca/1/">Read All Currrent Affairs->></a></p>		
+																						</div>
+																						
+																							
+																				</div>
+														{% endfor %}
+														</div>
+														
+														<!-- english-->
+														
+													<!--	<h3 class="current_h3" style="color:#0057ff"> Editorial Word List  </h3>--> 
+														
+														 <button id="b" onClick="op('#english_the',0)" type="button" class="x"style="float:right;color:#fff;border:12px solid #fff;background:#f05f70;font-weight:400;letter-spacing:2px;font-size:15px;line-height:11px;border-radius:10px;width:100%;padding:10px;margin-bottom:10px"><b>English Editorial</b>  </button>
+														<div id="english_the" style="display:none;padding:12px;">
+															
+						<!-- word list 1 -->
+						<div class="eng nopadding">
+				
+						
+																			{% if word1 != None %}
+																			<div class="panel panel-info nopadding" >
+																				<div class="col-md-12 nopadding">
+													
+														<h3 style="text-align:left; color: #336699"> The Hindu Editorial Wordlist 
+														<img style="text-align:right;float:right;"src="{% static "/the.png" %}" class="img-rounded" alt="Cinque Terre" width=104" height="86">
+														<P>
+														
+														<b style="color:black;font-size:14px"> <i class="fa fa-calendar" aria-hidden="true"></i> Date :{{word1_day}} </b> </p>
+														
+														
+														 
+														</h3>
+														</div>
+																			
+										
+										
+																								<div class="panel panel-primary card ">
+																									  <div class="c-header-color "><p class="c-heading">{% if header1 != None %}
+																									  {% for header1 in header1 %}
+																									  {{header1.Heading_for_list1}}  
+																									   <a class="c-heading"   target="_blank" style=" text-align:right;font-size:16px"href="{{header1.link}}"><u>Read more The Hindu->></u></a>  </p>
+																										{% endfor %}
+																									  {% endif %} 
+																									  </div>
+																									  <div class="panel-body">
+																									<div style="overflow-x:auto;">
+																										<table class="table " >
+																													<thead>
+																													  <tr>
+																														<th><a style="font-size:17px;font-family: 'PT Serif', serif;text-decoration:none;color:black">Word (form)</a></th>
+																														<th><a style="font-size:17px;font-family: 'PT Serif', serif;text-decoration:none;color:black">synonym </a></th>
+																														<th><a style="font-size:17px;font-family: 'PT Serif', serif;text-decoration:none;color:black">Example</a></th>
+																														<th><a style="font-size:17px;font-family: 'PT Serif', serif;text-decoration:none;color:black">Image </a></th>
+																													
+																													  </tr>
+																													</thead>
+																													<tbody >
+																											
+																						
+																		
+																					{% for words in word1 %}
+																													  <tr>
+																														<td ><b style="font-size:17px;font-family: 'PT Serif', serif;color:black; text-decoration:underline">{{words.word}} </b><br/> <br/><a style="font-size:17px; color:#1313de; text-decoration:none">{{words.meaning}}</a></td>
+																														<td><a style="font-size:17px; color:#105d10; text-decoration:none">{{words.synonym}}</a></td>
+																														<td><a style="font-size:17px; color:black; text-decoration:none"> {% autoescape off %} {{words.example}} {% endautoescape %}    </b></td>
+																													<td><a href="#"><img width="110" height="110" src="/media/{{words.word_img}}" class="attachment-120x120 size-120x120 wp-post-image" alt="" scale="0"></a></td>
+																													  </tr>  
+																													  	{% endfor %}
+																															
+																													  
+																														
+															 
+																													  
+																													 
+																													</tbody>
+																												  </table>
+																										</div>
+																										 <h4 style="color:#D50000;text-align:right"><a href="/english/word/page/1/" style="color:#D50000"> Continue...>></a></h4>
+																										
+																									  
+																									  
+																									  </div>
+																								</div>
+						
+																	</div>
+																	{% endif %}
+																							<!-- end word list 1 -->
+																													<!-- word list 2 hindu-->
+																				
+																													
+																												<!-- end word list 2 hiindu -->
+																												
+																												
+																												
+
+																												<!-- economy word list 1 start -->
+
+
+																	{% if word_e1 != None %}
+																	
+														
+															<div class="panel panel-info nopadding " >
+											
+										<div class="col-md-12 nopadding">
+														<p >
+														<h3 style="text-align:left; color: #336699">  Editorial from The EconomicTimes 
+														<img style="text-align:right;float:right;"src="{% static "/theet.png" %}" class="img-rounded" alt="Cinque Terre" width=104" height="86">
+														<P>
+														
+														<b style="color:black;font-size:14px"> <i class="fa fa-calendar" aria-hidden="true"></i> Date :{{word_e1_day}} </b> </p>
+														
+														
+														 
+														</h3>
+														</div>
+														
+														
+																	
+									<div class="panel panel-primary ">
+										  <div class="c-header-color  card"><p class="c-heading">{% if header_e1 != None %}
+																									  {% for header_e1 in header_e1 %}
+																									  {{header_e1.Heading_for_list1}}  
+																									  
+																									  <a class="c-heading"  target="_blank" style=" text-align:right;font-size:16px"href="{{header_e1.link}}"><u>Read more The EconoiTimes->></u></a>
+																										{% endfor %}
+																									  {% endif %} 
+																									  </p>
+											
+										  </div>
+										  <div class="panel-body">
+												<div style="overflow-x:auto;">
+											<table class="table">
+														<thead>
+																													  <tr>
+																														<th><a style="font-size:17px;font-family: 'PT Serif', serif;text-decoration:none;color:black">Word (form)</a></th>
+																														<th><a style="font-size:17px;font-family: 'PT Serif', serif;text-decoration:none;color:black">synonym </a></th>
+																														<th><a style="font-size:17px;font-family: 'PT Serif', serif;text-decoration:none;color:black">Example</a></th>
+																														<th><a style="font-size:17px;font-family: 'PT Serif', serif;text-decoration:none;color:black">Image </a></th>
+																													
+																													  </tr>
+																													</thead>
+														<tbody>
+														  
+																		{% for words in word_e1 %}
+																								 <tr>
+																									<td ><b style="font-size:17px;font-family: 'PT Serif', serif;color:black; text-decoration:underline">{{words.word}} </b><br/> <br/><a style="font-size:17px; color:#1313de; text-decoration:none">{{words.meaning}}</a></td>
+																														<td><a style="font-size:17px; color:#105d10; text-decoration:none">{{words.synonym}}</a></td>
+																														<td><a style="font-size:17px; color:black; text-decoration:none">{{words.example}}.</b></td>
+																									<td><a href="#"><img width="150" height="150" src="/media/{{words.word_img}}" class="attachment-120x120 size-120x120 wp-post-image" alt="" scale="0"></a></td>
+																								 </tr>  
+																											{% endfor %}
+																															
+														  
+														  
+														  
+														 
+														 
+														 
+														</tbody>
+														
+													  </table>
+													  </div>
+												
+											 <h4 style="color:#D50000;text-align:right"><a href="/english/word/page/1/" style="color:#D50000"> Continue...>></a></h4>
+											
+										  
+										  
+										  </div>
+									</div></div>
+									
+									
+									{% endif %}
+											<!-- end economy 1 wordlist -->
+											<!--  economy 2 wordlist -->
+											
+											{% if word_e2 != None %}
+											<div class="row card nopadding">
+														<div class="col-md-9">
+														<h3 style="text-align:left; color: #336699"> Editorial from The EconomicTimes 
+														
+														<p ><b> <i class="fa fa-calendar" aria-hidden="true"></i> Date :{{word_e2_day}} </b> <p></div>
+														
+														<div class="col-md-3">
+														<img src="{% static "/theet.png" %}" class="img-rounded" alt="Cinque Terre" width=104" height="86"> </h3>
+														
+														</div>
+														
+														</div>
+											
+											
+																	<div class="panel panel-info" style="margin-top:0px;">
+									<div class="panel panel-primary card">
+										  <div class="c-header-color"><p class="c-heading">{% if header_e2 != None %}
+																									  {% for header_e2 in header_e2 %}
+																									  {{header_e2.Heading_for_list2}}  
+																									  
+																									  <a class="c-heading"  target="_blank"style=" text-align:right"href="{{header_e2.link}}"><u>Read more The EconomicTimes->></u></a> 
+																									  {% endfor %}
+																									  {% endif %} 
+																									  </p>
+											
+										  </div>
+										  <div class="panel-body">
+												<div style="overflow-x:auto;">
+											<table class="table">
+														<thead>
+														  <tr>
+															<th>Word</th>
+															<th>Meaning</th>
+															<th>synonym</th>
+															
+														  </tr>
+														</thead>
+														<tbody>
+														  
+																		{% for words in word_e2 %}
+																								 <tr>
+																									<td><b>{{words.word}} </b><br/> <br/>{{words.meaning}}</td>
+																									<td><h4 style="color:green"> {{words.synonym}}</h4></td>
+																									<td><h2 style="color:#424242;">{{words.example}}He eagerly accepted the job because it came with a plethora of opportunities.</h2></td>
+																									<td><a href="#"><img width="150" height="150" src="/media/{{words.word_img}}" class="attachment-120x120 size-120x120 wp-post-image" alt="" scale="0"></a></td>
+																								 </tr>  
+																											{% endfor %}
+																															
+														  
+														  
+														  
+														 
+														 
+														 
+														</tbody>
+														
+													  </table>
+													  </div>
+												
+											 <h4 style="color:#D50000;text-align:right"><a href="/english/word/page/1/" style="color:#D50000"> Continue...>></a></h4>
+											
+										  
+										  
+										  </div>
+									</div></div>
+									
+									
+									{% endif %}
+											<!-- end economy 2 wordlist end -->
+														
+														
+														</div>
+														</div>
+														<!-- english -->
+														
+														
+														<!-- math -->
+														 <button id="b" onClick="op('#math_the',0)" type="button" class="x"style="float:right;color:#fff;border:12px solid #fff;background:#2e9fff;font-weight:400;letter-spacing:2px;font-size:15px;line-height:11px;border-radius:10px;width:100%;padding:10px;margin-bottom:20px"><b>math for competitive exam</b>  </button>
+														 <div id="math_the" style="display:none;padding:12px;">
+														{% if math != None %}
+														
+														<div style="padding:20px; background-color:#3F51B5">
+						
+						<h2 style="color: #fff;font-family: 'PT Serif', serif;text-decoration:underline"> Impotent Math Excersise 20-may-2017</h2>
+					
+						</div>
+						
+						
+						<div class="sayan" style="background-color:white">
+						
+						<span style="padding-bottom:20px;">
+						
+						<img src="" class="img-thumbnail center-block " alt="Cinque Terre" width="500" height="300"></span>
+						
+								</div>						
+													
+									{% for math in math %}
+									
+										<div class="panel nonpadding ">
+												
+												<div class="panel-heading card">
+									
+																		
+																		<h4>Profit and Loss: Solved Examples<p class="bg-info"> <b><i>Question {{forloop.counter}}: </i></b></p>  </h4>
+																		<div  style="font-family:'Roboto Condensed', sans-serif;font-size:17px;color:#000;display:inline;line-height: 1.42857;">
+																	{% autoescape off %}	{{math.question}} {% endautoescape %} </div>
+																{% if math.use_image == 0 %}
+														
+															
+															
+																
+																
+																
+																{% endif %}
+																
+															
+												</div>
+																													
+														
+														
+														<hr></hr>
+													<div class="panel-body">
+														<div id="mathclockdiv{{forloop.counter}}" class="clockdiv"style="text-align:center;margin-right:0;float:right;display:none">
+  
+															 
+															<!--  <div>
+																<span class="mathminutes"id="mathminutes"></span>
+																<div class="smalltext">Minutes</div>
+															  </div> 
+															  -->
+															  <div>
+																<span class="seconds"id="mathseconds{{forloop.counter}}"></span>
+																<div class="smalltext" id="mathsmalltext{{forloop.counter}}">Seconds</div>
+															  </div>
+															</div>
+																		
+																		<button id="mathtime{{forloop.counter}}" onClick="timer('mathclockdiv{{forloop.counter}}',{{math.time}},{{forloop.counter}}1,{{forloop.counter}}2,{{forloop.counter}}3,{{forloop.counter}}4,{{forloop.counter}}5,{{math.ans}},mathsolution{{forloop.counter}},{{forloop.counter}},'math',5)"
+
+																							
+																						style="text-align:center; color: #fff;background-color:rgb(36, 172, 98);margin-right:0;float:right;display:inline-block;"  class="btn  btn-sm"
+																						
+																						
+																						><i class="fa fa-clock-o" aria-hidden="true"></i>  Timer {{math.time}} Sec</button> 
+																		
+																		
+																		<h4 style="text-align:left ;color:#F06292"><b><u>Options:</u></b></h4>
+																		
+																	
+
+
+
+																							 
+																				<div class="radio radio-primary " >
+
+																		
+																 <form >
+												
+																																				<div style="display: block"> 
+																																		 
+																					<input type="radio" name="radio1" id="{{forloop.counter}}1" value="option1">
+																					<label for="{{forloop.counter}}1">
+																						{{math.a}}
+																					</label>
+																					<div id="{{forloop.counter}}w1"style="display:none">
+																					<img src="{% static "/c.png" %}" class="img-rounded"> 
+																					</div>
+																					<div id="{{forloop.counter}}r1"style="display:none">
+																					<img src="{% static "/d.png" %}" class="img-rounded"> 
+																					</div>
+																					</div>
+																					
+																					
+																					<div style="display: block"> 
+																					<input type="radio" name="radio1" id="{{forloop.counter}}2" value="option1">
+																					 
+																					<label for="{{forloop.counter}}2">
+																						{{math.b}}
+																					</label>
+																					<div id="{{forloop.counter}}w2"style="text-align:center;display:none">
+																					<img src="{% static "/c.png" %}" class="img-rounded"> 
+																					</div>
+																					<div id="{{forloop.counter}}r2"style="text-align:center;display:none">
+																					<img src="{% static "/d1.png" %}" class="img-rounded"> 
+																					</div>
+																					
+																				</div>
+																				
+																				
+																				<div style="display: block"> 
+																																		 
+																					<input type="radio" name="radio1" id="{{forloop.counter}}3" value="option1">
+																					<label for="{{forloop.counter}}3">
+																						{{math.c}}
+																					</label>
+																				<div id="{{forloop.counter}}w3"style="text-align:center;display:none">
+																					<img src="{% static "/c.png" %}" class="img-rounded"> 
+																					</div>
+																					<div id="{{forloop.counter}}r3"style="text-align:center;display:none">
+																					<img src="{% static "/d1.png" %}" class="img-rounded"> 
+																					</div>	
+																				</div>
+																					
+																					
+																					<div style="display: block"> 
+																					
+																					 <input type="radio" name="radio1" id="{{forloop.counter}}4" value="option1">
+																					<label for="{{forloop.counter}}4">
+																						{{math.d}}
+																					</label>
+																					<div id="{{forloop.counter}}w4"style="text-align:center;display:none">
+																					<img src="{% static "/c.png" %}" class="img-rounded"> 
+																					</div>
+																					<div id="{{forloop.counter}}r4"style="text-align:center;display:none">
+																					<img src="{% static "/d1.png" %}" class="img-rounded"> 
+																					</div>
+																					
+																				</div>
+																				
+																				<div style="display: block"> 
+																					
+																					 <input type="radio" name="radio1" id="{{forloop.counter}}5" value="option1">
+																					<label for="{{forloop.counter}}5" >
+																						{{math.e}}
+																					</label>
+																					
+																					
+																					<div id="{{forloop.counter}}w5"style="text-align:center;display:none">
+																					<img src="{% static "/c.png" %}" class="img-rounded"> 
+																					</div>
+																					<div id="{{forloop.counter}}r5"style="display:none;">
+																					<img src="{% static "/d.png" %}" class="img-rounded" > 
+																					</div>
+																					
+																					
+																				</div>
+																				
+																				
+																					</div>
+																					
+																			</form>
+																			
+																			<button 
+																		id="mathsol{{forloop.counter}}"onclick=
+	"op({{forloop.counter}}1,{{forloop.counter}}2,{{forloop.counter}}3,{{forloop.counter}}4,{{forloop.counter}}5,{{math.ans}},mathsolution{{forloop.counter}},{{forloop.counter}},'mathsol_upper{{forloop.counter}}','math',5)"
+																							
+																						style="text-align:center; color: #fff;background-color:#4D90FE;margin-right:0;float:left;display:inline-block;margin-top:16px" type="submit" class="btn  btn-sm"
+																						
+																						
+																						> See Solutoins</button> 
+																						
+																						
+																		
+																						
+													</div>			
+																		
+													
+													
+													
+													
+													
+													<div id="mathsolution{{forloop.counter}}"style="text-align:center;display:none">
+													 
+															<p  id="mathsol_upper{{forloop.counter}}"class="bg-info" style="text-align:center;"> <b>Correct<img src="{% static "/thh.png" %}" class="img-rounded" ></b> </p> 
+															<p> <b>  Answer :</b></p> 
+															<!-- <p class="bg-danger" style="display:inline"> Wrong
+																					<img src="{% static "/c.png" %}" class="img-rounded" id="{{forloop.counter}}w"style="display:none"> 
+																					
+																					
+																					<img src="{% static "/d.png" %}" class="img-rounded" id="{{forloop.counter}}r"style="display:none;"> 
+																					 </p><br></br> -->
+															
+																		<div  style="font-family:'arial', sans-serif;font-size:17px;color:#000;display:inline;line-height: 1.42857;">
+																	{% autoescape off %}	{{math.solution}} {% endautoescape %} </div>
+																
+																	
+																		</div>
+													</div>
+													
+													{% endfor %}
+													
+													
+													<!--end palel-->
+													<h4 style="color:#212121;text-align:right"><a href="https://www.w3schools.com/html/" style="color:#D50000"><u>Click to Practice More...>></u></a></h4>
+													
+													{% endif %}
+													
+													</div>
+														<!--math end -->
+														
+														
+																									
+						
+						
+														
+														
+														
+												 <button id="b" onClick="op('#reasoning_the',0)" type="button" class="x"style="float:right;color:#fff;border:12px solid #fff;background:#ff9b51;font-weight:400;letter-spacing:2px;font-size:15px;line-height:11px;border-radius:10px;width:100%;padding:10px;margin-bottom:20px"><b>Reasoning for competitive exam</b>  </button>		
+						
+						
+					<div id="reasoning_the" style="display:none;padding:12px;">
+						
+						
+						
+						{% if reasoning != None %}
+						
+						<div style="padding:20px; background-color:##19398A">
+						
+						<h2 style="color: white;font-family: 'PT Serif', serif;text-decoration:underline">  Todays Reasoning practice</h2>
+						
+						</div>
+						
+							<div class="sayan" style="background-color:white">
+						
+						
+						<span style="padding-bottom:20px;">
+						
+						<img src="{% static "/r.jpeg" %}" class="img-thumbnail center-block " alt="Cinque Terre" width="500" height="0"></span>
+						
+					
+						</div>
+					
+											
+									{% for reasoning in reasoning %}
+									
+										
+										<div class="panel nonpadding ">
+												
+												<div class="panel-heading card" style="text-align:justify">
+										
+																		
+																		<h4>Reasoning pratice with timer<p class="bg-info"> <b><i>Question {{forloop.counter}}: </i></b></p>  </h4>
+																		<div  style="font-family:'Roboto Condensed', sans-serif;font-size:17px;color:rgb(49, 103, 126);display:inline;line-height: 2.1;font-weight:bold">
+																	{% autoescape off %}	{{reasoning.question}} {% endautoescape %} </div>
+																{% if reasoning.use_image == 0 %}
+														
+															
+															
+																
+																
+																
+																{% endif %}
+																
+															
+												</div>
+																													
+														
+														
+														<hr></hr>
+														{% if reasoning.question_part == '' %}
+													<div class="panel-body">
+													
+															<div id="reasoningclockdiv{{forloop.counter}}" class="clockdiv"style="text-align:center;margin-right:0;float:right;display:none">
+  
+															 
+															<!--  <div>
+																<span class="reasoningminutes"id="reasoningminutes"></span>
+																<div class="smalltext">Minutes</div>
+															  </div> 
+															  -->
+															  <div>
+																<span class="seconds"id="reasoningseconds{{forloop.counter}}"></span>
+																<div class="smalltext" id="reasoningsmalltext{{forloop.counter}}">Seconds</div>
+															  </div>
+															</div>
+																		
+																		<button id="reasoningtime{{forloop.counter}}" onClick="timer('reasoningclockdiv{{forloop.counter}}',{{reasoning.time}},'res{{forloop.counter}}1','res{{forloop.counter}}2','res{{forloop.counter}}3','res{{forloop.counter}}4','res{{forloop.counter}}5',{{reasoning.ans}},reasoningsolution{{forloop.counter}},'{{forloop.counter}}','reasoning',5)"
+
+																							
+																						style="text-align:center; color: #fff;background-color:rgb(36, 172, 98);margin-right:0;float:right;display:inline-block;"  class="btn  btn-sm"
+																						
+																						
+																						><i class="fa fa-clock-o" aria-hidden="true"></i>  Timer {{reasoning.time}} Sec</button> 
+																		
+													<!--	<div id="clockdiv{{forloop.counter}}" class="clockdiv"style="text-align:center;margin-right:0;float:right;display:none">
+  
+															 <!--
+															  <div>
+																<span class="minutes"id="minutes"></span>
+																<div class="smalltext">Minutes</div>
+															  </div> 
+															 
+															  <div>
+																<span class="seconds{{forloop.counter}}"id="seconds{{forloop.counter}}"></span>
+																<div class="smalltext" id="smalltext{{forloop.counter}}">Seconds</div>
+															  </div>
+															</div>
+																		
+																		<button id="time{{forloop.counter}}" onClick="timer({{forloop.counter}},{{reasoning.time}},{{forloop.counter}}1,{{forloop.counter}}2,{{forloop.counter}}3,{{forloop.counter}}4,{{forloop.counter}}5,{{reasoning.ans}},solution{{forloop.counter}},{{forloop.counter}})"
+
+																							
+																						style="text-align:center; color: #fff;background-color:rgb(36, 172, 98);margin-right:0;float:right;display:inline-block;"  class="btn  btn-sm"
+																						
+																						
+																						><i class="fa fa-clock-o" aria-hidden="true"></i>  Timer {{reasoning.time}} Sec</button> -->
+																		
+																		
+																		<h4 style="text-align:left ;color:#F06292"><b><u>Options:</u></b></h4>
+																		
+																	
+
+
+
+																							 
+																				<div class="radio radio-primary " >
+
+																		
+																 <form >
+										
+																																				<div style="display: block"> 
+																																		 
+																					<input type="radio" name="radio1" id="res{{forloop.counter}}1" value="option1">
+																					<label for="res{{forloop.counter}}1">
+																						{{reasoning.a}}
+																					</label>
+																					<div id="res{{forloop.counter}}w1"style="display:none">
+																					<img src="{% static "/c.png" %}" class="img-rounded"> 
+																					</div>
+																					<div id="res{{forloop.counter}}r1"style="display:none">
+																					<img src="{% static "/d.png" %}" class="img-rounded"> 
+																					</div>
+																					</div>
+																					
+																					
+																					<div style="display: block"> 
+																					<input type="radio" name="radio1" id="res{{forloop.counter}}2" value="option1">
+																					 
+																					<label for="res{{forloop.counter}}2">
+																						{{reasoning.b}}
+																					</label>
+																					<div id="res{{forloop.counter}}w2"style="text-align:center;display:none">
+																					<img src="{% static "/c.png" %}" class="img-rounded"> 
+																					</div>
+																					<div id="res{{forloop.counter}}r2"style="text-align:center;display:none">
+																					<img src="{% static "/d1.png" %}" class="img-rounded"> 
+																					</div>
+																					
+																				</div>
+																				
+																				
+																				<div style="display: block"> 
+																																		 
+																					<input type="radio" name="radio1" id="res{{forloop.counter}}3" value="option1">
+																					<label for="res{{forloop.counter}}3">
+																						{{reasoning.c}}
+																					</label>
+																				<div id="res{{forloop.counter}}w3"style="text-align:center;display:none">
+																					<img src="{% static "/c.png" %}" class="img-rounded"> 
+																					</div>
+																					<div id="res{{forloop.counter}}r3"style="text-align:center;display:none">
+																					<img src="{% static "/d1.png" %}" class="img-rounded"> 
+																					</div>	
+																				</div>
+																					
+																					
+																					<div style="display: block"> 
+																					
+																					 <input type="radio" name="radio1" id="res{{forloop.counter}}4" value="option1">
+																					<label for="res{{forloop.counter}}4">
+																						{{reasoning.d}}
+																					</label>
+																					<div id="res{{forloop.counter}}w4"style="text-align:center;display:none">
+																					<img src="{% static "/c.png" %}" class="img-rounded"> 
+																					</div>
+																					<div id="res{{forloop.counter}}r4"style="text-align:center;display:none">
+																					<img src="{% static "/d1.png" %}" class="img-rounded"> 
+																					</div>
+																					
+																				</div>
+																				
+																				<div style="display: block"> 
+																					
+																					 <input type="radio" name="radio1" id="res{{forloop.counter}}5" value="option1">
+																					<label for="res{{forloop.counter}}5" >
+																						{{reasoning.e}}
+																					</label>
+																					
+																					
+																					<div id="res{{forloop.counter}}w5"style="text-align:center;display:none">
+																					<img src="{% static "/c.png" %}" class="img-rounded"> 
+																					</div>
+																					<div id="res{{forloop.counter}}r5"style="display:none;">
+																					<img src="{% static "/d.png" %}" class="img-rounded" > 
+																					</div>
+																					
+																					
+																				</div>
+																				
+																				
+																					
+																					
+																			</form>
+																			</div>
+																			<button 
+																		id="reasoningsol{{forloop.counter}}"onclick=
+	"op('res{{forloop.counter}}1','res{{forloop.counter}}2','res{{forloop.counter}}3','res{{forloop.counter}}4','res{{forloop.counter}}5',{{reasoning.ans}},reasoningsolution{{forloop.counter}},'res{{forloop.counter}}','reasoningsol_upper{{forloop.counter}}','reasoning',5)"
+																							
+																						style="text-align:center; color: #fff;background-color:#4D90FE;margin-right:0;float:left;display:inline-block;margin-top:16px" type="submit" class="btn  btn-sm"
+																						
+																						
+																						> See Solutoins</button> 
+																						
+																						
+																		
+																						
+													</div>			
+																		
+													
+													
+													
+													
+													
+													<div id="reasoningsolution{{forloop.counter}}"style="text-align:center;display:none">
+													 
+															<p  id="reasoningsol_upper{{forloop.counter}}"class="bg-info" style="text-align:center;"> <b>Correct<img src="{% static "/thh.png" %}" class="img-rounded" ></b> </p> 
+															<p> <b>  Answer :</b></p> 
+															<!-- <p class="bg-danger" style="display:inline"> Wrong
+																					<img src="{% static "/c.png" %}" class="img-rounded" id="{{forloop.counter}}w"style="display:none"> 
+																					
+																					
+																					<img src="{% static "/d.png" %}" class="img-rounded" id="{{forloop.counter}}r"style="display:none;"> 
+																					 </p><br></br> -->
+															
+																		<div  style="font-family:'arial', sans-serif;font-size:17px;color:#000;display:inline;line-height: 1.42857;">
+																	{% autoescape off %}	{{reasoning.solution}} {% endautoescape %} </div>
+																
+																	
+																		</div>
+													
+													{%else%}
+																	<div class="panel-body">
+														<div id="reasoningclockdiv{{forloop.counter}}" class="clockdiv"style="text-align:center;margin-right:0;float:right;display:none">
+  
+															 
+															<!--  <div>
+																<span class="reasoningminutes"id="reasoningminutes"></span>
+																<div class="smalltext">Minutes</div>
+															  </div> 
+															  -->
+															  <div>
+																<span class="seconds"id="reasoningseconds{{forloop.counter}}"></span>
+																<div class="smalltext" id="reasoningsmalltext{{forloop.counter}}">Seconds</div>
+															  </div>
+															</div>
+																		
+																		<button id="reasoningtime{{forloop.counter}}" onClick="timer('reasoningclockdiv{{forloop.counter}}',{{reasoning.time}},'res{{forloop.counter}}1','res{{forloop.counter}}2','res{{forloop.counter}}3','res{{forloop.counter}}4','res{{forloop.counter}}5','{{reasoning.ans}}',reasoningsolution{{forloop.counter}},'{{forloop.counter}}','ress',5)"
+
+																							
+																						style="text-align:center; color: #fff;background-color:rgb(36, 172, 98);margin-right:0;float:right;display:inline-block;"  class="btn  btn-sm"
+																						
+																						
+																						><i class="fa fa-clock-o" aria-hidden="true"></i>  Timer {{reasoning.time}} Sec</button> 
+																						<!-- <form >
+										
+																																				<div style="display: block"> 
+																																		 
+																					<input type="radio" name="radio1" id="{{forloop.counter}}1" value="option1"/>
+																					<label id="{{forloop.counter}}1">
+																						{{reasoning.a}}
+																					</label>
+																					<div id="{{forloop.counter}}w1"style="display:none">
+																					<img src="{% static "/c.png" %}" class="img-rounded"> 
+																					</div>
+																					<div id="{{forloop.counter}}r1"style="display:none">
+																					<img src="{% static "/d.png" %}" class="img-rounded"> 
+																					</div>
+																					</div>
+																				</form>-->
+									
+													
+													<form  id="inside{{forloop.counter}}" class="radio radio-primary ">
+													
+													
+													
+													</form>
+													
+													
+													<script> 
+													var d='inside'+'{{forloop.counter}}'
+var div = document.getElementById(d);
+								split_res('{{reasoning.question_part}}','{{reasoning.a}}','{{reasoning.b}}','{{reasoning.c}}','{{reasoning.d}}','{{reasoning.e}}','{{reasoning.f}}','{{reasoning.g}}','{{reasoning.h}}','{{reasoning.i}}','{{reasoning.j}}','{{reasoning.ans}}');
+																																		
+																																		
+																																		
+																																		 function split_res(x,a,b,c,d,e,f,g,h,i,k,lp){
+																																		
+																																		//div.innerHTML = div.innerHTML ;
+																																				var arrayy = lp.split('///');
+																																				/*  var myarray_ = [];
+
+																																			  for (var i = 0; i < arrayy.length; ++i) {
+																																				  myarray_[i] = "whatever";
+																																			  }*/
+																																				var myarray = x.split('///');
+																																				var myarray_a = a.split('///');
+																																				var myarray_b = b.split('///');
+																																				var myarray_c = c.split('///');
+																																				var myarray_d = d.split('///');
+																																				var myarray_e = e.split('///');
+																																				if(f != ''){var myarray_f = f.split('///');}
+																																				if(g != ''){var myarray_g = g.split('///');}
+																																				if(h != ''){var myarray_h = h.split('///');}
+																																				if(i !=''){var myarray_i = i.split('///');}
+																																				
+																																				if(k !=''){var myarray_k = k.split("///");}
+
+																																							for(var i = 0; i <arrayy.length; i++)
+																																							{var header='<h5 style="text-align:left;padding:0px;color:rgb(0, 0, 0)"><b style="text-align:left;padding:0px;font-size:16px;">'+myarray[i]+'</b></h5>';
+																																							div.innerHTML = div.innerHTML + header;
+																																					
+																																							//document.write(header);
+																																							//var ap='myarray_'.concat(i.toString());
+																																							if(i==0){
+																																							for(var j = 0; j < 5; j++)
+																																							
+																																							{wr(myarray_a[j],j,i);}
+																																							}else if(i==1){
+																																							for(var j = 0; j < 5; j++)
+																																							
+																																							{wr(myarray_b[j],j,i);}
+																																							}else if(i==2){
+																																							for(var j = 0; j < 5; j++)
+																																							
+																																							{wr(myarray_c[j],j,i);}
+																																							}else if(i==3){
+																																							for(var j = 0; j < 5; j++)
+																																							
+																																							{wr(myarray_d[j],j,i);}
+																																							}else if(i==4){
+																																							for(var j = 0; j < 5; j++)
+																																							
+																																							{wr(myarray_e[j],j,i);}
+																																							}else if(i==5){
+																																							for(var j = 0; j < 5; j++)
+																																							
+																																							{wr(myarray_f[j],j,i);}
+																																							}else if(i==6){
+																																							for(var j = 0; j < 5; j++)
+																																							
+																																							{wr(myarray_g[j],j,i);}
+																																							}else if(i==7){
+																																							for(var j = 0; j < 5; j++)
+																																							
+																																							{wr(myarray_h[j],j,i);}
+																																							}else if(i==8){
+																																							for(var j = 0; j < 5; j++)
+																																							
+																																							{wr(myarray_i[j],j,i);}
+																																							}else if(i==9){
+																																							for(var j = 0; j < 5; j++)
+																																							
+																																							{wr(myarray_k[j],j,i);}
+																																							}
+																																							
+	
+
+																																							
+																																							
+																																								
+																																							
+																																							}
+																																						
+																																							
+																																							 }
+																																							 
+																																							 
+																																							 function wr(s,j,i){
+																																							 var ss=s;
+																																							 var jj=j;
+																																							 
+																																							 if(jj==0){
+																																							 div.innerHTML = div.innerHTML + '<h4 style="text-align:left ;color:#F06292"><b><u>Options:</u></b></h4>'
+																																						;
+																																							 //document.write();	
+																																							 }
+																																							 
+																																							 var idd='ress'+(i.toString()).concat(j.toString());
+																																							 var w=idd+'w';
+																																							 var r=idd+'r';
+																																							 var radio='radio'+idd;
+																																							 var lebel='l'+idd;
+																																							 var opt='opt'+i.toString();
+																																							 
+																																							 var option = 
+																																				
+																															'<div style="display: block;padding:1px">'+'<input type="radio" name="'+opt+'" id='+idd+' value="'+opt+'">'+
+																																			'<label for="'+ idd +'" >'+
+																																			ss+
+																																			'</label>'+
+																																			'<div id="'+w+'"style="display:none">'+
+																																			'<img src="{% static "/c.png" %}" class="img-rounded"> '+
+																																			'</div>'+
+																																			'<div id="'+ r +'"style="display:none">'+
+																																			'<img src="{% static "/d.png" %}" class="img-rounded"/> '+
+																																			'</div>'+
+																																			'</div>';
+																																						//document.write(option);	 
+																																						
+																																						
+																																						div.innerHTML = div.innerHTML + option;
+																																							 
+																																							 if(jj== 4){
+																																							// alert(jj);
+																																							 	//div.innerHTML = div.innerHTML +'</form>';
+																																							//document.write('<hr></hr>');	
+																																							
+																																							 }
+																																							 }
+
+																																		
+																																		</script>
+	
+																																		
+																					<button 
+																		id="reasoningsol{{forloop.counter}}"onclick=
+	"op('ress{{forloop.counter}}1','ress{{forloop.counter}}2','ress{{forloop.counter}}3','ress{{forloop.counter}}4','ress{{forloop.counter}}5','{{reasoning.ans}}',reasoningsolution{{forloop.counter}},'res{{forloop.counter}}','resssol_upper{{forloop.counter}}','ress',5)"
+																							
+																						style="text-align:center; color: #fff;background-color:#4D90FE;margin-right:0;float:left;display:inline-block;margin-top:16px" type="submit" class="btn  btn-sm"
+																						
+																						
+																						> See Solutoins</button> 											
+																																		
+											</div><!-- pnel body end -->
+											
+											
+											<div id="reasoningsolution{{forloop.counter}}"style="text-align:center;display:none">
+													 
+															<p  id="resssol_upper{{forloop.counter}}"class="bg-info" style="text-align:center;"> <b>Your score<img src="{% static "/thh.png" %}" class="img-rounded" ></b> </p> 
+															<p> <b>  Answer :</b></p> 
+															<!-- <p class="bg-danger" style="display:inline"> Wrong
+																					<img src="{% static "/c.png" %}" class="img-rounded" id="{{forloop.counter}}w"style="display:none"> 
+																					
+																					
+																					<img src="{% static "/d.png" %}" class="img-rounded" id="{{forloop.counter}}r"style="display:none;"> 
+																					 </p><br></br> -->
+															
+																		<div  style="font-family:'arial', sans-serif;font-size:17px;color:#000;display:inline;line-height: 1.42857;">
+																		<a href="/reasoning/{{reasoning.new_id}}/"target="_blank"><b>Click here to view Solution</b></a>
+																	 </div>
+																
+																	
+																		</div>
+											
+							
+													{% endif %}
+													
+													
+													
+													
+													
+						
+						</div><!-- pnel end -->
+						{% endfor %}
+						{% endif %}
+						
+						</div>
+						<!--  end reasoning-->
+						
+						
+						<!-- close -->
+						
+							
+														
+														
+													
+						
+					
+														
+														
+						<hr></hr>
+						<button id="b" onClick="op('#close_the',0)" type="button" class="x"style="float:right;color:#fff;border:12px solid #fff;background:#765ff0;font-weight:400;letter-spacing:2px;font-size:15px;line-height:11px;border-radius:10px;width:100%;padding:10px;margin-bottom:20px"><b>Close Test for govt exam</b>  </button>
+						<div id="close_the" style="display:none;padding:12px;">
+						{% if close != None %}
+						
+						<div class="sayan" style="background-color:white">
+						
+						<span style="padding-bottom:20px;">
+						<p ><b style="color: #000;float:left">  Todays Cloze Test</b> <b style="float:right"><i class="fa fa-calendar" aria-hidden="true"></i> Date : <script> document.write(new Date().toDateString()); </script> </b><p> 
+						<img src="{% static "/cl.png" %}" class="img-thumbnail center-block " alt="Cinque Terre" width="500" height="0"></span>
+														</div>
+														
+														{% for close in close %}
+									
+									
+												
+												<div class="panel-heading card">
+									
+																		
+																		
+																		<div  style="font-family:'Roboto Condensed', sans-serif;font-size:17px;color:#000;display:inline;line-height: 1.42857;">
+																	{% autoescape off %}	{{close.question}} {% endautoescape %} </div>
+														
+																<a 
+																		id="{{forloop.counter}}"onclick=
+	""
+																							
+																						style="text-align:center; color: #fff;background-color:#4D90FE;margin-right:0;float:right;display:inline-block;margin-top:16px" type="submit" class="btn  btn-sm"
+																						href="/closetest/close/{{close.page}}/"
+																						target="_blank"
+																						
+																						> Read More>></a> 	
+															
+												</div>
+														{% endfor %}
+														
+														{% endif %}
+														</div>
+														
+						<!-- close end -->
+						
+													<div id="disqus_thread"style="padding:5px;"></div> 
+							<script>
+
+							/**
+							*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+							*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+							/*
+							var disqus_config = function () {
+							this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+							this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+							};
+							*/
+							(function() { // DON'T EDIT BELOW THIS LINE
+							var d = document, s = d.createElement('script');
+							s.src = 'https://getmyvideo-net.disqus.com/embed.js';
+							s.setAttribute('data-timestamp', +new Date());
+							(d.head || d.body).appendChild(s);
+							})();
+							</script>
+							<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+						</div><!--  div 7 end -->
+						
+						<div class="col-md-3 col-md-pull-7 " style="margin-top:10px">
+						
+						     <div class="offer" style="border:3px solid #fcfd11;text-align:center">
+			  <img class="gs_img" src="/static/css/gs.jpeg" class="media-object" style=""/>   
+						</div>
+						
+						<ul class="list-group">
+                    <a href="#" class="list-group-item ">Gk</a>
+                    <a href="http://www.jquery2dotnet.com/2014/01/jquery-export-table-data-into-ms-excel.html" class="list-group-item active">Current Affairs</a>
+                    <a href="#" class="list-group-item ">English</a>
+                    <a href="#" class="list-group-item " >Geography</a>
+                    <a href="#" class="list-group-item ">History</a>
+					<a href="#" class="list-group-item ">Math</a>
+                    <a href="#" class="list-group-item ">Reasoning</a>
+                    <a href="#" class="list-group-item ">General Science</a>
+					<a href="#" class="list-group-item ">Economics</a>
+                    <a href="#" class="list-group-item ">Constitution</a>
+                    <a href="#" class="list-group-item ">Political Science</a>
+                </ul>
+                </ul>
+						<div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        Current Affairs Category</h3>
+                </div>
+                <ul class="list-group">
+                     <a href="#" class="list-group-item">State </a>
+                    <a href="http://www.jquery2dotnet.com/2013/12/cool-simple-css-drop-down-menu.html" class="list-group-item ">International</a>
+                    <a href="#" class="list-group-item">Business Economy Banking</a>
+                    <a href="#" class="list-group-item">Environmen</a>
+                    <a href="#" class="list-group-item">Defence</a>
+					    <a href="#" class="list-group-item ">Persons in News</a>
+                    <a href="#" class="list-group-item " >Awards Honours</a>
+                    <a href="#" class="list-group-item ">Sports</a>
+					<a href="#" class="list-group-item ">art culture</a>
+                    <a href="#" class="list-group-item ">Government Schemes</a>
+					<a href="#" class="list-group-item ">art culture</a>
+                    <a href="#" class="list-group-item ">Government Schemes</a>
+                </ul>
+            </div>	
+							<div class="panel nopadding">
+							
+							
+							<div class="rana" style="background-color:#f3f3f3">
+							
+							
+					
+								
+							
+							
+							
+							
+							
+							</div>
+								<div class="panel-body nopadding">
+								<div class="menu">
+																			 <ul class="nav nav-pills nav-stacked"style="padding-left:20px;padding-right:20px;margin-bottom:10px">
+              
+                                                   
+           
+
+<button class="buttonab  arrow  btn-block" style="letter-spacing:1px;">Gk</button>
+<button class="buttonab  arrow  btn-block" style="letter-spacing:1px; animation-delay: 1000ms;">Current Affairs</button>
+<button class="buttonab  arrow  btn-block"style="letter-spacing:1px; animation-delay: 1000ms;">English</button>
+<button class="buttonab  arrow  btn-block"style="letter-spacing:1px">Geography</button>
+<button class="buttonab  arrow  btn-block"style="letter-spacing:1px">History</button>
+<button class="buttonab  arrow  btn-block"style="letter-spacing:1px">Math</button>
+<button class="buttonab  arrow  btn-block"style="letter-spacing:1px">Reasoning</button>
+<button class="buttonab  arrow  btn-block"style="letter-spacing:1px">Biology</button>
+<button class="buttonab  arrow  btn-block"style="letter-spacing:1px">General Science</button>
+<button class="buttonab  arrow  btn-block"style="letter-spacing:1px">Read more</button>
+<button class="buttonab  arrow  btn-block"style="letter-spacing:1px">Read more</button>
+<button class="buttonab  arrow  btn-block"style="letter-spacing:1px">Read more</button>
+
+	  
+	   </ul>
+						
+						
+						
+</div>
+						</div>
+									</div>	
+									
+									
+									
+													
+					<h3 class="card"style="text-align:center;    border: 1px solid #dddddd; color: white;background-color:#5b4282;font-size: 18px;padding-bottom:10px;padding-top:10px;margin-top:0px;margin-bottom:7px;background-image: url(static/css/p1.png);">Current Affairs Category  <i class="fa fa-codepen	
+" style="font-size:19px;color:white"></i> </h3> 
+							<div class="panel nopadding">
+							<div class="rana" style="background-color:#f3f3f3">
+							
+							
+					
+								
+							
+							
+							
+							
+							
+							</div>
+								<div class="panel-body nopadding">
+								<div class="menu">
+																			 <ul class="nav nav-pills nav-stacked">
+              					<li><a  href="/ca/1/"> <i class="glyphicon glyphicon-hand-right"></i>&nbsp Science And Techonlogy </a></li>
+																						<hr style="border-color:#eee"></hr>
+																			<li><a  href="/job/home/all/1/"> <i class="glyphicon glyphicon-hand-right"></i>&nbsp National</a></li>
+																			<hr style="border-color:#eee"></hr>
+																			<li><a   href="/english/word/page/1/"> <i class="glyphicon glyphicon-hand-right"></i>&nbsp State</a></li>
+																			<hr style="border-color:#eee"></hr>
+																			<li><a   href="/"><i class="glyphicon glyphicon-hand-right"></i>&nbsp International</a></li>
+																			<hr style="border-color:#eee"></hr>
+																			<li><a  href="/ca/1/"> <i class="glyphicon glyphicon-hand-right"></i>&nbsp Business Economy Banking </a></li>
+																			<hr style="border-color:#eee"></hr>
+																			<li><a href="/job/home/all/1/"> <i class="glyphicon glyphicon-hand-right"></i>&nbsp Environmen</a></li>
+																			<hr style="border-color:#eee"></hr>
+																			<li><a  href="/english/word/page/1/"> <i class="glyphicon glyphicon-hand-right"></i>&nbsp Defence</a></li>
+																			<hr style="border-color:#eee"></hr>
+																			<li><a  href="/"> <i class="glyphicon glyphicon-hand-right"></i>&nbsp Persons in News</a></li>
+																			<hr style="border-color:#eee"></hr>
+																			<li><a   href="/ca/1/"> <i class="glyphicon glyphicon-hand-right"></i>&nbsp Awards Honours </a></li>
+																			<hr style="border-color:#eee"></hr>
+																			<li><a  href="/job/home/all/1/"> <i class="glyphicon glyphicon-hand-right"></i>&nbsp Sports</a></li>
+																			<hr style="border-color:#eee"></hr>
+																			<li><a  href="/english/word/page/1/"><i class="glyphicon glyphicon-hand-right"></i>&nbsp art culture</a></li>
+																			<hr style="border-color:#eee"></hr>
+																			<li><a href="/"> <i class="glyphicon glyphicon-hand-right"></i>&nbsp Government Schemes</a></li>
+																			
+            </ul>
+						
+</div>
+						</div>
+									</div>	
+									
+									
+									
+									
+								
+							
+					
+			<div class="panel panel-primary">
+				<div class="panel-heading" style="background-color:red;">
+					<h3 class="panel-title">Panel 1</h3>
+                    <span class="pull-right clickable"><i class="glyphicon glyphicon-chevron-up"></i></span>
+				</div>
+				<div class="panel-body">
+					Panel content
+				</div>
+			</div>
+		
+				<div class="panel panel-primary">
+				<div class="panel-heading">
+					<h3 class="panel-title">Panel 2</h3>
+                  
+				</div>
+				<div class="panel-body">
+					<ul class="list-group">
+                    <a href="#" class="list-group-item active">Gk</a>
+                    <a href="http://www.jquery2dotnet.com/2014/01/jquery-export-table-data-into-ms-excel.html" class="list-group-item active">Current Affairs</a>
+                    <a href="#" class="list-group-item active">English</a>
+                    <a href="#" class="list-group-item active" >Geography</a>
+                    <a href="#" class="list-group-item active">History</a>
+					<a href="#" class="list-group-item active">Math</a>
+                    <a href="#" class="list-group-item active">Reasoning</a>
+                    <a href="#" class="list-group-item active">General Science</a>
+					<a href="#" class="list-group-item active">Economics</a>
+                    <a href="#" class="list-group-item active">Constitution</a>
+                    <a href="#" class="list-group-item active">Political Science</a>
+                </ul>
+				</div>
+			</div>					
+					<div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        Panel Primary</h3>
+                </div>
+                <ul class="list-group">
+                    <a href="#" class="list-group-item">Cras justo odio</a>
+                    <a href="http://www.jquery2dotnet.com/2014/01/jquery-export-table-data-into-ms-excel.html" class="list-group-item active">Dapibus ac facilisis in</a>
+                    <a href="#" class="list-group-item">Morbi leo risus</a>
+                    <a href="#" class="list-group-item">Porta ac consectetur ac</a>
+                    <a href="#" class="list-group-item">Vestibulum at eros</a>
+                </ul>
+            </div>				
+									
+									
+										<h3 class="card"style="text-align:center;    border: 1px solid #dddddd; color: white;background-color:#5b4282;font-size: 18px;padding-bottom:10px;padding-top:10px;margin-top:0px;margin-bottom:7px;background-image: url(static/css/p1.png);">Current Affairs Category  <i class="fa fa-codepen	
+" style="font-size:19px;color:white"></i> </h3> 
+							<div class="panel nopadding">
+							<div class="rana" style="background-color:#f3f3f3">
+							
+							
+					
+								
+							
+							
+							
+							
+							
+							</div>
+								<div class="panel-body nopadding">
+								<div class="menu">
+																			 <ul class="nav nav-pills nav-stacked">
+              
+              																			<li><a  href="/ca/1/"> <b><i class="glyphicon glyphicon-hand-right"></i>&nbsp modi visits us </b></a></li>
+																						<hr style="border-color:#85ff85"></hr>
+																			<li><a  href="/job/home/all/1/"> <b><i class="glyphicon glyphicon-hand-right"></i>&nbsp jobs home</b></a></li>
+																			<hr style="border-color:#85ff85"></hr>
+																			<li><a   href="/english/word/page/1/"> <b><i class="glyphicon glyphicon-hand-right"></i>&nbsp English</b></a></li>
+																			<hr style="border-color:#85ff85"></hr>
+																			<li><a   href="/"><b><i class="glyphicon glyphicon-hand-right"></i>&nbsp Home</b></a></li>
+																			<hr style="border-color:#85ff85"></hr>
+																			<li><a  href="/ca/1/"> <b><i class="glyphicon glyphicon-hand-right"></i>&nbsp Current Affairs</b> </a></li>
+																			<hr style="border-color:#85ff85"></hr>
+																			<li><a href="/job/home/all/1/"> <b><i class="glyphicon glyphicon-hand-right"></i>&nbspjobs home</b></a></li>
+																			<hr style="border-color:#85ff85"></hr>
+																			<li><a  href="/english/word/page/1/"> <b><i class="glyphicon glyphicon-hand-right"></i>&nbsp English</b></a></li>
+																			<hr style="border-color:#85ff85"></hr>
+																			<li><a  href="/"> <b><i class="glyphicon glyphicon-hand-right"></i>&nbsp Home</b></a></li>
+																			<hr style="border-color:#85ff85"></hr>
+																			<li><a   href="/ca/1/"> <b><i class="glyphicon glyphicon-hand-right"></i>&nbsp Current Affairs </b></a></li>
+																			<hr style="border-color:#85ff85"></hr>
+																			<li><a  href="/job/home/all/1/"> <b><i class="glyphicon glyphicon-hand-right"></i>&nbsp jobs home</b></a></li>
+																			<hr style="border-color:#85ff85"></hr>
+																			<li><a  href="/english/word/page/1/"><b><i class="glyphicon glyphicon-hand-right"></i>&nbsp English</b></a></li>
+																			<hr style="border-color:#85ff85"></hr>
+																			<li><a href="/"> <b><i class="glyphicon glyphicon-hand-right"></i>&nbsp Home</b></a></li>
+																			<hr style="border-color:#85ff85"></hr>
+																			<li><a  href="/ca/1/"><b><i class="glyphicon glyphicon-hand-right"></i>&nbsp Current Affairs </b></a></li>
+																			<hr style="border-color:#85ff85"></hr>
+																			<li><a  href="/job/home/all/1/"><b><i class="glyphicon glyphicon-hand-right"></i>&nbsp jobs home</b></a></li>
+																			<hr style="border-color:#85ff85"></hr>
+																			<li><a  href="/english/word/page/1/"> <b><i class="glyphicon glyphicon-hand-right"></i>&nbspEnglish</b></a></li>
+            </ul>
+						
+</div>
+						</div>
+									</div>	
+									
+									
+									
+					
+						</div><!--  div 3 end -->
+						
+						
+						
+						
+						
+						
+						
+						<div class="col-md-2 nopadding" style="margin-top:10px">
+						
+						
+						     <div class="offer" style="border:3px solid red;text-align:center">
+			  <img class="job_img" src="/static/css/Govt1.jpeg" class="media-object" style=""/>  
+
+ 
+						</div>
+					<button class="buttonab  arrow" >Read more</button>
+						
+						
+						<hr style="color:red"></hr>
+								<div class="panel-group ">
+								
+			
+								{% for job in job %}
+					
+								
+								<div class="panel panel-info card " >
+									<div  style="text-align:center;color:#784aff;background:#f8ffec;padding-top:12px;text-decoration:underline"><strong>{{job.heading}} </strong>
+									<img src="/media/{{job.ca_img}}" class=" card " width="100%" alt="Image"/>
+										  
+											
+										  </div>
+										  <div class="panel-body">
+											
+												<ul style="text-align:Left ">
+												
+													<li><Strong>Start Date:{{job.first_day}}</strong></li>
+													<li><Strong>Last Date:{{job.last_day}}</strong></li>
+													
+												
+												
+												</ul>
+													
+												<a href="/job/home/all/1/"style="text-align:center;"><h5 style="color:rgb(94, 151, 245);font-weight:600">Click for Details job <img width="25" height="25" src="/media/123.gif" alt="" scale="0" style="float:none"/> <h5></a>
+											
+											
+										  
+										  
+										  </div>
+									</div>
+									 
+									
+									<!-- if panel end -->
+									{% endfor %}
+									
+									
+									
+						
+								</div>
+						
+						</div>
+						
+				</div>
+
+				</div>
+				
+				
+ 
+			</div>	
+				
+				
+	
+
+ <div class="footer-bottom">
+
+	<div class="container">
+
+		<div class="row">
+
+			<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+
+				<div class="copyright">
+
+					© 2018, studypoint.in, All rights reserved
+
+				</div>
+
+			</div>
+
+			<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+
+				<div class="design">
+
+					 <a href="#">studyplus.in </a> |  <a target="_blank" href="http://www.webenlance.com">contact us @getsuccess@gmail.com</a>
+
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>
+
+</div>   
+
+
+
+
+
+
+
+	<script id="dsq-count-scr" src="//getmyvideo-net.disqus.com/count.js" async></script>
+					 
+
+<script type="text/javascript" >
+$(document).ready(function () {
+$(".rotate").click(function(){
+ $(this).toggleClass("down")  ; 
+})
+$('.navbar .dropdown').hover(function () {
+        $(this).find('.dropdown-menu').first().stop(true, true).slideDown(150);
+    }, function () {
+        $(this).find('.dropdown-menu').first().stop(true, true).slideUp(105);
+    });
+
+
+
+
+var showChar = 200;
+	var ellipsestext = "...";
+	var moretext = "Read more";
+	var lesstext = "less";
+	$('.more').each(function() {
+		var content = $(this).html();
+
+		if(content.length > showChar) {
+
+			var c = content.substr(0, showChar);
+			var h = content.substr(showChar-1, content.length - showChar);
+
+			var html = c + '<span class="moreelipses">'+ellipsestext+'</span>&nbsp;&nbsp;&nbsp;<a href="" class="morelink"><u>'+moretext+'</u></a></span>';
+
+			$(this).html(html);
+		}
+
+	});
+	
+	
+	
+	
+	//..........................
+	
+	
+		 $("#signup").submit(function (ev)
+	 {
+					var x = document.getElementById('img_signup');
+										var y = document.getElementById('below_signup');
+
+								y.innerHTML=""
+
+				x.style.display = 'block';		
+						
+							ev.preventDefault();
+		$.ajax({
+            type : 'POST',
+            url: '{% url 'bank:signup' %}',
+			
+			async: true,
+			
+           data  : $(this).serialize(),
+            success: function (response) 
+			{var r=response;
+			
+			if(r == "true")
+				{
+				x.style.display = 'none';	
+				y.style.display = 'inline';	
+				$('#below_signup').html("<b>Confirmation Email has been sent</b>");
+				}
+				else{
+				x.style.display = 'none';	
+				y.style.display = 'inline';	
+				$('#below_signup').html("<b>"+response+"</b>");
+				}
+         
+				// window.location = response.r;
+
+            },
+			 error: function (data) { 
+			 x.style.display = 'none';	
+				y.style.display = 'inline';	
+			 
+			 $('#below_signup').html("<b>please retry or check url</b>"+data);
+			 
+			 }
+        });
+
+        
+    });
+
+	
+	
+	//.........................
+	
+		//..........................
+	
+	
+
+
+	
+	
+	//.........................
+	
+	
+	
+	
+
+
+});
+
+
+
+
+		 $("#login").submit(function (ev)
+	 {
+							
+			ev.preventDefault();			
+							
+		$.ajax({
+            type : 'POST',
+            url: '{% url 'bank:login' %}',
+			
+			
+           data  : $(this).serialize(),
+            success: function (response) 
+			{
+			var r=response;
+				if(r == "true")
+				{
+				window.location = window.location;
+				}
+				else{
+				$('#below').html("<b>"+response+"</b>");
+				}
+
+            },
+			 error: function (data) { $('#below').html("<b>please 55 or check url</b>");
+			
+			 }
+        });
+
+        
+    });
+	
+function add(id,upper,username,img_url) {
+var link_id=id;
+var uname=username;
+var heading=upper;
+var im=img_url;
+//$('#myModal').modal('toggle');
+
+	$.ajax({
+            type : 'POST',
+            url: '{% url 'bank:add' %}',
+			
+			
+           data: {link: link_id, user_name: uname,head:heading,im_url:im,csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()},
+            success: function (response) 
+			{
+			var r=response;
+				if(r == "success")
+				{
+				document.getElementById(link_id).innerHTML ="Added Successfully ";
+				}
+				else{
+				//$('#below').html("<b>"+response+"</b>");
+				document.getElementById(link_id).innerHTML = response;
+				}
+
+            },
+			 error: function (data) { $('#link_id').html("<b>please 55 or check url</b>");
+			
+			 }
+        });
+    
+}
+
+
+
+
+//.......math
+
+
+	function timer(c_id,t,r1,r2,r3,r4,r5,a,i,counter,flag,loop){
+	
+	var colckdiv_id=c_id;
+	alert(colckdiv_id);
+	var colckdiv_id_hash='#'.concat(c_id.toString());
+	var clock = document.getElementById(colckdiv_id);
+	//alert(clock);
+	
+	if(flag=='math'){var min='.mathminutes'.concat(counter.toString());
+	//alert(min);
+	var sec='.mathseconds'.concat(counter.toString());
+	var sec_id='#mathseconds'.concat(counter.toString());
+	var min_id='#mathminutes'.concat(counter.toString());
+	var smltext_id='#mathsmalltext'.concat(counter.toString());
+var upper_sol='mathsol_upper'.concat(counter.toString());
+  var minutesSpan = clock.querySelector(min);
+  var secondsSpan = clock.querySelector(sec);
+  var sol='mathsol'.concat(counter.toString());
+var solution_hash='#mathsolution'.concat(counter.toString());
+
+var timer_id='#mathtime'.concat(counter.toString());
+			}else if(flag=='reasoning'){
+			
+			
+			
+			var min='.reasoningminutes'.concat(counter.toString());
+	//alert(min);
+	var sec='.reasoningseconds'.concat(counter.toString());
+	var sec_id='#reasoningseconds'.concat(counter.toString());
+	var min_id='#reasoningminutes'.concat(counter.toString());
+	var smltext_id='#reasoningsmalltext'.concat(counter.toString());
+var upper_sol='reasoningsol_upper'.concat(counter.toString());
+  var minutesSpan = clock.querySelector(min);
+  var secondsSpan = clock.querySelector(sec);
+  var sol='reasoningsol'.concat(counter.toString());
+var solution_hash='#reasoningsolution'.concat(counter.toString());
+
+var timer_id='#reasoningtime'.concat(counter.toString());
+counter='res'+counter.toString();
+
+
+
+			}else if(flag=='ress'){
+			
+			
+			
+			var min='.reasoningminutes'.concat(counter.toString());
+	//alert(min);
+	var sec='.reasoningseconds'.concat(counter.toString());
+	var sec_id='#reasoningseconds'.concat(counter.toString());
+	var min_id='#reasoningminutes'.concat(counter.toString());
+	var smltext_id='#reasoningsmalltext'.concat(counter.toString());
+var upper_sol='resssol_upper'.concat(counter.toString());
+  var minutesSpan = clock.querySelector(min);
+  var secondsSpan = clock.querySelector(sec);
+  var sol='reasoningsol'.concat(counter.toString());
+var solution_hash='#reasoningsolution'.concat(counter.toString());
+
+var timer_id='#reasoningtime'.concat(counter.toString());
+counter='res'+counter.toString();
+
+
+
+			}
+	
+	
+
+
+//alert(timer_id);
+  document.getElementById(sol).disabled = true;
+  $(timer_id).toggle(500);
+  $(colckdiv_id_hash).toggle(500);
+var seconds_left = 80;
+/*var interval = setInterval(function() {
+    document.getElementById('seconds').innerHTML = --seconds_left;
+
+    if (seconds_left <= 0)
+    {
+       document.getElementById('seconds').innerHTML = "You are Ready!";
+       clearInterval(interval);
+    }
+}, 1000); */
+
+//new timer
+var fiveMinutes = t,
+        display = $(sec_id),
+		smalltext=$(smltext_id);
+		if($(solution_hash).is(':visible'))
+{
+$(solution_hash).toggle(500);
+}
+startTimer(fiveMinutes,display,smalltext,colckdiv_id_hash,timer_id,sol,solution_hash,r1,r2,r3,r4,r5,a,i,counter,upper_sol,flag,loop);
+
+
+
+	
+	}
+	
+	
+	function startTimer(duration, display,smalltext,colckdiv_id_hash,timer_id,sol,solution_hash,r1,r2,r3,r4,r5,a,i,counter,upper_sol,flag,loop) {
+    var timer = duration, minutes, seconds;
+	 
+  var s=  setInterval(function () {
+	var seconds_left = --duration;
+        minutes = parseInt(timer / 60, 10)
+        seconds = parseInt(timer % 60, 10);
+
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+				if(minutes<1){
+        display.text(minutes + ":" + seconds);
+		smalltext.text("seconds")
+        }
+        else{display.text(minutes + ":" + seconds);
+		smalltext.text("Minutes")
+		}
+		
+		if(seconds_left<=-1){clearInterval(s);
+		
+								op(r1,r2,r3,r4,r5,a,i,counter,upper_sol,flag,loop);
+								$(timer_id).toggle(500);
+								$(colckdiv_id_hash).toggle(500);
+								
+								//$(solution_hash).toggle(500);
+								document.getElementById(sol).disabled = false; 
+									}
+		
+
+        if (--timer < 0) {
+            timer = duration;
+        }
+    }, 1000);}
+	
+	
+	
+	function op(r1,r2,r3,r4,r5,a,i,counter,upper_sol,flag,loop){
+	var radio1 = r1;
+	var radio2=r2;
+	 var radio3=r3;
+	var radio4=r4;
+	var radio5=r5;
+	var ans=a;
+	var id=i;
+	
+	var count=counter;
+	var chk=count.toString().concat(ans.toString());
+	var r8=count.toString();
+	var right=r8.concat('r');
+	
+	
+	if(flag == 'math'|| flag=='reasoning'){
+	
+if(document.getElementById(radio1).checked || document.getElementById(radio2).checked || document.getElementById(radio3).checked || document.getElementById(radio4).checked || document.getElementById(radio5).checked ) {
+alert(flag);
+
+				if(document.getElementById(chk).checked){
+				var right_img= right.concat(chk.slice(-1)) ;
+				//alert(right_img);
+				var x = document.getElementById(right_img);
+				
+
+				//x.innerHTML="<img src=\"http://placehold.it/350x350\" width=\"400px\" height=\"150px\">";
+				var y = document.getElementById(upper_sol);
+				y.innerHTML="<b>Correct<img src=\"{% static "/thh.png" %}\" class=\"img-rounded\" >"
+				x.style.display = 'inline';
+				
+				//$(x).toggle(500); 
+				//var y = document.getElementById(right);
+				//y.style.display = 'inline';
+				}else if(document.getElementById(radio1).checked) {
+				var wrong_img= count.toString().concat('w'.concat('radio1'.slice(-1))) ;
+				var x = document.getElementById(wrong_img);
+				var y = document.getElementById(upper_sol);
+				y.innerHTML="<b>InCorrect<img src=\"{% static "/c.png" %}\" class=\"img-rounded\" >"
+				x.style.display = 'inline';
+				
+				}else if(document.getElementById(radio2).checked) {
+				var wrong_img= count.toString().concat('w'.concat('radio2'.slice(-1))) ;
+				var x = document.getElementById(wrong_img);
+				var y = document.getElementById(upper_sol);
+				y.innerHTML="<b>InCorrect<img src=\"{% static "/c.png" %}\" class=\"img-rounded\" >"
+				x.style.display = 'inline';
+				
+				}else if(document.getElementById(radio3).checked) {
+				var wrong_img= count.toString().concat('w'.concat('radio3'.slice(-1))) ;
+				var x = document.getElementById(wrong_img);
+				var y = document.getElementById(upper_sol);
+				y.innerHTML="<b>InCorrect<img src=\"{% static "/c.png" %}\" class=\"img-rounded\" >"
+				x.style.display = 'inline';
+				
+				}else if(document.getElementById(radio4).checked) {
+				var wrong_img= count.toString().concat('w'.concat('radio4'.slice(-1))) ;
+				var x = document.getElementById(wrong_img);
+				var y = document.getElementById(upper_sol);
+				y.innerHTML="<b>InCorrect<img src=\"{% static "/c.png" %}\" class=\"img-rounded\" >"
+				x.style.display = 'inline';
+				
+				}else if(document.getElementById(radio5).checked) {
+				var wrong_img= count.toString().concat('w'.concat('radio5'.slice(-1))) ;
+				var x = document.getElementById(wrong_img);
+				var y = document.getElementById(upper_sol);
+				y.innerHTML="<b>InCorrect<img src=\"{% static "/c.png" %}\" class=\"img-rounded\" >"
+				x.style.display = 'inline';
+				
+				}
+			
+					
+		}
+					
+					
+				else  {
+
+				///$(upper_sol).html("Hello World");
+				var x = document.getElementById(upper_sol);
+				x.style.fontWeight  = 'bold';
+				x.innerHTML="Not Attempted";
+						
+						}
+						
+						
+}else{var score=0;
+			var attempt=0;
+			if(flag== 'ress'){
+			}
+			else if (flag=='css'){
+			
+			}
+
+var array = ans.split('///');
+var max=array.length;
+//alert(flag);
+		for(i=0;i< array.length; i++){
+			
+			
+			
+			radio1=flag+i.toString()+'0';
+			radio2=flag+i.toString()+'1';
+			radio3=flag+i.toString()+'2';
+			radio4=flag+i.toString()+'3';
+			radio5=flag+i.toString()+'4';
+			
+			//alert(radio1+" "+radio2+''+radio3);
+			chk=flag+i.toString()+ (parseInt(array[i])-1).toString();
+			//alert("chk="+chk);
+			if(document.getElementById(radio1).checked || document.getElementById(radio2).checked || document.getElementById(radio3).checked || document.getElementById(radio4).checked || document.getElementById(radio5).checked ) {
+
+				attempt=1;
+
+				if(document.getElementById(chk).checked){
+				score=score+1;
+				var right_img= chk+'r' ;
+				//alert(right_img);
+				var x = document.getElementById(right_img);
+				
+
+				//x.innerHTML="<img src=\"http://placehold.it/350x350\" width=\"400px\" height=\"150px\">";
+				var y = document.getElementById(upper_sol);
+				y.innerHTML='<b style=\"font-size:18px;\">Your Score: &nbsp;&nbsp;  '+score.toString()+'/'+max.toString()+'&nbsp;&nbsp;<img src=\"{% static "/thh.png" %}\" class=\"img-rounded\" >'
+				x.style.display = 'inline';
+				
+				//$(x).toggle(500); 
+				//var y = document.getElementById(right);
+				//y.style.display = 'inline';
+				}else if(document.getElementById(radio1).checked) {
+				var wrong_img= flag+i.toString().concat(('radio0'.slice(-1)))+'w' ;
+				var x = document.getElementById(wrong_img);
+				
+				x.style.display = 'inline';
+				var y = document.getElementById(upper_sol);
+				y.innerHTML='<b style=\"font-size:18px;\">Your Score: &nbsp;&nbsp;  '+score.toString()+'/'+max.toString()+'&nbsp;&nbsp;<img src=\"{% static "/thh.png" %}\" class=\"img-rounded\" >'
+				
+				}else if(document.getElementById(radio2).checked) {
+				var wrong_img= flag+i.toString().concat(('radio1'.slice(-1)))+'w' ;
+				var x = document.getElementById(wrong_img);
+				
+				x.style.display = 'inline';
+				var y = document.getElementById(upper_sol);
+				y.innerHTML='<b style=\"font-size:18px;\">Your Score: &nbsp;&nbsp;  '+score.toString()+'/'+max.toString()+'&nbsp;&nbsp;<img src=\"{% static "/thh.png" %}\" class=\"img-rounded\" >'
+				
+				}else if(document.getElementById(radio3).checked) {
+				var wrong_img= flag+i.toString().concat(('radio2'.slice(-1)))+'w' ;
+				var x = document.getElementById(wrong_img);
+				
+				x.style.display = 'inline';
+				var y = document.getElementById(upper_sol);
+				y.innerHTML='<b style=\"font-size:18px;\">Your Score: &nbsp;&nbsp;  '+score.toString()+'/'+max.toString()+'&nbsp;&nbsp;<img src=\"{% static "/thh.png" %}\" class=\"img-rounded\" >'
+				
+				}else if(document.getElementById(radio4).checked) {
+				var wrong_img= flag+i.toString().concat(('radio3'.slice(-1)))+'w' ;
+				var x = document.getElementById(wrong_img);
+				
+				x.style.display = 'inline';
+				var y = document.getElementById(upper_sol);
+				y.innerHTML='<b style=\"font-size:18px;\">Your Score: &nbsp;&nbsp;  '+score.toString()+'/'+max.toString()+'&nbsp;&nbsp;<img src=\"{% static "/thh.png" %}\" class=\"img-rounded\" >'
+				
+				}else if(document.getElementById(radio5).checked) {
+				var wrong_img= flag+i.toString().concat(('radio4'.slice(-1)))+'w' ;
+				var x = document.getElementById(wrong_img);
+				
+				x.style.display = 'inline';
+				var y = document.getElementById(upper_sol);
+				y.innerHTML='<b style=\"font-size:18px;\">Your Score: &nbsp;&nbsp;  '+score.toString()+'/'+max.toString()+'&nbsp;&nbsp;<img src=\"{% static "/thh.png" %}\" class=\"img-rounded\" >'
+				
+				}
+			
+					
+		}
+					
+					
+				else  {
+
+				///$(upper_sol).html("Hello World");
+				if(attempt==0){
+				var x = document.getElementById(upper_sol);
+				x.style.fontWeight  = 'bold';
+				x.innerHTML="<b>Not Attempted</b>"; }
+						
+						}
+			
+
+
+					}//for end
+
+	}				
+						
+						
+						
+	$(id).toggle(500);
+	
+	}
+
+//.........math end
+function op(i,j){
+	var id=i;
+	
+	if(j===1){
+	$(id).toggle(500);
+	}else{
+	$(id).toggle("slide");
+	  //$(id).fadeOut("slow");
+	//$(id).toggle(500);
+	}
+	
+	}
+function carousal(i){
+	var id1=i.toString() +'car_head';
+	var id2=i.toString() +'car_ul';
+	var id3=i.toString() +'car_btn';
+var x1 = document.getElementById(id1);
+var x2 = document.getElementById(id2);
+var x3 = document.getElementById(id3);
+//alert(id2);
+	if(x2.style.display == 'none'){
+				 $(x1).animate({fontSize: "14px" },200 );
+				 //$( x2 ).slideUp( 300 ).delay( 800 ).fadeIn( 400 );
+				 
+				//x2.style.display = 'block';
+			//$( x2 ).fadeIn( 500 );	
+			$( x2 ).delay( 300 ).fadeIn( 100 );
+			
+			document.getElementById(id3).onclick = function (){alert('foo');};
+
+			
+				}
+	//$(id).toggle(500);
+	  $(x3).html("go");
+	}
+	 
+	 
+	
+	 
+	 
+	 
+	 $(".x").click(function(){
+ $(this).toggleClass("active")  ; 
+})
+	$(".y").click(function(){
+ $(this).toggleClass("active")  ; 
+}) 
+	 
+	 
+
+	 
+	 
+
+</script>
+
+</body>
+</html>

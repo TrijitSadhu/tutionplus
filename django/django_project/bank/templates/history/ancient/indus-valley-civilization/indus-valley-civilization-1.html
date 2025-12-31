@@ -1,0 +1,1559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.3.1/css/mdb.min.css">
+
+ 
+  
+  <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Arimo" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
+ <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+  <link href='//fonts.googleapis.com/css?family=Cormorant Garamond' rel='stylesheet'>
+  <link href="https://fonts.googleapis.com/css?family=Noto+Sans" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Quattrocento+Sans" rel="stylesheet">
+ <link href="https://fonts.googleapis.com/css?family=PT+Serif" rel="stylesheet">
+ 
+
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Droid+Serif" rel="stylesheet">
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Marck+Script" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Italianno" rel="stylesheet">
+
+ 
+<link href="https://fonts.googleapis.com/css?family=Akronim|Cabin+Sketch|Londrina+Sketch|Monoton|Sacramento" rel="stylesheet">
+ {% load staticfiles %}
+<link rel="stylesheet" href="{% static 'css/animate.min.css' %}" />
+<link rel="stylesheet" href="{% static 'css/math39.css' %}" />
+
+
+
+
+<style>
+	.small_para{
+		font-size:15px;
+		
+		}	
+.myImg {
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.myImg:hover {opacity: 0.9;
+ transform: scale(1.5);
+}
+
+/* The modal1 (background) */
+.modal1 {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+}
+
+/* modal1 Content (image) */
+.modal1-content {
+    margin: auto;
+    display: block;
+    width: 100%;
+    max-width: 1000px;
+}
+
+/* Caption of modal1 Image */
+#caption {
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 700px;
+    text-align: center;
+    color: #ccc;
+    padding: 10px 0;
+    height: 30px;
+}
+
+/* Add Animation */
+.modal1-content, #caption {    
+    -webkit-animation-name: zoom;
+    -webkit-animation-duration: 0.6s;
+    animation-name: zoom;
+    animation-duration: 0.6s;
+}
+
+@-webkit-keyframes zoom {
+    from {-webkit-transform:scale(0)} 
+    to {-webkit-transform:scale(1)}
+}
+
+@keyframes zoom {
+    from {transform:scale(0)} 
+    to {transform:scale(1)}
+}
+
+/* The Close Button */
+.close {
+    position: absolute;
+    top: 15px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.close:hover,
+.close:focus {
+    color: #bbb;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* 100% Image Width on Smaller Screens */
+@media only screen and (max-width: 700px){
+    .modal1-content {
+        width: 100%;
+    }
+}
+.key> li {
+
+     line-height: 24px; 
+    margin:17px;
+    text-align: justify;
+    
+    
+
+	    color: #3e3e3e;
+
+   
+    font-weight: 400;
+    line-height: 28px;
+    padding: 0 0 14px;
+	
+	
+	    
+	
+	color:#000000;
+	font-family:"Roboto", "Lucida Grande", Verdana, Arial, sans-serif;
+		font-weight:400;
+
+	font-size: 15px;
+
+	color: #212121;
+	line-height: 24px;
+    padding: 0 4px 0px;
+    margin: 12px;
+	
+}
+
+.key1> li    { line-height: 24px;
+   letter-spacing:0.01rem;
+    text-align: justify;
+    color: #353535;
+    font-weight: 400;
+    line-height: 28px;
+    padding: 0 0 14px;
+    /* color: #000000; */
+    font-family: "Roboto", "Lucida Grande", Verdana, Arial, sans-serif;
+    font-weight: 400;
+    font-size: 15px;
+   
+}
+
+  .key2> li{  line-height: 24px;
+    margin: 17px;
+    text-align: justify;
+    color: #3e3e3e;
+    font-weight: 400;
+    line-height: 28px;
+    padding: 0 0 14px;
+    /* color: #000000; */
+     font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; 
+    font-weight: 400;
+    font-size: 17px;
+    /* color: #212121; */
+    /* line-height: 18px; */
+    padding: 0 11px 18px;
+    margin: 12px;
+	
+	}
+	
+	
+	.key4> li {
+  
+    margin-bottom: 31px;
+  
+     font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+   
+    padding: 0px 8px 0px;
+  
+}
+
+ul {
+    /*list-style-image: url({% static "/a10.png" %});*/
+	list-style-image: url({% static "css/key.gif" %});;
+}
+
+  
+  .pagination > li > a, .pagination > li > span {
+    position: relative;
+    float: left;
+    padding: 6px 12px;
+    margin-left: -1px;
+    line-height: 1.42857;
+    color: #000e77;
+    text-decoration: none;
+    background-color: #FFF;
+    border: 1px solid #DDD;
+	font-size:15px;
+	font-weight:bold;
+	
+}
+
+
+
+
+
+
+.clockdiv{
+    font-family: sans-serif;
+    color: #fff;
+    display: inline-block;
+    font-weight: 100;
+    text-align: center;
+    font-size: 16px;
+}
+
+.clockdiv > div{
+    padding: 10px;
+    border-radius: 3px;
+    background: #00BF96;
+    display: inline-block;
+}
+
+.clockdiv div > span{
+    padding: 15px;
+    border-radius: 3px;
+    background: #00816A;
+    display: inline-block;
+}
+
+.smalltext{
+    padding-top: 5px;
+    font-size: 14px;
+}
+
+
+.btn-lg  {
+margin-right:8px;
+margin-bottom:8px;
+border-color:white;
+background-color:#0e247347
+}
+
+
+
+
+
+
+.circle-tile {
+    margin-bottom: 30px;
+
+}
+
+.circle-tile {
+    margin-bottom: 1px;
+    text-align: center;
+}
+
+.circle-tile-heading {
+    position: relative;
+    width: 67px;
+    height: 57px;
+    margin: 0 auto -40px;
+    border: 3px solid rgba(255,255,255,0.3);
+    border-radius: 100%;
+    color: #fff;
+    transition: all ease-in-out .3s;
+}
+
+.menu >ul>li>a {
+color:#000e77;
+font-family:'Lato', serif;
+font-size:14px;
+
+}
+
+
+
+.red {
+    background-color: #e74c3c;
+}
+
+
+
+/* -- Text Color Helper Classes */
+
+ 
+.text-red {
+    color: #e74c3c;
+}
+
+
+.text-faded {
+    color: rgba(255,255,255,0.7);
+}
+
+
+
+.circle-tile-heading .fa {
+    line-height: 47px;
+}
+
+.circle-tile-content {
+    padding-top: 35px;
+}
+.circle-tile-description {
+    text-transform: uppercase;
+}
+
+.text-faded {
+    color: rgba(255,255,255,0.7);
+}
+
+.circle-tile-number {
+    padding: 5px 0 15px;
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.circle-tile-footer {
+    display: block;
+    padding: 5px;
+    color: rgba(255,255,255,0.5);
+    background-color: rgba(0,0,0,0.1);
+    transition: all ease-in-out .3s;
+}
+
+.circle-tile-footer:hover {
+    text-decoration: none;
+    color: rgba(255,255,255,0.5);
+    background-color: rgba(0,0,0,0.2);
+}
+
+.card {
+  background: #f3f3f3 none repeat scroll 0% 0%;
+}
+
+
+
+@media (min-width: 487px) {
+  .container {
+    max-width: 750px;
+  }
+  .col-sm-6 {
+    width: 50%;
+  }
+}
+@media (min-width: 900px) {
+  .container {
+    max-width: 970px;
+  }
+  .col-md-4 {
+    width: 45.333333%;
+  }
+}
+
+@media (min-width: 1200px) {
+  .container {
+    max-width: 1170px;
+  }
+  .col-lg-3 {
+    width: 25%;
+  }
+  }
+}
+
+
+
+
+.menu >ul>li>a {
+color:#000e77;
+font-family:'Lato', serif;
+}
+
+
+
+
+
+
+
+.panel.panel-pink {
+  border-radius: 0px;
+  box-shadow: 0px 0px 10px #888;
+  border-color: #EF5160;
+}
+.panel.panel-pink .panel-heading {
+  border-radius: 0px;
+  color: #FFF;
+  background-color: #EF5160;
+}
+.panel.panel-pink .panel-body {
+  background-color: #F2F2F2;
+  color: #4D4D4D;
+}
+
+
+
+.navbar-brand {
+    float: left;
+    height: 50px;
+    padding: 15px 15px;
+    font-size: 30px;
+    line-height: 20px;
+	font-family:'Graphik Web',HelveticaNeueBold,HelveticaNeue-Bold,"Helvetica Neue Bold",HelveticaBold,Helvetica-Bold,'Helvetica Bold',HelveticaNeue,'Helvetica Neue',Helvetica,Arial,sans-serif;
+	
+}
+
+
+
+.nav>li>a {
+    position: relative;
+    display: block;
+    padding: 10px 15px;
+	Color:#000;
+	font-weight:700;
+	letter-spacing:0px;
+}
+.shadow {
+  -webkit-box-shadow: 3px 3px 5px 6px #ccc;  /* Safari 3-4, iOS 4.0.2 - 4.2, Android 2.3+ */
+  -moz-box-shadow:    3px 3px 5px 6px #ccc;  /* Firefox 3.5 - 3.6 */
+  box-shadow:         3px 3px 5px 6px #ccc;  /* Opera 10.5, IE 9, Firefox 4+, Chrome 6+, iOS 5 */
+}
+
+p{
+
+font-family:Roboto,sans-serif;
+font-size:14px;
+}
+
+ @media  (max-width:400px)  {
+		 .blockquote {
+			padding: 0px 0px;
+			margin: 0 0 0px;
+			font-size: 17.5px;
+			border-left: 1px solid #eee;
+		}
+			.key> li {
+			padding:0px 0px 0px; 
+			font-size:13px;
+			
+			}
+			
+			.h3, h3 {
+		font-size: 19px;
+			}
+			
+				.panel-table .td {
+		display: table-cell;
+		padding: 0px;
+		border: 1px solid #ddd;
+		border-top: none;
+		border-left: none;
+		font-size: 13px;
+			}
+			img {
+    
+    width: 90%;
+			}
+			
+			.small_para{
+			font-size:12px;
+			}
+			.blockquote p {
+    font-size: 12px;
+}
+ }
+ 
+ .panel-table {
+    display:table;
+}
+.panel-table > .panel-heading {
+    display: table-header-group;
+    background: transparent;
+	box-shadow:0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12);
+}
+.panel-table > .panel-body {
+    display: table-row-group;
+}
+.panel-table > .panel-body:before,
+.panel-table > .panel-body:after {
+    content:none;
+}
+.panel-table > .panel-footer {
+    display: table-footer-group;
+    background: transparent;
+}
+.panel-table > div > .tr {
+    display: table-row;
+}
+.panel-table > div:last-child > .tr:last-child > .td {
+    border-bottom: none;
+}
+.panel-table .td {
+    display: table-cell;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-top: none;
+    border-left: none;
+	font-size:15px;
+}
+.panel-table .td:last-child {
+    border-right: none;
+}
+.panel-table > .panel-heading > .tr > .td,
+.panel-table > .panel-footer > .tr > .td {
+    background-color: #5760bd;
+	color:#fff;
+}
+.panel-table > .panel-heading > .tr > .td:first-child {
+    border-radius: 4px 0 0 0;
+}
+.panel-table > .panel-heading > .tr > .td:last-child {
+    border-radius: 0 4px 0 0;
+}
+.panel-table > .panel-footer > .tr > .td:first-child {
+    border-radius: 0 0 0 4px;
+}
+.panel-table > .panel-footer > .tr > .td:last-child {
+    border-radius: 0 0 4px 0;
+}
+			.blockquote p {
+    font-size: 14px;
+}
+
+
+
+ @media  (max-width:400px)  {
+		 .blockquote {
+			padding: 0px 0px;
+			margin: 0 0 0px;
+			font-size: 17.5px;
+			border-left: 1px solid #eee;
+		}
+			
+			
+			
+				.panel-table .td {
+		display: table-cell;
+		padding: 0px;
+		border: 1px solid #ddd;
+		border-top: none;
+		border-left: none;
+		font-size: 13px;
+			}
+			.blockquote p {
+    font-size: 12px;
+							}
+				}
+				
+  </style>
+</head>
+<body style="background-color:#a944421a">
+
+
+ <nav class="navbar navbar-static" style="border-bottom:10px solid #FC0;border-top: 4px solid #00ff9b;background-color:#ffffff">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    <b> <a class="navbar-brand" href="#" style="cursive; color:#000000">McqGk</a> </b>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav" style="text-align:center">
+      
+         <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Mathematics<i class="fa fa-angle-double-down	
+" style="font-size:20px;color:red;display:inline-block"></i></a>
+          <ul class="dropdown-menu">
+            <li><a href="#"> Multiplication Table</a></li>
+            <li><a href="#">Series</a></li>
+            
+            <li><a href="#">Days n Work</a></li>
+			 <li><a href="/math/profit_n_loss/1/">Profit n Loss</a></li>
+			  <li><a href="#">Boat & Stream</a></li>
+			 
+          </ul>
+        </li>
+
+
+
+    <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">English<i class="fa fa-angle-double-down	
+" style="font-size:20px;color:red;display:inline-block"></i></a>
+          <ul class="dropdown-menu">
+            <li><a href="/error_correction/noun/1/">Error Correction</a></li>
+             <li><a href="/error_correction/noun/1/">Noune</a></li>
+            
+              <li><a href="/closetest/close/1/">Close Test</a></li>
+			 <li><a href="#">Fill in the blank</a></li>
+			  <li><a href="/english/word/page/1">Vocabulary</a></li>
+			  <li><a href="#">Editorial</a></li>
+          </ul>
+        </li>
+		
+		    <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Reasoning<i class="fa fa-angle-double-down	
+" style="font-size:20px;color:red;display:inline-block"></i></a>
+      						<ul class="dropdown-menu">
+																		
+																		  <li><a href="#">Blood Relation</a></li>
+																		 
+																		  <li><a href="#">Ranking and Direction</a></li>
+
+																	
+																		  <li ><a href="#">Coading Decoding</a></li>
+																		  
+																		  <li ><a href="#">Puzzle</a></li>
+																		  
+																		  <li><a href="#">Input Output</a></li>
+																		  
+																		  
+																		 
+																		  <li><a href="/reasoning/seating_arrangment/1/">seating_arrangment</a></li>
+																		</ul>
+        </li>
+		
+		    <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Current Affairs<i class="fa fa-angle-double-down	
+" style="font-size:20px;color:red;display:inline-block"></i></span></a>
+          			<ul class="dropdown-menu">
+																		
+																		  <li><a href="/ca/1/">Daily Current Today</a></li>
+																		
+																		  <li><a href="#">Static Gk</a></li>
+
+																		
+																		  <li class="waves-effect"><a href="#">Banking Awerness</a></li>
+																		  
+																		</ul>
+        </li>
+		
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+<li><a href="#"><span class="glyphicon glyphicon-th" aria-hidden="true"></span> Dashboard</a></li>
+     			
+																			<li class="dropdown">
+																					
+																							
+																											{% if user.is_authenticated %}
+																											<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ user.username }} <b class="caret"></b></a>
+																											
+														
+																															<ul class="dropdown-menu">
+																															<li><a href="/logout" >Logout</a></li>
+																															 <li role="separator" class="divider"></li> 
+																															<li><a href="/dashboard/{{ user.username }}"> Dash Board</a></li>
+																															
+																															
+																															</ul>
+																															
+																														{% else %}
+																														<a href="" data-toggle="modal" data-target="#myModal">
+																														<span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>&nbsp;
+																														   Log In<b class="caret"></b>
+																														   </a>
+																														
+																														{% endif %} 
+																														
+																			</li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
+
+			<div id="zoom" class="modal1">
+  <span class="close">&times;</span>
+  <img class="modal1-content" width="10" id="img01">
+  <div id="caption"></div>
+</div >
+			
+			
+			
+																												<div id="myModal" class="modal fade mod" role="dialog">
+																									  <div class="modal-dialog ">
+
+																										<!-- Modal content-->
+																										<div class="modal-content"style="text-align:center">
+																										<div class="modal-header modal-header-danger">
+																										  <div class="modal-header">
+																											<button type="button" class="close" data-dismiss="modal">&times;</button>
+																											<h1 class="modal-title" style="color:#fff"><i class="glyphicon glyphicon-thumbs-up"></i>Sign In/Signup</h1>
+																											</div>
+																										  </div>
+																										  <div class="modal-body"style="text-align:center">
+																																																																																					
+																																																																																					
+																																																																																					<ul class="nav nav-tabs" style="text-align:center">
+																																<li class="active" style="text-align:center"><a data-toggle="tab" href="#home">Sign In</a></li>
+																																<li style="text-align:center"><a data-toggle="tab" href="#menu1">Registrations In</a></li>
+																																
+																															
+																															  </ul>
+
+																															  <div class="tab-content">
+																																<div id="home" class="tab-pane fade in active">
+																																  <h3>Sign In</h3>
+																																																																																																																																														{% block content %}
+																																																																																																																																														
+																																			  <form method="post" id="login" action="" >
+																																				
+																																			
+																																			   {% csrf_token %}
+																																				{{ login.as_p }}
+																																				<div id="below"></div>
+																																				<button class="btn btn-success "  style="color:green"type="submit">Sign In</button>
+																																			  </form>
+																																				
+
+
+																																</div>
+																																<div id="menu1" class="tab-pane fade">
+																																  <h3>Sign up</h3>
+																																																																																																  
+																																			  <form method="post" id="signup">
+																																				
+																																			  
+																																			   {% csrf_token %}
+																																				{{ form.as_p}}
+																																				<button type="submit">Sign up</button></div>
+																																			  </form>
+																																			{% endblock %}
+																																
+																															
+																																
+
+
+																												</div>
+																										  </div>
+																										  <div class="modal-footer">
+																											<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+																										  </div>
+																										</div>
+
+																									  </div>
+																									</div>
+			
+			
+			
+			
+			
+			
+			
+
+					 
+				<!-- container -->
+				
+				
+			<div class="container">
+			
+				<div class="row" >
+					<div class="panel " style="margin:0px" >
+					
+					
+
+					<div class="col-md-2 ">
+					</div>
+						
+						
+						
+						
+						
+						<div class="col-md-8 col-sm-12 col-xs-12 " style=" border: 0px solid #dddddd; background-color:white;padding:0px;margin:0px;">
+						
+												<h3 class=""style="text-align:center;    border: 1px solid #dddddd; color: white;background-color:#0199ec;font-size:21px;padding-top:0px;margin-top:0px;margin-bottom:7px">Indus Valley Civilization </h3> 
+												<img width="100%"src="/static/css/indus_homee.jpg" alt="Indus Valley"/>
+												
+												
+									 <blockquote class="blockquote"style="border:none;" >	<h3 class="mb-3 text-left" style="border:0px solid #ddd;padding:10px;color:#ff2929ad;padding:0px;margin-bottom:0rem !important; font-family:Helvetica Neue,Helvetica,Arial,sans-serif;font-size:2.6em;font-weight:600">Introduction :-</h3><ul style="text-align:left;padding-left:30px;padding-right:30px;"  class="key1 " >
+									  <li>It was called Indus Valley Civilization because it was discovered on the bank of River <b>Indus.</b></li><li> Established around <b>3300 B.C.</b>  and and disappeared around 1400 BC.</li>
+									  <li> It is also called <b style=""> Harappan Civilization</b>  after <b>Daya Ram Sahani</b> discovered the first site i.e Harappa  near <b>Panjab</b> ( District Sahiwal, Pakistan) located on the banks of <b>Ravi</b> river in <b>1921</b></li>
+									 <li>The Indus Valley Civilisation has also been called by some the "Sarasvati culture", the "Sarasvati Civilisation", the "Indus-Sarasvati Civilisation" or the "Sindhu-Saraswati Civilisation"</li>
+									 <li>The Indus Valley Civilization or Harappan Civilization was contemporary with <b>Mesopotamian civilization, Egyptian Civilization, Sumer </b></li>
+									 
+									 <li>The Indus Valley Civilisation (IVC) was a <b>Bronze Age civilisation </b>(Proto-Historic Period - <b>Chalcolithic Age </b>). </li>
+									 
+									 
+									 
+									
+									 
+									
+									 </ul>
+									 
+										  <hr></hr>
+										  
+										  
+										  
+										  
+										  
+										<h3 class="mb-3 text-left" style="font-weight:600;color:#ff2929ad;margin-bottom:0rem !important;border:0px solid #ddd;padding:10px ">Important Sites of Indus Valley Civilization :- </h3>
+<!--<div class="thumbnail"style="border:none">
+      <a href="/w3images/lights.jpg">
+        <img src="/static/css/indus3.jpg" alt="Lights" >
+        <div class="caption">
+          <p>Important Sites of Indus Valley Civilization</p>
+        </div>
+      </a>
+    </div>	-->	
+<p class="small_para"style=""> In India as well as outside India approxomately <b>1500 </b> sites have been found. Out of which seven sites is very important for examination point of view. These are :-</p>	
+ 
+<div style="overflow-x:auto;text-align:center;padding-left:10px" >
+<div class="panel panel-default panel-table" style="align:center;">
+    <div class="panel-heading" style="font-size:14px">
+        <div class="tr">
+            <div class="td"><b>Site</b></div>
+            <div class="td"><b>River</b></div>
+            <div class="td"><b>District</b></div>
+			<div class="td"><b>State/Province</b></div>
+			<div class="td"><b>Country</b></div>
+			<div class="td"><b>Excavators</b></div>
+        </div>
+    </div>
+    <div class="panel-body" style="font-size:14px">
+        <div class="tr">
+            <div class="td"><b style="color:blue">Harappa</b></div>
+            <div class="td">Ravi</div>
+            <div class="td">Sahiwal</div>
+			 <div class="td">Punjab</div>
+			  <div class="td">Pakistan</div>
+			   <div class="td"><b>Daya Ram Sahni (1921)</b></div>
+        </div>
+		   <div class="tr">
+            <div class="td"><b style="color:blue">Mohenjodaro</b></div>
+            <div class="td">Indus</div>
+            <div class="td">Larkana</div>
+			 <div class="td">Sindh</div>
+			  <div class="td">Pakistan</div>
+			   <div class="td"><b>Rakhal Das Banerjee(1922)</b></div>
+        </div>
+		   <div class="tr">
+            <div class="td"><b style="color:blue">Chanhudaro</b></div>
+            <div class="td">Indus</div>
+            <div class="td">Nawabshah</div>
+			 <div class="td">Sindh</div>
+			  <div class="td">Pakistan</div>
+			   <div class="td">Mackay (1925)</div>
+        </div>
+		<div class="tr">
+            <div class="td"><b style="color:blue">Lothal</b></div>
+            <div class="td">Bhogava</div>
+            <div class="td">Ahemedabad</div>
+			 <div class="td">Gujarat</div>
+			  <div class="td"><b style="color:red">India</b></div>
+			   <div class="td">S.R.Rao(1954)</div>
+        </div>
+		<div class="tr">
+            <div class="td"><b style="color:blue">Kalibanga</b></div>
+            <div class="td">Ghaggar</div>
+            <div class="td">Hanumangarh</div>
+			 <div class="td">Rajasthan</div>
+			  <div class="td"><b style="color:red">India</b></div>
+			   <div class="td">Amalanand Ghosh(1951)</div>
+        </div>
+		<div class="tr">
+            <div class="td"><b style="color:blue">Banawali</b></div>
+            <div class="td">Ghaggar</div>
+            <div class="td">Fatehabad</div>
+			 <div class="td">Haryana</div>
+			  <div class="td"><b style="color:red">India</b></div>
+			   <div class="td">R.S Bist(1973)</div>
+        </div>
+		<div class="tr">
+            <div class="td"><b style="color:blue">Dholavira</b></div>
+            <div class="td">Luni</div>
+            <div class="td">Kutchh</div>
+			 <div class="td">Gujrat</div>
+			  <div class="td"><b style="color:red">India</b></div>
+			   <div class="td">J.P Joshi(1967)</div>
+        </div>
+    </div>
+  
+</div>
+</div>
+<hr></hr>
+
+									 
+									
+									
+									
+									<h3 class="mb-3 text-left" style="font-weight:600;color:#ff2929ad;padding:0px;margin-bottom:0px;margin-bottom:0rem !important;border:0px solid #ddd;padding:10px ">Time Period of Harappan CiviliZation :-</h3>
+									<p>
+									
+									<ul class="key">
+									<li> Pre-Harappan (Early Harappan culture) found at <b style="color:blue">Mehrgarh</b>, Pakistan. <b style="font-size:12px;font-weight:400;color:#717171"> Note:- ( Mehrgarh civilization has had a time period of 7000 B.C to 2000 B.C.)</b> </li>
+									<li>Mehrgarh shows the first evidence of <b style="color:#717171">cotton </b>cultivation.</li>
+									<li> Harappa  flourished between 2700 BC and 1900 BC ( Mature Indus Valley Civilization / Late Harappan )</li>
+									
+									
+									
+									</ul></p>
+									
+									 <div class="thumbnail" style="border:none">
+     
+        <img class="myImg" width="50%"onclick="image_show(this)"id="time"src="/static/css/hsimple5.jpg" alt="TIME PERIOD" />
+        <div class="caption">
+          
+		  <p style="color:#717171;font-size:.9rem"><b style="color:black">Note:-</b> The most accepted time period of mature Harappan Civilization is 2500 BC-1750 BC</p>
+        </div>
+     
+    </div>   
+	
+	
+				<hr></hr>
+
+									 </blockquote >
+									
+									 
+									 <h3 class="mb-3 text-left" style="font-weight:600;color:#ff2929ad;margin-left:10px;margin-bottom:-1rem !important;border:0px solid #ddd;padding:10px ">Area of Indus Valley Civilization :- </h3>
+									 
+									 <blockquote class="blockquote" style="border:none" >			
+									 
+								<p style="font-family:Roboto,Lucida Grande, Verdana, Arial, sans-serif;font-size:16px;line-height:24px"><ul class="key">
+								<li>Geographically, this civilization covered  Sindh, Punjab, Haryana, Northern Maharastra, Baluchistan, Rajasthan, Gujarat and Western Uttar Pradesh.</li>
+								<li> It extended from <b>Sutkagengor</b> (in Baluchistan) in the West to <b>Alamgirpur</b> (Western UP) in the East.</li><li>from <b>Manda</b> (Jammu) in the North to <b>Daimabad</b> (Ahmednagar, Maharashtra) in the South.</li></ul>   </p>
+								<p style="font-size:14px;line-height:24px">Border Area of  this civilization is Shown in red color:-</p>
+									 <div class="thumbnail"style="border:none">
+     
+        <img width="50%"class="myImg"id="area"onclick="image_show(this);"src="/static/css/border.jpg" alt="Border Area in Red Color" />
+        
+          <ul class="key">
+		<li><b style="color:#6a60ec">Western-most-site:-</b><b style="color:red">Sutkagendor </b>(Dashk)/Makran Coast, Pakistan-Iron Border</li>
+		<li><b style="color:#6a60ec">Western-most-site:-</b><b style="color:red">Sutkagendor </b>(Dashk)/Makran Coast, Pakistan-Iron Border</li>
+		<li><b style="color:#6a60ec">Nothern-most-site:-</b><b style="color:red">Alamgirpur</b> (Hindon)/ Uttar Pradesh.</li>
+		<li><b style="color:#6a60ec">Southern-most-site:-</b> Bhagatrav(Kim)/ Gujrat(Earlier); <b style="color:red">Daimabad </b>/Maharashtra (Now)</li>
+		</ul>
+		
+       
+		
+     <hr></hr>
+    </div>
+									
+									 
+						
+
+</blockquote >	
+
+
+									 <div class="thumbnail" style="border:none">
+									 <p class="small_para"style="color:#000; "> For brief understanding of Indus Valley Civilization we can Devide its into many parts such as <b>Town Palling </b> of this Civiliztion, <b>trade,</b> <b>Tree animal worships</b>, <b>Riligious practices,</b> <b>Agriculture</b> etc. </p>
+														 
+															<img class="myImg" width="45%"onclick="image_show(this)"id="classification"src="/static/css/indus_cl2.jpg" alt="Brief idea of Indus valley Civilization" />
+															<div class="caption">
+															  
+															  
+															</div>
+														 
+														</div>   
+
+							<blockquote class="blockquote bq-primary"style="" >
+
+							<h3 class="mb-3 text-center" style="font-weight:600;color:#ff2929ad;margin-bottom:0rem !important;border:0px solid #ddd;padding:10px "> Agriculture :-</h3>
+							<h4 style="text-align:left ;"><b><u>Key points to Remember:</u></b></h4>
+									 
+									  <ul style="text-align:left;padding-left:30px;padding-right:30px"  class="key " >
+									  <li><b style="color:red"> Main Crops :-</b>  were <b>Wheat and Barely</b></li>
+									   <li>Evidence of cultivation of <b>rice in Lothal</b> and Rangpur (Gujarat) only</li>
+									    <li><b style="color:red"> Other Crops :-</b> Mustard, Cotton, Dates </li>
+										<li>Indus people were <b>first to produce Cotton</b> in the world</li>
+										
+										  <li><b style="color:red"> Animals :-</b> Goat, Camel, rhinoceros, Sheep, humped and humpless bull, buffelo, dog, boar, cat, pig, deer, tortoise tiger etc.</li>
+										   <li> <b style="color:#717171;font-size:.9rem;font-weight:500">Note:- Lion was not known to them </b></li>
+								
+																	</ul>
+									 </blockquote>
+									 <hr></hr>
+									 
+									 
+									 <blockquote class="blockquote bq-primary"style="" >
+
+							<h3 class="mb-3 text-center" style="font-weight:600;color:#ff2929ad;margin-bottom:0rem !important;border:0px solid #ddd;padding:10px "> Town Planning :-</h3>
+							<h4 style="text-align:left ;"><b><u>Key points to Remember:</u></b></h4>
+									 
+									  <ul style="text-align:left;padding-left:30px;padding-right:30px"  class="key " >
+									  <li>Systematic town planning, use of <b>Grid system</b>(Chess-board).</li>
+									   <li> Underground <b>drainage system.</b></li>
+									    <li>Use of <b>burnt bricks</b> in construction. </li>
+										<li>90° angle roads.</li>
+										<li>Fortified <b>citadel.</b> <b style="color:#717171;font-size:.9rem;font-weight:400">(Note:- Chanhudaro is the only city without citadel) </b> </li>
+								
+																	</ul>
+									 </blockquote>
+									 <hr></hr>
+									 
+									  <blockquote class="blockquote bq-primary"style="" >
+
+							<h3 class="mb-3 text-center" style="font-weight:600;color:#ff2929ad;margin-bottom:0rem !important;border:0px solid #ddd;padding:10px "> Trade :-</h3>
+							<h4 style="text-align:left ;"><b><u>Key points to Remember:</u></b></h4>
+									 
+									  <ul style="text-align:left;padding-left:30px;padding-right:30px"  class="key " >
+									  <li>There was inland trade as well as outland trade. Outland trade was mainly with <b>Mesopotamia / Sumeria, Bahrain</b>  etc.</li>
+									  <li><b style="color:red">Exports :-</b>  were cotton, agriculture products, certain beads (from Chanhudaro), teracotta figures, copper etc.</li>
+									   
+									    <li><b style="color:red"> Imports :-</b>  Gold Silver from afganisthan, Peria (Iran); Copper from Baluchistan, Tin, Jade, Amethyst etc.  </li>
+										<li><b>Note :- </b> <b style="color:#000;font-size:15px;font-weight:500">Iron was not known to them </b></li>
+										
+										
+								
+																	</ul>
+									 </blockquote>
+									 <hr></hr>
+									 
+									 <blockquote class="blockquote bq-primary"style="" >
+									 <h3 class="mb-3 text-center" style="font-weight:600;color:#ff2929ad;margin-bottom:0rem !important;border:0px solid #ddd;padding:10px "> Worships :-</h3>
+							<h4 style="text-align:left ;"><b><u>Key points to Remember:</u></b></h4>
+									 
+									  <ul style="text-align:left;padding-left:30px;padding-right:30px"  class="key " >
+									  <li>They did nit worship their god in tample. No tample found yet</li>
+									  <li>They worship statues and figures</li>
+									  
+									  <li><b style="color:red">Mother-Goddes (Shakti) :-</b> it is most commonly found figure <b> </b>  </li>
+									   
+									    <li><b style="color:red"> Pasupati Mahadeva :-</b>  He was the lord of animals (Proto-Shiva) represented in seals as sitting in yogic posture. he is surrounded with <b>elephant</b>, <b>tiger</b>, <b>buffalo</b>, <b>rhino</b>   <b style="color:#717171;font-size:13px;font-weight:400" > ( Note :- Shiva-shakti worship is the oldest form of worship in India )</b>   </li>
+										<li>There is evidence of <b>Lingam</b> (Male sex organ), <b>yoni</b> (Female sex organ) worships.  </li>
+										 <li>Tree (Specialy <b>Peepal</b>) and animal (specialy <b>Rhino and humped bull</b>) worship found,</li>
+										
+								
+																	</ul>
+									 </blockquote>
+									 <hr></hr>
+									 
+									 <blockquote class="blockquote bq-primary"style="" >
+									 <h3 class="mb-3 text-center" style="font-weight:600;color:#ff2929ad;margin-bottom:0rem !important;border:0px solid #ddd;padding:10px "> Political Stucture :-</h3>
+							<h4 style="text-align:left ;"><b><u>Key points to Remember:</u></b></h4>
+									 
+									  <ul style="text-align:left;padding-left:30px;padding-right:30px"  class="key " >
+									  <li>No clear cut evidence of political structure</li>
+									  <li>Harappan were possibly rulled by a class of <b>merchants.</b></li>
+									  
+								
+																	</ul>
+									 </blockquote>
+									 <hr></hr>
+									 
+									 <blockquote class="blockquote bq-primary"style="" >
+									 <h3 class="mb-3 text-center" style="font-weight:600;color:#ff2929ad;margin-bottom:0rem !important;border:0px solid #ddd;padding:10px "> Seals:-</h3>
+							<h4 style="text-align:left ;"><b><u>Key points to Remember:</u></b></h4>
+									 
+									  <ul style="text-align:left;padding-left:30px;padding-right:30px"  class="key " >
+									  <li>Seals were used to trade or worship.</li>
+									  <li>Images of Bull, buffalo, Tiger etc. were founf on the seal</li>
+									  <li><b style="color:red"> Swastika </b> symbol found on many seals</li>
+									  <li><b> Pictographic script </b>  found on seals which shows that writting was from left to right and right to left in alternate line. It has been refer to as Proto-Dravidian.</li>
+									  
+								
+																	</ul>
+									 </blockquote>
+									 <hr></hr>
+									
+									
+				
+			
+					
+		
+
+
+
+							
+									
+													
+													
+													
+													
+													
+													
+													
+													
+													
+														
+													
+													
+											
+
+										
+										
+										
+										
+														
+														
+														
+															
+
+														
+														<div class="row">
+							
+															<div class="col-md-2 ">
+															
+															</div>
+																
+																<div class="col-md-8 " style="text-align:center">
+																<ul class="pagination">
+    
+    <li class="active"><a href="/gktoday/history/ancient/indus-valley-civilization/1/">1</a></li>
+    <li ><a href="/gktoday/history/ancient/indus-valley-civilization/2/">2</a></li>
+   
+  </ul>
+																</div>
+											
+												
+												
+											  
+																
+																
+																<div class="col-md-2 ">
+																 <ul class="pager">
+																
+																    <li ><a style="color:blue"href="/gktoday/history/ancient/indus-valley-civilization/2/">Next<span class="glyphicon glyphicon-chevron-right"></span></a></li>
+																	
+																	
+																	
+																		  </ul>
+																</div>
+														
+														</div>
+											
+												<div id="disqus_thread"style="padding:5px"></div>
+							<script>
+
+							/**
+							*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+							*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+							/*
+							var disqus_config = function () {
+							this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+							this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+							};
+							*/
+							(function() { // DON'T EDIT BELOW THIS LINE
+							var d = document, s = d.createElement('script');
+							s.src = 'https://getmyvideo-net.disqus.com/embed.js';
+							s.setAttribute('data-timestamp', +new Date());
+							(d.head || d.body).appendChild(s);
+							})();
+							</script>
+							<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>	
+																	
+																	
+																
+						
+						</div>
+											<div class="col-md-2 nopadding">
+					  
+						
+						</div>
+						
+				</div>
+
+				</div>
+				
+				
+			</div>	
+				
+				
+	
+
+
+
+
+
+
+
+
+
+	<script id="dsq-count-scr" src="//getmyvideo-net.disqus.com/count.js" async></script>
+					 
+
+<script type="text/javascript" >
+$(document).ready(function () {
+
+
+$('.navbar .dropdown').hover(function () {
+        $(this).find('.dropdown-menu').first().stop(true, true).slideDown(150);
+    }, function () {
+        $(this).find('.dropdown-menu').first().stop(true, true).slideUp(105);
+    });
+
+
+
+
+var showChar = 200;
+	var ellipsestext = "...";
+	var moretext = "Read more";
+	var lesstext = "less";
+	$('.more').each(function() {
+		var content = $(this).html();
+
+		if(content.length > showChar) {
+
+			var c = content.substr(0, showChar);
+			var h = content.substr(showChar-1, content.length - showChar);
+
+			var html = c + '<span class="moreelipses">'+ellipsestext+'</span>&nbsp;&nbsp;&nbsp;<a href="" class="morelink"><u>'+moretext+'</u></a></span>';
+
+			$(this).html(html);
+		}
+
+	});
+	
+	
+	
+	
+	//..........................
+	
+	
+		 $("#signup").submit(function (ev)
+	 {
+							
+						
+							//ev.preventDefault();
+		$.ajax({
+            type : 'POST',
+            url: '{% url 'bank:login' %}',
+			dataType: "json",
+			async: true,
+           data : {
+											data1 : $(this).serialize(),
+											csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()
+										  },
+            success: function (response) 
+			{
+         
+				// window.location = response.r;
+
+            },
+			 error: function (data) { $('#below').html("<b>please retry or check url</b>");
+			 
+			 }
+        });
+
+        
+    });
+
+	
+	
+	//.........................
+	
+		//..........................
+	
+	//.........................
+	
+	
+	
+	
+
+
+});
+
+
+
+
+		 $("#login").submit(function (ev)
+	 {
+							
+			ev.preventDefault();			
+							
+		$.ajax({
+            type : 'POST',
+            url: '{% url 'bank:login' %}',
+			
+			
+           data  : $(this).serialize(),
+            success: function (response) 
+			{
+			var r=response;
+				if(r == "true")
+				{
+				window.location = window.location;
+				}
+				else{
+				$('#below').html("<b>"+response+"</b>");
+				}
+
+            },
+			 error: function (data) { $('#below').html("<b>please 55 or check url</b>");
+			
+			 }
+        });
+
+        
+    });
+	
+function add(id,username) {
+var link_id=id;
+var uname=username;
+//$('#myModal').modal('toggle');
+
+	$.ajax({
+            type : 'POST',
+            url: '{% url 'bank:add' %}',
+			
+			
+           data: {link: link_id, user_name: uname,csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()},
+            success: function (response) 
+			{
+			var r=response;
+				if(r == "success")
+				{
+				document.getElementById(link_id).innerHTML ="added";
+				}
+				else{
+				$('#below').html("<b>"+response+"</b>");
+				document.getElementById("link_id").innerHTML = response;
+				}
+
+            },
+			 error: function (data) { $('#link_id').html("<b>please 55 or check url</b>");
+			
+			 }
+        });
+    
+}
+
+	function timer(counter,t,r1,r2,r3,r4,r5,a,i,counter){
+	
+	var colckdiv_id='clockdiv'.concat(counter.toString());
+	var colckdiv_id_hash='#clockdiv'.concat(counter.toString());
+	var clock = document.getElementById(colckdiv_id);
+	var min='.minutes'.concat(counter.toString());
+	var sec='.seconds'.concat(counter.toString());
+	var sec_id='#seconds'.concat(counter.toString());
+	var min_id='#minutes'.concat(counter.toString());
+	var smltext_id='#smalltext'.concat(counter.toString());
+
+  var minutesSpan = clock.querySelector(min);
+  var secondsSpan = clock.querySelector(sec);
+
+var sol='sol'.concat(counter.toString());
+var solution_hash='#solution'.concat(counter.toString());
+
+var timer_id='#time'.concat(counter.toString());
+//alert(timer_id);
+  document.getElementById(sol).disabled = true;
+  $(timer_id).toggle(500);
+  $(colckdiv_id_hash).toggle(500);
+var seconds_left = 80;
+/*var interval = setInterval(function() {
+    document.getElementById('seconds').innerHTML = --seconds_left;
+
+    if (seconds_left <= 0)
+    {
+       document.getElementById('seconds').innerHTML = "You are Ready!";
+       clearInterval(interval);
+    }
+}, 1000); */
+
+//new timer
+var fiveMinutes = t,
+        display = $(sec_id),
+		smalltext=$(smltext_id);
+		if($(solution_hash).is(':visible'))
+{
+$(solution_hash).toggle(500);
+}
+startTimer(fiveMinutes,display,smalltext,colckdiv_id_hash,timer_id,sol,solution_hash,r1,r2,r3,r4,r5,a,i,counter);
+
+
+
+	
+	}
+	
+	
+	function startTimer(duration, display,smalltext,colckdiv_id_hash,timer_id,sol,solution_hash,r1,r2,r3,r4,r5,a,i,counter) {
+    var timer = duration, minutes, seconds;
+	 
+  var s=  setInterval(function () {
+	var seconds_left = --duration;
+        minutes = parseInt(timer / 60, 10)
+        seconds = parseInt(timer % 60, 10);
+
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+				if(minutes<1){
+        display.text(minutes + ":" + seconds);
+		smalltext.text("seconds")
+        }
+        else{display.text(minutes + ":" + seconds);
+		smalltext.text("Minutes")
+		}
+		
+		if(seconds_left<=-1){clearInterval(s);
+		
+								op(r1,r2,r3,r4,r5,a,i,counter);
+								$(timer_id).toggle(500);
+								$(colckdiv_id_hash).toggle(500);
+								
+								//$(solution_hash).toggle(500);
+								document.getElementById(sol).disabled = false; 
+									}
+		
+
+        if (--timer < 0) {
+            timer = duration;
+        }
+    }, 1000);}
+	
+	
+	
+	function op(r1,r2,r3,r4,r5,a,i,counter){
+	var radio1 = r1;
+	var radio2=r2;
+	 var radio3=r3;
+	var radio4=r4;
+	var radio5=r5;
+	var ans=a;
+	var id=i;
+	var upper_sol='sol_upper'.concat(counter.toString());
+	var count=counter;
+	var chk=count.toString().concat(ans.toString());
+	var r8=count.toString();
+	var right=r8.concat('r');
+	
+	
+	
+if(document.getElementById(radio1).checked || document.getElementById(radio2).checked || document.getElementById(radio3).checked || document.getElementById(radio4).checked || document.getElementById(radio5).checked ) {
+
+				if(document.getElementById(chk).checked){
+				var right_img= right.concat(chk.slice(-1)) ;
+				//alert(right_img);
+				var x = document.getElementById(right_img);
+				
+
+				//x.innerHTML="<img src=\"http://placehold.it/350x350\" width=\"400px\" height=\"150px\">";
+				var y = document.getElementById(upper_sol);
+				y.innerHTML="<b>Correct<img src=\"{% static "/thh.png" %}\" class=\"img-rounded\" >"
+				x.style.display = 'inline';
+				
+				//$(x).toggle(500); 
+				//var y = document.getElementById(right);
+				//y.style.display = 'inline';
+				}else if(document.getElementById(radio1).checked) {
+				var wrong_img= count.toString().concat('w'.concat('radio1'.slice(-1))) ;
+				var x = document.getElementById(wrong_img);
+				var y = document.getElementById(upper_sol);
+				y.innerHTML="<b>InCorrect<img src=\"{% static "/c.png" %}\" class=\"img-rounded\" >"
+				x.style.display = 'inline';
+				
+				}else if(document.getElementById(radio2).checked) {
+				var wrong_img= count.toString().concat('w'.concat('radio2'.slice(-1))) ;
+				var x = document.getElementById(wrong_img);
+				var y = document.getElementById(upper_sol);
+				y.innerHTML="<b>InCorrect<img src=\"{% static "/c.png" %}\" class=\"img-rounded\" >"
+				x.style.display = 'inline';
+				
+				}else if(document.getElementById(radio3).checked) {
+				var wrong_img= count.toString().concat('w'.concat('radio3'.slice(-1))) ;
+				var x = document.getElementById(wrong_img);
+				var y = document.getElementById(upper_sol);
+				y.innerHTML="<b>InCorrect<img src=\"{% static "/c.png" %}\" class=\"img-rounded\" >"
+				x.style.display = 'inline';
+				
+				}else if(document.getElementById(radio4).checked) {
+				var wrong_img= count.toString().concat('w'.concat('radio4'.slice(-1))) ;
+				var x = document.getElementById(wrong_img);
+				var y = document.getElementById(upper_sol);
+				y.innerHTML="<b>InCorrect<img src=\"{% static "/c.png" %}\" class=\"img-rounded\" >"
+				x.style.display = 'inline';
+				
+				}else if(document.getElementById(radio5).checked) {
+				var wrong_img= count.toString().concat('w'.concat('radio5'.slice(-1))) ;
+				var x = document.getElementById(wrong_img);
+				var y = document.getElementById(upper_sol);
+				y.innerHTML="<b>InCorrect<img src=\"{% static "/c.png" %}\" class=\"img-rounded\" >"
+				x.style.display = 'inline';
+				
+				}
+			
+					
+		}
+					
+					
+				else  {
+
+				///$(upper_sol).html("Hello World");
+				var x = document.getElementById(upper_sol);
+				x.style.fontWeight  = 'bold';
+				x.innerHTML="Not Attempted";
+						
+						}
+	$(id).toggle(500);
+	
+	}
+
+
+function image_show(x){
+
+var img = document.getElementById(x.id);
+var modal1 = document.getElementById('zoom');
+
+
+var modal1Img = document.getElementById("img01");
+var captionText = document.getElementById("caption");
+
+modal1.style.display = "block";
+    modal1Img.src = x.src;
+	
+
+	
+    captionText.innerHTML = x.alt;
+	
+	var span = document.getElementsByClassName("close")[1];
+
+// When the user clicks on <span> (x), close the modal1
+span.onclick = function() { 
+    modal1.style.display = "none";
+}
+
+
+window.onclick = function(event) {
+    if (event.target == modal1) {
+        modal1.style.display = "none";
+    }
+}
+}	
+	
+
+
+
+
+
+// Get the <span> element that closes the modal1
+
+
+</script>
+
+</body>
+</html>

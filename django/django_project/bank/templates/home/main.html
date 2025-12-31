@@ -1,0 +1,487 @@
+{% extends 'home/b.html' %}
+{% block main %}
+			
+			
+
+					 <section class="carousel-section">
+					   
+							<div id="myCarousel" class="carousel carousel-razon slide" data-ride="carousel">
+								<!-- Indicators -->
+									<ol class="carousel-indicators">
+									  <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+									  <li data-target="#myCarousel" data-slide-to="1"></li>
+									  <li data-target="#myCarousel" data-slide-to="2"></li>
+									</ol>
+								
+									<!-- Wrapper for slides -->
+									<div class="carousel-inner">
+												{% for slide in slide %}
+															{% if forloop.first %}
+															<div class="active item">
+														{% else %}
+															<div class="item">
+														{% endif %}
+											<div class="container">
+														<div class="row">
+															<div class="col-md-6 ">
+															
+																		<div class="carousel-caption">
+																		
+																		
+																				<div class="carousel-text">
+																				 <h1 class="animated fadeInDownBig animation-delay-7 carousel-title">{{slide.upper_heading}}</h1>
+																				 <h2 class="animated fadeInDownBig animation-delay-5  crousel-subtitle">{{slide.yellow_heading}}</h2>
+																				
+																				 
+
+																						<ul class="list-unstyled carousel-list">
+																						   <li class="animated bounceInLeft animation-delay-11"><i class="fa fa-check"></i>{{slide.key_1}}</li>
+																						   <li class="animated bounceInLeft animation-delay-13"><i class="fa fa-check"></i>{{slide.key_2}}</li>
+																						   <li class="animated bounceInLeft animation-delay-15"><i class="fa fa-check"></i>{{slide.key_3}}</li>
+																					   </ul>							 
+																				</div>
+																	</div>
+															</div>
+															<div class="col-md-6 col-sm-5  carousel-img-wrap">
+															
+																<div class="carousel-img">
+																	<img src="/media/{{ slide.ca_img}}" class="img-responsive center-block img-rounded animated bounceInUp animation-delay-3 " alt="Image">
+																</div>
+															</div>
+														</div>
+													</div>
+										  </div>
+												{% endfor %}
+
+									<!-- Left and right controls -->
+									<a class="left carousel-control" href="#myCarousel" data-slide="prev">
+									  <span class="glyphicon glyphicon-chevron-left" ></span>
+									  <span class="sr-only">Previous</span>
+									</a>
+									<a class="right carousel-control" href="#myCarousel" data-slide="next">
+									  <span class="glyphicon glyphicon-chevron-right"></span>
+									  <span class="sr-only">Next</span>
+									</a>
+							</div>
+								  
+					  
+					  
+					  
+					 </section >
+					 
+					 
+					 
+				<!-- belw slide -->
+				
+				
+			<div class="container">
+			
+				<div class="row">
+					<div class="panel card" ">
+						<div class="col-md-3 nopadding">
+						
+							<div class="panel ">
+							  <div class="panel-heading" style="background-color:#cc0000;"><h3 style="color:#ffffff;padding:0px"><u>Latest Notification</u><h3></div>
+							  <div class="panel-body"><p><a href="https://www.w3schools.com/html/">Go to Currrent Affairs Section>></a></p></div>
+							</div>
+						
+						</div>
+						
+						
+						
+						
+						<div class="col-md-6 nopadding" style=" border: 1px solid #dddddd;">
+						
+						
+						
+							
+										<h3 class="card"style="text-align:center; color: #336699">Current Affairs Today</h3>
+										{% for slide in slide %}
+																			<div class="panel nopadding ">
+																			
+																					<div class="panel-heading card " >
+																					
+																						<h4 style=" display:inline-block;" ><strong>{{slide.upper_heading}} </strong></h4> 
+																						<button id="{{slide.new_id}}"
+
+																							
+																						style="text-align:center; color: #fff;background-color:#d9534f;margin-right:0;float:right;display:inline-block;" type="submit" class="btn btn-danger btn-xs"
+																						{% if user.is_authenticated %}
+																						onclick="add('{{slide.new_id}}','{{ user.username }}' )" 
+																						{% else %}
+																						
+																						data-toggle="modal" data-target="#myModal"
+																						
+																						{% endif %}
+																						
+																						><span class="glyphicon glyphicon-plus"></span> Add to notes</button> 
+																					</div>
+																																						
+																							<hr></hr>
+																							<div class="panel-body">
+																								<div class="paragraph_image" style="margin-right:8px;">
+															<a href="http://currentaffairs.gktoday.in/madhav-chitale-committee-recommends-measures-de-silting-ganga-05201744848.html"><img width="150" height="150" src="{% static "a.jpg" %}" class="attachment-120x120 size-120x120 wp-post-image" alt="" scale="0"></a>
+														</div>
+											
+																											<p  style="font-size:20px;font-family: 'Arimo', sans-serif;font-color:black;"> {{slide.paragraph}}</p>
+																											
+																											
+																											<h4 style="text-align:left ;color:green"><b><u>Key points to Remember:</u></b></h4>
+																									
+																											
+																											
+																											<ul style="text-align:Left " id="{{forloop.counter}}" class="key" >
+																									
+																												
+																									
+																												</ul>
+																												
+																											
+																																		<script>   key('{{slide.all_key_points}}');
+																																		
+																																		
+																																		
+																																		 function key(a){
+
+																																				
+																																				var myarray = a.split('///');
+
+																																							for(var i = 0; i < myarray.length; i++)
+																																							{
+
+																																							var node=document.createElement("LI");
+																																							var textnode=document.createTextNode(myarray[i]);
+																																							node.appendChild(textnode);
+																																							document.getElementById("{{forloop.counter}}").appendChild(node);
+
+																																							}
+																																							 }
+
+																																		
+																																		</script>
+																											
+																											<p ><a href="https://www.w3schools.com/html/">Go to Currrent Affairs Section>></a></p>
+																						</div>
+																						
+																							
+																				</div>
+														{% endfor %}
+														
+														
+														
+														
+														
+														
+														
+															<div class="panel nonpadding ">
+										
+												<div class="panel-heading card">
+														<h4 ><strong>India protests Participation of Canadas PM at Khalsa Day</strong></h4>
+												</div>
+																													
+														<hr></hr>
+														<div class="panel-body">
+														
+																		<p  style="Arial,Helvetica Neue,Helvetica,sans-serif;font-size:20px;font-color:black;"> India has protested ( fight against) the participation of Canadian Prime Minister Justin Trudeau at Khalsa Day in Toronto that saw felicitation (facility) of Sikh separatist elements and featured Khalistani flags and posters of Jarnail Singh Bhindranwale. Mr. Trudeau has become the first Canadian PM to attend the Khalsa Dayevent in a decade since Paul Martin in 2005. The Khalsa Day event was organised to mark the Sikh new year. The parade organised by the Ontario Sikhs and Gurdwara Council felicitated two 
+
+																		</p>
+																		
+																		
+																		<h4 style="text-align:left ;color:green"><b><u>Key points to Remember:</u></b></h4>
+																		
+																		
+																		<ul style="text-align:Left ">
+																
+																				<li><Strong>Start Date:</strong></li>
+																				<li><Strong>Last Date:</strong></li>
+																				
+																				<li><Strong>Eligibility:</strong></li>
+																				<li><Strong>age:</strong></li>
+																
+																			</ul>
+																			
+																		<p><a href="https://www.w3schools.com/html/">Go to Currrent Affairs Section>></a></p>
+													</div>
+														
+											</div>
+
+														
+														
+														
+											
+														<div class="row card ">
+														<div class="col-md-9">
+														<h3 style="text-align:left; color: #336699"> The Hindu Editorial Wordlist  
+														
+														<p > <i class="fa fa-calendar" aria-hidden="true"></i> Date : 19/05/2017 <p></div>
+														
+														<div class="col-md-3">
+														<img src="{% static "/the.png" %}" class="img-rounded" alt="Cinque Terre" width=104" height="86"> </h3>
+														
+														</div>
+														
+														</div>
+														
+														
+														
+														<div class="panel panel-info" style="margin-top:2px;">
+									<div class="panel panel-primary card">
+										  <div class="c-header-color"><p class="c-heading">he menacing spread, starting last Friday, of the malicious software WannaCry, which has since infected thousands of computer systems in 150 countries, is a frightening reminder of the vulnerabilities of a connected world.  <a class="c-heading" style=" text-align:right"href="https://www.w3schools.com/html/"><u>The Hindu->></u></a>  </p>
+											
+										  </div>
+										  <div class="panel-body">
+												
+											<table class="table">
+														<thead>
+														  <tr>
+															<th>Word</th>
+															<th>Meaning</th>
+															<th>synonym</th>
+															
+														  </tr>
+														</thead>
+														<tbody>
+														  <tr>
+															<td>Plathora</td>
+															<td><h4 style="color:green">synonyms:	complain, carp, grumble, moan, grouse, grouch, whine, bleat, find fault with</h4></td>
+															<td><h2 style="color:#424242;">He eagerly accepted the job because it came with a plethora of opportunities.</h2></td>
+														
+														  </tr>  
+														  
+														  
+														    <tr>
+															<td>Plathora</td>
+															<td><h4 style="color:green">synonyms:	complain, carp, grumble, moan, grouse, grouch, whine, bleat, find fault with</h4></td>
+															<td><h2 style="color:#424242;">He eagerly accepted the job because it came with a plethora of opportunities.</h2></td>
+														
+														  </tr> 
+														  
+														    <tr>
+															<td>Plathora</td>
+															<td><h4 style="color:green">synonyms:	complain, carp, grumble, moan, grouse, grouch, whine, bleat, find fault with</h4></td>
+															<td><h2 style="color:#424242;">He eagerly accepted the job because it came with a plethora of opportunities.</h2></td>
+														
+														  </tr> 
+														  
+														  
+														  
+														 
+														 
+														 
+														</tbody>
+														
+													  </table>
+												
+											 <h4 style="color:#D50000;text-align:right"><a href="https://www.w3schools.com/html/" style="color:#D50000"> Continue...>></a></h4>
+											
+										  
+										  
+										  </div>
+									</div>
+						
+						</div>
+						
+						
+													<div class="row card ">
+														<div class="col-md-9">
+														<h3 style="text-align:left; color: #336699"> Editorial from The EconoiTimes 
+														
+														<p > <i class="fa fa-calendar" aria-hidden="true"></i> Date : 19/05/2017 <p></div>
+														
+														<div class="col-md-3">
+														<img src="{% static "/theet.png" %}" class="img-rounded" alt="Cinque Terre" width=104" height="86"> </h3>
+														
+														</div>
+														
+														</div>
+														
+														
+														
+														<div class="panel panel-info" style="margin-top:2px;">
+																								<div class="panel panel-primary card">
+																									  <div class="c-header-blue"><p class="c-heading">he menacing spread, starting last Friday, of the malicious software WannaCry, which has since infected thousands of computer systems in 150 countries, is a frightening reminder of the vulnerabilities of a connected world.  <a class="c-heading" style=" text-align:right"href="https://www.w3schools.com/html/"><u>The Hindu->></u></a>  </p>
+																										
+																									  </div>
+																									  <div class="panel-body">
+																											
+																										<table class="table">
+																													<thead>
+																													  <tr>
+																														<th>Word</th>
+																														<th>Meaning</th>
+																														<th>synonym</th>
+																														
+																													  </tr>
+																													</thead>
+																													<tbody>
+																													  <tr>
+																														<td>Plathora</td>
+																														<td><h4 style="color:green">synonyms:	complain, carp, grumble, moan, grouse, grouch, whine, bleat, find fault with</h4></td>
+																														<td><h2 style="color:#424242;">He eagerly accepted the job because it came with a plethora of opportunities.</h2></td>
+																													
+																													  </tr>  
+																													  
+																													  
+																														<tr>
+																														<td>Plathora</td>
+																														<td><h4 style="color:green">synonyms:	complain, carp, grumble, moan, grouse, grouch, whine, bleat, find fault with</h4></td>
+																														<td><h2 style="color:#424242;">He eagerly accepted the job because it came with a plethora of opportunities.</h2></td>
+																													
+																													  </tr> 
+																													  
+																														<tr>
+																														<td>Plathora</td>
+																														<td><h4 style="color:green">synonyms:	complain, carp, grumble, moan, grouse, grouch, whine, bleat, find fault with</h4></td>
+																														<td><h2 style="color:#424242;">He eagerly accepted the job because it came with a plethora of opportunities.</h2></td>
+																													
+																													  </tr> 
+																													  
+															 
+																													  
+																													 
+																													</tbody>
+																												  </table>
+																											
+																										 <h4 style="color:#D50000;text-align:right"><a href="https://www.w3schools.com/html/" style="color:#D50000"> Continue...>></a></h4>
+																										
+																									  
+																									  
+																									  </div>
+																								</div>
+						
+																	</div>
+						
+						
+						<div style="padding:20px;">
+						
+						<h2 style="color: #2f6683;"> Impotent Math Excersise 20-may-2017</h2>
+						<hr></hr>
+						</div>
+						
+						
+						
+						
+						<span style="padding-bottom:20px;">
+						
+						<img src="http://www.onlinecollege.org/wp-content/themes/onlinecollegeorg/assets/img/min/photos/degree_pages/scienceandmath.jpg" class="img-thumbnail center-block " alt="Cinque Terre" width="500" height="300"></span>
+						
+						<p style="Trebuchet MS,Lucida Grande,Lucida Sans Unicode,Lucida Sans,Tahoma,sans-serif;padding:20px;size :3.4em">
+						<span ><h4 style="color:#151515;padding-left:20px">Q1. The entrance ticket of an exhibition was Rs. 5. Later it was decreased by 20% and thus the sale amount is increased by 44%. What was the percentage increase in the number of visitors?</h4>&nbsp;</span>
+						</p>
+						<p>(a) 65</p>
+						<p>(b) 60</p>
+						<p>(c) 35</p>
+						<p>(d) 65</p>
+						<p>(e) None of theAbove</p>
+						
+						<p style="font-family: 'Arimo', sans-serif;padding-left:10px;size :40%">
+						<h4 >Q1. The entrance ticket of an exhibition was Rs. 5. Later it was decreased by 20% and thus the sale amount is increased by 44%. What was the percentage increase in the number of visitors?</h4>&nbsp;
+						</p>
+						<p>(a) 65</p>
+						<p>(b) 60</p>
+						<p>(c) 35</p>
+						<p>(d) 65</p>
+						<p>(e) None of theAbove</p>
+						
+						<h4 style="color:#212121;text-align:right"><a href="https://www.w3schools.com/html/" style="color:#D50000"> See Solutions...>></a></h4>
+						
+						
+						
+						<div style="padding:20px">
+						
+						<h2 style="color: #2f6683;"> Reasoning 20-may-2017</h2>
+						<hr></hr>
+						</div>
+						
+						
+						
+						
+						<span style="padding-bottom:20px;">
+						
+						<img src="{% static "/r.jpeg" %}" class="img-thumbnail center-block " alt="Cinque Terre" width="500" height="0"></span>
+						
+						<p style="font-family: 'Arimo', sans-serif;padding-left:10px;size :40%">
+						<h4 >Q1. The entrance ticket of an exhibition was Rs. 5. Later it was decreased by 20% and thus the sale amount is increased by 44%. What was the percentage increase in the number of visitors?</h4>&nbsp;
+						</p>
+						<p>(a) 65</p>
+						<p>(b) 60</p>
+						<p>(c) 35</p>
+						<p>(d) 65</p>
+						<p>(e) None of theAbove</p>
+						
+						
+						
+						
+						
+						</div>
+						
+						<div class="col-md-3 nopadding">
+						
+								<div class="panel-group ">
+									<div class="panel panel-info ">
+										  <div class="panel-heading"><strong>Postal bank Recruitment 2017</strong>
+											<img src="postal.png" class="img-thumbnail " alt="Image">
+										  </div>
+										  <div class="panel-body">
+												
+												<ul style="text-align:Left ">
+												
+													<li><Strong>Start Date:</strong></li>
+													<li><Strong>Last Date:</strong></li>
+													
+													<li><Strong>Eligibility:</strong></li>
+													<li><Strong>age:</strong></li>
+												
+												</ul>
+												
+												<a href="#"style="text-align:center"><h5>Click for Details<h5></a>
+												<a href="#" style="text-align:center"><h5>Click here  to Apply<h5></a>
+											
+										  
+										  
+										  </div>
+									</div>
+									<div class="panel panel-info">
+										  <div class="panel-heading"><strong>RBI Recruitment 2017  162 Officer Grade , Medical Consultant & Director Posts
+
+															Read more: RBI Recruitment 2017 - 162 Officer Grade 'B', Medical Consultant & Director Posts 
+																</strong>
+														<img src="rbi.jpeg" class="img-thumbnail " alt="Image">
+										  </div>
+										  <div class="panel-body">
+												
+												<ul style="text-align:Left ">
+												
+													<li><Strong>Start Date:</strong></li>
+													<li><Strong>Last Date:</strong></li>
+													
+													<li><Strong>Eligibility:</strong></li>
+													<li><Strong>age:</strong></li>
+												
+												</ul>
+												
+												<a href="#"style="text-align:center;padding:0px;"><h5>Click for Details<h5></a>
+												<a href="#" style="text-align:center;padding:0px; margib-bottom=0px;"><h5>Click here  to Apply<h5></a>
+											
+										  
+										  
+										  </div>
+									</div>
+									<div class="panel panel-info">
+									  <div class="panel-heading">Panel Header</div>
+									  <div class="panel-body">Panel Content</div>
+									</div>
+								</div>
+						
+						</div>
+						
+				</div>
+
+				</div>
+				
+				
+			</div>	
+			
+			{% endblock %}
+			
+			

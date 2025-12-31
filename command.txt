@@ -1,0 +1,20 @@
+python -m venv env
+.\env\Scripts\activate
+.\env\Scripts\deactivate
+
+pip freeze > requirements.txt
+pip install -r requirements.txt
+
+for different python version installed in diff location such as desktop python 3.10.............
+..................................................................................
+pip install virtualenv
+virtualenv venv --python=C:\Users\newwe\py10\python.exe
+
+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
+
+.....add venv to jupyter............
+activate venv then
+
+python -m pip install ipykernel  
+
+python -m  ipykernel install --user --name=pv  

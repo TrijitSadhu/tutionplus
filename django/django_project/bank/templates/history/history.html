@@ -1,0 +1,1829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+ 
+  
+  <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Arimo" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
+ <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+  <link href='//fonts.googleapis.com/css?family=Cormorant Garamond' rel='stylesheet'>
+  <link href="https://fonts.googleapis.com/css?family=Noto+Sans" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Quattrocento+Sans" rel="stylesheet">
+ <link href="https://fonts.googleapis.com/css?family=PT+Serif" rel="stylesheet">
+ 
+
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Droid+Serif" rel="stylesheet">
+  
+  
+  <link href="https://fonts.googleapis.com/css?family=Marck+Script" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Italianno" rel="stylesheet">
+
+ 
+<link href="https://fonts.googleapis.com/css?family=Akronim|Cabin+Sketch|Londrina+Sketch|Monoton|Sacramento" rel="stylesheet">
+ {% load staticfiles %}
+<link rel="stylesheet" href="{% static 'css/animate.min.css' %}" />
+<link rel="stylesheet" href="{% static 'css/math39.css' %}" />
+
+
+
+
+<style>
+  
+  .pagination > li > a, .pagination > li > span {
+    position: relative;
+    float: left;
+    padding: 6px 12px;
+    margin-left: -1px;
+    line-height: 1.42857;
+    color: #000e77;
+    text-decoration: none;
+    background-color: #FFF;
+    border: 1px solid #DDD;
+	font-size:15px;
+	font-weight:bold;
+	
+}
+
+
+
+
+
+
+.clockdiv{
+    font-family: sans-serif;
+    color: #fff;
+    display: inline-block;
+    font-weight: 100;
+    text-align: center;
+    font-size: 16px;
+}
+
+.clockdiv > div{
+    padding: 10px;
+    border-radius: 3px;
+    background: #00BF96;
+    display: inline-block;
+}
+
+.clockdiv div > span{
+    padding: 15px;
+    border-radius: 3px;
+    background: #00816A;
+    display: inline-block;
+}
+
+.smalltext{
+    padding-top: 5px;
+    font-size: 14px;
+}
+
+
+.btn-lg  {
+margin-right:8px;
+margin-bottom:8px;
+border-color:white;
+background-color:#0e247347
+}
+
+
+
+
+
+
+.circle-tile {
+    margin-bottom: 30px;
+
+}
+
+.circle-tile {
+    margin-bottom: 1px;
+    text-align: center;
+}
+
+.circle-tile-heading {
+    position: relative;
+    width: 67px;
+    height: 57px;
+    margin: 0 auto -40px;
+    border: 3px solid rgba(255,255,255,0.3);
+    border-radius: 100%;
+    color: #fff;
+    transition: all ease-in-out .3s;
+}
+
+.menu >ul>li>a {
+color:#000e77;
+font-family:'Lato', serif;
+font-size:14px;
+
+}
+
+
+
+.red {
+    background-color: #e74c3c;
+}
+
+
+
+/* -- Text Color Helper Classes */
+
+ 
+.text-red {
+    color: #e74c3c;
+}
+
+
+.text-faded {
+    color: rgba(255,255,255,0.7);
+}
+
+
+
+.circle-tile-heading .fa {
+    line-height: 47px;
+}
+
+.circle-tile-content {
+    padding-top: 35px;
+}
+.circle-tile-description {
+    text-transform: uppercase;
+}
+
+.text-faded {
+    color: rgba(255,255,255,0.7);
+}
+
+.circle-tile-number {
+    padding: 5px 0 15px;
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.circle-tile-footer {
+    display: block;
+    padding: 5px;
+    color: rgba(255,255,255,0.5);
+    background-color: rgba(0,0,0,0.1);
+    transition: all ease-in-out .3s;
+}
+
+.circle-tile-footer:hover {
+    text-decoration: none;
+    color: rgba(255,255,255,0.5);
+    background-color: rgba(0,0,0,0.2);
+}
+
+.card {
+  background: #f3f3f3 none repeat scroll 0% 0%;
+}
+
+
+/* BELL */
+@keyframes ring {
+	0%{transform:rotate(-15deg)}
+	2%{transform:rotate(15deg)}
+	4%{transform:rotate(-18deg)}
+	6%{transform:rotate(18deg)}
+	8%{transform:rotate(-22deg)}
+	10%{transform:rotate(22deg)}
+	12%{transform:rotate(-18deg)}
+	14%{transform:rotate(18deg)}
+	16%{transform:rotate(-12deg)}
+	18%{transform:rotate(12deg)}
+	20%,100%{transform:rotate(0deg)}
+}
+.faa-ring.animated,
+.faa-ring.animated-hover:hover,
+.faa-parent.animated-hover:hover > .faa-ring {
+	animation: ring 2s ease infinite;
+	transform-origin-x: 50%;
+	transform-origin-y: 0px;
+	transform-origin-z: initial;
+}
+.faa-ring.animated.faa-fast,
+.faa-ring.animated-hover.faa-fast:hover,
+.faa-parent.animated-hover:hover > .faa-ring.faa-fast {
+	animation: ring 1s ease infinite;
+}
+.faa-ring.animated.faa-slow,
+.faa-ring.animated-hover.faa-slow:hover,
+.faa-parent.animated-hover:hover > .faa-ring.faa-slow {
+	animation: ring 3s ease infinite;
+}
+
+
+
+
+.shape{    
+	border-style: solid; border-width: 0 70px 40px 0; float:right; height: 0px; width: 0px;
+	-ms-transform:rotate(360deg); /* IE 9 */
+	-o-transform: rotate(360deg);  /* Opera 10.5 */
+	-webkit-transform:rotate(360deg); /* Safari and Chrome */
+	transform:rotate(360deg);
+}
+.offer{
+	background:#fff; border:1px solid #ddd; box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); margin: 15px 0; overflow:hidden;
+}
+.offer:hover {
+    -webkit-transform: scale(1.1); 
+    -moz-transform: scale(1.1); 
+    -ms-transform: scale(1.1); 
+    -o-transform: scale(1.1); 
+    transform:rotate scale(1.1); 
+    -webkit-transition: all 0.4s ease-in-out; 
+-moz-transition: all 0.4s ease-in-out; 
+-o-transition: all 0.4s ease-in-out;
+transition: all 0.4s ease-in-out;
+    }
+.shape {
+	border-color: rgba(255,255,255,0) #d9534f rgba(255,255,255,0) rgba(255,255,255,0);
+}
+.offer-radius{
+	border-radius:7px;
+}
+.offer-danger {	border-color: #d9534f; }
+.offer-danger .shape{
+	border-color: transparent #d9534f transparent transparent;
+}
+.offer-success {	border-color: #5cb85c; }
+.offer-success .shape{
+	border-color: transparent #5cb85c transparent transparent;
+}
+.offer-default {	border-color: #999999; }
+.offer-default .shape{
+	border-color: transparent #999999 transparent transparent;
+}
+.offer-primary {	border-color: #428bca; }
+.offer-primary .shape{
+	border-color: transparent #428bca transparent transparent;
+}
+.offer-info {	border-color: #5bc0de; }
+.offer-info .shape{
+	border-color: transparent #5bc0de transparent transparent;
+}
+.offer-warning {	border-color: #f0ad4e; }
+.offer-warning .shape{
+	border-color: transparent #f0ad4e transparent transparent;
+}
+
+.shape-text{
+	color:#fff; font-size:12px; font-weight:bold; position:relative; right:-40px; top:2px; white-space: nowrap;
+	-ms-transform:rotate(30deg); /* IE 9 */
+	-o-transform: rotate(360deg);  /* Opera 10.5 */
+	-webkit-transform:rotate(30deg); /* Safari and Chrome */
+	transform:rotate(30deg);
+}	
+.offer-content{
+	padding:0 20px 10px;
+}
+@media (min-width: 487px) {
+  .container {
+    max-width: 750px;
+  }
+  .col-sm-6 {
+    width: 50%;
+  }
+}
+@media (min-width: 900px) {
+  .container {
+    max-width: 970px;
+  }
+  .col-md-4 {
+    width: 45.333333%;
+  }
+}
+
+@media (min-width: 1200px) {
+  .container {
+    max-width: 1170px;
+  }
+  .col-lg-3 {
+    width: 25%;
+  }
+  }
+}
+
+
+
+
+.menu >ul>li>a {
+color:#000e77;
+font-family:'Lato', serif;
+}
+
+
+
+
+
+
+
+.panel.panel-pink {
+  border-radius: 0px;
+  box-shadow: 0px 0px 10px #888;
+  border-color: #EF5160;
+}
+.panel.panel-pink .panel-heading {
+  border-radius: 0px;
+  color: #FFF;
+  background-color: #EF5160;
+}
+.panel.panel-pink .panel-body {
+  background-color: #F2F2F2;
+  color: #4D4D4D;
+}
+
+
+
+
+  </style>
+</head>
+<body style="background-color:#f3f3f3">
+
+ <nav class="navbar navbar-default" style="border-top: 4px solid #00ff9b;background-color:#ffffff">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    <b> <a class="navbar-brand" href="#" style="cursive; color:#000000">McqGk</a> </b>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav" style="text-align:center">
+      
+         <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Mathematics<i class="fa fa-angle-double-down	
+" style="font-size:20px;color:red;display:inline-block"></i></a>
+          <ul class="dropdown-menu">
+            <li><a href="#"> Multiplication Table</a></li>
+            <li><a href="#">Series</a></li>
+            
+            <li><a href="#">Days n Work</a></li>
+			 <li><a href="/math/profit_n_loss/1/">Profit n Loss</a></li>
+			  <li><a href="#">Boat & Stream</a></li>
+			 
+          </ul>
+        </li>
+
+
+
+    <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">English<i class="fa fa-angle-double-down	
+" style="font-size:20px;color:red;display:inline-block"></i></a>
+          <ul class="dropdown-menu">
+            <li><a href="/error_correction/noun/1/">Error Correction</a></li>
+             <li><a href="/error_correction/noun/1/">Noune</a></li>
+            
+              <li><a href="/closetest/close/1/">Close Test</a></li>
+			 <li><a href="#">Fill in the blank</a></li>
+			  <li><a href="/english/word/page/1">Vocabulary</a></li>
+			  <li><a href="#">Editorial</a></li>
+          </ul>
+        </li>
+		
+		    <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Reasoning<i class="fa fa-angle-double-down	
+" style="font-size:20px;color:red;display:inline-block"></i></a>
+      						<ul class="dropdown-menu">
+																		
+																		  <li><a href="#">Blood Relation</a></li>
+																		 
+																		  <li><a href="#">Ranking and Direction</a></li>
+
+																	
+																		  <li ><a href="#">Coading Decoding</a></li>
+																		  
+																		  <li ><a href="#">Puzzle</a></li>
+																		  
+																		  <li><a href="#">Input Output</a></li>
+																		  
+																		  
+																		 
+																		  <li><a href="/reasoning/seating_arrangment/1/">seating_arrangment</a></li>
+																		</ul>
+        </li>
+		
+		    <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Current Affairs<i class="fa fa-angle-double-down	
+" style="font-size:20px;color:red;display:inline-block"></i></span></a>
+          			<ul class="dropdown-menu">
+																		
+																		  <li><a href="/ca/1/">Daily Current Today</a></li>
+																		
+																		  <li><a href="#">Static Gk</a></li>
+
+																		
+																		  <li class="waves-effect"><a href="#">Banking Awerness</a></li>
+																		  
+																		</ul>
+        </li>
+		
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+<li><a href="#"><span class="glyphicon glyphicon-th" aria-hidden="true"></span> Dashboard</a></li>
+     			
+																			<li class="dropdown">
+																					
+																							
+																											{% if user.is_authenticated %}
+																											<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ user.username }} <b class="caret"></b></a>
+																											
+														
+																															<ul class="dropdown-menu">
+																															<li><a href="/logout" >Logout</a></li>
+																															 <li role="separator" class="divider"></li> 
+																															<li><a href="/dashboard/{{ user.username }}"> Dash Board</a></li>
+																															
+																															
+																															</ul>
+																															
+																														{% else %}
+																														<a href="" data-toggle="modal" data-target="#myModal">
+																														<span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>&nbsp;
+																														   Log In<b class="caret"></b>
+																														   </a>
+																														
+																														{% endif %} 
+																														
+																			</li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+<style><style>
+html, body {
+  font-family: 'Lato', serif;  
+}
+
+.navbar-default {
+  font-size: 12px;
+  font-weight: 600;
+  background-color: #29487d;
+  padding:0px;
+  border: 0px;
+  border-radius: 0px;
+  /* box-shadow:inset 0 -1px 2px rgba(0,0,0,.24);*/
+}
+
+.navbar-default .navbar-nav>li>a {
+  color: #560bcb;
+  display:inline-flex;
+}
+
+.navbar-default .navbar-nav>li>a:hover {
+  color: #cbf0ff;
+}
+
+.navbar-default .navbar-brand {
+  color: #002433;
+}
+
+.navbar-default .navbar-brand:hover {
+  color: #ffffff;
+  text-shadow: 1px -1px 8px #b3e9ff;
+}
+
+.navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:hover, .navbar-default .navbar-nav>.open>a:focus {
+  background-color: #004059;
+  color: white;
+}
+
+.navbar-default .navbar-toggle {
+  border: none;
+}
+
+.navbar-default .navbar-collapse, .navbar-default .navbar-form {
+  border: none;
+}
+
+.navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus {
+  background-color: #002433;
+}
+
+.navbar-default .navbar-toggle .icon-bar {
+  background-color: #ffffff;
+}
+
+.dropdown-menu {
+  background-color: #004059;
+  color: white;
+  border: 0px;
+  border-radius: 2px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.dropdown-menu>li>a {
+  background-color: #004059;
+  color: white;
+}
+
+.dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus {
+  background-color: #004059;
+  color:white;
+}
+
+.dropdown-menu .divider {
+    height: 1px;
+    margin: 9px 0;
+    overflow: hidden;
+    background-color: #003246;
+}
+
+.navbar-default .navbar-nav .open .dropdown-menu>li>a {
+    color: #ffffff;
+}
+
+@media (max-width: 767px) { 
+  .dropdown-menu>li>a {
+    background-color: #006b96;
+    color: #ffffff;
+  }
+  .dropdown-menu>li>a:hover {
+    color: #ffffff;
+  }
+  
+  .navbar-default .navbar-nav .open .dropdown-menu>li>a:focus, .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover {
+    color: #ffffff;
+    background-color: transparent;
+  }
+  
+  .dropdown-menu .divider {
+    height: 1px;
+    margin: 9px 0;
+    overflow: hidden;
+    background-color: #005577;
+  }
+} /* END Media Query */
+
+
+</style>
+
+
+
+</style>
+
+			
+			
+			
+			
+																												<div id="myModal" class="modal fade mod" role="dialog">
+																									  <div class="modal-dialog ">
+
+																										<!-- Modal content-->
+																										<div class="modal-content"style="text-align:center">
+																										<div class="modal-header modal-header-danger">
+																										  <div class="modal-header">
+																											<button type="button" class="close" data-dismiss="modal">&times;</button>
+																											<h1 class="modal-title" style="color:#fff"><i class="glyphicon glyphicon-thumbs-up"></i>Sign In/Signup</h1>
+																											</div>
+																										  </div>
+																										  <div class="modal-body"style="text-align:center">
+																																																																																					
+																																																																																					
+																																																																																					<ul class="nav nav-tabs" style="text-align:center">
+																																<li class="active" style="text-align:center"><a data-toggle="tab" href="#home">Sign In</a></li>
+																																<li style="text-align:center"><a data-toggle="tab" href="#menu1">Registrations In</a></li>
+																																
+																															
+																															  </ul>
+
+																															  <div class="tab-content">
+																																<div id="home" class="tab-pane fade in active">
+																																  <h3>Sign In</h3>
+																																																																																																																																														{% block content %}
+																																																																																																																																														
+																																			  <form method="post" id="login" action="" >
+																																				
+																																			
+																																			   {% csrf_token %}
+																																				{{ login.as_p }}
+																																				<div id="below"></div>
+																																				<button class="btn btn-success "  style="color:green"type="submit">Sign In</button>
+																																			  </form>
+																																				
+
+
+																																</div>
+																																<div id="menu1" class="tab-pane fade">
+																																  <h3>Sign up</h3>
+																																																																																																  
+																																			  <form method="post" id="signup">
+																																				
+																																			  
+																																			   {% csrf_token %}
+																																				{{ form.as_p}}
+																																				<button type="submit">Sign up</button></div>
+																																			  </form>
+																																			{% endblock %}
+																																
+																															
+																																
+
+
+																												</div>
+																										  </div>
+																										  <div class="modal-footer">
+																											<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+																										  </div>
+																										</div>
+
+																									  </div>
+																									</div>
+			
+			
+			
+			
+			
+			
+			
+			
+	<!--   image start -->	
+	<section class="img-sec" style="height:200px;text-align:center;">
+<b href="#" style="color:white;text-decoration:none;font-size:50px;font-family: 'Sacramento', cursive;">	McqGk</b>
+		</section>
+		
+					 <!--   image end -->
+					
+					 
+				<!-- belw slide -->
+				
+				
+			<div class="container">
+			
+				<div class="row" >
+					<div class="panel card" >
+					
+					
+
+					
+						<div class="col-md-3  nopadding">
+					<h3 class="card"style="text-align:center;    border: 1px solid #dddddd; color: white;background-color:#5b4282;font-size: 19px;padding-bottom:10px;padding-top:10px;margin-top:14px;margin-bottom:7px;background-image: url(static/css/p1.png);">Current Affairs Category  <i class="fa fa-codepen	
+" style="font-size:19px;color:white"></i> </h3> 
+
+							<div class="panel nopadding">
+						<div class="rana" style="background-color:#f3f3f3">
+
+							</div>
+								<div class="panel-body nopadding">
+									<div class="menu">
+																										 <ul class="nav nav-pills nav-stacked">
+              
+                <li><a href="/current/Science_Techonlogy/1"><b><i class="glyphicon glyphicon-hand-right"></i>&nbsp Science And Techonlogy </b></a></li>
+				<hr style="border-color:#85ff85;"></hr>
+                <li><a href="/current/National/1"><b><i class="glyphicon glyphicon-hand-right"></i> &nbsp National</b></a></li>
+                <hr style="border-color:#85ff85"></hr>
+                <li><a href="/current/State/1" ><b><i class="glyphicon glyphicon-hand-right"></i> &nbsp State</b></a></li>
+				<hr style="border-color:#85ff85"></hr>
+                <li><a href="/current/International/1"><b><i class="glyphicon glyphicon-hand-right"></i> &nbsp International</b></a></li>
+				<hr style="border-color:#85ff85"></hr>
+                <li><a href="/current/Business_Economy_Banking/1"><b><i class="glyphicon glyphicon-hand-right"></i> &nbsp Business Economy Banking</b></a></li>
+				<hr style="border-color:#85ff85"></hr>
+                <li><a href="/current/Environment/1"><b><i class="glyphicon glyphicon-hand-right"></i> &nbsp Environment</b></a></li>
+				<hr style="border-color:#85ff85"></hr>
+                <li><a href="/current/Defence/1"><b><i class="glyphicon glyphicon-hand-right"></i> &nbsp Defence</b></a></li>
+				<hr style="border-color:#85ff85"></hr>
+                <li><a href="/current/Persons_in_News/1 in news"><b><i class="glyphicon glyphicon-hand-right"></i> &nbsp Persons in News</b></a></li>
+				<hr style="border-color:#85ff85"></hr>
+                <li><a href="/current/Awards_Honours/1 "><b><i class="glyphicon glyphicon-hand-right"></i> &nbsp Awards Honours</b></a></li>
+		        <hr style="border-color:#85ff85"></hr>
+				 <li><a href="/current/Sports/1"><b><i class="glyphicon glyphicon-hand-right"></i> &nbsp Sports</b></a></li>
+				 <hr style="border-color:#85ff85"></hr>
+				  <li><a href="/current/Art_Culture/1"><b><i class="glyphicon glyphicon-hand-right"></i> &nbsp art culture</b></a></li>
+				  <hr style="border-color:#85ff85"></hr>
+				  <li><a href="/current/Government_Schemes/1"><b><i class="glyphicon glyphicon-hand-right"></i> &nbsp Government Schemes</b></a></li>
+            </ul>
+			</div>
+										</div>
+									</div>	
+							
+							
+					
+						
+						
+						
+						
+						<div class="panel ">
+							<div class="panel-heading" style="background-color:#cc0000;"><h3 style="color:#ffffff;padding:0px"><u>Current Affairs Category</u><h3></div>
+								<div class="panel-body nopadding">
+																			  <ul class="list-group">
+																			  
+																			  
+													<a href="/current/Science_Techonlogy/1"><li class="list-group-item">	8 jun 2017</li></a>
+													{% for list_day in list_day %}
+													<li class="list-group-item">	<a  href="/english/word/{{list_day.day|date:'Y-m-d'}}/1"> {{list_day.day}}</a> </li>
+													
+													{% endfor  %}
+													<li class="list-group-item">	<a style="font-size:16px;"href="/current/State/1">6 jun 2017</a> </li>
+													<li class="list-group-item">	<a style="font-size:16px;" href="/current/International/1">5 jun 2017</a> </li>
+													<li class="list-group-item">	<a  href="/current/Business_Economy_Banking/1"><b>5 jun 2017</b></a></li>
+													<li class="list-group-item">	<a lass="pp" href="/current/Environment/1">4 jun 2017</a>  </li>
+													
+													
+												  </ul>
+										</div>
+									</div>	
+						</div>
+						
+						
+						
+						
+						<div class="col-md-7 " style=" border: 1px solid #dddddd; background-color:white;padding-top:0px;margin-top:15px;">
+						
+												<h3 class="card"style="text-align:center;    border: 1px solid #dddddd; color: white;background-color:#0199ec;font-size:21px;padding-top:0px;margin-top:0px;margin-bottom:7px">History for compitative exam </h3> 
+						
+					<div class="sannn" style="text-align:center">
+												<div class="row" >
+													
+
+							</div>	
+					</div>
+					
+			<h2 style="color:black"><b>Ancient History of Indian </b></h2>
+          
+  <table class="table table-bordered" style="background-color:white">
+    <thead style="background-color:blue">
+      <tr style="color:white">
+        <th><b>Sl No</b></th>
+        <th><b>Topic</b></th>
+        <th><b>Chose</b></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><b>01</b></td>
+		<td><b>Important Poets in Ancient Indian History</b></td>
+         <td style="text-align:center">   <button type="button" class="btn btn-primary">Read</button>
+<button type="button" class="btn btn-success">Exercise</button></td>
+      
+      
+      </tr>
+	  <tr>
+        <td><b>02</b></td>
+		<td><b style="color:#1263a9cf">Indus Valley Civilization</b></td>
+         <td style="text-align:center">   <a href="/gktoday/history/ancient/indus-valley-civilization/1"type="button" class="btn btn-primary">Read</a>
+<button type="button" class="btn btn-success">Exercise</button></td>
+      
+      
+      </tr>
+	  <tr>
+        <td><b>03</b></td>
+		<td><b style="color:#1263a9cf">Vedic Civilization</b></td>
+         <td style="text-align:center">   <button type="button" class="btn btn-primary">Read</button>
+<button type="button" class="btn btn-success">Exercise</button></td>
+      
+      
+      </tr>
+	  <tr>
+        <td><b>04</b></td>
+		<td><b style="color:#1263a9cf">The Sixteen Mahajanpadas</b></td>
+         <td style="text-align:center">   <button type="button" class="btn btn-primary">Read</button>
+<button type="button" class="btn btn-success">Exercise</button></td>
+      
+      
+      </tr>
+	  <tr>
+        <td><b>05</b></td>
+		<td><b>Pre Mauryan Dynasties</b></td>
+         <td style="text-align:center">   <button type="button" class="btn btn-primary">Read</button>
+<button type="button" class="btn btn-success">Exercise</button></td>
+      
+      
+      </tr>
+	  <tr>
+        <td><b>06</b></td>
+		<td><b>Mauryan Empire</b></td>
+         <td style="text-align:center">   <button type="button" class="btn btn-primary">Read</button>
+<button type="button" class="btn btn-success">Exercise</button></td>
+      
+      
+      </tr>
+	  <tr>
+        <td><b>07</b></td>
+		<td><b>The Mauryan Rulers</b></td>
+         <td style="text-align:center">   <button type="button" class="btn btn-primary">Read</button>
+<button type="button" class="btn btn-success">Exercise</button></td>
+      
+      
+      </tr>
+	  <tr>
+        <td><b>08</b></td>
+		<td><b>Ashoka’s Edicts and Inscriptions</b></td>
+         <td style="text-align:center">   <button type="button" class="btn btn-primary">Read</button>
+<button type="button" class="btn btn-success">Exercise</button></td>
+      
+      
+      </tr>
+	  <tr>
+        <td><b>09</b></td>
+		<td><b>Buddhism</b></td>
+         <td style="text-align:center">   <button type="button" class="btn btn-primary">Read</button>
+<button type="button" class="btn btn-success">Exercise</button></td>
+      
+      
+      </tr><tr>
+        <td><b>10</b></td>
+		<td><b>Hinayana And Mahayana Buddhism</b></td>
+         <td style="text-align:center">   <button type="button" class="btn btn-primary">Read</button>
+<button type="button" class="btn btn-success">Exercise</button></td>
+      
+      
+      </tr>
+	  <tr>
+        <td><b>11</b></td>
+		<td><b>Jainism in Indian History</b></td>
+         <td style="text-align:center">   <button type="button" class="btn btn-primary">Read</button>
+<button type="button" class="btn btn-success">Exercise</button></td>
+      
+      
+      </tr><tr>
+        <td><b>12</b></td>
+		<td><b>Post Mauryan India</b></td>
+         <td style="text-align:center">   <button type="button" class="btn btn-primary">Read</button>
+<button type="button" class="btn btn-success">Exercise</button></td>
+      
+      
+      </tr><tr>
+        <td><b>13</b></td>
+		<td><b>Post Mauryan Society and Trade</b></td>
+         <td style="text-align:center">   <button type="button" class="btn btn-primary">Read</button>
+<button type="button" class="btn btn-success">Exercise</button></td>
+      
+      
+      </tr><tr>
+        <td><b>14</b></td>
+		<td><b>Post Mauryan Developments in Culture</b></td>
+         <td style="text-align:center">   <button type="button" class="btn btn-primary">Read</button>
+<button type="button" class="btn btn-success">Exercise</button></td>
+      
+      
+      </tr><tr>
+        <td><b>15</b></td>
+		<td><b>The Kushana Empire</b></td>
+         <td style="text-align:center">   <button type="button" class="btn btn-primary">Read</button>
+<button type="button" class="btn btn-success">Exercise</button></td>
+      
+      
+      </tr>
+	  <tr>
+        <td><b>16</b></td>
+		<td><b>Gupta Empire / Dynasty</b></td>
+         <td style="text-align:center">   <button type="button" class="btn btn-primary">Read</button>
+<button type="button" class="btn btn-success">Exercise</button></td>
+      
+      
+      </tr>
+	  <tr>
+        <td><b>17</b></td>
+		<td><b>Developments in Gupta Period</b></td>
+         <td style="text-align:center">   <button type="button" class="btn btn-primary">Read</button>
+<button type="button" class="btn btn-success">Exercise</button></td>
+      
+      
+      </tr>
+	  <tr>
+        <td><b>18</b></td>
+		<td><b>Sangam Age</b></td>
+         <td style="text-align:center">   <button type="button" class="btn btn-primary">Read</button>
+<button type="button" class="btn btn-success">Exercise</button></td>
+      
+      
+      </tr><tr>
+        <td><b>19</b></td>
+		<td><b>Six Schools of Indian Philosophy</b></td>
+         <td style="text-align:center">   <button type="button" class="btn btn-primary">Read</button>
+<button type="button" class="btn btn-success">Exercise</button></td>
+      
+      
+      </tr><tr>
+        <td><b>20</b></td>
+		<td><b>Harshavardhana’s Reign</b></td>
+         <td style="text-align:center">   <button type="button" class="btn btn-primary">Read</button>
+<button type="button" class="btn btn-success">Exercise</button></td>
+      
+      
+      </tr><tr>
+        <td><b>21</b></td>
+		<td><b>Ancient Indian Literature</b></td>
+         <td style="text-align:center">   <button type="button" class="btn btn-primary">Read</button>
+<button type="button" class="btn btn-success">Exercise</button></td>
+      
+      
+      </tr><tr>
+        <td><b>22</b></td>
+		<td><b>Early Medieval Period in India</b></td>
+         <td style="text-align:center">   <button type="button" class="btn btn-primary">Read</button>
+<button type="button" class="btn btn-success">Exercise</button></td>
+      
+      
+      </tr>
+	  <tr>
+        <td><b>23</b></td>
+		<td><b>Pallava Dynasty</b></td>
+         <td style="text-align:center">   <button type="button" class="btn btn-primary">Read</button>
+<button type="button" class="btn btn-success">Exercise</button></td>
+      
+      
+      </tr>
+	  <tr>
+        <td><b>24</b></td>
+		<td><b>Chalukya Dynasty</b></td>
+         <td style="text-align:center">   <button type="button" class="btn btn-primary">Read</button>
+<button type="button" class="btn btn-success">Exercise</button></td>
+      
+      
+      </tr>
+	  <tr>
+        <td><b>25</b></td>
+		<td><b>The Rashtrakuta Dynasty</b></td>
+         <td style="text-align:center">   <button type="button" class="btn btn-primary">Read</button>
+<button type="button" class="btn btn-success">Exercise</button></td>
+      
+      
+      </tr>
+	  <tr>
+        <td><b>26</b></td>
+		<td><b>The Chola Empire</b></td>
+         <td style="text-align:center">   <button type="button" class="btn btn-primary">Read</button>
+<button type="button" class="btn btn-success">Exercise</button></td>
+      
+      
+      </tr>
+	  
+        
+	
+    </tbody>
+  </table>
+  
+  
+  
+  			<h2 style="color:black"><b>Medieval History of Indian</b></h2>
+          
+  <table class="table table-bordered" style="background-color:white">
+    <thead style="background-color:blue">
+      <tr style="color:white">
+        <th><b>Sl No</b></th>
+        <th><b>Topic</b></th>
+        <th><b>Chose</b></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><b>01</b></td>
+		<td><b>Delhi Sultanate</b></td>
+         <td style="text-align:center">   <button type="button" class="btn btn-primary">Read</button>
+<button type="button" class="btn btn-success">Exercise</button></td>
+      
+      
+      </tr>
+	  <tr>
+        <td><b>02</b></td>
+		<td><b>Vijayanagar Empire</b></td>
+         <td style="text-align:center">   <button type="button" class="btn btn-primary">Read</button>
+<button type="button" class="btn btn-success">Exercise</button></td>
+      
+      
+      </tr>
+	  <tr>
+        <td><b>03</b></td>
+		<td><b>Mughal Empire</b></td>
+         <td style="text-align:center">   <button type="button" class="btn btn-primary">Read</button>
+<button type="button" class="btn btn-success">Exercise</button></td>
+      
+      
+      </tr>
+	  <tr>
+        <td><b>04</b></td>
+		<td><b>Maratha Empire</b></td>
+         <td style="text-align:center">   <button type="button" class="btn btn-primary">Read</button>
+<button type="button" class="btn btn-success">Exercise</button></td>
+      
+      
+      </tr>
+	  <tr>
+        <td><b>05</b></td>
+		<td><b>Europeans in India</b></td>
+         <td style="text-align:center">   <button type="button" class="btn btn-primary">Read</button>
+<button type="button" class="btn btn-success">Exercise</button></td>
+      
+      
+      </tr>
+	 
+        
+	
+    </tbody>
+  </table>
+  
+  
+  	<h2 style="color:black"><b>Modern History of Indian</b></h2>
+          
+  <table class="table table-bordered" style="background-color:white">
+    <thead style="background-color:blue">
+      <tr style="color:white">
+        <th><b>Sl No</b></th>
+        <th><b>Topic</b></th>
+        <th><b>Chose</b></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><b>01</b></td>
+		<td><b>Peasant Movements in India</b></td>
+         <td style="text-align:center">   <button type="button" class="btn btn-primary">Read</button>
+<button type="button" class="btn btn-success">Exercise</button></td>
+      
+      
+      </tr>
+	  <tr>
+        <td><b>02</b></td>
+		<td><b>East India Company Rule in India</b></td>
+         <td style="text-align:center">   <button type="button" class="btn btn-primary">Read</button>
+<button type="button" class="btn btn-success">Exercise</button></td>
+      
+      
+      </tr>
+	  <tr>
+        <td><b>03</b></td>
+		<td><b>Anglo Sikh Wars</b></td>
+         <td style="text-align:center">   <button type="button" class="btn btn-primary">Read</button>
+<button type="button" class="btn btn-success">Exercise</button></td>
+      
+      
+      </tr>
+	  <tr>
+        <td><b>04</b></td>
+		<td><b>Anglo Mysore Wars</b></td>
+         <td style="text-align:center">   <button type="button" class="btn btn-primary">Read</button>
+<button type="button" class="btn btn-success">Exercise</button></td>
+      
+      
+      </tr>
+	  <tr>
+        <td><b>05</b></td>
+		<td><b>Anglo Maratha Wars</b></td>
+         <td style="text-align:center">   <button type="button" class="btn btn-primary">Read</button>
+<button type="button" class="btn btn-success">Exercise</button></td>
+      
+      
+      </tr>
+	  <tr>
+        <td><b>06</b></td>
+		<td><b>Economic impact of British Rule in India</b></td>
+         <td style="text-align:center">   <button type="button" class="btn btn-primary">Read</button>
+<button type="button" class="btn btn-success">Exercise</button></td>
+      
+      
+      </tr>
+	  <tr>
+        <td><b>07</b></td>
+		<td><b>Land Revenue System of British in India</b></td>
+         <td style="text-align:center">   <button type="button" class="btn btn-primary">Read</button>
+<button type="button" class="btn btn-success">Exercise</button></td>
+      
+  
+        
+	
+    </tbody>
+  </table>
+						
+							
+									{% for math in math %}
+									
+										<div class="panel nonpadding ">
+												
+												<div class="panel-heading card" style="background-color:white">
+									<!--				<h4 ><strong><p>IMPORTANT FACTS</p>
+
+																<p><b>Cost Price:</b></p>
+
+																The price, at which an article is purchased, is called its cost price, abbreviated as C.P.
+
+																<p><b><h4>Cost Price:</h4></b></p>
+
+																<p>The price, at which an article is sold, is called its selling prices, abbreviated as S.P.<p>
+
+																<p><b>Cost Price:</b></p>
+
+																<p>If S.P. is greater than C.P., the seller is said to have a profit or gain.</p>
+
+																<p><b>Cost Price:</b></p>
+																
+																
+
+																Profit and Loss: Solved Examples<p class="bg-warning"> Question 1: </p>  
+																
+																
+																<p  style="Arial,Helvetica Neue,Helvetica,sans-serif;font-size:20px;font-color:black;">An article is purchased for Rs. 450 and sold for Rs. 500. Find the gain percent.
+
+																Solution:
+
+																Gain = SP – CP = 500 – 450 = 50.
+
+																Gain% = (50/450)*100 = 100/9 %
+
+																		</p></strong></h4> -->
+																		
+																		<h4>Profit and Loss: Solved Examples<p class="bg-info"> <b><i>Question {{forloop.counter}}: </i></b></p>  </h4>
+																		<div  style="font-family:'Roboto Condensed', sans-serif;font-size:17px;color:#000;display:inline;line-height: 1.42857;">
+																	{% autoescape off %}	{{math.question}} {% endautoescape %} </div>
+																{% if math.use_image == 0 %}
+														
+															
+															
+																
+																
+																
+																{% endif %}
+																
+																<!--<p  style="Arial,Helvetica Neue,Helvetica,sans-serif;font-size:20px;font-color:black;">An rana article is purchased for Rs. 450 and sold for Rs. 500. Find the gain percent.
+
+																Solution:
+
+																Gain = SP – CP = 500 – 450 = 50.
+
+																Gain% = (50/450)*100 = 100/9 %
+
+																		</p>-->
+												</div>
+																													
+														
+														
+														<hr></hr>
+													<div class="panel-body">
+														<div id="clockdiv{{forloop.counter}}" class="clockdiv"style="text-align:center;margin-right:0;float:right;display:none">
+  
+															 <!--
+															  <div>
+																<span class="minutes"id="minutes"></span>
+																<div class="smalltext">Minutes</div>
+															  </div> 
+															  -->
+															  <div>
+																<span class="seconds{{forloop.counter}}"id="seconds{{forloop.counter}}"></span>
+																<div class="smalltext" id="smalltext{{forloop.counter}}">Seconds</div>
+															  </div>
+															</div>
+																		
+																		<button id="time{{forloop.counter}}" onClick="timer({{forloop.counter}},{{math.time}},{{forloop.counter}}1,{{forloop.counter}}2,{{forloop.counter}}3,{{forloop.counter}}4,{{forloop.counter}}5,{{math.ans}},solution{{forloop.counter}},{{forloop.counter}})"
+
+																							
+																						style="text-align:center; color: #fff;background-color:#C00;margin-right:0;float:right;display:inline-block;"  class="btn  btn-sm"
+																						
+																						
+																						><i class="fa fa-clock-o" aria-hidden="true"></i>  Timer {{math.time}} Sec</button> 
+																		
+																		
+																		<h4 style="text-align:left ;color:#F06292"><b><u>Options:</u></b></h4>
+																		
+																	
+
+
+
+																							 
+																				<div class="radio radio-primary " >
+
+																		
+																 <form >
+														<!--
+																				<input type="radio" name="chooseone" value="HTML"><label for="HTML"> HTML</label>
+																				<ul style="list-style-type: none;">
+																				<li><input type="radio" name="chooseone" value="HTML"><label for="HTML"> HTML</label></li>
+																				<li> <input type="radio" name="radio1" id="radio1" value="option1">
+																						<label for="radio1">
+																								Small
+																							</label></li>
+																						<li><input type="radio" name="chooseone" value="HTML"><label for="HTML"> HTML</label></li>
+																				<li><input type="radio" name="chooseone" value="HTML"><label for="HTML"> HTML</label></li>
+																				<li><Strong>550</strong></li>
+																			
+																				</ul> -->
+																																				<div style="display: block"> 
+																																		 
+																					<input type="radio" name="radio1" id="{{forloop.counter}}1" value="option1">
+																					<label for="{{forloop.counter}}1">
+																						{{math.a}}
+																					</label>
+																					<div id="{{forloop.counter}}w1"style="display:none">
+																					<img src="{% static "/c.png" %}" class="img-rounded"> 
+																					</div>
+																					<div id="{{forloop.counter}}r1"style="display:none">
+																					<img src="{% static "/d.png" %}" class="img-rounded"> 
+																					</div>
+																					</div>
+																					
+																					
+																					<div style="display: block"> 
+																					<input type="radio" name="radio1" id="{{forloop.counter}}2" value="option1">
+																					 
+																					<label for="{{forloop.counter}}2">
+																						{{math.b}}
+																					</label>
+																					<div id="{{forloop.counter}}w2"style="text-align:center;display:none">
+																					<img src="{% static "/c.png" %}" class="img-rounded"> 
+																					</div>
+																					<div id="{{forloop.counter}}r2"style="text-align:center;display:none">
+																					<img src="{% static "/d1.png" %}" class="img-rounded"> 
+																					</div>
+																					
+																				</div>
+																				
+																				
+																				<div style="display: block"> 
+																																		 
+																					<input type="radio" name="radio1" id="{{forloop.counter}}3" value="option1">
+																					<label for="{{forloop.counter}}3">
+																						{{math.c}}
+																					</label>
+																				<div id="{{forloop.counter}}w3"style="text-align:center;display:none">
+																					<img src="{% static "/c.png" %}" class="img-rounded"> 
+																					</div>
+																					<div id="{{forloop.counter}}r3"style="text-align:center;display:none">
+																					<img src="{% static "/d1.png" %}" class="img-rounded"> 
+																					</div>	
+																				</div>
+																					
+																					
+																					<div style="display: block"> 
+																					
+																					 <input type="radio" name="radio1" id="{{forloop.counter}}4" value="option1">
+																					<label for="{{forloop.counter}}4">
+																						{{math.d}}
+																					</label>
+																					<div id="{{forloop.counter}}w4"style="text-align:center;display:none">
+																					<img src="{% static "/c.png" %}" class="img-rounded"> 
+																					</div>
+																					<div id="{{forloop.counter}}r4"style="text-align:center;display:none">
+																					<img src="{% static "/d1.png" %}" class="img-rounded"> 
+																					</div>
+																					
+																				</div>
+																				
+																				<div style="display: block"> 
+																					
+																					 <input type="radio" name="radio1" id="{{forloop.counter}}5" value="option1">
+																					<label for="{{forloop.counter}}5" >
+																						{{math.e}}
+																					</label>
+																					
+																					
+																					<div id="{{forloop.counter}}w5"style="text-align:center;display:none">
+																					<img src="{% static "/c.png" %}" class="img-rounded"> 
+																					</div>
+																					<div id="{{forloop.counter}}r5"style="display:none;">
+																					<img src="{% static "/d.png" %}" class="img-rounded" > 
+																					</div>
+																					
+																					
+																				</div>
+																				
+																				
+																					</div>
+																					
+																			</form>
+																			
+																			<button 
+																		id="sol{{forloop.counter}}"onclick=
+				"op({{forloop.counter}}1,{{forloop.counter}}2,{{forloop.counter}}3,{{forloop.counter}}4,{{forloop.counter}}5,{{math.ans}},solution{{forloop.counter}},{{forloop.counter}})"
+																							
+																						style="text-align:center; color: #fff;background-color:#4D90FE;margin-right:0;float:left;display:inline-block;margin-top:16px" type="submit" class="btn  btn-sm"
+																						
+																						
+																						> See Solutoins</button> 
+																						
+																						
+																		
+																						
+													</div>			
+																		
+													
+													
+													
+													
+													
+													<div id="solution{{forloop.counter}}"style="text-align:center;display:none">
+													 
+															<p  id="sol_upper{{forloop.counter}}"class="bg-info" style="text-align:center;"> <b>Correct<img src="{% static "/thh.png" %}" class="img-rounded" ></b> </p> 
+															<p> <b>  Answer :</b></p> 
+															<!-- <p class="bg-danger" style="display:inline"> Wrong
+																					<img src="{% static "/c.png" %}" class="img-rounded" id="{{forloop.counter}}w"style="display:none"> 
+																					
+																					
+																					<img src="{% static "/d.png" %}" class="img-rounded" id="{{forloop.counter}}r"style="display:none;"> 
+																					 </p><br></br> -->
+															
+																		<div  style="font-family:'arial', sans-serif;font-size:17px;color:#000;display:inline;line-height: 1.42857;">
+																	{% autoescape off %}	{{math.solution}} {% endautoescape %} </div>
+																
+																	
+																		</div>
+													</div>
+													
+													{% endfor %}
+													<!--end palel-->
+													
+													
+													
+													
+													
+													
+													
+													
+													
+														
+													
+													<!-- uuuuuuuuuuuuuuuuuuuuu-->
+														
+											
+
+										
+										
+										
+										
+														
+														
+														
+															
+
+														
+														<div class="row">
+							
+															<div class="col-md-2 ">
+															 <ul class="pager">
+															 {% if previous != 0 %}
+																			<li ><a href="/ca/{{previous}}"><span class="glyphicon glyphicon-chevron-left"></span>Prev</a></li>
+																{% else %}
+																		 <li ><a href="#">Previous</a></li>
+																				{% endif %}
+																		  </ul>
+															</div>
+																
+																<div class="col-md-8 " style="text-align:center">
+																<ul class="pagination pagination-lg" >
+																{% for pages in page %}
+																	 {% if pages == params %}
+												<li class="active"><a href="/ca/{{pages}}">{{pages}}</a></li>
+												
+												{% else %}
+												<li><a href="/ca/{{pages}}">{{pages}}</a></li>
+												{% endif %}
+												
+											{% endfor %}
+											
+												
+												
+											  </ul>
+																</div>
+																
+																<div class="col-md-2 ">
+																 <ul class="pager">
+																 {% if next != 0  %}
+																    <li ><a href="/ca/{{next}}">Next<span class="glyphicon glyphicon-chevron-right"></span></a></li>
+																	
+																	
+																	{% else %}
+																		 <li ><a href="#">Next</a></li>
+																				{% endif %}
+																		  </ul>
+																</div>
+														
+														</div>
+											
+												<div id="disqus_thread"style="padding:5px"></div>
+							<script>
+
+							/**
+							*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+							*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+							/*
+							var disqus_config = function () {
+							this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+							this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+							};
+							*/
+							(function() { // DON'T EDIT BELOW THIS LINE
+							var d = document, s = d.createElement('script');
+							s.src = 'https://getmyvideo-net.disqus.com/embed.js';
+							s.setAttribute('data-timestamp', +new Date());
+							(d.head || d.body).appendChild(s);
+							})();
+							</script>
+							<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>	
+																	
+																	
+																
+						
+						</div>
+											<div class="col-md-2 nopadding">
+					  <div class="circle-tile">
+                            <a href="#">
+                                <div class="circle-tile-heading red">
+                                    <i class="fa fa-fw fa-bell faa-ring animated" style="font-size:30px"></i></i>
+                                </div>
+                            </a>
+                            <div class="circle-tile-content red">
+                                
+                                <div class="circle-tile-number text-faded" style="color:white">
+                                   LATEST GOVT JOB
+                                    <span id="sparklineC"></span>
+                                </div>
+                                <a href="#" class="circle-tile-footer">More Info <i class="fa fa-chevron-circle-right"></i></a>
+                            </div>
+                        </div>
+						<hr style="color:red"></hr>
+								<div class="panel-group ">
+								
+								{% for job in job %}
+									<div class="panel panel-info card ">
+									<img src="/media/{{job.ca_img}}" class=" card " width="100%" alt="Image"/>
+										  <div  style="text-align:center;color:#666"><strong>{{job.heading}} </strong>
+											
+										  </div>
+										  <div class="panel-body" style="background-color:white">
+												
+												<ul style="text-align:Left ">
+												
+													<li><Strong>Start Date:{{job.first_day}}</strong></li>
+													<li><Strong>Last Date:{{job.last_day}}</strong></li>
+													
+													
+												
+												</ul>
+												
+												<a href="/job/home/all/1/"style="text-align:center"><h5>Click for Details job <img width="25" height="25" src="/media/123.gif" alt="" scale="0" style="float:none"/> <h5></a>
+											
+											
+										  
+										  
+										  </div>
+									</div>
+									 
+									
+									<!-- if panel end -->
+									{% endfor %}
+									
+									
+									
+						
+								</div>
+						
+						</div>
+						
+				</div>
+
+				</div>
+				
+				
+			</div>	
+				
+				
+	
+
+
+
+
+
+
+
+
+
+	<script id="dsq-count-scr" src="//getmyvideo-net.disqus.com/count.js" async></script>
+					 
+
+<script type="text/javascript" >
+$(document).ready(function () {
+
+
+$('.navbar .dropdown').hover(function () {
+        $(this).find('.dropdown-menu').first().stop(true, true).slideDown(150);
+    }, function () {
+        $(this).find('.dropdown-menu').first().stop(true, true).slideUp(105);
+    });
+
+
+
+
+var showChar = 200;
+	var ellipsestext = "...";
+	var moretext = "Read more";
+	var lesstext = "less";
+	$('.more').each(function() {
+		var content = $(this).html();
+
+		if(content.length > showChar) {
+
+			var c = content.substr(0, showChar);
+			var h = content.substr(showChar-1, content.length - showChar);
+
+			var html = c + '<span class="moreelipses">'+ellipsestext+'</span>&nbsp;&nbsp;&nbsp;<a href="" class="morelink"><u>'+moretext+'</u></a></span>';
+
+			$(this).html(html);
+		}
+
+	});
+	
+	
+	
+	
+	//..........................
+	
+	
+		 $("#signup").submit(function (ev)
+	 {
+							
+						
+							//ev.preventDefault();
+		$.ajax({
+            type : 'POST',
+            url: '{% url 'bank:login' %}',
+			dataType: "json",
+			async: true,
+           data : {
+											data1 : $(this).serialize(),
+											csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()
+										  },
+            success: function (response) 
+			{
+         
+				// window.location = response.r;
+
+            },
+			 error: function (data) { $('#below').html("<b>please retry or check url</b>");
+			 
+			 }
+        });
+
+        
+    });
+
+	
+	
+	//.........................
+	
+		//..........................
+	
+	//.........................
+	
+	
+	
+	
+
+
+});
+
+
+
+
+		 $("#login").submit(function (ev)
+	 {
+							
+			ev.preventDefault();			
+							
+		$.ajax({
+            type : 'POST',
+            url: '{% url 'bank:login' %}',
+			
+			
+           data  : $(this).serialize(),
+            success: function (response) 
+			{
+			var r=response;
+				if(r == "true")
+				{
+				window.location = window.location;
+				}
+				else{
+				$('#below').html("<b>"+response+"</b>");
+				}
+
+            },
+			 error: function (data) { $('#below').html("<b>please 55 or check url</b>");
+			
+			 }
+        });
+
+        
+    });
+	
+function add(id,username) {
+var link_id=id;
+var uname=username;
+//$('#myModal').modal('toggle');
+
+	$.ajax({
+            type : 'POST',
+            url: '{% url 'bank:add' %}',
+			
+			
+           data: {link: link_id, user_name: uname,csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()},
+            success: function (response) 
+			{
+			var r=response;
+				if(r == "success")
+				{
+				document.getElementById(link_id).innerHTML ="added";
+				}
+				else{
+				$('#below').html("<b>"+response+"</b>");
+				document.getElementById("link_id").innerHTML = response;
+				}
+
+            },
+			 error: function (data) { $('#link_id').html("<b>please 55 or check url</b>");
+			
+			 }
+        });
+    
+}
+
+	function timer(counter,t,r1,r2,r3,r4,r5,a,i,counter){
+	
+	var colckdiv_id='clockdiv'.concat(counter.toString());
+	var colckdiv_id_hash='#clockdiv'.concat(counter.toString());
+	var clock = document.getElementById(colckdiv_id);
+	var min='.minutes'.concat(counter.toString());
+	var sec='.seconds'.concat(counter.toString());
+	var sec_id='#seconds'.concat(counter.toString());
+	var min_id='#minutes'.concat(counter.toString());
+	var smltext_id='#smalltext'.concat(counter.toString());
+
+  var minutesSpan = clock.querySelector(min);
+  var secondsSpan = clock.querySelector(sec);
+
+var sol='sol'.concat(counter.toString());
+var solution_hash='#solution'.concat(counter.toString());
+
+var timer_id='#time'.concat(counter.toString());
+//alert(timer_id);
+  document.getElementById(sol).disabled = true;
+  $(timer_id).toggle(500);
+  $(colckdiv_id_hash).toggle(500);
+var seconds_left = 80;
+/*var interval = setInterval(function() {
+    document.getElementById('seconds').innerHTML = --seconds_left;
+
+    if (seconds_left <= 0)
+    {
+       document.getElementById('seconds').innerHTML = "You are Ready!";
+       clearInterval(interval);
+    }
+}, 1000); */
+
+//new timer
+var fiveMinutes = t,
+        display = $(sec_id),
+		smalltext=$(smltext_id);
+		if($(solution_hash).is(':visible'))
+{
+$(solution_hash).toggle(500);
+}
+startTimer(fiveMinutes,display,smalltext,colckdiv_id_hash,timer_id,sol,solution_hash,r1,r2,r3,r4,r5,a,i,counter);
+
+
+
+	
+	}
+	
+	
+	function startTimer(duration, display,smalltext,colckdiv_id_hash,timer_id,sol,solution_hash,r1,r2,r3,r4,r5,a,i,counter) {
+    var timer = duration, minutes, seconds;
+	 
+  var s=  setInterval(function () {
+	var seconds_left = --duration;
+        minutes = parseInt(timer / 60, 10)
+        seconds = parseInt(timer % 60, 10);
+
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+				if(minutes<1){
+        display.text(minutes + ":" + seconds);
+		smalltext.text("seconds")
+        }
+        else{display.text(minutes + ":" + seconds);
+		smalltext.text("Minutes")
+		}
+		
+		if(seconds_left<=-1){clearInterval(s);
+		
+								op(r1,r2,r3,r4,r5,a,i,counter);
+								$(timer_id).toggle(500);
+								$(colckdiv_id_hash).toggle(500);
+								
+								//$(solution_hash).toggle(500);
+								document.getElementById(sol).disabled = false; 
+									}
+		
+
+        if (--timer < 0) {
+            timer = duration;
+        }
+    }, 1000);}
+	
+	
+	
+	function op(r1,r2,r3,r4,r5,a,i,counter){
+	var radio1 = r1;
+	var radio2=r2;
+	 var radio3=r3;
+	var radio4=r4;
+	var radio5=r5;
+	var ans=a;
+	var id=i;
+	var upper_sol='sol_upper'.concat(counter.toString());
+	var count=counter;
+	var chk=count.toString().concat(ans.toString());
+	var r8=count.toString();
+	var right=r8.concat('r');
+	
+	
+	
+if(document.getElementById(radio1).checked || document.getElementById(radio2).checked || document.getElementById(radio3).checked || document.getElementById(radio4).checked || document.getElementById(radio5).checked ) {
+
+				if(document.getElementById(chk).checked){
+				var right_img= right.concat(chk.slice(-1)) ;
+				//alert(right_img);
+				var x = document.getElementById(right_img);
+				
+
+				//x.innerHTML="<img src=\"http://placehold.it/350x350\" width=\"400px\" height=\"150px\">";
+				var y = document.getElementById(upper_sol);
+				y.innerHTML="<b>Correct<img src=\"{% static "/thh.png" %}\" class=\"img-rounded\" >"
+				x.style.display = 'inline';
+				
+				//$(x).toggle(500); 
+				//var y = document.getElementById(right);
+				//y.style.display = 'inline';
+				}else if(document.getElementById(radio1).checked) {
+				var wrong_img= count.toString().concat('w'.concat('radio1'.slice(-1))) ;
+				var x = document.getElementById(wrong_img);
+				var y = document.getElementById(upper_sol);
+				y.innerHTML="<b>InCorrect<img src=\"{% static "/c.png" %}\" class=\"img-rounded\" >"
+				x.style.display = 'inline';
+				
+				}else if(document.getElementById(radio2).checked) {
+				var wrong_img= count.toString().concat('w'.concat('radio2'.slice(-1))) ;
+				var x = document.getElementById(wrong_img);
+				var y = document.getElementById(upper_sol);
+				y.innerHTML="<b>InCorrect<img src=\"{% static "/c.png" %}\" class=\"img-rounded\" >"
+				x.style.display = 'inline';
+				
+				}else if(document.getElementById(radio3).checked) {
+				var wrong_img= count.toString().concat('w'.concat('radio3'.slice(-1))) ;
+				var x = document.getElementById(wrong_img);
+				var y = document.getElementById(upper_sol);
+				y.innerHTML="<b>InCorrect<img src=\"{% static "/c.png" %}\" class=\"img-rounded\" >"
+				x.style.display = 'inline';
+				
+				}else if(document.getElementById(radio4).checked) {
+				var wrong_img= count.toString().concat('w'.concat('radio4'.slice(-1))) ;
+				var x = document.getElementById(wrong_img);
+				var y = document.getElementById(upper_sol);
+				y.innerHTML="<b>InCorrect<img src=\"{% static "/c.png" %}\" class=\"img-rounded\" >"
+				x.style.display = 'inline';
+				
+				}else if(document.getElementById(radio5).checked) {
+				var wrong_img= count.toString().concat('w'.concat('radio5'.slice(-1))) ;
+				var x = document.getElementById(wrong_img);
+				var y = document.getElementById(upper_sol);
+				y.innerHTML="<b>InCorrect<img src=\"{% static "/c.png" %}\" class=\"img-rounded\" >"
+				x.style.display = 'inline';
+				
+				}
+			
+					
+		}
+					
+					
+				else  {
+
+				///$(upper_sol).html("Hello World");
+				var x = document.getElementById(upper_sol);
+				x.style.fontWeight  = 'bold';
+				x.innerHTML="Not Attempted";
+						
+						}
+	$(id).toggle(500);
+	
+	}
+
+
+</script>
+
+</body>
+</html>

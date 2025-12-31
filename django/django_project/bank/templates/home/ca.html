@@ -1,0 +1,1281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  
+  
+<link href="https://fonts.googleapis.com/css?family=Arimo" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lato:400,700"/>
+  <link href='//fonts.googleapis.com/css?family=Cormorant Garamond' rel='stylesheet'>
+  <link href="https://fonts.googleapis.com/css?family=Noto+Sans" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Quattrocento+Sans" rel="stylesheet">
+  
+ {% load staticfiles %}
+<link rel="stylesheet" href="{% static 'css/animate.min.css' %}" />
+<link rel="stylesheet" href="{% static 'css/h.css' %}" />
+
+<style>
+
+
+.carousel-control {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 5%;
+    font-size: 20px;
+    color: #fff;
+    text-align: center;
+   /* text-shadow: 0 1px 2px rgba(0,0,0,.6); */
+    background-color: rgba(0,0,0,0);
+    filter: alpha(opacity=50);
+    opacity: .5;
+}
+
+   .menu ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+.menu li {
+    padding: 8px;
+    margin-bottom: 7px;
+    background-color: #33b5e5;
+    color: #ffffff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+}
+.menu li:hover {
+    background-color: #0099cc;
+}
+  .pagination > li > a, .pagination > li > span {
+    position: relative;
+    float: left;
+    padding: 6px 12px;
+    margin-left: -1px;
+    line-height: 1.42857;
+    color: #337AB7;
+    text-decoration: none;
+    background-color: #FFF;
+    border: 1px solid #DDD;
+	font-size:15px;
+	font-weight:bold;
+	
+}
+@media (max-width:1266px) and (min-width:1200px) {
+    .carousel-control {
+    
+    width: 2%;
+  
+}
+}​
+.co{
+    position: relative; 
+    max-width: 800px; /* Maximum width */
+    margin: 0 auto; /* Center it */
+}
+
+.co .content {
+    position: absolute; /* Position the background text */
+    bottom: 0; /* At the bottom. Use top:0 to append it to the top */
+    background: rgba(0, 0, 0, 0.5); /* Black background with 0.5 opacity */
+    color: #f1f1f1; /* Grey text */
+    width: 100%; /* Full width */
+    padding: 20px; /* Some padding */
+}
+
+
+  </style>
+</head>
+<body style="background-color:#f3f3f3">
+<div >
+mcqgk
+</div>
+
+
+ <nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    <b> <a class="navbar-brand" href="#" style="font-family: 'Marck Script', cursive; color:white">McqGk</a> </b>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav" style="text-align:center">
+      
+         <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Mathematics<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="#"> Multiplication Table</a></li>
+            <li><a href="#">Series</a></li>
+            
+            <li><a href="#">Days n Work</a></li>
+			 <li><a href="/math/profit_n_loss/1/">Profit n Loss</a></li>
+			  <li><a href="#">Boat & Stream</a></li>
+          </ul>
+        </li>
+
+
+
+    <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">English<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/error_correction/noun/1/">Error Correction</a></li>
+             <li><a href="/error_correction/noun/1/">Noune</a></li>
+            
+              <li><a href="/closetest/close/1/">Close Test</a></li>
+			 <li><a href="#">Fill in the blank</a></li>
+			  <li><a href="/english/word/page/1">Vocabulary</a></li>
+			  <li><a href="#">Editorial</a></li>
+          </ul>
+        </li>
+		
+		    <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Reasoning<span class="caret"></span></a>
+      						<ul class="dropdown-menu">
+																		
+																		  <li><a href="#">Blood Relation</a></li>
+																		 
+																		  <li><a href="#">Ranking and Direction</a></li>
+
+																	
+																		  <li ><a href="#">Coading Decoding</a></li>
+																		  
+																		  <li ><a href="#">Puzzle</a></li>
+																		  
+																		  <li><a href="#">Input Output</a></li>
+																		  
+																		  
+																		 
+																		  <li><a href="/reasoning/seating_arrangment/1/">seating_arrangment</a></li>
+																		</ul>
+        </li>
+		
+		    <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Current Affairs<span class="caret"></span></a>
+          			<ul class="dropdown-menu">
+																		
+																		  <li><a href="/ca/1/">Daily Current Today</a></li>
+																		
+																		  <li><a href="#">Static Gk</a></li>
+
+																		
+																		  <li class="waves-effect"><a href="#">Banking Awerness</a></li>
+																		  
+																		</ul>
+        </li>
+		
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+<li><a href="#"><span class="glyphicon glyphicon-th" aria-hidden="true"></span> Dashboard</a></li>
+     			
+																			<li class="dropdown">
+																					
+																							
+																											{% if user.is_authenticated %}
+																											<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ user.username }} <b class="caret"></b></a>
+																											
+														
+																															<ul class="dropdown-menu">
+																															<li><a href="/logout" >Logout</a></li>
+																															 <li role="separator" class="divider"></li> 
+																															<li><a href="/dashboard/{{ user.username }}"> Dash Board</a></li>
+																															
+																															
+																															</ul>
+																															
+																														{% else %}
+																														<a href="" data-toggle="modal" data-target="#myModal">
+																														<span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>&nbsp;
+																														   Log In<b class="caret"></b>
+																														   </a>
+																														
+																														{% endif %} 
+																														
+																			</li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+			
+	
+
+
+<style>
+html, body {
+  font-family: 'Lato', serif;  
+}
+
+.navbar-default {
+  font-size: 1.15em;
+  font-weight: 400;
+  background-color: #29487d;
+  padding: 5px;
+  border: 0px;
+  border-radius: 0px;
+  box-shadow:inset 0 -1px 2px rgba(0,0,0,.24);
+}
+
+.navbar-default .navbar-nav>li>a {
+  color: white;
+}
+
+.navbar-default .navbar-nav>li>a:hover {
+  color: #cbf0ff;
+}
+
+.navbar-default .navbar-brand {
+  color: #002433;
+}
+
+.navbar-default .navbar-brand:hover {
+  color: #ffffff;
+  text-shadow: 1px -1px 8px #b3e9ff;
+}
+
+.navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:hover, .navbar-default .navbar-nav>.open>a:focus {
+  background-color: #004059;
+  color: white;
+}
+
+.navbar-default .navbar-toggle {
+  border: none;
+}
+
+.navbar-default .navbar-collapse, .navbar-default .navbar-form {
+  border: none;
+}
+
+.navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus {
+  background-color: #002433;
+}
+
+.navbar-default .navbar-toggle .icon-bar {
+  background-color: #ffffff;
+}
+
+.dropdown-menu {
+  background-color: #004059;
+  color: white;
+  border: 0px;
+  border-radius: 2px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.dropdown-menu>li>a {
+  background-color: #004059;
+  color: white;
+}
+
+.dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus {
+  background-color: #004059;
+  color:white;
+}
+
+.dropdown-menu .divider {
+    height: 1px;
+    margin: 9px 0;
+    overflow: hidden;
+    background-color: #003246;
+}
+
+.navbar-default .navbar-nav .open .dropdown-menu>li>a {
+    color: #ffffff;
+}
+
+@media (max-width: 767px) { 
+  .dropdown-menu>li>a {
+    background-color: #006b96;
+    color: #ffffff;
+  }
+  .dropdown-menu>li>a:hover {
+    color: #ffffff;
+  }
+  
+  .navbar-default .navbar-nav .open .dropdown-menu>li>a:focus, .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover {
+    color: #ffffff;
+    background-color: transparent;
+  }
+  
+  .dropdown-menu .divider {
+    height: 1px;
+    margin: 9px 0;
+    overflow: hidden;
+    background-color: #005577;
+  }
+} /* END Media Query */
+
+
+</style>
+
+	
+
+
+
+	
+			
+			
+																												<div id="myModal" class="modal fade mod" role="dialog">
+																									  <div class="modal-dialog ">
+
+																										<!-- Modal content-->
+																										<div class="modal-content"style="text-align:center">
+																										<div class="modal-header modal-header-danger">
+																										  <div class="modal-header">
+																											<button type="button" class="close" data-dismiss="modal">&times;</button>
+																											<h1 class="modal-title" style="color:#fff"><i class="glyphicon glyphicon-thumbs-up"></i>Modal Header</h1>
+																											</div>
+																										  </div>
+																										  <div class="modal-body"style="text-align:center">
+																																																																																					
+																																																																																					
+																																																																																					<ul class="nav nav-tabs" style="text-align:center">
+																																<li class="active" style="text-align:center"><a data-toggle="tab" href="#home">Sign In</a></li>
+																																<li style="text-align:center"><a data-toggle="tab" href="#menu1">Registrations In</a></li>
+																																
+																															
+																															  </ul>
+
+																															  <div class="tab-content">
+																																<div id="home" class="tab-pane fade in active">
+																																  <h3>Sign In</h3>
+																																																																																																																																														{% block content %}
+																																																																																																																																														
+																																			  <form method="post" id="login" action="" >
+																																				
+																																			
+																																			   {% csrf_token %}
+																																				{{ login.as_p }}
+																																				<div id="below"></div>
+																																				<button class="btn btn-success "  style="color:green"type="submit">Sign In</button>
+																																			  </form>
+																																			
+
+
+																																</div>
+																																<div id="menu1" class="tab-pane fade">
+																																  <h3>Sign up</h3>
+																																																																																																			  
+																																			  <form method="post" id="signup">
+																																				
+																																			   <div class="input-group input-group-lg">
+																																			   {% csrf_token %}
+																																				{{ form}}
+																																				<button type="submit">Sign up</button></div>
+																																			  </form>
+																																			{% endblock %}
+																																</div>
+																															
+																																
+
+
+																												</div>
+																										  </div>
+																										  <div class="modal-footer">
+																											<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+																										  </div>
+																										</div>
+
+																									  </div>
+																									</div>
+			
+			
+			
+			
+			
+			
+
+					 <section class="carousel-section">
+					   
+							<div id="myCarousel" class="carousel carousel-razon slide" data-ride="carousel" data-interval="60000">
+								<!-- Indicators -->
+									<ol class="carousel-indicators">
+									  <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+									  <li data-target="#myCarousel" data-slide-to="1"></li>
+									  <li data-target="#myCarousel" data-slide-to="2"></li>
+									</ol>
+								
+									<!-- Wrapper for slides -->
+									<div class="carousel-inner">
+												{% for slide in slide %}
+															{% if forloop.first %}
+															<div class="active item">
+														{% else %}
+															<div class="item">
+														{% endif %}
+											<div class="container rana">
+														<div class="row">
+															<div class="col-xs-6 col-sm-6 col-md-6 nopadding">
+															
+																		<div class="carousel-caption nopadding">
+																		
+																		
+																				<div class="carousel-text" style="font-family: arial,sans-serif">
+															<a href="#{{forloop.counter}}link" id="back"> <h3 style="color:white"class="animated fadeInDownBig animation-delay-7 carousel-subtitle">{% autoescape off %} {{slide.upper_heading}} {% endautoescape %}</h3></a>
+															
+															
+																				
+																				 
+
+																						<ul class="list-unstyled carousel-list">
+																						   <li class="animated bounceInLeft animation-delay-11"><i class="fa fa-check"></i> {% autoescape off %}{{slide.key_1}} {% endautoescape %}</li>
+																						   <li class="animated bounceInLeft animation-delay-13"><i class="fa fa-check"></i> {% autoescape off %}{{slide.key_2}} {% endautoescape %}</li>
+																						   <li class="animated bounceInLeft animation-delay-15"><i class="fa fa-check"></i> {% autoescape off %}{{slide.key_3}} {% endautoescape %}</li>
+																						   
+																					   </ul>							 
+																				</div>
+																	</div>
+															</div>
+															<div class=" col-xs-6 col-sm-6 col-md-6   carousel-img-wrap nopadding">
+															
+																<div class="carousel-img">
+																	<img src="/media/{{ slide.ca_img}}" class="img-responsive center-block img-rounded animated bounceInUp animation-delay-3 " alt="Image">
+																</div>
+															</div>
+														</div>
+													</div>
+										  </div>
+												{% endfor %}
+
+									<!-- Left and right controls -->
+									<a class="left carousel-control" href="#myCarousel" data-slide="prev">
+									  <span class="glyphicon glyphicon-chevron-left" ></span>
+									  <span class="sr-only">Previous</span>
+									</a>
+									<a class="right carousel-control" href="#myCarousel" data-slide="next">
+									  <span class="glyphicon glyphicon-chevron-right"></span>
+									  <span class="sr-only">Next</span>
+									</a>
+							</div>
+								  
+					  </div>
+					  
+					  
+					 </section >
+					 
+					 
+					 
+					 
+				<!-- belw slide -->
+				
+				
+			<div class="container">
+			
+				<div class="row">
+					<div class="panel card">
+						<div class="col-md-3  nopadding">
+						
+							
+							<div class="panel nopadding">
+						<div class="rana" style="background-color:#f3f3f3;"><div class="panel-heading pan  card" style=" border-top-right-radius: 65px;; background-color:background: rgba(78,83,126,1);
+background: -moz-linear-gradient(top, rgba(78,83,126,1) 0%, rgba(78,83,126,1) 21%, rgba(8,15,58,1) 59%, rgba(8,15,58,1) 100%);
+background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(78,83,126,1)), color-stop(21%, rgba(78,83,126,1)), color-stop(59%, rgba(8,15,58,1)), color-stop(100%, rgba(8,15,58,1)));
+background: -webkit-linear-gradient(top, rgba(78,83,126,1) 0%, rgba(78,83,126,1) 21%, rgba(8,15,58,1) 59%, rgba(8,15,58,1) 100%);
+background: -o-linear-gradient(top, rgba(78,83,126,1) 0%, rgba(78,83,126,1) 21%, rgba(8,15,58,1) 59%, rgba(8,15,58,1) 100%);
+background: -ms-linear-gradient(top, rgba(78,83,126,1) 0%, rgba(78,83,126,1) 21%, rgba(8,15,58,1) 59%, rgba(8,15,58,1) 100%);
+background: linear-gradient(to bottom, rgba(78,83,126,1) 0%, rgba(78,83,126,1) 21%, rgba(8,15,58,1) 59%, rgba(8,15,58,1) 100%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4e537e', endColorstr='#080f3a', GradientType=0 );"><h3 style="color:#ffffff;padding:0px"><u>Current Affairs Category</u><h3></div></div>
+								<div class="panel-body nopadding">
+																			  <ul style="font-weight:bold; "class="list-group nopadding">
+													<a href="/current/Science_Techonlogy/1"><li class="list-group-item">	Science And Techonlogy </li></a>
+													<li class="list-group-item">	<a  href="/current/National/1">National</a> </li>
+													<li class="list-group-item">	<a style="font-size:16px;"href="/current/State/1">State</a> </li>
+													<li class="list-group-item">	<a style="font-size:16px;" href="/current/International/1">International</a> </li>
+													<li class="list-group-item">	<a  href="/current/Business_Economy_Banking/1"><b>Business Economy Banking</b></a></li>
+													<li class="list-group-item">	<a lass="pp" href="/current/Environment/1">Environment</a>  </li>
+													<li class="list-group-item">	<a  href="/current/Defence/1">Defence</a> </li>
+													<li class="list-group-item">	<a href="/current/Persons_in_News/1 in news">Persons in News</a></li>
+													<li class="list-group-item">	<a href="/current/Awards_Honours/1 ">Awards Honours</a> </li>
+													<li class="list-group-item">	<a href="/current/Sports/1">Sports</a></li>
+													
+													<li class="list-group-item">	<a href="/current/Art_Culture/1">art culture</a></li>
+													<li class="list-group-item">	<a href="/current/Government_Schemes/1"><b>Government Schemes</b></a></li>
+												  </ul>
+										</div>
+									</div>			
+						
+						
+							
+						<div class="panel ">
+							  <div class="panel-heading" style="background-color:#d13c3a;"><h3 style="color:#ffffff;padding:0px"><u>Important Topics</u><h3></div>
+							  {{p}}
+							  <div class="panel-body"></div>
+						
+															<div class="menu">
+																		  <ul>
+																			<li><a style="color:#ffffff" href="/">Gods and service tax</a></li>
+																			<li><a style="color:#ffffff" href="/ca/1/">modi visits us </a></li>
+																			<li><a  style="color:#ffffff"href="/job/home/all/1/">jobs home</a></li>
+																			<li><a style="color:#ffffff" href="/english/word/page/1/">English</a></li>
+																			<li><a style="color:#ffffff" href="/">Home</a></li>
+																			<li><a style="color:#ffffff" href="/ca/1/">Current Affairs </a></li>
+																			<li><a  style="color:#ffffff"href="/job/home/all/1/">jobs home</a></li>
+																			<li><a style="color:#ffffff" href="/english/word/page/1/">English</a></li>
+																			<li><a style="color:#ffffff" href="/">Home</a></li>
+																			<li><a style="color:#ffffff" href="/ca/1/">Current Affairs </a></li>
+																			<li><a  style="color:#ffffff"href="/job/home/all/1/">jobs home</a></li>
+																			<li><a style="color:#ffffff" href="/english/word/page/1/">English</a></li>
+																			<li><a style="color:#ffffff" href="/">Home</a></li>
+																			<li><a style="color:#ffffff" href="/ca/1/">Current Affairs </a></li>
+																			<li><a  style="color:#ffffff"href="/job/home/all/1/">jobs home</a></li>
+																			<li><a style="color:#ffffff" href="/english/word/page/1/">English</a></li>
+																		  </ul>
+																		</div>
+
+															
+							</div>
+							
+						</div>
+						
+					
+						
+						<div class="col-md-7 nopadding" style=" border: 1px solid #dddddd;">
+						
+						
+						
+							
+										<h3 class="card"style="text-align:center; color: #336699">Current Affairs </h3>
+										{% for slide in slide %}
+																			<div class="panel nopadding ">
+																			
+																					<div class="panel-heading card " >
+																					
+																							<h4 style="font-family:arial,sans-serif-light,sans-serif ; display:inline-block;color:#000000;font-size:19px;padding-left:10px;padding-right:10px;padding-bottom:0px;font-weight:600" ><strong style="font-weight:100"> {{slide.upper_heading}} </strong></h4> 
+																						<button id="{{slide.new_id}}"
+
+																							
+																						style="text-align:center; color: #fff;background-color:#d9534f;margin-right:0;float:right;display:inline-block;" type="submit" class="btn btn-danger btn-xs"
+																						{% if user.is_authenticated %}
+																						onClick="add('{{slide.new_id}}','{{slide.upper_heading}}','{{ user.username }}','/media/{{slide.ca_img}}')" 
+																						
+																						{% else %}
+																						
+																						data-toggle="modal" data-target="#myModal"
+																						
+																						{% endif %}
+																						
+																						><span class="glyphicon glyphicon-plus"></span> Add to notes</button> 
+																					</div>
+																																						
+																							<hr></hr>
+																							<div class="panel-body">
+																								<div class="paragraph_image" style="margin-right:8px;">
+															<a href="http://currentaffairs.gktoday.in/madhav-chitale-committee-recommends-measures-de-silting-ganga-05201744848.html"><img width="150" height="150" src="{% static "/a.jpg" %}" class="attachment-120x120 size-120x120 wp-post-image" alt="" scale="0"></a>
+														</div>
+											
+																											<p  style="font-size:20px;font-family: 'Arimo', sans-serif;font-color:black;"> {{slide.paragraph}}</p>
+																											
+																											
+																											<h4 style="text-align:left ;color:rgb(0, 153, 218)"><b><u>Key points to Remember:</u></b></h4>
+																									
+																											
+																											
+																											<ul style="text-align:Left " id="{{forloop.counter}}" class="key" >
+																									
+																												
+																									
+																												</ul>
+																												
+																											
+																																		<script>   key('{{slide.all_key_points}}');
+																																		
+																																		
+																																		
+																																		 function key(a){
+
+																																				
+																																				var myarray = a.split('///');
+
+																																							for(var i = 0; i < myarray.length; i++)
+																																							{
+
+																																							var node=document.createElement("LI");
+																																							var textnode=document.createTextNode(myarray[i]);
+																																							node.appendChild(textnode);
+																																							document.getElementById("{{forloop.counter}}").appendChild(node);
+
+																																							}
+																																							 }
+
+																																		
+																																		</script>
+																											
+																											<p ><a href="https://www.w3schools.com/html/">Go to Currrent Affairs Section>></a></p>
+																						</div>
+																						
+																							
+																				</div>
+														{% endfor %}
+														
+														
+														
+														
+														
+
+														
+														<div class="row">
+							
+															<div class="col-md-2 ">
+															 <ul class="pager">
+															 {% if previous != 0 %}
+																			<li ><a href="/ca/{{previous}}"><span class="glyphicon glyphicon-chevron-left"></span>Prev</a></li>
+																{% else %}
+																		 <li ><a href="#">Previous</a></li>
+																				{% endif %}
+																		  </ul>
+															</div>
+																
+																<div class="col-md-8 " style="text-align:center">
+																<ul class="pagination pagination-lg" >
+																{% for pages in page %}
+																	 {% if pages == params %}
+												<li class="active"><a href="/ca/{{pages}}">{{pages}}</a></li>
+												
+												{% else %}
+												<li><a href="/ca/{{pages}}">{{pages}}</a></li>
+												{% endif %}
+												
+											{% endfor %}
+											
+												
+												
+											  </ul>
+																</div>
+																
+																<div class="col-md-2 ">
+																 <ul class="pager">
+																 {% if next != 0  %}
+																    <li ><a href="/ca/{{next}}">Next<span class="glyphicon glyphicon-chevron-right"></span></a></li>
+																	
+																	
+																	{% else %}
+																		 <li ><a href="#">Next</a></li>
+																				{% endif %}
+																		  </ul>
+																</div>
+														
+														</div>
+											
+										
+													<div id="disqus_thread"style="padding:5px"></div>
+							<script>
+
+							/**
+							*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+							*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+							/*
+							var disqus_config = function () {
+							this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+							this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+							};
+							*/
+							(function() { // DON'T EDIT BELOW THIS LINE
+							var d = document, s = d.createElement('script');
+							s.src = 'https://getmyvideo-net.disqus.com/embed.js';
+							s.setAttribute('data-timestamp', +new Date());
+							(d.head || d.body).appendChild(s);
+							})();
+							</script>
+							<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>				
+																	
+																
+						
+						</div>
+						
+						<div class="col-md-2 nopadding">
+						<div class="co">
+  <img src="notebook.jpg" alt="Notebook" style="width:100%;">
+  <div class="content">
+    <h1>Heading</h1>
+    <p>Lorem ipsum..</p>
+  </div>
+</div>
+							<div class="panel-group ">
+								<div class="co">
+  <img src="notebook.jpg" alt="Notebook" style="width:100%;">
+  <div class="content">
+    <h1>Heading</h1>
+    <p>Lorem ipsum..</p>
+  </div>
+</div>
+								{% for job in job %}
+									<div class="panel panel-info ">
+										  <div class="panel-heading menu" style="text-align:center"><strong>{{job.heading}}</strong>
+											<img src="/media/{{job.ca_img}}" class="img-thumbnail " width="150px" alt="Image">
+										  </div>
+										  <div class="panel-body">
+												
+												<ul style="text-align:Left ">
+												
+													<li><Strong>Start Date:{{job.first_day}}</strong></li>
+													<li><Strong>Last Date:{{job.last_day}}</strong></li>
+													
+													
+												
+												</ul>
+												
+												<a href="/job/home/all/1/"style="text-align:center"><h5>Click for Details job<h5></a>
+											
+											
+										  
+										  
+										  </div>
+									</div><!-- if panel end -->
+									{% endfor %}
+									
+									
+									
+						
+								</div>
+						
+				</div>
+
+				</div>
+				
+				
+			</div>	
+				
+				
+	
+
+
+
+
+
+
+
+
+
+	
+					 
+	<script id="dsq-count-scr" src="//getmyvideo-net.disqus.com/count.js" async></script>
+					 
+
+<script type="text/javascript" >
+$(document).ready(function () {
+$('.navbar .dropdown').hover(function () {
+        $(this).find('.dropdown-menu').first().stop(true, true).slideDown(150);
+    }, function () {
+        $(this).find('.dropdown-menu').first().stop(true, true).slideUp(105);
+    });
+
+
+
+
+var showChar = 200;
+	var ellipsestext = "...";
+	var moretext = "Read more";
+	var lesstext = "less";
+	$('.more').each(function() {
+		var content = $(this).html();
+
+		if(content.length > showChar) {
+
+			var c = content.substr(0, showChar);
+			var h = content.substr(showChar-1, content.length - showChar);
+
+			var html = c + '<span class="moreelipses">'+ellipsestext+'</span>&nbsp;&nbsp;&nbsp;<a href="" class="morelink"><u>'+moretext+'</u></a></span>';
+
+			$(this).html(html);
+		}
+
+	});
+	
+	
+	
+	
+	//..........................
+	
+	
+		 $("#signup").submit(function (ev)
+	 {
+					var x = document.getElementById('img_signup');
+										var y = document.getElementById('below_signup');
+
+								y.innerHTML=""
+
+				x.style.display = 'block';		
+						
+							ev.preventDefault();
+		$.ajax({
+            type : 'POST',
+            url: '{% url 'bank:signup' %}',
+			
+			async: true,
+			
+           data  : $(this).serialize(),
+            success: function (response) 
+			{var r=response;
+			
+			if(r == "true")
+				{
+				x.style.display = 'none';	
+				y.style.display = 'inline';	
+				$('#below_signup').html("<b>Confirmation Email has been sent</b>");
+				}
+				else{
+				x.style.display = 'none';	
+				y.style.display = 'inline';	
+				$('#below_signup').html("<b>"+response+"</b>");
+				}
+         
+				// window.location = response.r;
+
+            },
+			 error: function (data) { 
+			 x.style.display = 'none';	
+				y.style.display = 'inline';	
+			 
+			 $('#below_signup').html("<b>please retry or check url</b>"+data);
+			 
+			 }
+        });
+
+        
+    });
+
+	
+	
+	//.........................
+	
+		//..........................
+	
+	
+
+
+	
+	
+	//.........................
+	
+	
+	
+	
+
+
+});
+
+
+
+
+		 $("#login").submit(function (ev)
+	 {
+							
+			ev.preventDefault();			
+							
+		$.ajax({
+            type : 'POST',
+            url: '{% url 'bank:login' %}',
+			
+			
+           data  : $(this).serialize(),
+            success: function (response) 
+			{
+			var r=response;
+				if(r == "true")
+				{
+				window.location = window.location;
+				}
+				else{
+				$('#below').html("<b>"+response+"</b>");
+				}
+
+            },
+			 error: function (data) { $('#below').html("<b>please 55 or check url</b>");
+			
+			 }
+        });
+
+        
+    });
+	
+function add(id,upper,username,img_url) {
+var link_id=id;
+var uname=username;
+var heading=upper;
+var im=img_url;
+//$('#myModal').modal('toggle');
+
+	$.ajax({
+            type : 'POST',
+            url: '{% url 'bank:add' %}',
+			
+			
+           data: {link: link_id, user_name: uname,head:heading,im_url:im,csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()},
+            success: function (response) 
+			{
+			var r=response;
+				if(r == "success")
+				{
+				document.getElementById(link_id).innerHTML ="Added Successfully ";
+				}
+				else{
+				//$('#below').html("<b>"+response+"</b>");
+				document.getElementById(link_id).innerHTML = response;
+				}
+
+            },
+			 error: function (data) { $('#link_id').html("<b>please 55 or check url</b>");
+			
+			 }
+        });
+    
+}
+
+
+
+
+//.......math
+
+
+	function timer(c_id,t,r1,r2,r3,r4,r5,a,i,counter,flag,loop){
+	
+	var colckdiv_id=c_id;
+	alert(colckdiv_id);
+	var colckdiv_id_hash='#'.concat(c_id.toString());
+	var clock = document.getElementById(colckdiv_id);
+	//alert(clock);
+	
+	if(flag=='math'){var min='.mathminutes'.concat(counter.toString());
+	//alert(min);
+	var sec='.mathseconds'.concat(counter.toString());
+	var sec_id='#mathseconds'.concat(counter.toString());
+	var min_id='#mathminutes'.concat(counter.toString());
+	var smltext_id='#mathsmalltext'.concat(counter.toString());
+var upper_sol='mathsol_upper'.concat(counter.toString());
+  var minutesSpan = clock.querySelector(min);
+  var secondsSpan = clock.querySelector(sec);
+  var sol='mathsol'.concat(counter.toString());
+var solution_hash='#mathsolution'.concat(counter.toString());
+
+var timer_id='#mathtime'.concat(counter.toString());
+			}else if(flag=='reasoning'){
+			
+			
+			
+			var min='.reasoningminutes'.concat(counter.toString());
+	//alert(min);
+	var sec='.reasoningseconds'.concat(counter.toString());
+	var sec_id='#reasoningseconds'.concat(counter.toString());
+	var min_id='#reasoningminutes'.concat(counter.toString());
+	var smltext_id='#reasoningsmalltext'.concat(counter.toString());
+var upper_sol='reasoningsol_upper'.concat(counter.toString());
+  var minutesSpan = clock.querySelector(min);
+  var secondsSpan = clock.querySelector(sec);
+  var sol='reasoningsol'.concat(counter.toString());
+var solution_hash='#reasoningsolution'.concat(counter.toString());
+
+var timer_id='#reasoningtime'.concat(counter.toString());
+counter='res'+counter.toString();
+
+
+
+			}else if(flag=='ress'){
+			
+			
+			
+			var min='.reasoningminutes'.concat(counter.toString());
+	//alert(min);
+	var sec='.reasoningseconds'.concat(counter.toString());
+	var sec_id='#reasoningseconds'.concat(counter.toString());
+	var min_id='#reasoningminutes'.concat(counter.toString());
+	var smltext_id='#reasoningsmalltext'.concat(counter.toString());
+var upper_sol='resssol_upper'.concat(counter.toString());
+  var minutesSpan = clock.querySelector(min);
+  var secondsSpan = clock.querySelector(sec);
+  var sol='reasoningsol'.concat(counter.toString());
+var solution_hash='#reasoningsolution'.concat(counter.toString());
+
+var timer_id='#reasoningtime'.concat(counter.toString());
+counter='res'+counter.toString();
+
+
+
+			}
+	
+	
+
+
+//alert(timer_id);
+  document.getElementById(sol).disabled = true;
+  $(timer_id).toggle(500);
+  $(colckdiv_id_hash).toggle(500);
+var seconds_left = 80;
+/*var interval = setInterval(function() {
+    document.getElementById('seconds').innerHTML = --seconds_left;
+
+    if (seconds_left <= 0)
+    {
+       document.getElementById('seconds').innerHTML = "You are Ready!";
+       clearInterval(interval);
+    }
+}, 1000); */
+
+//new timer
+var fiveMinutes = t,
+        display = $(sec_id),
+		smalltext=$(smltext_id);
+		if($(solution_hash).is(':visible'))
+{
+$(solution_hash).toggle(500);
+}
+startTimer(fiveMinutes,display,smalltext,colckdiv_id_hash,timer_id,sol,solution_hash,r1,r2,r3,r4,r5,a,i,counter,upper_sol,flag,loop);
+
+
+
+	
+	}
+	
+	
+	function startTimer(duration, display,smalltext,colckdiv_id_hash,timer_id,sol,solution_hash,r1,r2,r3,r4,r5,a,i,counter,upper_sol,flag,loop) {
+    var timer = duration, minutes, seconds;
+	 
+  var s=  setInterval(function () {
+	var seconds_left = --duration;
+        minutes = parseInt(timer / 60, 10)
+        seconds = parseInt(timer % 60, 10);
+
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+				if(minutes<1){
+        display.text(minutes + ":" + seconds);
+		smalltext.text("seconds")
+        }
+        else{display.text(minutes + ":" + seconds);
+		smalltext.text("Minutes")
+		}
+		
+		if(seconds_left<=-1){clearInterval(s);
+		
+								op(r1,r2,r3,r4,r5,a,i,counter,upper_sol,flag,loop);
+								$(timer_id).toggle(500);
+								$(colckdiv_id_hash).toggle(500);
+								
+								//$(solution_hash).toggle(500);
+								document.getElementById(sol).disabled = false; 
+									}
+		
+
+        if (--timer < 0) {
+            timer = duration;
+        }
+    }, 1000);}
+	
+	
+	
+	function op(r1,r2,r3,r4,r5,a,i,counter,upper_sol,flag,loop){
+	var radio1 = r1;
+	var radio2=r2;
+	 var radio3=r3;
+	var radio4=r4;
+	var radio5=r5;
+	var ans=a;
+	var id=i;
+	
+	var count=counter;
+	var chk=count.toString().concat(ans.toString());
+	var r8=count.toString();
+	var right=r8.concat('r');
+	
+	
+	if(flag == 'math'|| flag=='reasoning'){
+	
+if(document.getElementById(radio1).checked || document.getElementById(radio2).checked || document.getElementById(radio3).checked || document.getElementById(radio4).checked || document.getElementById(radio5).checked ) {
+alert(flag);
+
+				if(document.getElementById(chk).checked){
+				var right_img= right.concat(chk.slice(-1)) ;
+				//alert(right_img);
+				var x = document.getElementById(right_img);
+				
+
+				//x.innerHTML="<img src=\"http://placehold.it/350x350\" width=\"400px\" height=\"150px\">";
+				var y = document.getElementById(upper_sol);
+				y.innerHTML="<b>Correct<img src=\"{% static "/thh.png" %}\" class=\"img-rounded\" >"
+				x.style.display = 'inline';
+				
+				//$(x).toggle(500); 
+				//var y = document.getElementById(right);
+				//y.style.display = 'inline';
+				}else if(document.getElementById(radio1).checked) {
+				var wrong_img= count.toString().concat('w'.concat('radio1'.slice(-1))) ;
+				var x = document.getElementById(wrong_img);
+				var y = document.getElementById(upper_sol);
+				y.innerHTML="<b>InCorrect<img src=\"{% static "/c.png" %}\" class=\"img-rounded\" >"
+				x.style.display = 'inline';
+				
+				}else if(document.getElementById(radio2).checked) {
+				var wrong_img= count.toString().concat('w'.concat('radio2'.slice(-1))) ;
+				var x = document.getElementById(wrong_img);
+				var y = document.getElementById(upper_sol);
+				y.innerHTML="<b>InCorrect<img src=\"{% static "/c.png" %}\" class=\"img-rounded\" >"
+				x.style.display = 'inline';
+				
+				}else if(document.getElementById(radio3).checked) {
+				var wrong_img= count.toString().concat('w'.concat('radio3'.slice(-1))) ;
+				var x = document.getElementById(wrong_img);
+				var y = document.getElementById(upper_sol);
+				y.innerHTML="<b>InCorrect<img src=\"{% static "/c.png" %}\" class=\"img-rounded\" >"
+				x.style.display = 'inline';
+				
+				}else if(document.getElementById(radio4).checked) {
+				var wrong_img= count.toString().concat('w'.concat('radio4'.slice(-1))) ;
+				var x = document.getElementById(wrong_img);
+				var y = document.getElementById(upper_sol);
+				y.innerHTML="<b>InCorrect<img src=\"{% static "/c.png" %}\" class=\"img-rounded\" >"
+				x.style.display = 'inline';
+				
+				}else if(document.getElementById(radio5).checked) {
+				var wrong_img= count.toString().concat('w'.concat('radio5'.slice(-1))) ;
+				var x = document.getElementById(wrong_img);
+				var y = document.getElementById(upper_sol);
+				y.innerHTML="<b>InCorrect<img src=\"{% static "/c.png" %}\" class=\"img-rounded\" >"
+				x.style.display = 'inline';
+				
+				}
+			
+					
+		}
+					
+					
+				else  {
+
+				///$(upper_sol).html("Hello World");
+				var x = document.getElementById(upper_sol);
+				x.style.fontWeight  = 'bold';
+				x.innerHTML="Not Attempted";
+						
+						}
+						
+						
+}else{var score=0;
+			var attempt=0;
+			if(flag== 'ress'){
+			}
+			else if (flag=='css'){
+			
+			}
+
+var array = ans.split('///');
+var max=array.length;
+//alert(flag);
+		for(i=0;i< array.length; i++){
+			
+			
+			
+			radio1=flag+i.toString()+'0';
+			radio2=flag+i.toString()+'1';
+			radio3=flag+i.toString()+'2';
+			radio4=flag+i.toString()+'3';
+			radio5=flag+i.toString()+'4';
+			
+			//alert(radio1+" "+radio2+''+radio3);
+			chk=flag+i.toString()+ (parseInt(array[i])-1).toString();
+			//alert("chk="+chk);
+			if(document.getElementById(radio1).checked || document.getElementById(radio2).checked || document.getElementById(radio3).checked || document.getElementById(radio4).checked || document.getElementById(radio5).checked ) {
+
+				attempt=1;
+
+				if(document.getElementById(chk).checked){
+				score=score+1;
+				var right_img= chk+'r' ;
+				//alert(right_img);
+				var x = document.getElementById(right_img);
+				
+
+				//x.innerHTML="<img src=\"http://placehold.it/350x350\" width=\"400px\" height=\"150px\">";
+				var y = document.getElementById(upper_sol);
+				y.innerHTML='<b style=\"font-size:18px;\">Your Score: &nbsp;&nbsp;  '+score.toString()+'/'+max.toString()+'&nbsp;&nbsp;<img src=\"{% static "/thh.png" %}\" class=\"img-rounded\" >'
+				x.style.display = 'inline';
+				
+				//$(x).toggle(500); 
+				//var y = document.getElementById(right);
+				//y.style.display = 'inline';
+				}else if(document.getElementById(radio1).checked) {
+				var wrong_img= flag+i.toString().concat(('radio0'.slice(-1)))+'w' ;
+				var x = document.getElementById(wrong_img);
+				
+				x.style.display = 'inline';
+				var y = document.getElementById(upper_sol);
+				y.innerHTML='<b style=\"font-size:18px;\">Your Score: &nbsp;&nbsp;  '+score.toString()+'/'+max.toString()+'&nbsp;&nbsp;<img src=\"{% static "/thh.png" %}\" class=\"img-rounded\" >'
+				
+				}else if(document.getElementById(radio2).checked) {
+				var wrong_img= flag+i.toString().concat(('radio1'.slice(-1)))+'w' ;
+				var x = document.getElementById(wrong_img);
+				
+				x.style.display = 'inline';
+				var y = document.getElementById(upper_sol);
+				y.innerHTML='<b style=\"font-size:18px;\">Your Score: &nbsp;&nbsp;  '+score.toString()+'/'+max.toString()+'&nbsp;&nbsp;<img src=\"{% static "/thh.png" %}\" class=\"img-rounded\" >'
+				
+				}else if(document.getElementById(radio3).checked) {
+				var wrong_img= flag+i.toString().concat(('radio2'.slice(-1)))+'w' ;
+				var x = document.getElementById(wrong_img);
+				
+				x.style.display = 'inline';
+				var y = document.getElementById(upper_sol);
+				y.innerHTML='<b style=\"font-size:18px;\">Your Score: &nbsp;&nbsp;  '+score.toString()+'/'+max.toString()+'&nbsp;&nbsp;<img src=\"{% static "/thh.png" %}\" class=\"img-rounded\" >'
+				
+				}else if(document.getElementById(radio4).checked) {
+				var wrong_img= flag+i.toString().concat(('radio3'.slice(-1)))+'w' ;
+				var x = document.getElementById(wrong_img);
+				
+				x.style.display = 'inline';
+				var y = document.getElementById(upper_sol);
+				y.innerHTML='<b style=\"font-size:18px;\">Your Score: &nbsp;&nbsp;  '+score.toString()+'/'+max.toString()+'&nbsp;&nbsp;<img src=\"{% static "/thh.png" %}\" class=\"img-rounded\" >'
+				
+				}else if(document.getElementById(radio5).checked) {
+				var wrong_img= flag+i.toString().concat(('radio4'.slice(-1)))+'w' ;
+				var x = document.getElementById(wrong_img);
+				
+				x.style.display = 'inline';
+				var y = document.getElementById(upper_sol);
+				y.innerHTML='<b style=\"font-size:18px;\">Your Score: &nbsp;&nbsp;  '+score.toString()+'/'+max.toString()+'&nbsp;&nbsp;<img src=\"{% static "/thh.png" %}\" class=\"img-rounded\" >'
+				
+				}
+			
+					
+		}
+					
+					
+				else  {
+
+				///$(upper_sol).html("Hello World");
+				if(attempt==0){
+				var x = document.getElementById(upper_sol);
+				x.style.fontWeight  = 'bold';
+				x.innerHTML="<b>Not Attempted</b>"; }
+						
+						}
+			
+
+
+					}//for end
+
+	}				
+						
+						
+						
+	$(id).toggle(500);
+	
+	}
+
+//.........math end
+
+
+</script>
+
+</body>
+</html>

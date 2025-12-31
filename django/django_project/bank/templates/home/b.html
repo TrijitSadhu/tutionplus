@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  
+  
+<link href="https://fonts.googleapis.com/css?family=Arimo" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lato:400,700"/>
+  <link href='//fonts.googleapis.com/css?family=Cormorant Garamond' rel='stylesheet'>
+  <link href="https://fonts.googleapis.com/css?family=Noto+Sans" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Quattrocento+Sans" rel="stylesheet">
+  
+ {% load staticfiles %}
+<link rel="stylesheet" href="{% static 'css/animate.min.css' %}" />
+<link rel="stylesheet" href="{% static 'css/pratima.css' %}" />
+
+<style>
+  
+ 
+
+  </style>
+</head>
+<body>
+
+			  <nav class="navbar navbar-custom "role="navigation" >
+					  <div class="container  text-center">
+					  <!--   header -->
+						<div class="navbar-header" id="brand">
+						<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#collapsenav">
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+								</button>
+						  <a class="navbar-brand" href="/">
+						 <!--   <img alt="Brand" src="..."> -->
+						 Getmyvideo.Net....
+						  </a>
+						</div> 
+						<!--   item -->
+
+											<div class="collapse navbar-collapse " id="collapsenav" >
+													<ul class="nav navbar-nav">
+														<!-- MATH -->
+															 <li class="dropdown">
+																	<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+																	<strong>Mathematics </strong><b class="caret"></b></a>
+																		<ul class="dropdown-menu">
+																		
+																		  <li><a href="#">Multiplication Table</a></li>
+																		  <li role="separator" class="divider"></li>    
+																		  <li><a href="#">Series</a></li>
+
+																		  <li role="separator" class="divider"></li>    
+																		  <li class="waves-effect"><a href="#">Days n Work</a></li>
+																		   <li role="separator" class="divider"></li>
+																		  <li class="waves-effect"><a href="#">Profit n Loss</a></li>
+																		   <li role="separator" class="divider"></li>
+																		  <li><a href="#">Boat & Stream</a></li>
+																		</ul>
+															  </li>
+															  
+															  
+															  <!-- REASONING -->
+															  <li class="dropdown">
+																	<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+																	Reasoning <b class="caret"></b></a>
+																		<ul class="dropdown-menu">
+																		
+																		  <li><a href="#">Blood Relation</a></li>
+																		  <li role="separator" class="divider"></li>    
+																		  <li><a href="#">Ranking and Direction</a></li>
+
+																		  <li role="separator" class="divider"></li>    
+																		  <li class="waves-effect"><a href="#">Coading Decoding</a></li>
+																		   <li role="separator" class="divider"></li>
+																		  <li class="waves-effect"><a href="#">Puzzle</a></li>
+																		   <li role="separator" class="divider"></li>
+																		  <li><a href="#">Input Output</a></li>
+																		</ul>
+															  </li>
+															  
+															  
+															  <!-- english -->
+															  <li class="dropdown">
+																	<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">English <b class="caret"></b></a>
+																		<ul class="dropdown-menu">
+																		
+																		  <li><a href="#">Error Correction</a></li>
+																		  <li role="separator" class="divider"></li>    
+																		  <li><a href="#">Close Test</a></li>
+
+																		  <li role="separator" class="divider"></li>    
+																		  <li class="waves-effect"><a href="#">Fill in the blank</a></li>
+																		   <li role="separator" class="divider"></li>
+																		  <li class="waves-effect"><a href="#">Vocabulary</a></li>
+																		   <li role="separator" class="divider"></li>
+																		  <li><a href="#">Editorial</a></li>
+																		</ul>
+															  </li>
+															  <!-- current affairs -->
+															  <li class="dropdown">
+																	<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Current affairs <b class="caret"></b></a>
+																		<ul class="dropdown-menu">
+																		
+																		  <li><a href="#">Daily Current Today</a></li>
+																		  <li role="separator" class="divider"></li>    
+																		  <li><a href="#">Static Gk</a></li>
+
+																		  <li role="separator" class="divider"></li>    
+																		  <li class="waves-effect"><a href="#">Banking Awerness</a></li>
+																		  
+																		</ul>
+															  </li>
+													  
+													  </ul>
+															<ul class="nav navbar-nav navbar-right">
+																			
+																			<li class="dropdown">
+																					
+																							
+																											{% if user.is_authenticated %}
+																											<li class="dropdown">
+														<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">																	{{ user.username }} <b class="caret"></b></a>
+																															<ul class="dropdown-menu">
+																															<li><a href="/logout" >Logout</li>
+																															 <li role="separator" class="divider"></li> 
+																															<li><a href=""> Dash Board</li>
+																															 <li role="separator" class="divider"></li> 
+																															
+																															</ul>
+																															</li>
+																														{% else %}
+																														<a href="" data-toggle="modal" data-target="#myModal">
+																														<span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>&nbsp;
+																														   Log In
+																														{% endif %} </a>
+																			</li>
+															</ul>
+											</div>
+						
+					  </div>
+			</nav>
+			
+			
+			
+			
+			
+																												<div id="myModal" class="modal fade mod" role="dialog">
+																									  <div class="modal-dialog ">
+
+																										<!-- Modal content-->
+																										<div class="modal-content"style="text-align:center">
+																										<div class="modal-header modal-header-danger">
+																										  <div class="modal-header">
+																											<button type="button" class="close" data-dismiss="modal">&times;</button>
+																											<h1 class="modal-title" style="color:#fff"><i class="glyphicon glyphicon-thumbs-up"></i>Modal Header</h1>
+																											</div>
+																										  </div>
+																										  <div class="modal-body"style="text-align:center">
+																																																																																					
+																																																																																					
+																																																																																					<ul class="nav nav-tabs" style="text-align:center">
+																																<li class="active" style="text-align:center"><a data-toggle="tab" href="#home">Sign In</a></li>
+																																<li style="text-align:center"><a data-toggle="tab" href="#menu1">Registrations In</a></li>
+																																
+																															
+																															  </ul>
+
+																															  <div class="tab-content">
+																																<div id="home" class="tab-pane fade in active">
+																																  <h3>Sign In</h3>
+																																																																																																																																														{% block content %}
+																																																																																																																																														
+																																			  <form method="post" id="login" action="" >
+																																				
+																																			
+																																			   {% csrf_token %}
+																																				{{ login.as_p }}
+																																				<div id="below"></div>
+																																				<button class="btn btn-success "  style="color:green"type="submit">Sign In</button>
+																																			  </form>
+																																			
+
+
+																																</div>
+																																<div id="menu1" class="tab-pane fade">
+																																  <h3>Sign up</h3>
+																																																																																																			  
+																																			  <form method="post" id="signup">
+																																				
+																																			   <div class="input-group input-group-lg">
+																																			   {% csrf_token %}
+																																				{{ form}}
+																																				<button type="submit">Sign up</button></div>
+																																			  </form>
+																																			{% endblock %}
+																																</div>
+																															
+																																
+
+
+																												</div>
+																										  </div>
+																										  <div class="modal-footer">
+																											<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+																										  </div>
+																										</div>
+
+																									  </div>
+																									</div>
+			
+			
+			
+			
+			{% block main %}
+			
+			
+			
+			{% endblock %}
+			
+			
+			
+
+					
+					 
+					 
+				<!-- belw slide -->
+				
+			
+				
+				
+	
+
+
+
+
+
+
+
+
+
+	
+					 
+
+<script type="text/javascript" >
+$(document).ready(function () {
+$('.navbar .dropdown').hover(function () {
+        $(this).find('.dropdown-menu').first().stop(true, true).slideDown(150);
+    }, function () {
+        $(this).find('.dropdown-menu').first().stop(true, true).slideUp(105);
+    });
+
+
+
+
+var showChar = 200;
+	var ellipsestext = "...";
+	var moretext = "Read more";
+	var lesstext = "less";
+	$('.more').each(function() {
+		var content = $(this).html();
+
+		if(content.length > showChar) {
+
+			var c = content.substr(0, showChar);
+			var h = content.substr(showChar-1, content.length - showChar);
+
+			var html = c + '<span class="moreelipses">'+ellipsestext+'</span>&nbsp;&nbsp;&nbsp;<a href="" class="morelink"><u>'+moretext+'</u></a></span>';
+
+			$(this).html(html);
+		}
+
+	});
+	
+	
+	
+	
+	//..........................
+	
+	
+		 $("#signup").submit(function (ev)
+	 {
+							
+						
+							//ev.preventDefault();
+		$.ajax({
+            type : 'POST',
+            url: '{% url 'bank:login' %}',
+			dataType: "json",
+			async: true,
+           data : {
+											data1 : $(this).serialize(),
+											csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()
+										  },
+            success: function (response) 
+			{
+         
+				// window.location = response.r;
+
+            },
+			 error: function (data) { $('#below').html("<b>please retry or check url</b>");
+			 
+			 }
+        });
+
+        
+    });
+
+	
+	
+	//.........................
+	
+		//..........................
+	
+	
+
+
+	
+	
+	//.........................
+	
+	
+	
+	
+
+
+});
+
+
+
+
+		 $("#login").submit(function (ev)
+	 {
+							
+			ev.preventDefault();			
+							
+		$.ajax({
+            type : 'POST',
+            url: '{% url 'bank:login' %}',
+			
+			
+           data  : $(this).serialize(),
+            success: function (response) 
+			{
+			var r=response;
+				if(r == "true")
+				{
+				window.location = window.location;
+				}
+				else{
+				$('#below').html("<b>"+response+"</b>");
+				}
+
+            },
+			 error: function (data) { $('#below').html("<b>please 55 or check url</b>");
+			
+			 }
+        });
+
+        
+    });
+	
+function add(id,username) {
+var link_id=id;
+var uname=username;
+$('#myModal').modal('toggle');
+
+	$.ajax({
+            type : 'POST',
+            url: '{% url 'bank:add' %}',
+			
+			
+           data: {link: link_id, user_name: uname,csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()},
+            success: function (response) 
+			{
+			var r=response;
+				if(r == "success")
+				{
+				document.getElementById(link_id).innerHTML ="added";
+				}
+				else{
+				$('#below').html("<b>"+response+"</b>");
+				document.getElementById("link_id").innerHTML = response;
+				}
+
+            },
+			 error: function (data) { $('#link_id').html("<b>please 55 or check url</b>");
+			
+			 }
+        });
+    
+}
+
+</script>
+
+</body>
+</html>

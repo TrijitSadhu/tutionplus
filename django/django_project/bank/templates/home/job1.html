@@ -1,0 +1,1664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+ 
+  
+  <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Arimo" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
+ <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+  <link href='//fonts.googleapis.com/css?family=Cormorant Garamond' rel='stylesheet'>
+  <link href="https://fonts.googleapis.com/css?family=Noto+Sans" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Quattrocento+Sans" rel="stylesheet">
+ 
+  
+ {% load staticfiles %}
+<link rel="stylesheet" href="{% static 'css/animate.min.css' %}" />
+<link rel="stylesheet" href="{% static 'css/pratima.css' %}" />
+
+
+<style>
+  
+  .pagination > li > a, .pagination > li > span {
+    position: relative;
+    float: left;
+    padding: 6px 12px;
+    margin-left: -1px;
+    line-height: 1.42857;
+    color: #337AB7;
+    text-decoration: none;
+    background-color: #FFF;
+    border: 1px solid #DDD;
+	font-size:15px;
+	font-weight:bold;
+	
+}
+
+
+
+
+td{font-weight:bold;
+color:#544545;
+}
+
+
+.clockdiv{
+    font-family: sans-serif;
+    color: #fff;
+    display: inline-block;
+    font-weight: 100;
+    text-align: center;
+    font-size: 16px;
+}
+
+.clockdiv > div{
+    padding: 10px;
+    border-radius: 3px;
+    background: #00BF96;
+    display: inline-block;
+}
+
+.clockdiv div > span{
+    padding: 15px;
+    border-radius: 3px;
+    background: #00816A;
+    display: inline-block;
+}
+
+.smalltext{
+    padding-top: 5px;
+    font-size: 14px;
+}
+hr{
+	 width: auto;
+    margin: 0 10px;
+	    border:1px  solid pink;
+	
+}
+
+
+table {
+  width: 100%;
+  max-width: 600px;
+  height: 320px;
+  border-collapse: collapse;
+  border: 1px solid #38678f;
+  margin: 50px auto;
+  background: white;
+}
+th {
+  background: steelblue;
+  height: 54px;
+  width: 25%;
+  font-weight: lighter;
+  text-shadow: 0 1px 0 #38678f;
+  color: white;
+  border: 1px solid #38678f;
+  box-shadow: inset 0px 1px 2px #568ebd;
+  transition: all 0.2s;
+}
+tr {
+  border-bottom: 1px solid #cccccc;
+}
+tr:last-child {
+  border-bottom: 0px;
+}
+td {
+  border-right: 1px solid #cccccc;
+  padding: 10px;
+  transition: all 0.2s;
+}
+td:last-child {
+  border-right: 0px;
+}
+td.selected {
+  background: #d7e4ef;
+  z-index: ;
+}
+td input {
+  font-size: 14px;
+  background: none;
+  outline: none;
+  border: 0;
+  display: table-cell;
+  height: 100%;
+  width: 100%;
+}
+td input:focus {
+  box-shadow: 0 1px 0 steelblue;
+  color: steelblue;
+}
+h4{color:#0277BD}
+.c-header-my{
+    background-color:#ffffff;
+    color:#0277BD;
+    border-bottom:3px solid #BBB;
+    box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    font-family: 'Roboto', sans-serif;
+    padding:0px;
+    margin-top:0px;
+    overflow:hidden;
+    -webkit-transition: box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          transition: box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+	 
+}
+
+  </style>
+</head>
+<body>
+
+			  <nav class="navbar navbar-custom "role="navigation" >
+					  <div class="container  text-center">
+					  <!--   header -->
+						<div class="navbar-header" id="brand">
+						<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#collapsenav">
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+								</button>
+						  <a class="navbar-brand" href="/">
+						 <!--   <img alt="Brand" src="..."> -->
+						 Getmyvideo.Net....
+						  </a>
+						</div> 
+						<!--   item -->
+
+											<div class="collapse navbar-collapse " id="collapsenav" >
+													<ul class="nav navbar-nav">
+														<!-- MATH -->
+															 <li class="dropdown">
+																	<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+																	<strong>Mathematics </strong><b class="caret"></b></a>
+																		<ul class="dropdown-menu">
+																		
+																		  <li><a href="#">Multiplication Table</a></li>
+																		  <li role="separator" class="divider"></li>    
+																		  <li><a href="#">Series</a></li>
+
+																		  <li role="separator" class="divider"></li>    
+																		  <li class="waves-effect"><a href="#">Days n Work</a></li>
+																		   <li role="separator" class="divider"></li>
+																		  <li class="waves-effect"><a href="#">Profit n Loss</a></li>
+																		   <li role="separator" class="divider"></li>
+																		  <li><a href="#">Boat & Stream</a></li>
+																		</ul>
+															  </li>
+															  
+															  
+															  <!-- REASONING -->
+															  <li class="dropdown">
+																	<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+																	Reasoning <b class="caret"></b></a>
+																		<ul class="dropdown-menu">
+																		
+																		  <li><a href="#">Blood Relation</a></li>
+																		  <li role="separator" class="divider"></li>    
+																		  <li><a href="#">Ranking and Direction</a></li>
+
+																		  <li role="separator" class="divider"></li>    
+																		  <li class="waves-effect"><a href="#">Coading Decoding</a></li>
+																		   <li role="separator" class="divider"></li>
+																		  <li class="waves-effect"><a href="#">Puzzle</a></li>
+																		   <li role="separator" class="divider"></li>
+																		  <li><a href="#">Input Output</a></li>
+																		</ul>
+															  </li>
+															  
+															  
+															  <!-- english -->
+															  <li class="dropdown">
+																	<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">English <b class="caret"></b></a>
+																		<ul class="dropdown-menu">
+																		
+																		  <li><a href="#">Error Correction</a></li>
+																		  <li role="separator" class="divider"></li>    
+																		  <li><a href="#">Close Test</a></li>
+
+																		  <li role="separator" class="divider"></li>    
+																		  <li class="waves-effect"><a href="#">Fill in the blank</a></li>
+																		   <li role="separator" class="divider"></li>
+																		  <li class="waves-effect"><a href="#">Vocabulary</a></li>
+																		   <li role="separator" class="divider"></li>
+																		  <li><a href="#">Editorial</a></li>
+																		</ul>
+															  </li>
+															  <!-- current affairs -->
+															  <li class="dropdown">
+																	<a href="/ca/1/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Current affairs <b class="caret"></b></a>
+																		<ul class="dropdown-menu">
+																		
+																		  <li><a href="/ca/1">Daily Current Today</a></li>
+																		  <li role="separator" class="divider"></li>    
+																		  <li><a href="#">Static Gk</a></li>
+
+																		  <li role="separator" class="divider"></li>    
+																		  <li class="waves-effect"><a href="#">Banking Awerness</a></li>
+																		  
+																		</ul>
+															  </li>
+													  
+													  </ul>
+															<ul class="nav navbar-nav navbar-right">
+																			
+																			<li class="dropdown">
+																					
+																							
+																											{% if user.is_authenticated %}
+																											<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ user.username }} <b class="caret"></b></a>
+																											
+														
+																															<ul class="dropdown-menu">
+																															<li><a href="/logout" >Logout</a></li>
+																															 <li role="separator" class="divider"></li> 
+																															<li><a href="{% url 'bank:dashboard' %}"> Dash Board</a></li>
+																															
+																															
+																															</ul>
+																															
+																														{% else %}
+																														<a href="" data-toggle="modal" data-target="#myModal">
+																														<span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>&nbsp;
+																														   Log In<b class="caret"></b>
+																														   </a>
+																														
+																														{% endif %} 
+																														
+																			</li>
+															</ul>
+											</div>
+						
+					  </div>
+			</nav>
+			
+			
+			
+			
+			
+																												<div id="myModal" class="modal fade mod" role="dialog">
+																									  <div class="modal-dialog ">
+
+																										<!-- Modal content-->
+																										<div class="modal-content"style="text-align:center">
+																										<div class="modal-header modal-header-danger">
+																										  <div class="modal-header">
+																											<button type="button" class="close" data-dismiss="modal">&times;</button>
+																											<h1 class="modal-title" style="color:#fff"><i class="glyphicon glyphicon-thumbs-up"></i>Modal Header</h1>
+																											</div>
+																										  </div>
+																										  <div class="modal-body"style="text-align:center">
+																																																																																					
+																																																																																					
+																																																																																					<ul class="nav nav-tabs" style="text-align:center">
+																																<li class="active" style="text-align:center"><a data-toggle="tab" href="#home">Sign In</a></li>
+																																<li style="text-align:center"><a data-toggle="tab" href="#menu1">Registrations In</a></li>
+																																
+																															
+																															  </ul>
+
+																															  <div class="tab-content">
+																																<div id="home" class="tab-pane fade in active">
+																																  <h3>Sign In</h3>
+																																																																																																																																														{% block content %}
+																																																																																																																																														
+																																			  <form method="post" id="login" action="" >
+																																				
+																																			
+																																			   {% csrf_token %}
+																																				{{ login.as_p }}
+																																				<div id="below"></div>
+																																				<button class="btn btn-success "  style="color:green"type="submit">Sign In</button>
+																																			  </form>
+																																			
+
+
+																																</div>
+																																<div id="menu1" class="tab-pane fade">
+																																  <h3>Sign up</h3>
+																																																																																																			  
+																																			  <form method="post" id="signup">
+																																				
+																																			   <div class="input-group input-group-lg">
+																																			   {% csrf_token %}
+																																				{{ form}}
+																																				<button type="submit">Sign up</button></div>
+																																			  </form>
+																																			{% endblock %}
+																																</div>
+																															
+																																
+
+
+																												</div>
+																										  </div>
+																										  <div class="modal-footer">
+																											<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+																										  </div>
+																										</div>
+
+																									  </div>
+																									</div>
+			
+			
+			
+			
+			
+			
+			
+			
+	<!--   image start -->
+					
+					 	<div class="container">
+				<div class="row">
+					<div class="panel card">
+					
+					
+										<div class="col-md-12 nopadding">
+										<img src="{% static "/ch.jpg" %}" class="img-rounded" alt="Cinque Terre" width="100%" >
+										<h3 class="card"style="text-align:center; color: #336699">English Vocabulary </h3>
+										
+										</div>
+					 </div>
+				</div>	</div> 
+					 <!--   image end -->
+					
+					 
+				<!-- belw slide -->
+				
+				
+			<div class="container">
+			
+				<div class="row">
+					<div class="panel card" >
+					
+					
+					
+					
+						<div class="col-md-2 nopadding ">
+						
+							<div class="panel ">
+							  <div class="panel-heading" style="background-color:#cc0000;"><h3 style="color:#ffffff;padding:0px"><u>Latest Notification</u><h3></div>
+							  {{p}}
+							  <div class="panel-body"><p><a href="https://www.w3schools.com/html/">Go to Currrent Affairs Section>></a></p></div>
+							</div>
+							
+							
+						<p><a href="#">Go to Currrent Affairs Section>></a></p>
+						
+						
+						
+						
+						<div class="panel ">
+							<div class="panel-heading" style="background-color:#cc0000;"><h3 style="color:#ffffff;padding:0px"><u>Current Affairs Category</u><h3></div>
+								<div class="panel-body nopadding">
+																			  <ul class="list-group">
+																			  
+																			  
+													<a href="/current/Science_Techonlogy/1"><li class="list-group-item">	8 jun 2017</li></a>
+													{% for list_day in list_day %}
+													<li class="list-group-item">	<a  href="/english/word/{{list_day.day|date:'Y-m-d'}}/1"> {{list_day.day}}</a> </li>
+													
+													{% endfor  %}
+													<li class="list-group-item">	<a style="font-size:16px;"href="/current/State/1">6 jun 2017</a> </li>
+													<li class="list-group-item">	<a style="font-size:16px;" href="/current/International/1">5 jun 2017</a> </li>
+													<li class="list-group-item">	<a  href="/current/Business_Economy_Banking/1"><b>5 jun 2017</b></a></li>
+													<li class="list-group-item">	<a lass="pp" href="/current/Environment/1">4 jun 2017</a>  </li>
+													
+													
+												  </ul>
+										</div>
+									</div>	
+						</div>
+						
+						
+						
+						
+						<div class="col-md-8 nopadding" style=" border: 1px solid #dddddd;">
+						<div class="media">
+  <div class="media-left">
+    <img src="/media/media/cgl.jpg" class="media-object" style="width:160px">
+  </div>
+  <div class="media-body">
+    <h4 class="media-heading">CGL RECRUIMENT 2017 VARIOUS POST OFFICER ASSISTANT GM, AGM, DGM, Sr & Dy Manager, Executive Secretary – 11 Posts</h4>
+	<button type="button" class="btn btn-warning btn-xs"style="float:right;color:blue;border:1px blue;">Details<i class="fa fa-arrow-down" aria-hidden="true"></i>
+</button>	
+    <p>LAST DATE TO APPLY:21/08/2017</p>
+  </div>
+</div>
+ <hr></hr>
+<div class="media">
+  <div class="media-left">
+    <img src="/media/media/rbi.jpeg" class="media-object" style="width:160px">
+  </div>
+  <div class="media-body" >
+    <h4 class="media-heading">CGL RECRUIMENT 2017 VARIOUS POST OFFICER ASSISTANT GM, AGM, DGM, Sr & Dy Manager, Executive Secretary – 11 Posts</h4>
+	<button type="button" class="btn btn-warning btn-xs"style="float:right">Details<i class="fa fa-arrow-down" aria-hidden="true"></i>
+</button>	
+    <p style="color:#D50000"><b>LAST DATE TO APPLY:21/08/2017</b></p>
+  </div>
+</div>
+<div class="media">
+  <div class="media-left">
+    <img src="/media/media/rbi.jpeg" class="media-object" style="width:160px">
+  </div>
+  <div class="media-body" >
+    <h4 class="media-heading"><u>CGL RECRUIMENT 2017 VARIOUS POST OFFICER ASSISTANT GM, AGM, DGM, Sr & Dy Manager, Executive Secretary – 11 Posts</u></h4>
+	<button type="button" class="btn btn-warning btn-xs"style="float:right">Details<i class="fa fa-arrow-down" aria-hidden="true"></i>
+</button>	
+    <p style="color:#D50000"><b>LAST DATE TO APPLY:21/08/2017</b></p>
+  </div>
+</div>
+ <hr></hr>
+<div class="media">
+  <div class="media-left">
+    <img src="/media/media/rbi.jpeg" class="media-object" style="width:160px">
+  </div>
+  <div class="media-body" >
+    <h4 class="media-heading"><u>CGL RECRUIMENT 2017 VARIOUS POST OFFICER ASSISTANT GM, AGM, DGM, Sr & Dy Manager, Executive Secretary – 11 Posts</u></h4>
+	<button type="button" class="btn btn-warning btn-xs"style="float:right">Details<i class="fa fa-arrow-down" aria-hidden="true"></i>
+</button>	
+    <p style="color:#D50000"><b>LAST DATE TO APPLY:21/08/2017</b></p>
+  </div>
+</div>
+ <hr></hr>
+<div class="media">
+  <div class="media-left">
+    <img src="/media/media/postal.png" class="media-object" style="width:160px">
+  </div>
+  <div class="media-body">
+    <h4 class="media-heading">CGL RECRUIMENT 2017 VARIOUS POST OFFICER ASSISTANT GM, AGM, DGM, Sr & Dy Manager, Executive Secretary – 11 Posts</h4>
+    <p>LAST DATE TO APPLY:21/08/2017</p>
+  </div>
+   <hr></hr>
+</div>
+
+<div class="media">
+  <div class="media-left">
+    <img src="/media/media/rrb.jpeg" class="media-object" style="width:160px">
+  </div>
+  <div class="media-body">
+    <h4 class="media-heading">CGL RECRUIMENT 2017 VARIOUS POST OFFICER ASSISTANT GM, AGM, DGM, Sr & Dy Manager, Executive Secretary – 11 Posts</h4>
+    <p>LAST DATE TO APPLY:21/08/2017</p>
+  </div>
+</div>
+<div class="media">
+  <div class="media-left">
+    <img src="/media/media/cgl.jpg" class="media-object" style="width:160px">
+  </div>
+  <div class="media-body">
+    <h4 class="media-heading">CGL RECRUIMENT 2017 VARIOUS POST OFFICER ASSISTANT GM, AGM, DGM, Sr & Dy Manager, Executive Secretary – 11 Posts</h4>
+    <p>LAST DATE TO APPLY:21/08/2017</p>
+  </div>
+</div>
+<div class="media">
+  <div class="media-left">
+    <img src="/media/media/rbi.jpeg" class="media-object" style="width:160px">
+  </div>
+  <div class="media-body">
+    <h4 class="media-heading">CGL RECRUIMENT 2017 VARIOUS POST OFFICER ASSISTANT GM, AGM, DGM, Sr & Dy Manager, Executive Secretary – 11 Posts</h4>
+    <p>LAST DATE TO APPLY:21/08/2017</p>
+  </div>
+</div>
+<div class="media">
+  <div class="media-left">
+    <img src="/media/media/postal.png" class="media-object" style="width:160px">
+  </div>
+  <div class="media-body">
+    <h4 class="media-heading">CGL RECRUIMENT 2017 VARIOUS POST OFFICER ASSISTANT GM, AGM, DGM, Sr & Dy Manager, Executive Secretary – 11 Posts</h4>
+    <p>LAST DATE TO APPLY:21/08/2017</p>
+  </div>
+</div>
+<div class="media">
+  <div class="media-left">
+    <img src="/media/media/rrb.jpeg" class="media-object" style="width:160px">
+  </div>
+  <div class="media-body">
+    <h4 class="media-heading">CGL RECRUIMENT 2017 VARIOUS POST OFFICER ASSISTANT GM, AGM, DGM, Sr & Dy Manager, Executive Secretary – 11 Posts</h4>
+    <p>LAST DATE TO APPLY:21/08/2017</p>
+  </div>
+</div>
+
+
+
+						<div class="table-responsive">
+						 <table class="table">
+    <thead>
+      <tr>
+        <th>Firstname</th>
+        <th>Lastname</th>
+        <th>Email</th>
+		<th>Email</th>
+		<th>Email</th>
+		<th>Lastname</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Associate Professor, Stores Officer</td>
+        <td>India 	GM, AGM, DGM, Sr & Dy Manager, Executive Secretary – 11 Posts
+
+</td>
+        <td>Any Degree, CA/ ICWA/ MBA</td>
+		<td>02/2017</td>
+		<td>def@somemail.com</td>
+		 <td>Defaultson</td>
+      </tr>      
+      <tr class="success">
+       <td>Associate Professor, Stores Officer</td>
+        <td>India 	GM, AGM, DGM, Sr & Dy Manager, Executive Secretary – 11 Posts
+
+</td>
+        <td>Any Degree, CA/ ICWA/ MBA</td>
+		<td>02/2017</td>
+		<td>def@somemail.com</td>
+		 <td>Defaultson</td>
+      </tr>
+	  <tr>
+        <td>Associate Professor, Stores Officer</td>
+        <td>India 	GM, AGM, DGM, Sr & Dy Manager, Executive Secretary – 11 Posts
+
+</td>
+        <td>Any Degree, CA/ ICWA/ MBA</td>
+		<td>02/2017</td>
+		<td>def@somemail.com</td>
+		 <td>Defaultson</td>
+      </tr>   
+      <tr class="warning">
+       <td>Associate Professor, Stores Officer</td>
+        <td>India 	GM, AGM, DGM, Sr & Dy Manager, Executive Secretary – 11 Posts
+
+</td>
+        <td>Any Degree, CA/ ICWA/ MBA</td>
+		<td>02/2017</td>
+		<td>def@somemail.com</td>
+		 <td>Defaultson</td>
+      </tr>
+	  <tr>
+        <td>Associate Professor, Stores Officer</td>
+        <td>India 	GM, AGM, DGM, Sr & Dy Manager, Executive Secretary – 11 Posts
+
+</td>
+        <td>Any Degree, CA/ ICWA/ MBA</td>
+		<td>02/2017</td>
+		<td>def@somemail.com</td>
+		 <td>Defaultson</td>
+      </tr>   
+      <tr class="info">
+      <td>Associate Professor, Stores Officer</td>
+        <td>India 	GM, AGM, DGM, Sr & Dy Manager, Executive Secretary – 11 Posts
+
+</td>
+        <td>Any Degree, CA/ ICWA/ MBA</td>
+		<td>02/2017</td>
+		<td>def@somemail.com</td>
+		 <td>Defaultson</td>
+      </tr>
+	  <tr>
+        <td>Associate Professor, Stores Officer</td>
+        <td>India 	GM, AGM, DGM, Sr & Dy Manager, Executive Secretary – 11 Posts
+
+</td>
+        <td>Any Degree, CA/ ICWA/ MBA</td>
+		<td>02/2017</td>
+		<td>def@somemail.com</td>
+		 <td>Defaultson</td>
+      </tr>   
+      <tr class="warning">
+        <td>Warning</td>
+        <td>Refs</td>
+        <td>bo@example.com</td>
+		<td>def@somemail.com</td>
+		<td>def@somemail.com</td>
+		 <td>Defaultson</td>
+      </tr>
+	  <tr>
+        <td>Associate Professor, Stores Officer</td>
+        <td>India 	GM, AGM, DGM, Sr & Dy Manager, Executive Secretary – 11 Posts
+
+</td>
+        <td>Any Degree, CA/ ICWA/ MBA</td>
+		<td>02/2017</td>
+		<td>def@somemail.com</td>
+		 <td>Defaultson</td>
+      </tr>   
+      <tr class="active">
+        <td>Active</td>
+        <td>Activeson</td>
+        <td>act@example.com</td>
+		<td>def@somemail.com</td>
+		<td>def@somemail.com</td>
+		 <td>Defaultson</td>
+      </tr>
+	  <tr>
+        <td>Associate Professor, Stores Officer</td>
+        <td>India 	GM, AGM, DGM, Sr & Dy Manager, Executive Secretary – 11 Posts
+
+</td>
+        <td>Any Degree, CA/ ICWA/ MBA</td>
+		<td>02/2017</td>
+		<td>def@somemail.com</td>
+		 <td>Defaultson</td>
+      </tr>   
+    </tbody>
+  </table>
+  </div>
+					<div class="panel-group ">
+					<div class="col-md-6">
+									<div class="panel panel-info ">
+										<div class="paragraph_image" style="margin-right:8px;">
+                        <a href="#"><img width="150" height="150" src="/media/media/rbi.jpeg"class="attachment-120x120 size-120x120 wp-post-image" alt="" scale="0"></a>
+                    </div>
+																		<p  style="font-size:20px;font-family: 'Arimo', sans-serif;font-color:black;"> RBI Recruitment 2017 162 Officer Grade , Medical Consultant & 
+RBI Recruitment 2017 162 Officer Grade , Medical Consultant & RBI Recruitment 2017 162 Officer Grade
+																		</p>
+										  <div class="panel-heading"><strong>Postal bank Recruitment 2017</strong>
+											<!-- <img src="/media/media/postal.png" class="img-thumbnail " alt="Image"> -->
+										  </div>
+										  <div class="panel-body" style="text-align:center;">
+												
+												<ul style="text-align:Left;margin-top:50px;">
+												
+													<li><Strong>Start Date:  27/05/2017</strong></li>
+													<li><Strong>Last Date:  05/08/2017</strong></li>
+													
+													<li><Strong>Eligibility:<ol style="text-align:Left;padding-left:10px; ">
+												
+													<li><Strong>Officer Scale 1: Graduate</strong></li>
+													<li><Strong>Officer Scale 2:  MBA/BBA</strong></li>
+													
+													<li><Strong>Officer Scale 3:  Chatterd Accountant/commerce with 4 year experiance</strong></li>
+													<li><Strong>Marketting officer: MBA with 4 year experiance</strong></li>
+												
+												</ol></strong></li>
+													<li><Strong>age: 30 years</strong></li>
+												
+												</ul>
+												
+												<a href="#"style="text-align:center"><h5>Click for Details<h5></a>
+												<a href="#" style="text-align:center"><h5>Click here  to Apply<h5></a>
+											
+										  
+										  
+										  </div>
+									</div>
+									</div>
+									<div class="col-md-6">
+									<div class="panel panel-info">
+										  <div class="panel-heading"><strong>RBI Recruitment 2017  162 Officer Grade , Medical Consultant & Director Posts
+
+															Read more: RBI Recruitment 2017 - 162 Officer Grade 'B', Medical Consultant & Director Posts 
+																</strong>
+														<img src="/media/media/rbi.jpeg" class="img-thumbnail " alt="Image" width="210" height="360" >
+										  </div>
+										  <div class="panel-body" style="text-align:center;">
+												
+												<ul style="text-align:Left;margin-top:50px;">
+												
+													<li><Strong>Start Date:  27/05/2017</strong></li>
+													<li><Strong>Last Date:  05/08/2017</strong></li>
+													
+													<li><Strong>Eligibility:<ol style="text-align:Left;padding-left:10px; ">
+												
+													<li><Strong>Officer Scale 1: Graduate</strong></li>
+													<li><Strong>Officer Scale 2:  MBA/BBA</strong></li>
+													<li><Strong>Officer Scale 1: Graduate</strong></li>
+													<li><Strong>Officer Scale 2:  MBA/BBA</strong></li>
+													<li><Strong>Officer Scale 1: Graduate</strong></li>
+													<li><Strong>Officer Scale 2:  MBA/BBA</strong></li>
+													<li><Strong>Officer Scale 1: Graduate</strong></li>
+													<li><Strong>Officer Scale 2:  MBA/BBA</strong></li>
+													
+													<li><Strong>Officer Scale 3:  Chatterd Accountant/commerce with 4 year experiance</strong></li>
+													<li><Strong>Marketting officer: MBA with 4 year experiance</strong></li>
+												
+												</ol></strong></li>
+													<li><Strong>age: 30 years</strong></li>
+												
+												</ul>
+												
+												<a href="#"style="text-align:center"><h5>Click for Details<h5></a>
+												<a href="#" style="text-align:center"><h5>Click here  to Apply<h5></a>
+											
+										  
+										  
+										  </div>
+									</div>
+									</div>
+									
+									</div>
+									
+													
+													
+													
+													
+													
+													
+													
+													
+													
+													
+																													
+														<hr></hr>
+												
+																																	
+																																	
+																																	<div class="col-md-6">
+					
+																
+																																	<div class="c-content">
+																																		<div class="c-header-blue">
+																																		<div class="paragraph_image" style="margin-right:8px;">
+                        <a href="#"><img width="150" height="150" src="/media/media/rbi.jpeg"class="attachment-120x120 size-120x120 wp-post-image" alt="" scale="0"></a>
+                    </div>
+																																		   <h1 class="c-heading">RBI Recruitment 2017  162 Officer Grade , Medical Consultant & Director Posts
+
+															Read more: RBI Recruitment 2017 - 162 Officer Grade 'B', Medical Consultant & Director Posts  </h2>
+																																		</div>
+																																		<div class="c-body">
+																																		  <p class="c-p">
+																																		  
+																																		  
+																																		  
+																																		<ul style="text-align:Left;margin-top:50px;">
+												
+													<li><Strong>Start Date:  27/05/2017</strong></li>
+													<li><Strong>Last Date:  05/08/2017</strong></li>
+													
+													<li><Strong>Eligibility:<ol style="text-align:Left;padding-left:10px; ">
+												
+													<li><Strong>Officer Scale 1: Graduate</strong></li>
+													<li><Strong>Officer Scale 2:  MBA/BBA</strong></li>
+													
+													<li><Strong>Officer Scale 3:  Chatterd Accountant/commerce with 4 year experiance</strong></li>
+													<li><Strong>Marketting officer: MBA with 4 year experiance</strong></li>
+												
+												</ol></strong></li>
+													<li><Strong>age: 30 years</strong></li>
+												
+												</ul>
+												
+												<a href="#"style="text-align:center"><h5>Click for Details<h5></a>
+												<a href="#" style="text-align:center"><h5>Click here  to Apply<h5></a>
+																																				
+																																			</p>
+																																		</div>
+																																		
+																																		<nav class="nav-tabs">
+																																			<ul class="nav nav-pills pull-left">
+																																				<li class="card-action"><a href="#">Link</a></li>
+																																				
+																																			</ul>
+																																			
+																																		</nav>
+																																			
+																																	</div>
+																																	
+																																	</div>
+																																	<div class="col-md-6">
+					
+																
+																																	<div class="c-content">
+																																		<div class="c-header-blue"style="background-color:#428bca">
+																																		<a href="#"><img width="150" height="100%" src="/media/media/cgl.jpg" alt="" scale="0"></a>
+																																																												   <h1 class="c-heading">RBI Recruitment 2017  162 Officer Grade , Medical Consultant & Director Posts
+
+															Read more: RBI Recruitment 2017 - 162 Officer Grade 'B', Medical Consultant & Director Posts  </h2>
+																																		</div>
+																																		<div class="c-body">
+																																		  <p class="c-p">
+																																		  
+																																		  
+																																		 <ul style="text-align:Left;margin-top:50px;">
+												
+													<li><Strong>Start Date:  27/05/2017</strong></li>
+													<li><Strong>Last Date:  05/08/2017</strong></li>
+													
+													<li><Strong>Eligibility:<ol style="text-align:Left;padding-left:10px; ">
+												
+													<li><Strong>Officer Scale 1: Graduate</strong></li>
+													<li><Strong>Officer Scale 2:  MBA/BBA</strong></li>
+													
+													<li><Strong>Officer Scale 3:  Chatterd Accountant/commerce with 4 year experiance</strong></li>
+													<li><Strong>Marketting officer: MBA with 4 year experiance</strong></li>
+												
+												</ol></strong></li>
+													<li><Strong>age: 30 years</strong></li>
+												
+												</ul>
+												
+												<a href="#"style="text-align:center"><h5>Click for Details<h5></a>
+												<a href="#" style="text-align:center"><h5>Click here  to Apply<h5></a>
+																																				
+																																			</p>
+																																		</div>
+																																		
+																																		<nav class="nav-tabs">
+																																			<ul class="nav nav-pills pull-left">
+																																				<li class="card-action"><a href="#">Link</a></li>
+																																				
+																																			</ul>
+																																			
+																																		</nav>
+																																			
+																																	</div>
+																																	
+																																	</div>
+																																		<div class="col-md-6">
+					
+																
+																																	<div class="c-content">
+																																		<div class="c-header-blue"style="background-color:#31708f">
+																																		<div class="paragraph_image" style="margin-right:8px;">
+                        <a href="#"><img width="150" height="150" src="/media/media/postal.png"class="attachment-120x120 size-120x120 wp-post-image" alt="" scale="0"></a>
+                    </div>
+																																		   <h1 class="c-heading">RBI Recruitment 2017  162 Officer Grade , Medical Consultant & Director Posts
+
+															Read more: RBI Recruitment 2017 - 162 Officer Grade 'B', Medical Consultant & Director Posts  </h2>
+																																		</div>
+																																		<div class="c-body">
+																																		  <p class="c-p">
+																																		  
+																																		  
+																																		 <ul style="text-align:Left;margin-top:50px;">
+												
+													<li><Strong>Start Date:  27/05/2017</strong></li>
+													<li><Strong>Last Date:  05/08/2017</strong></li>
+													
+													<li><Strong>Eligibility:<ol style="text-align:Left;padding-left:10px; ">
+												
+													<li><Strong>Officer Scale 1: Graduate</strong></li>
+													<li><Strong>Officer Scale 2:  MBA/BBA</strong></li>
+													
+													<li><Strong>Officer Scale 3:  Chatterd Accountant/commerce with 4 year experiance</strong></li>
+													<li><Strong>Marketting officer: MBA with 4 year experiance</strong></li>
+												
+												</ol></strong></li>
+													<li><Strong>age: 30 years</strong></li>
+												
+												</ul>
+												
+												<a href="#"style="text-align:center"><h5>Click for Details<h5></a>
+												<a href="#" style="text-align:center"><h5>Click here  to Apply<h5></a>
+																																				
+																																			</p>
+																																		</div>
+																																		
+																																		<nav class="nav-tabs">
+																																			<ul class="nav nav-pills pull-left">
+																																				<li class="card-action"><a href="#">Link</a></li>
+																																				
+																																			</ul>
+																																			
+																																		</nav>
+																																			
+																																	</div>
+																																	
+																																	</div>
+																																	<div class="col-md-6">
+					
+																
+																																	<div class="c-content">
+																																		<div class="c-header-blue">
+																																		<div class="paragraph_image" style="margin-right:8px;">
+                        <a href="#"><img width="150" height="150" src="/media/media/postal.png"class="attachment-120x120 size-120x120 wp-post-image" alt="" scale="0"></a>
+                    </div>
+																																		   <h1 class="c-heading">RBI Recruitment 2017  162 Officer Grade , Medical Consultant & Director Posts
+
+															Read more: RBI Recruitment 2017 - 162 Officer Grade 'B', Medical Consultant & Director Posts  </h2>
+																																		</div>
+																																		<div class="c-body">
+																																		  <p class="c-p">
+																																		  
+																																		  
+																																		 <ul style="text-align:Left;margin-top:50px;">
+												
+													<li><Strong>Start Date:  27/05/2017</strong></li>
+													<li><Strong>Last Date:  05/08/2017</strong></li>
+													
+													<li><Strong>Eligibility:<ol style="text-align:Left;padding-left:10px; ">
+												
+													<li><Strong>Officer Scale 1: Graduate</strong></li>
+													<li><Strong>Officer Scale 2:  MBA/BBA</strong></li>
+													
+													<li><Strong>Officer Scale 3:  Chatterd Accountant/commerce with 4 year experiance</strong></li>
+													<li><Strong>Marketting officer: MBA with 4 year experiance</strong></li>
+												
+												</ol></strong></li>
+													<li><Strong>age: 30 years</strong></li>
+												
+												</ul>
+												
+												<a href="#"style="text-align:center"><h5>Click for Details<h5></a>
+												<a href="#" style="text-align:center"><h5>Click here  to Apply<h5></a>
+																																				
+																																			</p>
+																																		</div>
+																																		
+																																		<nav class="nav-tabs">
+																																			<ul class="nav nav-pills pull-left">
+																																				<li class="card-action"><a href="#">Link</a></li>
+																																				
+																																			</ul>
+																																			
+																																		</nav>
+																																			
+																																	</div>
+																																	
+																																	</div>
+																																		<div class="col-md-6">
+					
+																
+																																	<div class="c-content">
+																																		<div class="c-header-blue">
+																																		<div class="paragraph_image" style="margin-right:8px;">
+                        <a href="#"><img width="150" height="80" src="/media/media/postal.png"class="attachment-120x120 size-120x120 wp-post-image" alt="" scale="0"></a>
+                    </div>
+																																	 <h4 style="color:white">POSTAL Recruitment 2017  162 Officer Grade , Medical Consultant & Director Posts
+
+																																					</h4>
+																														<button type="button" class="btn btn-warning btn-xs"style="float:right">Details<i class="fa fa-arrow-down" aria-hidden="true"></i>
+</button>	
+																																					
+																																		</div>
+																																		<div class="c-body">
+																																		  <p class="c-p">
+																																		  
+																																		  
+																																		 <ul style="text-align:Left;margin-top:50px;">
+												
+													<li><Strong>Start Date:  27/05/2017</strong></li>
+													<li><Strong>Last Date:  05/08/2017</strong></li>
+													
+													<li><Strong>Eligibility:<ol style="text-align:Left;padding-left:10px; ">
+												
+													<li><Strong>Officer Scale 1: Graduate</strong></li>
+													<li><Strong>Officer Scale 2:  MBA/BBA</strong></li>
+													
+													<li><Strong>Officer Scale 3:  Chatterd Accountant/commerce with 4 year experiance</strong></li>
+													<li><Strong>Marketting officer: MBA with 4 year experiance</strong></li>
+												
+												</ol></strong></li>
+													<li><Strong>age: 30 years</strong></li>
+												
+												</ul>
+												
+												<a href="#"style="text-align:center"><h5>Click for Details<h5></a>
+												<a href="#" style="text-align:center"><h5>Click here  to Apply<h5></a>
+																																				
+																																			</p>
+																																		</div>
+																																		
+																																		<nav class="nav-tabs">
+																																			<ul class="nav nav-pills pull-left">
+																																				<li class="card-action"><a href="#">Link</a></li>
+																																				
+																																			</ul>
+																																			
+																																		</nav>
+																																			
+																																	</div>
+																																	
+																																	</div>
+																																	<div class="col-md-6">
+					
+																
+																																	<div class="c-content">
+																																		<div class="c-header-blue">
+																																		<div class="paragraph_image" style="margin-right:8px;">
+                        <a href="#"><img width="150" height="80" src="/media/media/rbi.jpeg"class="attachment-120x120 size-120x120 wp-post-image" alt="" scale="0"></a>
+                    </div>
+																																		  <h4 style="color:white">POSTAL Recruitment 2017  162 Officer Grade , Medical Consultant & Director Posts
+
+																																					</h4></h2>
+																																		</div>
+																																		<div class="c-body">
+																																		  <p class="c-p">
+																																		  
+																																		  
+																																		 <ul style="text-align:Left;margin-top:50px;">
+												
+													<li><Strong>Start Date:  27/05/2017</strong></li>
+													<li><Strong>Last Date:  05/08/2017</strong></li>
+													
+													<li><Strong>Eligibility:<ol style="text-align:Left;padding-left:10px; ">
+												
+													<li><Strong>Officer Scale 1: Graduate</strong></li>
+													<li><Strong>Officer Scale 2:  MBA/BBA</strong></li>
+													
+													<li><Strong>Officer Scale 3:  Chatterd Accountant/commerce with 4 year experiance</strong></li>
+													<li><Strong>Marketting officer: MBA with 4 year experiance</strong></li>
+												
+												</ol></strong></li>
+													<li><Strong>age: 30 years</strong></li>
+												
+												</ul>
+												
+												<a href="#"style="text-align:center"><h5>Click for Details<h5></a>
+												<a href="#" style="text-align:center"><h5>Click here  to Apply<h5></a>
+																																				
+																																			</p>
+																																		</div>
+																																		
+																																		<nav class="nav-tabs">
+																																			<ul class="nav nav-pills pull-left">
+																																				<li class="card-action"><a href="#">Link</a></li>
+																																				
+																																			</ul>
+																																			
+																																		</nav>
+																																			
+																																	</div>
+																																	
+																																	</div>
+																																	
+																												<div class="col-md-12">
+					
+																
+																																	<div class="c-content">
+																																		<div class="c-header-blue">
+																																		<div class="paragraph_image" style="margin-right:8px;">
+                        <a href="#"><img width="150" height="100" src="/media/media/rbi.jpeg"class="attachment-120x120 size-120x120 wp-post-image" alt="" scale="0"></a>
+                    </div>
+																																		   <h4 style="color:white">11POSTAL Recruitment 2017  162 Officer Grade , Medical Consultant & Director Posts
+
+																																					</h4>
+																																		</div>
+																																		<div class="c-header-blue">
+																																		<div class="paragraph_image" style="margin-right:8px;">
+                        <a href="#"><img width="150" height="100" src="/media/media/postal.png"class="attachment-120x120 size-120x120 wp-post-image" alt="" scale="0"></a>
+                    </div>
+																																		   <h4 style="color:white">POSTAL Recruitment 2017  162 Officer Grade , Medical Consultant & Director Posts
+
+																																					</h4>
+																																		</div>
+																																			<div class="c-header-my">
+																																		<div class="paragraph_image" style="margin-right:8px;">
+                        <a href="#"><img width="150" height="100" src="/media/media/rrb.jpeg"class="attachment-120x120 size-120x120 wp-post-image" alt="" scale="0"></a>
+                    </div>
+																																		   <h4 style="color:white">POSTAL Recruitment 2017  162 Officer Grade , Medical Consultant & Director Posts
+
+																																					</h4>
+																																		</div>
+																																			<div class="c-header-my">
+																																		<div class="paragraph_image" style="margin-right:8px;">
+                        <a href="#"><img width="150" height="100" src="/media/media/cgl.jpg"class="attachment-120x120 size-120x120 wp-post-image" alt="" scale="0"></a>
+                    </div>
+																																		   <h4 >POSTAL Recruitment 2017  162 Officer Grade , Medical Consultant & Director Posts
+
+																																					</h4> <p> Last Date: 21/07/2017</p><button id="b" onClick="op('#cb')" type="button" class="btn btn-warning btn-xs"style="float:right;color:white;border:1px blue;">Details<i class="fa fa-arrow-down" aria-hidden="true"></i>
+</button>	
+																																		</div>
+																																		<div class="c-body" id="cb" style=";display:none"">
+																																		  <p class="c-p">
+																																		  
+																																		  
+																																		 <ul style="text-align:Left;margin-top:50px;">
+												
+													<li><Strong>Start Date:  27/05/2017</strong></li>
+													<li><Strong>Last Date:  05/08/2017</strong></li>
+													
+													<li><Strong>Eligibility:<ol style="text-align:Left;padding-left:10px; ">
+												
+													<li><Strong>Officer Scale 1: Graduate</strong></li>
+													<li><Strong>Officer Scale 2:  MBA/BBA</strong></li>
+													
+													<li><Strong>Officer Scale 3:  Chatterd Accountant/commerce with 4 year experiance</strong></li>
+													<li><Strong>Marketting officer: MBA with 4 year experiance</strong></li>
+												
+												</ol></strong></li>
+													<li><Strong>age: 30 years</strong></li>
+												
+												</ul>
+												
+												<a href="#"style="text-align:center"><h5>Click for Details<h5></a>
+												<a href="#" style="text-align:center"><h5>Click here  to Apply<h5></a>
+																																				
+																																			</p>
+																																		</div>
+																																			<div class="c-header-blue">
+																																		<div class="paragraph_image" style="margin-right:8px;">
+                        <a href="#"><img width="150" height="100" src="/media/media/postal.png"class="attachment-120x120 size-120x120 wp-post-image" alt="" scale="0"></a>
+                    </div>
+																																		   <h4 style="color:white">POSTAL Recruitment 2017  162 Officer Grade , Medical Consultant & Director Posts
+
+																																					</h4><button type="button" class="btn btn-warning btn-xs"style="float:right;color:white;border:1px blue;">Details<i class="fa fa-arrow-down" aria-hidden="true"></i>
+</button>	
+																																		</div>
+																																		<div class="c-body">
+																																		  <p class="c-p">
+																																		  
+																																		  
+																																		 <ul style="text-align:Left;margin-top:50px;">
+												
+													<li><Strong>Start Date:  27/05/2017</strong></li>
+													<li><Strong>Last Date:  05/08/2017</strong></li>
+													
+													<li><Strong>Eligibility:<ol style="text-align:Left;padding-left:10px; ">
+												
+													<li><Strong>Officer Scale 1: Graduate</strong></li>
+													<li><Strong>Officer Scale 2:  MBA/BBA</strong></li>
+													
+													<li><Strong>Officer Scale 3:  Chatterd Accountant/commerce with 4 year experiance</strong></li>
+													<li><Strong>Marketting officer: MBA with 4 year experiance</strong></li>
+												
+												</ol></strong></li>
+													<li><Strong>age: 30 years</strong></li>
+												
+												</ul>
+												
+												<a href="#"style="text-align:center"><h5>Click for Details<h5></a>
+												<a href="#" style="text-align:center"><h5>Click here  to Apply<h5></a>
+																																				
+																																			</p>
+																																		</div>
+																																		
+																																		<nav class="nav-tabs">
+																																			<ul class="nav nav-pills pull-left">
+																																				<li class="card-action"><a href="#">Link</a></li>
+																																				
+																																			</ul>
+																																			
+																																		</nav>
+																																			
+																																	</div>
+																																	
+																																	</div>	
+																																	<div class="col-md-12">
+					
+																
+																																	<div class="c-content">
+																																		<div class="c-header-blue">
+																																		<div class="paragraph_image" style="margin-right:8px;">
+                        <a href="#"><img width="150" height="150" src="/media/media/postal.png"class="attachment-120x120 size-120x120 wp-post-image" alt="" scale="0"></a>
+                    </div>
+																																		   <h4 class="c-heading"> POSTAL Recruitment 2017  162 Officer Grade , Medical Consultant & Director Posts
+
+															</h4>
+																																		</div>
+																																		<div class="c-body">
+																																		  <p class="c-p">
+																																		  
+																																		  
+																																		 <ul style="text-align:Left;margin-top:50px;">
+												
+													<li><Strong>Start Date:  27/05/2017</strong></li>
+													<li><Strong>Last Date:  05/08/2017</strong></li>
+													
+													<li><Strong>Eligibility:<ol style="text-align:Left;padding-left:10px; ">
+												
+													<li><Strong>Officer Scale 1: Graduate</strong></li>
+													<li><Strong>Officer Scale 2:  MBA/BBA</strong></li>
+													
+													<li><Strong>Officer Scale 3:  Chatterd Accountant/commerce with 4 year experiance</strong></li>
+													<li><Strong>Marketting officer: MBA with 4 year experiance</strong></li>
+												
+												</ol></strong></li>
+													<li><Strong>age: 30 years</strong></li>
+												
+												</ul>
+												
+												<a href="#"style="text-align:center"><h5>Click for Details<h5></a>
+												<a href="#" style="text-align:center"><h5>Click here  to Apply<h5></a>
+																																				
+																																			</p>
+																																		</div>
+																																		
+																																		<nav class="nav-tabs">
+																																			<ul class="nav nav-pills pull-left">
+																																				<li class="card-action"><a href="#">Link</a></li>
+																																				
+																																			</ul>
+																																			
+																																		</nav>
+																																			
+																																	</div>
+																																	
+																																	</div>	
+																																	<div class="col-md-12">
+					
+																
+																																	<div class="c-content">
+																																		<div class="c-header-blue">
+																																		<div class="paragraph_image" style="margin-right:8px;">
+                        <a href="#"><img width="150" height="150" src="/media/media/cgl.jpg"class="attachment-120x120 size-120x120 wp-post-image" alt="" scale="0"></a>
+                    </div>
+																																		   <h1 class="c-heading">POSTAL Recruitment 2017  162 Officer Grade , Medical Consultant & Director Posts
+
+															</h2>
+																																		</div>
+																																		<div class="c-body">
+																																		  <p class="c-p">
+																																		  
+																																		  
+																																		 <ul style="text-align:Left;margin-top:50px;">
+												
+													<li><Strong>Start Date:  27/05/2017</strong></li>
+													<li><Strong>Last Date:  05/08/2017</strong></li>
+													
+													<li><Strong>Eligibility:<ol style="text-align:Left;padding-left:10px; ">
+												
+													<li><Strong>Officer Scale 1: Graduate</strong></li>
+													<li><Strong>Officer Scale 2:  MBA/BBA</strong></li>
+													
+													<li><Strong>Officer Scale 3:  Chatterd Accountant/commerce with 4 year experiance</strong></li>
+													<li><Strong>Marketting officer: MBA with 4 year experiance</strong></li>
+												
+												</ol></strong></li>
+													<li><Strong>age: 30 years</strong></li>
+												
+												</ul>
+												
+												<a href="#"style="text-align:center"><h5>Click for Details<h5></a>
+												<a href="#" style="text-align:center"><h5>Click here  to Apply<h5></a>
+																																				
+																																			</p>
+																																		</div>
+																																		
+																																		<nav class="nav-tabs">
+																																			<ul class="nav nav-pills pull-left">
+																																				<li class="card-action"><a href="#">Link</a></li>
+																																				
+																																			</ul>
+																																			
+																																		</nav>
+																																			
+																																	</div>
+																																	
+																																	</div>	
+
+
+
+
+																																	
+																																	
+																																	
+																																	
+																																	
+													<!-- uuuuuuuuuuuuuuuuuuuuu-->
+														
+											
+
+										
+										
+										
+										
+														
+														
+														
+															
+
+														
+														<div class="row">
+							
+															<div class="col-md-2 ">
+															 <ul class="pager">
+															 {% if previous != 0 %}
+																			<li ><a href="/ca/{{previous}}"><span class="glyphicon glyphicon-chevron-left"></span>Prev</a></li>
+																{% else %}
+																		 <li ><a href="#">Previous</a></li>
+																				{% endif %}
+																		  </ul>
+															</div>
+																
+																<div class="col-md-8 " style="text-align:center">
+																<ul class="pagination pagination-lg" >
+																{% for pages in page %}
+																	 {% if pages == params %}
+												<li class="active"><a href="/ca/{{pages}}">{{pages}}</a></li>
+												
+												{% else %}
+												<li><a href="/ca/{{pages}}">{{pages}}</a></li>
+												{% endif %}
+												
+											{% endfor %}
+											
+												
+												
+											  </ul>
+																</div>
+																
+																<div class="col-md-2 ">
+																 <ul class="pager">
+																 {% if next != 0  %}
+																    <li ><a href="/ca/{{next}}">Next<span class="glyphicon glyphicon-chevron-right"></span></a></li>
+																	
+																	
+																	{% else %}
+																		 <li ><a href="#">Next</a></li>
+																				{% endif %}
+																		  </ul>
+																</div>
+														
+														</div>
+											
+										
+				
+																	
+																	
+																
+						
+						</div><!--colm 8 -->
+						
+						<div class="col-md-2 nopadding">
+						
+								<div class="panel-group ">
+									<div class="panel panel-info ">
+										  <div class="panel-heading"><strong>Postal bank Recruitment 2017</strong>
+											<img src="/media/media/postal.png" class="img-thumbnail " alt="Image">
+										  </div>
+										  <div class="panel-body">
+												
+												<ul style="text-align:Left ">
+												
+													<li><Strong>Start Date:</strong></li>
+													<li><Strong>Last Date:</strong></li>
+													
+													<li><Strong>Eligibility:</strong></li>
+													<li><Strong>age:</strong></li>
+												
+												</ul>
+												
+												<a href="#"style="text-align:center"><h5>Click for Details<h5></a>
+												<a href="#" style="text-align:center"><h5>Click here  to Apply<h5></a>
+											
+										  
+										  
+										  </div>
+									</div>
+									<div class="panel panel-info">
+										  <div class="panel-heading"><strong>RBI Recruitment 2017  162 Officer Grade , Medical Consultant & Director Posts
+
+															Read more: RBI Recruitment 2017 - 162 Officer Grade 'B', Medical Consultant & Director Posts 
+																</strong>
+														<img src="/media/media/r.jpeg" class="img-thumbnail " alt="Image">
+										  </div>
+										  <div class="panel-body">
+												
+												<ul style="text-align:Left ">
+												
+													<li><Strong>Start Date:</strong></li>
+													<li><Strong>Last Date:</strong></li>
+													
+													<li><Strong>Eligibility:</strong></li>
+													<li><Strong>age:</strong></li>
+												
+												</ul>
+												
+												<a href="#"style="text-align:center;padding:0px;"><h5>Click for Details<h5></a>
+												<a href="#" style="text-align:center;padding:0px; margib-bottom=0px;"><h5>Click here  to Apply<h5></a>
+											
+										  
+										  
+										  </div>
+									</div>
+								
+									
+									</div>
+
+
+
+									
+						</div>
+						
+				</div>
+
+				</div><!-- row end -->
+				
+				
+			</div>	<!-- cintainer end -->
+				
+				
+	
+
+
+
+
+
+
+
+
+
+	
+					 
+
+<script type="text/javascript" >
+$(document).ready(function () {
+
+
+$('.navbar .dropdown').hover(function () {
+        $(this).find('.dropdown-menu').first().stop(true, true).slideDown(150);
+    }, function () {
+        $(this).find('.dropdown-menu').first().stop(true, true).slideUp(105);
+    });
+
+
+
+
+var showChar = 200;
+	var ellipsestext = "...";
+	var moretext = "Read more";
+	var lesstext = "less";
+	$('.more').each(function() {
+		var content = $(this).html();
+
+		if(content.length > showChar) {
+
+			var c = content.substr(0, showChar);
+			var h = content.substr(showChar-1, content.length - showChar);
+
+			var html = c + '<span class="moreelipses">'+ellipsestext+'</span>&nbsp;&nbsp;&nbsp;<a href="" class="morelink"><u>'+moretext+'</u></a></span>';
+
+			$(this).html(html);
+		}
+
+	});
+	
+	
+	
+	
+	//..........................
+	
+	
+		 $("#signup").submit(function (ev)
+	 {
+							
+						
+							//ev.preventDefault();
+		$.ajax({
+            type : 'POST',
+            url: '{% url 'bank:login' %}',
+			dataType: "json",
+			async: true,
+           data : {
+											data1 : $(this).serialize(),
+											csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()
+										  },
+            success: function (response) 
+			{
+         
+				// window.location = response.r;
+
+            },
+			 error: function (data) { $('#below').html("<b>please retry or check url</b>");
+			 
+			 }
+        });
+
+        
+    });
+
+	
+	
+	//.........................
+	
+		//..........................
+	
+	//.........................
+	
+	
+	
+	
+
+
+});
+
+
+
+
+		 $("#login").submit(function (ev)
+	 {
+							
+			ev.preventDefault();			
+							
+		$.ajax({
+            type : 'POST',
+            url: '{% url 'bank:login' %}',
+			
+			
+           data  : $(this).serialize(),
+            success: function (response) 
+			{
+			var r=response;
+				if(r == "true")
+				{
+				window.location = window.location;
+				}
+				else{
+				$('#below').html("<b>"+response+"</b>");
+				}
+
+            },
+			 error: function (data) { $('#below').html("<b>please 55 or check url</b>");
+			
+			 }
+        });
+
+        
+    });
+	
+function add(id,username) {
+var link_id=id;
+var uname=username;
+//$('#myModal').modal('toggle');
+
+	$.ajax({
+            type : 'POST',
+            url: '{% url 'bank:add' %}',
+			
+			
+           data: {link: link_id, user_name: uname,csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()},
+            success: function (response) 
+			{
+			var r=response;
+				if(r == "success")
+				{
+				document.getElementById(link_id).innerHTML ="added";
+				}
+				else{
+				$('#below').html("<b>"+response+"</b>");
+				document.getElementById("link_id").innerHTML = response;
+				}
+
+            },
+			 error: function (data) { $('#link_id').html("<b>please 55 or check url</b>");
+			
+			 }
+        });
+    
+}
+
+	function timer(counter,t){
+	
+	var colckdiv_id='clockdiv'.concat(counter.toString());
+	var colckdiv_id_hash='#clockdiv'.concat(counter.toString());
+	var clock = document.getElementById(colckdiv_id);
+	var min='.minutes'.concat(counter.toString());
+	var sec='.seconds'.concat(counter.toString());
+	var sec_id='#seconds'.concat(counter.toString());
+	var min_id='#minutes'.concat(counter.toString());
+	var smltext_id='#smalltext'.concat(counter.toString());
+
+  var minutesSpan = clock.querySelector(min);
+  var secondsSpan = clock.querySelector(sec);
+
+var sol='sol'.concat(counter.toString());
+var solution_hash='#solution'.concat(counter.toString());
+
+var timer_id='#time'.concat(counter.toString());
+//alert(timer_id);
+  document.getElementById(sol).disabled = true;
+  $(timer_id).toggle(500);
+  $(colckdiv_id_hash).toggle(500);
+var seconds_left = 80;
+/*var interval = setInterval(function() {
+    document.getElementById('seconds').innerHTML = --seconds_left;
+
+    if (seconds_left <= 0)
+    {
+       document.getElementById('seconds').innerHTML = "You are Ready!";
+       clearInterval(interval);
+    }
+}, 1000); */
+
+//new timer
+var fiveMinutes = t,
+        display = $(sec_id),
+		smalltext=$(smltext_id);
+startTimer(fiveMinutes,display,smalltext,colckdiv_id_hash,timer_id,sol,solution_hash);
+
+
+
+	
+	}
+	
+	
+	function startTimer(duration, display,smalltext,colckdiv_id_hash,timer_id,sol,solution_hash) {
+    var timer = duration, minutes, seconds;
+	 
+  var s=  setInterval(function () {
+	var seconds_left = --duration;
+        minutes = parseInt(timer / 60, 10)
+        seconds = parseInt(timer % 60, 10);
+
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+				if(minutes<1){
+        display.text(minutes + ":" + seconds);
+		smalltext.text("seconds")
+        }
+        else{display.text(minutes + ":" + seconds);
+		smalltext.text("Minutes")
+		}
+		
+		if(seconds_left<=-1){clearInterval(s);$(timer_id).toggle(500);
+								$(colckdiv_id_hash).toggle(500);
+								
+								$(solution_hash).toggle(500);
+								document.getElementById(sol).disabled = false; 
+									}
+		
+
+        if (--timer < 0) {
+            timer = duration;
+        }
+    }, 1000);}
+	
+	
+	
+	function op(i){
+	var id=i;
+	$(id).toggle(500);
+	
+	}
+
+
+</script>
+
+</body>
+</html>

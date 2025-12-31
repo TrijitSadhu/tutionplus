@@ -1,0 +1,9 @@
+rgba(33, 93, 119, 0.9)
+
+rgba(0, 135, 193, 0.39)
+
+rgba(58, 91, 217, 0.91)
+
+rgb(214, 51, 92)
+
+.navbar-nav > li > a, .navbar-brand {padding-top:5px !important; padding-bottom:0 !important; height: 30px; } .navbar-custom {min-height:30px !important;}

@@ -1,0 +1,36 @@
+.cardd {
+    display: inline-block;
+    position: relative;
+    width: 100%;
+    border-radius: 2px;
+    color: rgba(0, 0, 0, 0.84);
+    background: rgba(255, 255, 255, 0.0); none repeat scroll 0% 0%;
+    box-shadow: 20px 25px 10px rgba(0, 0, 0, 0.23), 20px 25px 10px rgba(0, 0, 0, 0.16);
+	margin:0px;
+	
+
+	
+}
+body {
+  
+  
+  background: url(15.jpg) no-repeat center fixed; 
+    background-size: cover;
+}
+h1, h2, h3, h4, h5, h6 {
+    font-family: Lato, sans-serif;
+    font-weight: 600;
+    line-height: 190%;
+    color: rgb(244, 255, 244);
+    margin: 20px 0px 17px;
+}
+
+p{
+	
+	margin-top:25px;
+}
+
+#id_email{
+	
+	width:100%;
+}

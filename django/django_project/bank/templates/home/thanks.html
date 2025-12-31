@@ -1,0 +1,60 @@
+<html>
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<body>
+
+<h2 style="color:blue">Thank you for your email confirmation. Now you can login your account.</h2>
+
+<h4 style="display:inline">you will be automatically Redirected to home page after  <p id="seconds" style="display:inline;color="green"> 7 </p > sec<h4>
+
+
+<script type="text/javascript" >
+$(document).ready(function () {
+
+
+/*
+    // Handler for .ready() called.
+    window.setTimeout(function () {
+       window.location = '/';
+    }, 5000); */
+	
+	timer();
+});
+
+
+function timer(){
+	
+
+
+
+
+
+
+var seconds_left = 7;
+var interval = setInterval(function() {
+    document.getElementById('seconds').innerHTML = --seconds_left;
+
+    if (seconds_left <= 0)
+    {clearInterval(interval);
+     window.location = '/';
+       
+    }
+}, 1000); 
+
+
+
+	
+	}
+	
+	
+
+
+
+
+
+
+</script>
+</body>
+
+</html>

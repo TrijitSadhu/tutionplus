@@ -1,0 +1,2540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+ 
+  
+  <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Arimo" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
+ <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+  <link href='//fonts.googleapis.com/css?family=Cormorant Garamond' rel='stylesheet'>
+  <link href="https://fonts.googleapis.com/css?family=Noto+Sans" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Quattrocento+Sans" rel="stylesheet">
+ 
+  
+ {% load staticfiles %}
+<link rel="stylesheet" href="{% static 'css/animate.min.css' %}" />
+<link rel="stylesheet" href="{% static 'css/job2.css' %}" />
+
+
+<style>
+  .carousel-razon .carousel-img img {
+    width: 520px;
+    /* margin-left: 18px; */
+    margin-right: 1px;
+    text-align: right;
+    display: block;
+    height: 180px;
+    max-height: 180px;
+    float: right;
+}
+  .menu ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+.menu li {
+    padding: 8px;
+    margin-bottom: 7px;
+    background-color: #33b5e5;
+    color: #ffffff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+}
+.menu li:hover {
+    background-color: #0099cc;
+}
+  .pagination > li > a, .pagination > li > span {
+    position: relative;
+    float: left;
+    padding: 6px 12px;
+    margin-left: -1px;
+    line-height: 1.42857;
+    color: #337AB7;
+    text-decoration: none;
+    background-color: #FFF;
+    border: 1px solid #DDD;
+	font-size:15px;
+	font-weight:bold;
+	
+}
+
+
+
+
+td{font-weight:bold;
+color:#544545;
+}
+
+
+.clockdiv{
+    font-family: sans-serif;
+    color: #fff;
+    display: inline-block;
+    font-weight: 100;
+    text-align: center;
+    font-size: 16px;
+}
+
+.clockdiv > div{
+    padding: 10px;
+    border-radius: 3px;
+    background: #00BF96;
+    display: inline-block;
+}
+
+.clockdiv div > span{
+    padding: 15px;
+    border-radius: 3px;
+    background: #00816A;
+    display: inline-block;
+}
+
+.smalltext{
+    padding-top: 5px;
+    font-size: 14px;
+}
+hr{
+	 width: auto;
+    margin: 0 10px;
+	    border:1px  solid pink;
+	
+}
+
+
+table {
+  width: 100%;
+  max-width: 600px;
+  height: 320px;
+  border-collapse: collapse;
+  border: 1px solid #38678f;
+  margin: 50px auto;
+  background: white;
+}
+th {
+  background: steelblue;
+  height: 54px;
+  width: 25%;
+  font-weight: lighter;
+  text-shadow: 0 1px 0 #38678f;
+  color: white;
+  border: 1px solid #38678f;
+  box-shadow: inset 0px 1px 2px #568ebd;
+  transition: all 0.2s;
+}
+tr {
+  border-bottom: 1px solid #cccccc;
+}
+tr:last-child {
+  border-bottom: 0px;
+}
+td {
+  border-right: 1px solid #cccccc;
+  padding: 10px;
+  transition: all 0.2s;
+}
+td:last-child {
+  border-right: 0px;
+}
+td.selected {
+  background: #d7e4ef;
+  z-index: ;
+}
+td input {
+  font-size: 14px;
+  background: none;
+  outline: none;
+  border: 0;
+  display: table-cell;
+  height: 100%;
+  width: 100%;
+}
+td input:focus {
+  box-shadow: 0 1px 0 steelblue;
+  color: steelblue;
+}
+h4{color:#0277BD}
+.c-header-my{
+    background-color:#ffffff;
+    color:#0277BD;
+    border-bottom:3px solid #BBB;
+    box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    font-family: 'Roboto', sans-serif;
+    padding:0px;
+    margin-top:0px;
+    overflow:hidden;
+    -webkit-transition: box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          transition: box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+	 
+}
+.carousel-control {
+    
+    width: 1%;
+  
+}
+
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+.glyphicon-lg{font-size:3em}
+.blockquote-box{border-right:5px solid #E6E6E6;margin-bottom:25px}
+.blockquote-box .square{width:100px;min-height:50px;margin-right:22px;text-align:center!important;background-color:#E6E6E6;padding:20px 0}
+.blockquote-box.blockquote-primary{border-color:#357EBD}
+.blockquote-box.blockquote-primary .square{background-color:#428BCA;color:#FFF}
+.blockquote-box.blockquote-success{border-color:#4CAE4C}
+.blockquote-box.blockquote-success .square{background-color:#5CB85C;color:#FFF}
+.blockquote-box.blockquote-info{border-color:#46B8DA}
+.blockquote-box.blockquote-info .square{background-color:#5BC0DE;color:#FFF}
+.blockquote-box.blockquote-warning{border-color:#EEA236}
+.blockquote-box.blockquote-warning .square{background-color:#F0AD4E;color:#FFF}
+.blockquote-box.blockquote-danger{border-color:#D43F3A}
+.blockquote-box.blockquote-danger .square{background-color:#D9534F;color:#FFF}
+
+  </style>
+</head>
+<body style="background-color:#f3f3f3" >
+
+		 <nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    <b> <a class="navbar-brand" href="#" style="font-family: 'Marck Script', cursive; color:white">McqGk</a> </b>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav" style="text-align:center">
+      
+         <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Mathematics<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="#"> Multiplication Table</a></li>
+            <li><a href="#">Series</a></li>
+            
+            <li><a href="#">Days n Work</a></li>
+			 <li><a href="/math/profit_n_loss/1/">Profit n Loss</a></li>
+			  <li><a href="#">Boat & Stream</a></li>
+          </ul>
+        </li>
+
+
+
+    <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">English<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/error_correction/noun/1/">Error Correction</a></li>
+             <li><a href="/error_correction/noun/1/">Noune</a></li>
+            
+              <li><a href="/closetest/close/1/">Close Test</a></li>
+			 <li><a href="#">Fill in the blank</a></li>
+			  <li><a href="/english/word/page/1">Vocabulary</a></li>
+			  <li><a href="#">Editorial</a></li>
+          </ul>
+        </li>
+		
+		    <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Reasoning<span class="caret"></span></a>
+      						<ul class="dropdown-menu">
+																		
+																		  <li><a href="#">Blood Relation</a></li>
+																		 
+																		  <li><a href="#">Ranking and Direction</a></li>
+
+																	
+																		  <li ><a href="#">Coading Decoding</a></li>
+																		  
+																		  <li ><a href="#">Puzzle</a></li>
+																		  
+																		  <li><a href="#">Input Output</a></li>
+																		  
+																		  
+																		 
+																		  <li><a href="/reasoning/seating_arrangment/1/">seating_arrangment</a></li>
+																		</ul>
+        </li>
+		
+		    <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Current Affairs<span class="caret"></span></a>
+          			<ul class="dropdown-menu">
+																		
+																		  <li><a href="/ca/1/">Daily Current Today</a></li>
+																		
+																		  <li><a href="#">Static Gk</a></li>
+
+																		
+																		  <li class="waves-effect"><a href="#">Banking Awerness</a></li>
+																		  
+																		</ul>
+        </li>
+		
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+<li><a href="#"><span class="glyphicon glyphicon-th" aria-hidden="true"></span> Dashboard</a></li>
+     			
+																			<li class="dropdown">
+																					
+																							
+																											{% if user.is_authenticated %}
+																											<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ user.username }} <b class="caret"></b></a>
+																											
+														
+																															<ul class="dropdown-menu">
+																															<li><a href="/logout" >Logout</a></li>
+																															 <li role="separator" class="divider"></li> 
+																															<li><a href="/dashboard/{{ user.username }}"> Dash Board</a></li>
+																															
+																															
+																															</ul>
+																															
+																														{% else %}
+																														<a href="" data-toggle="modal" data-target="#myModal">
+																														<span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>&nbsp;
+																														   Log In<b class="caret"></b>
+																														   </a>
+																														
+																														{% endif %} 
+																														
+																			</li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+<style>
+html, body {
+  font-family: 'Lato', serif;  
+}
+
+.navbar-default {
+  font-size: 1.15em;
+  font-weight: 400;
+  background-color: #29487d;
+  padding: 5px;
+  border: 0px;
+  border-radius: 0px;
+  box-shadow:inset 0 -1px 2px rgba(0,0,0,.24);
+}
+
+.navbar-default .navbar-nav>li>a {
+  color: white;
+}
+
+.navbar-default .navbar-nav>li>a:hover {
+  color: #cbf0ff;
+}
+
+.navbar-default .navbar-brand {
+  color: #002433;
+}
+
+.navbar-default .navbar-brand:hover {
+  color: #ffffff;
+  text-shadow: 1px -1px 8px #b3e9ff;
+}
+
+.navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:hover, .navbar-default .navbar-nav>.open>a:focus {
+  background-color: #004059;
+  color: white;
+}
+
+.navbar-default .navbar-toggle {
+  border: none;
+}
+
+.navbar-default .navbar-collapse, .navbar-default .navbar-form {
+  border: none;
+}
+
+.navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus {
+  background-color: #002433;
+}
+
+.navbar-default .navbar-toggle .icon-bar {
+  background-color: #ffffff;
+}
+
+.dropdown-menu {
+  background-color: #004059;
+  color: white;
+  border: 0px;
+  border-radius: 2px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.dropdown-menu>li>a {
+  background-color: #004059;
+  color: white;
+}
+
+.dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus {
+  background-color: #004059;
+  color:white;
+}
+
+.dropdown-menu .divider {
+    height: 1px;
+    margin: 9px 0;
+    overflow: hidden;
+    background-color: #003246;
+}
+
+.navbar-default .navbar-nav .open .dropdown-menu>li>a {
+    color: #ffffff;
+}
+
+@media (max-width: 767px) { 
+  .dropdown-menu>li>a {
+    background-color: #006b96;
+    color: #ffffff;
+  }
+  .dropdown-menu>li>a:hover {
+    color: #ffffff;
+  }
+  
+  .navbar-default .navbar-nav .open .dropdown-menu>li>a:focus, .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover {
+    color: #ffffff;
+    background-color: transparent;
+  }
+  
+  .dropdown-menu .divider {
+    height: 1px;
+    margin: 9px 0;
+    overflow: hidden;
+    background-color: #005577;
+  }
+} /* END Media Query */
+
+
+</style>
+
+			<!--<hr style=" border:1px  solid steelblue;"></hr> -->
+			
+				 <section class="carousel-section">
+					   
+							<div id="myCarousel" class="carousel carousel-razon slide" data-ride="carousel" data-interval="60000">
+								<!-- Indicators -->
+									<ol class="carousel-indicators">
+									  <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+									  <li data-target="#myCarousel" data-slide-to="1"></li>
+									  <li data-target="#myCarousel" data-slide-to="2"></li>
+									</ol>
+								
+									<!-- Wrapper for slides -->
+									<div class="carousel-inner">
+												{% for top_list in top_list %}
+												
+												
+															{% if forloop.first %}
+															<div class="active item">
+														{% else %}
+															<div class="item">
+														{% endif %}
+											<div class="container">
+														<div class="row">
+															<div class="col-xs-6 col-sm-6 col-md-6 nopadding">
+															
+																		<div class="carousel-caption nopadding">
+																		
+																		
+																				<div class="carousel-text">
+															 <h3 class="animated fadeInDownBig animation-delay-7 carousel-title">{{top_list.heading}}</h3>
+																				 <h5 class="animated fadeInDownBig animation-delay-5  crousel-subtitle">{{slide.yellow_heading}}</h5>
+																				
+																				 
+
+																						<ul class="list-unstyled carousel-list">
+																						   <li class="animated bounceInLeft animation-delay-11"><i class="fa fa-check"></i>Start Day:-{{top_list.first_day}}</li>
+																						   <li class="animated bounceInLeft animation-delay-13"><i class="fa fa-check"></i>Last Day:-{{top_list.last_day}}</li>
+																						 
+																						   
+															<i class="fa fa-check"></i>	<a href="{{top_list.detail_link}}"target="_blank"style="text-align:center;color:#ecff26"><u>Click for Details</u></a>
+																
+															<i class="fa fa-check"></i>	<a href="{{top_list.apply_link}}" target="_blank"style="text-align:center;color:#ecff26"><u>Click here  to Apply</u></a>
+															
+																						   
+																					   </ul>							 
+																				</div>
+																	</div>
+															</div>
+															<div class=" col-xs-6 col-sm-6 col-md-6   carousel-img-wrap nopadding">
+															
+																<div class="carousel-img">
+																	<img src="/media/{{top_list.ca_img}}" style="height:180px" class="img-responsive center-block img-rounded animated bounceInUp animation-delay-3 " alt="Image">
+																</div>
+															</div>
+														</div>
+													</div>
+										  </div>
+										  
+										
+												{% endfor %}
+
+									<!-- Left and right controls -->
+									<a class="left carousel-control" href="#myCarousel" data-slide="prev">
+									  <span class="glyphicon glyphicon-chevron-left" ></span>
+									  <span class="sr-only">Previous</span>
+									</a>
+									<a class="right carousel-control" href="#myCarousel" data-slide="next">
+									  <span class="glyphicon glyphicon-chevron-right"></span>
+									  <span class="sr-only">Next</span>
+									</a>
+							</div>
+								  
+					  </div>
+					  
+					  
+					 </section >
+					 
+					 
+					 
+				<!-- belw slide -->
+			
+			
+			
+																												<div id="myModal" class="modal fade mod" role="dialog">
+																									  <div class="modal-dialog ">
+
+																										<!-- Modal content-->
+																										<div class="modal-content"style="text-align:center">
+																										<div class="modal-header modal-header-danger">
+																										  <div class="modal-header">
+																											<button type="button" class="close" data-dismiss="modal">&times;</button>
+																											<h1 class="modal-title" style="color:#fff"><i class="glyphicon glyphicon-thumbs-up"></i>Modal Header</h1>
+																											</div>
+																										  </div>
+																										  <div class="modal-body"style="text-align:center">
+																																																																																					
+																																																																																					
+																																																																																					<ul class="nav nav-tabs" style="text-align:center">
+																																<li class="active" style="text-align:center"><a data-toggle="tab" href="#home">Sign In</a></li>
+																																<li style="text-align:center"><a data-toggle="tab" href="#menu1">Registrations In</a></li>
+																																
+																															
+																															  </ul>
+
+																															  <div class="tab-content">
+																																<div id="home" class="tab-pane fade in active">
+																																  <h3>Sign In</h3>
+																																																																																																																																														{% block content %}
+																																																																																																																																														
+																																			  <form method="post" id="login" action="" >
+																																				
+																																			
+																																			   {% csrf_token %}
+																																				{{ login.as_p }}
+																																				<div id="below"></div>
+																																				<button class="btn btn-success "  style="color:green"type="submit">Sign In</button>
+																																			  </form>
+																																			
+
+
+																																</div>
+																																<div id="menu1" class="tab-pane fade">
+																																  <h3>Sign up</h3>
+																																																																																																			  
+																																			  <form method="post" id="signup">
+																																				
+																																			   <div class="input-group input-group-lg">
+																																			   {% csrf_token %}
+																																				{{ form}}
+																																				<button type="submit">Sign up</button></div>
+																																			  </form>
+																																			{% endblock %}
+																																</div>
+																															
+																																
+
+
+																												</div>
+																										  </div>
+																										  <div class="modal-footer">
+																											<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+																										  </div>
+																										</div>
+
+																									  </div>
+																									</div>
+			
+			
+			
+			
+			
+			
+			
+			
+	<!--   image start -->
+					
+					
+					 <!--   image end -->
+					
+					 
+				<!-- belw slide -->
+				
+				
+			<div class="container nopadding">
+			
+				<div class="row " >
+				
+				
+					<div class="panel cardd " >
+					
+					
+										<h3 class="card"style="text-align:center;    border: 1px solid #dddddd; color: white;background:background-color:background: background: rgba(242,58,160,1);
+background: -moz-linear-gradient(top, rgba(242,58,160,1) 0%, rgba(242,58,160,1) 41%, rgba(239,26,133,1) 53%, rgba(168,0,79,1) 99%, rgba(255,20,122,1) 100%);
+background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(242,58,160,1)), color-stop(41%, rgba(242,58,160,1)), color-stop(53%, rgba(239,26,133,1)), color-stop(99%, rgba(168,0,79,1)), color-stop(100%, rgba(255,20,122,1)));
+background: -webkit-linear-gradient(top, rgba(242,58,160,1) 0%, rgba(242,58,160,1) 41%, rgba(239,26,133,1) 53%, rgba(168,0,79,1) 99%, rgba(255,20,122,1) 100%);
+background: -o-linear-gradient(top, rgba(242,58,160,1) 0%, rgba(242,58,160,1) 41%, rgba(239,26,133,1) 53%, rgba(168,0,79,1) 99%, rgba(255,20,122,1) 100%);
+background: -ms-linear-gradient(top, rgba(242,58,160,1) 0%, rgba(242,58,160,1) 41%, rgba(239,26,133,1) 53%, rgba(168,0,79,1) 99%, rgba(255,20,122,1) 100%);
+background: linear-gradient(to bottom, rgba(242,58,160,1) 0%, rgba(242,58,160,1) 41%, rgba(239,26,133,1) 53%, rgba(168,0,79,1) 99%, rgba(255,20,122,1) 100%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f23aa0', endColorstr='#ff147a', GradientType=0 ); ">Latest government job </h3> 
+					
+					
+						<div class="col-md-2 nopadding ">
+						
+							
+						<div class="panel panel-primary nopadding">
+      <div class="panel-heading card" style="color:#fff">Job Category  <span class="glyphicon glyphicon-chevron-down" style="float:right"></span></div>
+      <div class="panel-body nopadding">
+	  
+	  
+	   <ul class="list-group  nopadding"style="font-weight:bold;font-color:#fff">
+																			  
+																			  
+													
+													
+													<li class="list-group-item"><a  href="/job/qualification/tenth/1">10th</a>
+</li>
+	<li class="list-group-item"><a  href="/job/qualification/twelth/1"><b>BANK</b></a>
+</li>
+	<li class="list-group-item"><a  href="/job/qualification/eighth/1"><b>SSC</b></a>
+</li>
+	<li class="list-group-item"><a " href="/job/qualification/b_com/1"><b>UPSC</b></a>
+</li>
+	<li class="list-group-item"><a  href="/job/qualification/b_ed/1"><b>DEFENCE</b></a>
+</li>
+<li class="list-group-item"><a  href="/job/qualification/b_ed/1"><b>RAILWAY</b></a>
+</li>
+<li class="list-group-item"><a  href="/job/qualification/b_ed/1"><b>OTHER GOVT JOBS</b></a>
+</li>
+
+</ul>
+	  
+	  
+	  
+	  
+	  
+	  </div>
+    </div>
+						
+						
+						
+						<div class="panel ">
+							<div class="panel-heading" style="background-color:#20595f;"><h3 style="color:#ffffff;padding:0px"><u>Examwise Job Category</u><h3></div>
+								<div class="panel-body nopadding">
+																			  <ul class="list-group "style="font-weight:bold;font-color:#fff">
+																			  
+																			  
+													
+													
+													<li class="list-group-item"><a  href="/job/qualification/tenth/1">10th</a>
+</li>
+	<li class="list-group-item"><a  href="/job/qualification/twelth/1"><b>12th</b></a>
+</li>
+	<li class="list-group-item"><a  href="/job/qualification/eighth/1"><b>Eighth</b></a>
+</li>
+	<li class="list-group-item"><a " href="/job/qualification/b_com/1"><b>B Com</b></a>
+</li>
+	<li class="list-group-item"><a  href="/job/qualification/b_ed/1"><b>B Ed</b></a>
+</li>
+	<li class="list-group-item"><a href="/job/qualification/b_pharm/1">B Pharma</a>
+</li>
+	<li class="list-group-item"><a href="/job/qualification/b_sc/1"><b>B Sc</b></a>
+</li>
+	<li class="list-group-item"><a href="/job/qualification/bba/1"><b>BBA</b></a>
+</li>
+	<li class="list-group-item"><a href="/job/qualification/mca/1"><b>BCA</b></a>
+</li>
+	<li class="list-group-item"><a href="/job/qualification/bds/1">BDS</a>
+</li>
+	<li class="list-group-item"><a href="/job/qualification/b_tech/1">BE / B Tech</a>
+</li>
+	<li class="list-group-item"><a href="/job/qualification/ca/1">CA / ICWA</a>
+</li>
+	<li class="list-group-item"><a href="/job/qualification/cs/1">CS / ICSA</a>
+</li>
+	<li class="list-group-item"><a href="/job/qualification/deploma/1">Diploma</a>
+</li>
+	<li class="list-group-item"><a href="/job/qualification/graduate_only/1">Graduate</a>
+</li>
+	<li class="list-group-item"><a href="/job/qualification/iti/1">ITI</a>
+</li>
+	<li class="list-group-item"><a href="/job/qualification/llb/1">LLB</a>
+</li>
+	<li class="list-group-item"><a href="/job/qualification/llm/1">LLM</a>
+</li>
+	<li class="list-group-item"><a href="/job/qualification/m_com/1">M Com</a>
+</li>
+	<li class="list-group-item"><a href="/job/qualification/m_phil/1">M Phil</a>
+</li>
+	<li class="list-group-item"><a href="/job/qualification/m_sc/1">M Sc</a>
+</li>
+	<li class="list-group-item"><a href="/job/qualification/mba/1">MBA / PGDBM</a>
+</li>
+	<li class="list-group-item"><a href="/job/qualification/mbbs/1">MBBS</a>
+</li>
+	<li class="list-group-item"><a href="/job/qualification/mca/1">MCA</a>
+</li>
+	<li class="list-group-item"><a href="/job/qualification/m_tech/1">ME / M Tech</a>
+</li>
+	<li class="list-group-item"><a href="/job/qualification/medical/1">MEDICAL</a>
+</li>
+	<li class="list-group-item"><a href="/job/qualification/phd/1">Ph D</a>
+</li>
+	<li class="list-group-item"><a href="/job/qualification/post_g/1">Post Graduate</a>
+</li>
+ 
+													
+												  </ul>
+										</div>
+									</div>	<!--panel end -->
+									
+						
+						
+						
+						<div class="panel ">
+							  <div class="panel-heading" style="background-color:#cc0000;"><h3 style="color:#ffffff;padding:0px"><u>Latest Notification</u><h3></div>
+							  {{p}}
+							  <div class="panel-body nopadding"><p><a href="https://www.w3schools.com/html/">Go to Currrent Affairs Section>></a></p>
+							
+							  
+							  </div>
+							</div>
+							
+							
+						<p><a href="#">Go to Currrent Affairs Section>></a></p>
+						</div><!-- col2 end -->
+						
+						
+						
+						
+						<div class="col-md-8 " style=" border: 1px solid #dddddd;">
+
+
+
+
+					
+			
+													
+													
+													
+													
+													
+												
+												
+																																	
+																																	
+																																	
+																																
+																																	
+																																	
+								<div class="col-md-12 nopadding" >
+								<!-- bank -->
+										 {% if bank != None %}
+								{% for bank in bank %}
+								{% if forloop.first %}
+								<div class="panel card  bg-info">
+					
+					
+										<div class="col-md-12 nopadding">
+										
+										<h1 class="card "style="text-align:center; color: #fff;background-color:#2e5782"><a style="text-align:center; color: #fff"  href="/job/category/bank/1/">BANK</a></h1>
+										
+										</div>
+					 </div>
+					{% endif %}
+
+														<!--		<div class="panel panel-primary"style="text-align:center;color:#fff">
+																			<div class="panel-heading" style="text-align:center;color:#fff"><h1 style="text-align:center;color:#fff">Bank</h1></div>
+																			
+																</div> -->
+																	
+														<div class="c-header-my" style="padding-left:0px;">
+														
+																<div class="paragraph_image" style="margin-right:8px;">
+																	<a href="#"><img width="160" height="106" src="/media/{{bank.ca_img}}"class="attachment-120x120 size-120x120 wp-post-image" alt="" scale="0"></a>
+																</div>
+				
+													<a href="/job/goto/{{bank.new_id}}/1">			<h4 ><u>{{bank.heading}}</u></h4></a>
+																
+																<p style="padding-bottom:0px;display:inline;color:#D50000"> <b>LAST DATE TO APPLY:  21/08/2017</b></p>
+																																					
+																<button id="b" onClick="op('#{{forloop.counter}}dis_bank')" type="button" class="btn btn-warning btn-xs"style="float:right;color:steelblue;border:1px solid steelblue;"><b><i>Details</i></b><i class="fa fa-arrow-down" aria-hidden="true"></i>
+																</button>	
+																																							
+													   </div>
+																																		
+														<div class="c-body" id="{{forloop.counter}}dis_bank" style="font-weight:bold;display:none">
+															
+															<p class="c-p">
+                                                                      dff
+																	  
+																	    <div class="row">
+       
+        <div class="col-md-6">
+            <div class="blockquote-box clearfix">
+                <div class="square pull-left">
+                    <img src="#" alt="" class="" />
+                </div>
+                <h4>
+                    Date</h4>
+              <ul style="text-align:Left;margin-top:5px;" id="{{forloop.counter}}_bank">
+																	
+																		<li style="color:red;padding:5px;"><Strong><i>Start Date:</i>&nbsp;{{bank.first_day}}</strong></li>
+																		
+																		<li  style="color:red;padding:5px;text"><Strong><i>Last Date: </i>&nbsp;{{bank.last_day}}</strong></li>
+																		
+																		</ul>
+            </div>
+            <div class="blockquote-box blockquote-primary clearfix">
+                <div class="square pull-left">
+                    <span class="glyphicon glyphicon-music glyphicon-lg"></span>
+                </div>
+                <h4>
+                   Eligibility</h4>
+               <ul style="text-align:Left;margin-top:5px;" id="{{forloop.counter}}_bank">
+																		
+																		<li style="padding-top:10px;color:#1C51DE"id="{{forloop.counter}}eligibility_bank"><Strong><u><i>Eligibility:</i></u></strong><ol style="text-align:Left;padding-left:10px; color:#000000" id="{{forloop.counter}}e_o_bank">
+																	
+																		
+																	
+																		</ol></li>
+																		</ul>
+            </div>
+            <div class="blockquote-box blockquote-success clearfix">
+                <div class="square pull-left">
+                    <span class="glyphicon glyphicon-tree-conifer glyphicon-lg"></span>
+                </div>
+                <h4>
+                    Image</h4>
+                <ul style="text-align:Left;margin-top:5px;" id="{{forloop.counter}}_bank">
+																		<li style="padding-top:10px;color:#1C51DE" id="{{forloop.counter}}amt_bank"><Strong>Amount: <ol style="text-align:Left;padding-left:40px;color:#000 " id="{{forloop.counter}}am_o_bank">
+																	
+																		
+																	
+																		</ol></strong></li>
+																	
+																	</ul>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="blockquote-box blockquote-info clearfix">
+                <div class="square pull-left">
+                    <span class="glyphicon glyphicon-info-sign glyphicon-lg"></span>
+                </div>
+                <h4>
+                    Age</h4>
+                <ul style="text-align:Left;margin-top:5px;" id="{{forloop.counter}}_bank">
+																		<li style="padding-top:10px;color:#1C51DE " id="{{forloop.counter}}age_bank"><Strong><u><i>Age:</i></u></strong> <ol style="text-align:Left;padding-left:10px;color:#000 " id="{{forloop.counter}}a_o_bank">
+																	
+																		
+																	
+																		</ol></li>
+																		</ul>
+            </div>
+            <div class="blockquote-box blockquote-warning clearfix">
+                <div class="square pull-left">
+                    <span class="glyphicon glyphicon-warning-sign glyphicon-lg"></span>
+                </div>
+                <h4>
+                    Warning</h4>
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a
+                    ante.
+                </p>
+            </div>
+            <div class="blockquote-box blockquote-danger clearfix">
+                <div class="square pull-left">
+                    <span class="glyphicon glyphicon-record glyphicon-lg"></span>
+                </div>
+                <h4>
+                    Fee</h4>
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a
+                    ante.
+                </p>
+            </div>
+        </div>
+    </div>
+																	  
+																	  
+																	<script>  
+																	var ex='{{bank.extra_day}}';
+																			if(ex != null){
+																	key('{{bank.extra_day}}',"{{forloop.counter}}eligibility_bank");}
+																	if('{{bank.eligibility}}' != null){
+																	eli('{{bank.eligibility}}',"{{forloop.counter}}age_bank",0);}
+																	if('{{bank.age}}' != null){
+																	eli('{{bank.age}}',"{{forloop.counter}}age_bank",1);}
+																	if('{{bank.amount}}' != null){
+																	eli('{{bank.amount}}',"{{forloop.counter}}amt_bank",2);}
+																	
+																																		
+																																		
+																																		
+																																		 function key(a,b){
+
+																																				
+																																				var myarray = a.split('///');
+																																				var count = a.split("///").length - 1;
+																																				if(count>0){
+																																							for(var i = 0; i < myarray.length; i++)
+																																							{
+
+																																							var node=document.createElement("LI");
+																																							  node.style.color = "red";
+																																							   node.style.padding="5px";
+																																							  
+
+
+																																							var textnode=document.createTextNode(myarray[i]);
+																																							node.appendChild(textnode);
+																																							document.getElementById("{{forloop.counter}}_bank").appendChild(node);
+
+																																							}
+																																							}
+																																							
+																																							
+																																							 }
+																																							 
+																																							 
+																														function eli(a,b,c){
+
+																																				
+																																				var myarray = a.split('///');
+																																				var countt = a.split("///").length - 1;
+																																				if(countt>0){
+																																							for(var i = 0; i < myarray.length; i++)
+																																							{
+
+																																							var node=document.createElement("LI");
+ node.style.padding="5px";
+																																							var textnode=document.createTextNode(myarray[i]);
+																																							node.appendChild(textnode);
+																																							if(c==0){
+																																							document.getElementById("{{forloop.counter}}e_o_bank").appendChild(node);}else if(c==1){
+																																							
+																																							document.getElementById("{{forloop.counter}}a_o_bank").appendChild(node);
+																																							}else{
+																																							document.getElementById("{{forloop.counter}}am_o_bank").appendChild(node);
+																																							}
+
+
+																																							}
+																																							}
+																																							else{
+																																							for(var i = 0; i < myarray.length; i++)
+																																							{ 
+
+																																		
+																																				if(c==0){
+																																				document.getElementById(
+																																	"{{forloop.counter}}eligibility_bank").innerHTML = "<b style='color:#1C51DE'>Eligibility: </b>" + myarray[i];}
+																																	else if(c==1){
+																																	document.getElementById(
+																																	"{{forloop.counter}}age_bank").innerHTML = "Age: " + myarray[i];
+																																	}
+																																	
+																																	else{document.getElementById(
+																																	"{{forloop.counter}}amt_bank").innerHTML = "Amount: " + myarray[i];}
+
+																																							}
+																																							}
+																																							
+																																							 }									 
+																																							 
+																																							 
+																																							 
+
+																																		
+																																		</script>
+																
+																																									
+														  </p>
+														  <div class="col-md-12 " >
+														  	<a href="{{bank.detail_link}}"target="_blank"style="text-align:center"><h5><u></b>Click for Details<b></u><h5></a>
+																	<a href="{{bank.apply_link}}" target="_blank"style="text-align:center"><h5><u><b>Click here  to Apply</b></u><h5></a>
+														  </div>
+													 </div>
+													 
+													 {% endfor %}
+													 
+													 {% endif %}
+													 
+													 <!-- bank -->
+													 <!-- ssc -->
+											 {% if ssc != None %}
+								{% for ssc in ssc %}
+								{% if forloop.first %}
+								<div class="panel card  bg-info">
+					
+					
+										<div class="col-md-12 nopadding">
+										
+										<h3 class="card "style="text-align:center; color: #fff;background-color:#5d6d7e"><a style="text-align:center; color: #fff"  href="/job/category/ssc/1/">SSC </a></h3>
+										
+										</div>
+					 </div>
+					{% endif %}
+
+														<!--		<div class="panel panel-primary"style="text-align:center;color:#fff">
+																			<div class="panel-heading" style="text-align:center;color:#fff"><h1 style="text-align:center;color:#fff">ssc</h1></div>
+																			
+																</div> -->
+																	
+														<div class="c-header-my" style="padding-left:0px;">
+														
+																<div class="paragraph_image" style="margin-right:8px;">
+																	<a href="#"><img width="160" height="106" src="/media/{{ssc.ca_img}}"class="attachment-120x120 size-120x120 wp-post-image" alt="" scale="0"></a>
+																</div>
+				
+																<h4 ><u>{{ssc.heading}}</u></h4>
+																
+																<p style="padding-bottom:0px;display:inline;color:#D50000"> <b>LAST DATE TO APPLY:  21/08/2017</b></p>
+																																					
+																<button id="b" onClick="op('#{{forloop.counter}}dis_ssc')" type="button" class="btn btn-warning btn-xs"style="float:right;color:steelblue;border:1px blue;"><b><i>Details</i></b><i class="fa fa-arrow-down" aria-hidden="true"></i>
+																</button>	
+																																							
+													   </div>
+																																		
+														<div class="c-body" id="{{forloop.counter}}dis_ssc" style="font-weight:bold;display:none">
+															
+															<p class="c-p">
+																																		  
+																																		  
+																	<ul style="text-align:Left;margin-top:5px;" id="{{forloop.counter}}_ssc">
+																	
+																		<li style="color:red;padding:5px;"><Strong>Start Date:&nbsp;{{ssc.first_day}}</strong></li>
+																		
+																		<li style="color:red;padding:5px;"><Strong>Last Date: &nbsp;{{ssc.last_day}}</strong></li>
+																		
+																		
+																		
+																		
+																		<li style="padding-top:10px"id="{{forloop.counter}}eligibility_ssc"><Strong>Eligibility:<ol style="text-align:Left;padding-left:40px; color:#1C51DE" id="{{forloop.counter}}e_o_ssc">
+																	
+																		
+																	
+																		</ol></strong></li>
+																		
+																		<li style="padding-top:10px" id="{{forloop.counter}}age_ssc"><Strong>Age: <ol style="text-align:Left;padding-left:40px;color:steelblue " id="{{forloop.counter}}a_o_ssc">
+																	
+																		
+																	
+																		</ol></strong></li>
+																		
+																		<li style="padding-top:10px" id="{{forloop.counter}}amt_ssc"><Strong>Amount: <ol style="text-align:Left;padding-left:40px;color:steelblue " id="{{forloop.counter}}am_o_ssc">
+																	
+																		
+																	
+																		</ol></strong></li>
+																	
+																	</ul>
+																	<script>  
+																	var ex='{{ssc.extra_day}}';
+																			if(ex != null){
+																	key('{{ssc.extra_day}}',"{{forloop.counter}}eligibility_ssc");}
+																	if('{{ssc.eligibility}}' != null){
+																	eli('{{ssc.eligibility}}',"{{forloop.counter}}age_ssc",0);}
+																	if('{{ssc.age}}' != null){
+																	eli('{{ssc.age}}',"{{forloop.counter}}age_ssc",1);}
+																	if('{{ssc.amount}}' != null){
+																	eli('{{ssc.amount}}',"{{forloop.counter}}amt_ssc",2);}
+																	
+																																		
+																																		
+																																		
+																																		 function key(a,b){
+
+																																				
+																																				var myarray = a.split('///');
+																																				var count = a.split("///").length - 1;
+																																				if(count>0){
+																																							for(var i = 0; i < myarray.length; i++)
+																																							{
+
+																																							var node=document.createElement("LI");
+																																							 node.style.color = "red";
+																																							   node.style.padding="5px";
+
+																																							var textnode=document.createTextNode(myarray[i]);
+																																							node.appendChild(textnode);
+																																							document.getElementById("{{forloop.counter}}_ssc").insertBefore(node, document.getElementById(b));
+
+																																							}
+																																							}
+																																							
+																																							
+																																							 }
+																																							 
+																																							 
+																														function eli(a,b,c){
+
+																																				
+																																				var myarray = a.split('///');
+																																				var countt = a.split("///").length - 1;
+																																				if(countt>0){
+																																							for(var i = 0; i < myarray.length; i++)
+																																							{
+
+																																							var node=document.createElement("LI");
+
+																																							var textnode=document.createTextNode(myarray[i]);
+																																							node.appendChild(textnode);
+																																							if(c==0){
+																																							document.getElementById("{{forloop.counter}}e_o_ssc").appendChild(node);}else if(c==1){
+																																							
+																																							document.getElementById("{{forloop.counter}}a_o_ssc").appendChild(node);
+																																							}else{
+																																							document.getElementById("{{forloop.counter}}am_o_ssc").appendChild(node);
+																																							}
+
+
+																																							}
+																																							}
+																																							else{
+																																							for(var i = 0; i < myarray.length; i++)
+																																							{ 
+
+																																		
+																																				if(c==0){
+																																				document.getElementById(
+																																	"{{forloop.counter}}eligibility_ssc").innerHTML = "<b style='color:#1C51DE'>Eligibility: </b>" + myarray[i];}
+																																	else if(c==1){
+																																	document.getElementById(
+																																	"{{forloop.counter}}age_ssc").innerHTML = "Age: " + myarray[i];
+																																	}
+																																	
+																																	else{document.getElementById(
+																																	"{{forloop.counter}}amt_ssc").innerHTML = "Amount: " + myarray[i];}
+
+																																							}
+																																							}
+																																							
+																																							 }									 
+																																							 
+																																							 
+																																							 
+
+																																		
+																																		</script>
+																	<a href="{{ssc.detail_link}}"target="_blank"style="text-align:center"><h5>Click for Details<h5></a>
+																	<a href="{{ssc.apply_link}}"target="_blank" style="text-align:center"><h5>Click here  to Apply<h5></a>
+																																									
+														  </p>
+													 </div>
+													 
+													 {% endfor %}
+													 
+													 {% endif %}
+													 <!-- ssc -->
+													  <!-- upsc -->
+													  {% if upsc != None %}
+								{% for upsc in upsc %}
+								{% if forloop.first %}
+								<div class="panel card  bg-info">
+					
+					
+										<div class="col-md-12 nopadding">
+										
+										<h3 class="card "style="text-align:center; color: #fff;background-color:#27ae60;font-size:26px;"><a style="text-align:center; color: #fff"  href="/job/category/upsc/1/">UPSC</a></h3>
+										
+										</div>
+					 </div>
+					{% endif %}
+
+														<!--		<div class="panel panel-primary"style="text-align:center;color:#fff">
+																			<div class="panel-heading" style="text-align:center;color:#fff"><h1 style="text-align:center;color:#fff">upsc</h1></div>
+																			
+																</div> -->
+																	
+														<div class="c-header-my" style="padding-left:0px;">
+														
+																<div class="paragraph_image" style="margin-right:8px;">
+																	<a href="#"><img width="160" height="106" src="/media/{{upsc.ca_img}}"class="attachment-120x120 size-120x120 wp-post-image" alt="" scale="0"></a>
+																</div>
+				
+																<h4 ><u>{{upsc.heading}}</u></h4>
+																
+																<p style="padding-bottom:0px;display:inline;color:#D50000"> <b>LAST DATE TO APPLY:  21/08/2017</b></p>
+																																					
+																<button id="b" onClick="op('#{{forloop.counter}}dis_upsc')" type="button" class="btn btn-warning btn-xs"style="float:right;color:steelblue;border:1px blue;"><b><i>Details</i></b><i class="fa fa-arrow-down" aria-hidden="true"></i>
+																</button>	
+																																							
+													   </div>
+																																		
+														<div class="c-body" id="{{forloop.counter}}dis_upsc" style="font-weight:bold;display:none">
+															
+															<p class="c-p">
+																																		  
+																																		  
+																	<ul style="text-align:Left;margin-top:5px;" id="{{forloop.counter}}_upsc">
+																	
+																		<li style="color:red;padding:5px;"><Strong>Start Date:&nbsp;{{upsc.first_day}}</strong></li>
+																		
+																		<li style="color:red;padding:5px;"><Strong>Last Date: &nbsp;{{upsc.last_day}}</strong></li>
+																		
+																		
+																		
+																		
+																		<li style="padding-top:10px"id="{{forloop.counter}}eligibility_upsc"><Strong>Eligibility:<ol style="text-align:Left;padding-left:40px; color:#1C51DE" id="{{forloop.counter}}e_o_upsc">
+																	
+																		
+																	
+																		</ol></strong></li>
+																		
+																		<li style="padding-top:10px" id="{{forloop.counter}}age_upsc"><Strong>Age: <ol style="text-align:Left;padding-left:40px;color:steelblue " id="{{forloop.counter}}a_o_upsc">
+																	
+																		
+																	
+																		</ol></strong></li>
+																		
+																		<li style="padding-top:10px" id="{{forloop.counter}}amt_upsc"><Strong>Amount: <ol style="text-align:Left;padding-left:40px;color:steelblue " id="{{forloop.counter}}am_o_upsc">
+																	
+																		
+																	
+																		</ol></strong></li>
+																	
+																	</ul>
+																	<script>  
+																	var ex='{{upsc.extra_day}}';
+																			if(ex != null){
+																	key('{{upsc.extra_day}}',"{{forloop.counter}}eligibility_upsc");}
+																	if('{{upsc.eligibility}}' != null){
+																	eli('{{upsc.eligibility}}',"{{forloop.counter}}age_upsc",0);}
+																	if('{{upsc.age}}' != null){
+																	eli('{{upsc.age}}',"{{forloop.counter}}age_upsc",1);}
+																	if('{{upsc.amount}}' != null){
+																	eli('{{upsc.amount}}',"{{forloop.counter}}amt_upsc",2);}
+																	
+																																		
+																																		
+																																		
+																																		 function key(a,b){
+
+																																				
+																																				var myarray = a.split('///');
+																																				var count = a.split("///").length - 1;
+																																				if(count>0){
+																																							for(var i = 0; i < myarray.length; i++)
+																																							{
+
+																																							var node=document.createElement("LI");
+																																							 node.style.color = "red";
+																																							   node.style.padding="5px";
+
+																																							var textnode=document.createTextNode(myarray[i]);
+																																							node.appendChild(textnode);
+																																							document.getElementById("{{forloop.counter}}_upsc").insertBefore(node, document.getElementById(b));
+
+																																							}
+																																							}
+																																							
+																																							
+																																							 }
+																																							 
+																																							 
+																														function eli(a,b,c){
+
+																																				
+																																				var myarray = a.split('///');
+																																				var countt = a.split("///").length - 1;
+																																				if(countt>0){
+																																							for(var i = 0; i < myarray.length; i++)
+																																							{
+
+																																							var node=document.createElement("LI");
+
+																																							var textnode=document.createTextNode(myarray[i]);
+																																							node.appendChild(textnode);
+																																							if(c==0){
+																																							document.getElementById("{{forloop.counter}}e_o_upsc").appendChild(node);}else if(c==1){
+																																							
+																																							document.getElementById("{{forloop.counter}}a_o_upsc").appendChild(node);
+																																							}else{
+																																							document.getElementById("{{forloop.counter}}am_o_upsc").appendChild(node);
+																																							}
+
+
+																																							}
+																																							}
+																																							else{
+																																							for(var i = 0; i < myarray.length; i++)
+																																							{ 
+
+																																		
+																																				if(c==0){
+																																				document.getElementById(
+																																	"{{forloop.counter}}eligibility_upsc").innerHTML = "<b style='color:#1C51DE'>Eligibility: </b>" + myarray[i];}
+																																	else if(c==1){
+																																	document.getElementById(
+																																	"{{forloop.counter}}age_upsc").innerHTML = "Age: " + myarray[i];
+																																	}
+																																	
+																																	else{document.getElementById(
+																																	"{{forloop.counter}}amt_upsc").innerHTML = "Amount: " + myarray[i];}
+
+																																							}
+																																							}
+																																							
+																																							 }									 
+																																							 
+																																							 
+																																							 
+
+																																		
+																																		</script>
+																	<a href="{{upsc.detail_link}}"target="_blank"style="text-align:center"><h5>Click for Details<h5></a>
+																	<a href="{{upsc.apply_link}}"target="_blank" style="text-align:center"><h5>Click here  to Apply<h5></a>
+																																									
+														  </p>
+													 </div>
+													 
+													 {% endfor %}
+													 
+													 {% endif %}
+													 <!-- upsc -->
+													  <!-- rail -->
+													  {% if rail != None %}
+								{% for rail in rail %}
+								{% if forloop.first %}
+								<div class="panel card  bg-info">
+					
+					
+										<div class="col-md-12  nopadding">
+										
+										<h3 class="card "style="text-align:center; color: #fff;background-color:#e74c3c;font-size:26px;"><a style="text-align:center; color: #fff"  href="/job/category/rail/1/">RAILWAY</a></h3>
+										
+										</div>
+					 </div>
+					{% endif %}
+
+														<!--		<div class="panel panel-primary"style="text-align:center;color:#fff">
+																			<div class="panel-heading" style="text-align:center;color:#fff"><h1 style="text-align:center;color:#fff">rail</h1></div>
+																			
+																</div> -->
+																	
+														<div class="c-header-my" style="padding-left:0px;">
+														
+																<div class="paragraph_image" style="margin-right:8px;">
+																	<a href="#"><img width="160" height="106" src="/media/{{rail.ca_img}}"class="attachment-120x120 size-120x120 wp-post-image" alt="" scale="0"></a>
+																</div>
+				
+																<h4 ><u>{{rail.heading}}</u></h4>
+																
+																<p style="padding-bottom:0px;display:inline;color:#D50000"> <b>LAST DATE TO APPLY:  21/08/2017</b></p>
+																																					
+																<button id="b" onClick="op('#{{forloop.counter}}dis_rail')" type="button" class="btn btn-warning btn-xs"style="float:right;color:steelblue;border:1px blue;"><b><i>Details</i></b><i class="fa fa-arrow-down" aria-hidden="true"></i>
+																</button>	
+																																							
+													   </div>
+																																		
+														<div class="c-body" id="{{forloop.counter}}dis_rail" style="font-weight:bold;display:none">
+															
+															<p class="c-p">
+																																		  
+																																		  
+																	<ul style="text-align:Left;margin-top:5px;" id="{{forloop.counter}}_rail">
+																	
+																		<li style="color:red;padding:5px;"><Strong>Start Date:&nbsp;{{rail.first_day}}</strong></li>
+																		
+																		<li style="color:red;padding:5px;"><Strong>Last Date: &nbsp;{{rail.last_day}}</strong></li>
+																		
+																		
+																		
+																		
+																		<li style="padding-top:10px"id="{{forloop.counter}}eligibility_rail"><Strong>Eligibility:<ol style="text-align:Left;padding-left:40px; color:#1C51DE" id="{{forloop.counter}}e_o_rail">
+																	
+																		
+																	
+																		</ol></strong></li>
+																		
+																		<li style="padding-top:10px" id="{{forloop.counter}}age_rail"><Strong>Age: <ol style="text-align:Left;padding-left:40px;color:steelblue " id="{{forloop.counter}}a_o_rail">
+																	
+																		
+																	
+																		</ol></strong></li>
+																		
+																		<li style="padding-top:10px" id="{{forloop.counter}}amt_rail"><Strong>Amount: <ol style="text-align:Left;padding-left:40px;color:steelblue " id="{{forloop.counter}}am_o_rail">
+																	
+																		
+																	
+																		</ol></strong></li>
+																	
+																	</ul>
+																	<script>  
+																	var ex='{{rail.extra_day}}';
+																			if(ex != null){
+																	key('{{rail.extra_day}}',"{{forloop.counter}}eligibility_rail");}
+																	if('{{rail.eligibility}}' != null){
+																	eli('{{rail.eligibility}}',"{{forloop.counter}}age_rail",0);}
+																	if('{{rail.age}}' != null){
+																	eli('{{rail.age}}',"{{forloop.counter}}age_rail",1);}
+																	if('{{rail.amount}}' != null){
+																	eli('{{rail.amount}}',"{{forloop.counter}}amt_rail",2);}
+																	
+																																		
+																																		
+																																		
+																																		 function key(a,b){
+
+																																				
+																																				var myarray = a.split('///');
+																																				var count = a.split("///").length - 1;
+																																				if(count>0){
+																																							for(var i = 0; i < myarray.length; i++)
+																																							{
+
+																																							var node=document.createElement("LI");
+																																							 node.style.color = "red";
+																																							   node.style.padding="5px";
+
+																																							var textnode=document.createTextNode(myarray[i]);
+																																							node.appendChild(textnode);
+																																							document.getElementById("{{forloop.counter}}_rail").insertBefore(node, document.getElementById(b));
+
+																																							}
+																																							}
+																																							
+																																							
+																																							 }
+																																							 
+																																							 
+																														function eli(a,b,c){
+
+																																				
+																																				var myarray = a.split('///');
+																																				var countt = a.split("///").length - 1;
+																																				if(countt>0){
+																																							for(var i = 0; i < myarray.length; i++)
+																																							{
+
+																																							var node=document.createElement("LI");
+
+																																							var textnode=document.createTextNode(myarray[i]);
+																																							node.appendChild(textnode);
+																																							if(c==0){
+																																							document.getElementById("{{forloop.counter}}e_o_rail").appendChild(node);}else if(c==1){
+																																							
+																																							document.getElementById("{{forloop.counter}}a_o_rail").appendChild(node);
+																																							}else{
+																																							document.getElementById("{{forloop.counter}}am_o_rail").appendChild(node);
+																																							}
+
+
+																																							}
+																																							}
+																																							else{
+																																							for(var i = 0; i < myarray.length; i++)
+																																							{ 
+
+																																		
+																																				if(c==0){
+																																				document.getElementById(
+																																	"{{forloop.counter}}eligibility_rail").innerHTML =  "Eligibility: <b style='color:#1C51DE'>" + myarray[i]+'</b>';}
+																																	else if(c==1){
+																																	document.getElementById(
+																																	"{{forloop.counter}}age_rail").innerHTML = "Age: " + myarray[i];
+																																	}
+																																	
+																																	else{document.getElementById(
+																																	"{{forloop.counter}}amt_rail").innerHTML = "Amount: " + myarray[i];}
+
+																																							}
+																																							}
+																																							
+																																							 }									 
+																																							 
+																																							 
+																																							 
+
+																																		
+																																		</script>
+																	<a href="{{rail.detail_link}}"target="_blank"style="text-align:center"><h5>Click for Details<h5></a>
+																	<a href="{{rail.apply_link}}"target="_blank" style="text-align:center"><h5>Click here  to Apply<h5></a>
+																																									
+														  </p>
+													 </div>
+													 
+													 {% endfor %}
+													 
+													 {% endif %}            
+													 <!-- rail -->
+													  <!-- defence -->
+													  {% if defence != None %}
+								{% for defence in defence %}
+								{% if forloop.first %}
+								<div class="panel card  bg-info">
+					
+					
+										<div class="col-md-12  nopadding">
+										
+										<h3 class="card "style="text-align:center; color: #fff;background-color:#239b56"><a style="text-align:center; color: #fff"  href="/job/category/defence/1/">DEFENCE</a></h3>
+										
+										</div>
+					 </div>
+					{% endif %}
+
+														<!--		<div class="panel panel-primary"style="text-align:center;color:#fff">
+																			<div class="panel-heading" style="text-align:center;color:#fff"><h1 style="text-align:center;color:#fff">defence</h1></div>
+																			
+																</div> -->
+																	
+														<div class="c-header-my" style="padding-left:0px;">
+														
+																<div class="paragraph_image" style="margin-right:8px;">
+																	<a href="#"><img width="160" height="106" src="/media/{{defence.ca_img}}"class="attachment-120x120 size-120x120 wp-post-image" alt="" scale="0"></a>
+																</div>
+				
+																<h4 ><u>{{defence.heading}}</u></h4>
+																
+																<p style="padding-bottom:0px;display:inline;color:#D50000"> <b>LAST DATE TO APPLY:  21/08/2017</b></p>
+																																					
+																<button id="b" onClick="op('#{{forloop.counter}}dis_defence')" type="button" class="btn btn-warning btn-xs"style="float:right;color:steelblue;border:1px blue;"><b><i>Details</i></b><i class="fa fa-arrow-down" aria-hidden="true"></i>
+																</button>	
+																																							
+													   </div>
+																																		
+														<div class="c-body" id="{{forloop.counter}}dis_defence" style="font-weight:bold;display:none">
+															
+															<p class="c-p">
+																																		  
+																																		  
+																	<ul style="text-align:Left;margin-top:5px;" id="{{forloop.counter}}_defence">
+																	
+																		<li style="color:red;padding:5px;"><Strong>Start Date:&nbsp;{{defence.first_day}}</strong></li>
+																		
+																		<li style="color:red;padding:5px;"><Strong>Last Date: &nbsp;{{defence.last_day}}</strong></li>
+																		
+																		
+																		
+																		
+																		<li style="padding-top:10px"id="{{forloop.counter}}eligibility_defence"><Strong>Eligibility:<ol style="text-align:Left;padding-left:40px; color:#1C51DE" id="{{forloop.counter}}e_o_defence">
+																	
+																		
+																	
+																		</ol></strong></li>
+																		
+																		<li style="padding-top:10px" id="{{forloop.counter}}age_defence"><Strong>Age: <ol style="text-align:Left;padding-left:40px;color:steelblue " id="{{forloop.counter}}a_o_defence">
+																	
+																		
+																	
+																		</ol></strong></li>
+																		
+																		<li style="padding-top:10px" id="{{forloop.counter}}amt_defence"><Strong>Amount: <ol style="text-align:Left;padding-left:40px;color:steelblue " id="{{forloop.counter}}am_o_defence">
+																	
+																		
+																	
+																		</ol></strong></li>
+																	
+																	</ul>
+																	<script>  
+																	var ex='{{defence.extra_day}}';
+																			if(ex != null){
+																	key('{{defence.extra_day}}',"{{forloop.counter}}eligibility_defence");}
+																	if('{{defence.eligibility}}' != null){
+																	eli('{{defence.eligibility}}',"{{forloop.counter}}age_defence",0);}
+																	if('{{defence.age}}' != null){
+																	eli('{{defence.age}}',"{{forloop.counter}}age_defence",1);}
+																	if('{{defence.amount}}' != null){
+																	eli('{{defence.amount}}',"{{forloop.counter}}amt_defence",2);}
+																	
+																																		
+																																		
+																																		
+																																		 function key(a,b){
+
+																																				
+																																				var myarray = a.split('///');
+																																				var count = a.split("///").length - 1;
+																																				if(count>0){
+																																							for(var i = 0; i < myarray.length; i++)
+																																							{
+
+																																							var node=document.createElement("LI");
+																																							 node.style.color = "red";
+																																							   node.style.padding="5px";
+
+																																							var textnode=document.createTextNode(myarray[i]);
+																																							node.appendChild(textnode);
+																																							document.getElementById("{{forloop.counter}}_defence").insertBefore(node, document.getElementById(b));
+
+																																							}
+																																							}
+																																							
+																																							
+																																							 }
+																																							 
+																																							 
+																														function eli(a,b,c){
+
+																																				
+																																				var myarray = a.split('///');
+																																				var countt = a.split("///").length - 1;
+																																				if(countt>0){
+																																							for(var i = 0; i < myarray.length; i++)
+																																							{
+
+																																							var node=document.createElement("LI");
+
+																																							var textnode=document.createTextNode(myarray[i]);
+																																							node.appendChild(textnode);
+																																							if(c==0){
+																																							document.getElementById("{{forloop.counter}}e_o_defence").appendChild(node);}else if(c==1){
+																																							
+																																							document.getElementById("{{forloop.counter}}a_o_defence").appendChild(node);
+																																							}else{
+																																							document.getElementById("{{forloop.counter}}am_o_defence").appendChild(node);
+																																							}
+
+
+																																							}
+																																							}
+																																							else{
+																																							for(var i = 0; i < myarray.length; i++)
+																																							{ 
+
+																																		
+																																				if(c==0){
+																																				document.getElementById(
+																																	"{{forloop.counter}}eligibility_defence").innerHTML =  "Eligibility: <b style='color:#1C51DE'>" + myarray[i]+'</b>';}
+																																	else if(c==1){
+																																	document.getElementById(
+																																	"{{forloop.counter}}age_defence").innerHTML = "Age: " + myarray[i];
+																																	}
+																																	
+																																	else{document.getElementById(
+																																	"{{forloop.counter}}amt_defence").innerHTML = "Amount: " + myarray[i];}
+
+																																							}
+																																							}
+																																							
+																																							 }									 
+																																							 
+																																							 
+																																							 
+
+																																		
+																																		</script>
+																	<a href="{{defence.detail_link}}"target="_blank"style="text-align:center"><h5>Click for Details<h5></a>
+																	<a href="{{defence.apply_link}}"target="_blank" style="text-align:center"><h5>Click here  to Apply<h5></a>
+																																									
+														  </p>
+													 </div>
+													 
+													 {% endfor %}
+													 
+													 {% endif %}
+													 <!-- defence -->
+													 <!-- other -->
+													  {% if other != None %}
+								{% for other in other %}
+								{% if forloop.first %}
+								<div class="panel card  bg-info">
+					
+					
+										<div class="col-md-12  nopadding">
+										
+										<h3 class="card "style="text-align:center; color: #fff;background-color:#337ab7"><a style="text-align:center; color: #fff"  href="/job/category/other/1/"> OTHER GOVT JOBS -- <span class="glyphicon glyphicon-chevron-right" style="font-size:16px;"></span></a>  </h3>
+										
+										</div>
+					 </div>
+					{% endif %}
+
+														<!--		<div class="panel panel-primary"style="text-align:center;color:#fff">
+																			<div class="panel-heading" style="text-align:center;color:#fff"><h1 style="text-align:center;color:#fff">other</h1></div>
+																			
+																</div> -->
+																	
+														<div class="c-header-my" style="padding-left:0px;">
+														
+																<div class="paragraph_image" style="margin-right:8px;">
+																	<a href="#"><img width="160" height="106" src="/media/{{other.ca_img}}"class="attachment-120x120 size-120x120 wp-post-image" alt="" scale="0"></a>
+																</div>
+				
+																<h4 ><u>{{other.heading}}</u></h4>
+																
+																<p style="padding-bottom:0px;display:inline;color:#D50000"> <b>LAST DATE TO APPLY:  21/08/2017</b></p>
+																																					
+																<button id="b" onClick="op('#{{forloop.counter}}dis_other')" type="button" class="btn btn-warning btn-xs"style="float:right;color:steelblue;border:1px blue;"><b><i>Details</i></b><i class="fa fa-arrow-down" aria-hidden="true"></i>
+																</button>	
+																																							
+													   </div>
+																																		
+														<div class="c-body" id="{{forloop.counter}}dis_other" style="font-weight:bold;display:none">
+															
+															<p class="c-p">
+																																		  
+																																		  
+																	<ul style="text-align:Left;margin-top:5px;" id="{{forloop.counter}}_other">
+																	
+																		<li style="color:red;padding:5px;"><Strong>Start Date:&nbsp;{{other.first_day}}</strong></li>
+																		
+																		<li style="color:red;padding:5px;"><Strong>Last Date: &nbsp;{{other.last_day}}</strong></li>
+																		
+																		
+																		
+																		
+																		<li style="padding-top:10px"id="{{forloop.counter}}eligibility_other"><Strong>Eligibility:<ol style="text-align:Left;padding-left:40px; color:#1C51DE" id="{{forloop.counter}}e_o_other">
+																	
+																		
+																	
+																		</ol></strong></li>
+																		
+																		<li style="padding-top:10px" id="{{forloop.counter}}age_other"><Strong>Age: <ol style="text-align:Left;padding-left:40px;color:steelblue " id="{{forloop.counter}}a_o_other">
+																	
+																		
+																	
+																		</ol></strong></li>
+																		
+																		<li style="padding-top:10px" id="{{forloop.counter}}amt_other"><Strong>Amount: <ol style="text-align:Left;padding-left:40px;color:steelblue " id="{{forloop.counter}}am_o_other">
+																	
+																		
+																	
+																		</ol></strong></li>
+																	
+																	</ul>
+																	<script>  
+																	var ex='{{other.extra_day}}';
+																			if(ex != null){
+																	key('{{other.extra_day}}',"{{forloop.counter}}eligibility_other");}
+																	if('{{other.eligibility}}' != null){
+																	eli('{{other.eligibility}}',"{{forloop.counter}}age_other",0);}
+																	if('{{other.age}}' != null){
+																	eli('{{other.age}}',"{{forloop.counter}}age_other",1);}
+																	if('{{other.amount}}' != null){
+																	eli('{{other.amount}}',"{{forloop.counter}}amt_other",2);}
+																	
+																																		
+																																		
+																																		
+																																		 function key(a,b){
+
+																																				
+																																				var myarray = a.split('///');
+																																				var count = a.split("///").length - 1;
+																																				if(count>0){
+																																							for(var i = 0; i < myarray.length; i++)
+																																							{
+
+																																							var node=document.createElement("LI");
+																																							 node.style.color = "red";
+																																							   node.style.padding="5px";
+
+																																							var textnode=document.createTextNode(myarray[i]);
+																																							node.appendChild(textnode);
+																																							document.getElementById("{{forloop.counter}}_other").insertBefore(node, document.getElementById(b));
+
+																																							}
+																																							}
+																																							
+																																							
+																																							 }
+																																							 
+																																							 
+																														function eli(a,b,c){
+
+																																				
+																																				var myarray = a.split('///');
+																																				var countt = a.split("///").length - 1;
+																																				if(countt>0){
+																																							for(var i = 0; i < myarray.length; i++)
+																																							{
+
+																																							var node=document.createElement("LI");
+
+																																							var textnode=document.createTextNode(myarray[i]);
+																																							node.appendChild(textnode);
+																																							if(c==0){
+																																							document.getElementById("{{forloop.counter}}e_o_other").appendChild(node);}else if(c==1){
+																																							
+																																							document.getElementById("{{forloop.counter}}a_o_other").appendChild(node);
+																																							}else{
+																																							document.getElementById("{{forloop.counter}}am_o_other").appendChild(node);
+																																							}
+
+
+																																							}
+																																							}
+																																							else{
+																																							for(var i = 0; i < myarray.length; i++)
+																																							{ 
+
+																																		
+																																				if(c==0){
+																																				document.getElementById(
+																																	"{{forloop.counter}}eligibility_other").innerHTML = "Eligibility: <b style='color:#1C51DE'>" + myarray[i]+'</b>';}
+																																	else if(c==1){
+																																	document.getElementById(
+																																	"{{forloop.counter}}age_other").innerHTML = "Age: " + myarray[i];
+																																	}
+																																	
+																																	else{document.getElementById(
+																																	"{{forloop.counter}}amt_other").innerHTML = "Amount: " + myarray[i];}
+
+																																							}
+																																							}
+																																							
+																																							 }									 
+																																							 
+																																							 
+																																							 
+
+																																		
+																																		</script>
+																	<a href="{{other.detail_link}}"target="_blank"style="text-align:center"><h5>Click for Details<h5></a>
+																	<a href="{{other.apply_link}}"target="_blank" style="text-align:center"><h5>Click here  to Apply<h5></a>
+																																									
+														  </p>
+													 </div>
+													 
+													 {% endfor %}
+													 
+													 {% endif %}
+													 <!-- other end -->
+													 <!-- job extra -->
+													 {% if job != None %}
+								{% for job in job %}
+								{% if forloop.first %}
+								<div class="panel card  bg-info">
+					
+					
+										<div class="col-md-12  bg-primary">
+										
+										<h3 class="card "style="text-align:center; color: #fff;background-color:#2A74CD ">{{after_string}}</h3>
+										
+										</div>
+					 </div>
+					{% endif %}
+
+														<!--		<div class="panel panel-primary"style="text-align:center;color:#fff">
+																			<div class="panel-heading" style="text-align:center;color:#fff"><h1 style="text-align:center;color:#fff">job</h1></div>
+																			
+																</div> -->
+																	
+														<div class="c-header-my" style="padding-left:0px;">
+														
+																<div class="paragraph_image" style="margin-right:8px;">
+																	<a href="#"><img width="160" height="106" src="/media/{{job.ca_img}}"class="attachment-120x120 size-120x120 wp-post-image" alt="" scale="0"></a>
+																</div>
+				
+																<h4 ><u>{{job.heading}}</u></h4>
+																
+																<p style="padding-bottom:0px;display:inline;color:#D50000"> <b>LAST DATE TO APPLY:  21/08/2017</b></p>
+																																					
+																<button id="b" onClick="op('#{{forloop.counter}}dis_job')" type="button" class="btn btn-warning btn-xs"style="float:right;color:steelblue;border:1px blue;"><b><i>Details</i></b><i class="fa fa-arrow-down" aria-hidden="true"></i>
+																</button>	
+																																							
+													   </div>
+																																		
+														<div class="c-body" id="{{forloop.counter}}dis_job" {% if string != 'goto' %}style="font-weight:bold;display:none"  {% else %}style="font-weight:bold;"{% endif %}>
+															
+															<p class="c-p">
+																																		  
+																																		  
+																	<ul style="text-align:Left;margin-top:5px;" id="{{forloop.counter}}_job">
+																	
+																		<li style="color:red;padding:5px;"><Strong>Start Date:&nbsp;{{job.first_day}}</strong></li>
+																		
+																		<li style="color:red;padding:5px;"><Strong>Last Date: &nbsp;{{job.last_day}}</strong></li>
+																		
+																		
+																		
+																		
+																		<li style="padding-top:10px"id="{{forloop.counter}}eligibility_job"><Strong>Eligibility:<ol style="text-align:Left;padding-left:40px; color:#1C51DE" id="{{forloop.counter}}e_o_job">
+																	
+																		
+																	
+																		</ol></strong></li>
+																		
+																		<li style="padding-top:10px" id="{{forloop.counter}}age_job"><Strong>Age: <ol style="text-align:Left;padding-left:40px;color:steelblue " id="{{forloop.counter}}a_o_job">
+																	
+																		
+																	
+																		</ol></strong></li>
+																		
+																		<li style="padding-top:10px" id="{{forloop.counter}}amt_job"><Strong>Amount: <ol style="text-align:Left;padding-left:40px;color:steelblue " id="{{forloop.counter}}am_o_job">
+																	
+																		
+																	
+																		</ol></strong></li>
+																	
+																	</ul>
+																	<script>  
+																	var ex='{{job.extra_day}}';
+																			if(ex != null){
+																	key('{{job.extra_day}}',"{{forloop.counter}}eligibility_job");}
+																	if('{{job.eligibility}}' != null){
+																	eli('{{job.eligibility}}',"{{forloop.counter}}age_job",0);}
+																	if('{{job.age}}' != null){
+																	eli('{{job.age}}',"{{forloop.counter}}age_job",1);}
+																	if('{{job.amount}}' != null){
+																	eli('{{job.amount}}',"{{forloop.counter}}amt_job",2);}
+																	
+																																		
+																																		
+																																		
+																																		 function key(a,b){
+
+																																				
+																																				var myarray = a.split('///');
+																																				var count = a.split("///").length - 1;
+																																				if(count>0){
+																																							for(var i = 0; i < myarray.length; i++)
+																																							{
+
+																																							var node=document.createElement("LI");
+																																							 node.style.color = "red";
+																																							   node.style.padding="5px";
+
+																																							var textnode=document.createTextNode(myarray[i]);
+																																							node.appendChild(textnode);
+																																							document.getElementById("{{forloop.counter}}_job").insertBefore(node, document.getElementById(b));
+
+																																							}
+																																							}
+																																							
+																																							
+																																							 }
+																																							 
+																																							 
+																														function eli(a,b,c){
+
+																																				
+																																				var myarray = a.split('///');
+																																				var countt = a.split("///").length - 1;
+																																				if(countt>0){
+																																							for(var i = 0; i < myarray.length; i++)
+																																							{
+
+																																							var node=document.createElement("LI");
+
+																																							var textnode=document.createTextNode(myarray[i]);
+																																							node.appendChild(textnode);
+																																							if(c==0){
+																																							document.getElementById("{{forloop.counter}}e_o_job").appendChild(node);}else if(c==1){
+																																							
+																																							document.getElementById("{{forloop.counter}}a_o_job").appendChild(node);
+																																							}else{
+																																							document.getElementById("{{forloop.counter}}am_o_job").appendChild(node);
+																																							}
+
+
+																																							}
+																																							}
+																																							else{
+																																							for(var i = 0; i < myarray.length; i++)
+																																							{ 
+
+																																		
+																																				if(c==0){
+																																				document.getElementById(
+																																	"{{forloop.counter}}eligibility_job").innerHTML =  "Eligibility: <b style='color:#1C51DE'>" + myarray[i]+'</b>';}
+																																	else if(c==1){
+																																	document.getElementById(
+																																	"{{forloop.counter}}age_job").innerHTML = "Age: " + myarray[i];
+																																	}
+																																	
+																																	else{document.getElementById(
+																																	"{{forloop.counter}}amt_job").innerHTML = "Amount: " + myarray[i];}
+
+																																							}
+																																							}
+																																							
+																																							 }									 
+																																							 
+																																							 
+																																							 
+
+																																		
+																																		</script>
+																	<a href="{{job.detail_link}}"target="_blank"style="text-align:center"><h5>Click for Details<h5></a>
+																	<a href="{{job.apply_link}}"target="_blank" style="text-align:center"><h5>Click here  to Apply<h5></a>
+																																									
+														  </p>
+													 </div>
+													 
+													 {% endfor %}
+													 
+													 {% endif %}
+													 <!-- job extra end -->
+															<!-- 2nd -->
+<!--
+														<div class="c-header-my" style="padding-left:0px;">
+														
+																<div class="paragraph_image" style="margin-right:8px;">
+																	<a href="#"><img width="160" height="106" src="/media/media/cgl.jpg"class="attachment-120x120 size-120x120 wp-post-image" alt="" scale="0"></a>
+																</div>
+				
+																<h4 ><u>CGL RECRUIMENT 2017 VARIOUS POST OFFICER ASSISTANT GM, AGM, DGM, Sr & Dy Manager, Executive Secretary – 11 Posts</u></h4>
+																
+																<p style="padding-bottom:0px;display:inline;color:#D50000"> <b>LAST DATE TO APPLY:  21/08/2017</b></p>
+																																					
+																<button id="b" onClick="op('#cb')" type="button" class="btn btn-warning btn-xs"style="float:right;color:steelblue;border:1px blue;"><b><i>Details</i></b><i class="fa fa-arrow-down" aria-hidden="true"></i>
+																</button>	
+																																							
+													   </div>
+																																		
+														<div class="c-body" id="cb" style=";display:none"">
+															
+															<p class="c-p">
+																																		  
+																																		  
+																	<ul style="text-align:Left;margin-top:50px;">
+																	
+																		<li><Strong>Start Date:  27/05/2017</strong></li>
+																		<li><Strong>Last Date:  05/08/2017</strong></li>
+																		<li><strong>Call letter for Online exam – Main</strong></li>
+																		
+																		<li><Strong>Eligibility:<ol style="text-align:Left;padding-left:10px; ">
+																	
+																		<li><Strong>Officer Scale 1: Graduate</strong></li>
+																		<li><Strong>Officer Scale 2:  MBA/BBA</strong></li>
+																		
+																		<li><Strong>Officer Scale 3:  Chatterd Accountant/commerce with 4 year experiance</strong></li>
+																		<li><Strong>Marketting officer: MBA with 4 year experiance</strong></li>
+																	
+																		</ol></strong></li>
+																		<li><Strong>age: 30 years</strong></li>
+																	
+																	</ul>
+																	
+																	<a href="#"style="text-align:center"><h5>Click for Details<h5></a>
+																	<a href="#" style="text-align:center"><h5>Click here  to Apply<h5></a>
+																																									
+														  </p>
+													 </div>  -->
+
+																<!-- 2nd end -->
+																
+														<!--		{% for job in job %}
+													<li class="list-group-item">	<a  href="/english/word/{{list_day.day|date:'Y-m-d'}}/1"> {{list_day.day}}</a> </li>  
+													
+													{% endfor  %} -->
+													
+																																		
+																																		
+																																	
+						</div>	
+																																	
+
+
+
+																																	
+																																	
+																																	
+																																	
+																																	
+													<!-- uuuuuuuuuuuuuuuuuuuuu-->
+														
+											
+
+										
+										
+										
+										
+														
+														
+														
+															
+
+														
+														<div class="row">
+													 {% if string != 'goto' %}
+															<div class="col-md-2 ">
+															 <ul class="pager">
+															 {% if previous != 0 %}
+																			
+																			
+																 
+																    <li ><a href="/job/{{string}}/{{after_string}}/{{previous}}"><span class="glyphicon glyphicon-chevron-left"></span>Prev</a></li>
+																	
+																{% else %}
+																		 <li ><a href="#">Previous</a></li>
+																				{% endif %}
+																		  </ul>
+															</div>
+																
+																<div class="col-md-8 " style="text-align:center">
+																<ul class="pagination pagination-lg" >
+																{% for pages in page %}
+																	 {% if pages == params %}
+																	
+																	 
+												<li class="active"><a href="/job/{{string}}/{{after_string}}/{{pages}}">{{pages}}</a></li>
+												
+															
+												
+												{% else %}
+												
+													
+																	 
+												<li ><a href="/job/{{string}}/{{after_string}}/{{pages}}">{{pages}}</a></li>
+												
+																
+												
+												{% endif %}
+												
+											{% endfor %}
+											
+												
+												
+											  </ul>
+																</div>
+																
+																<div class="col-md-2 ">
+																 <ul class="pager">
+																 {% if next != 0  %}
+																
+																 
+																    <li ><a href="/job/{{string}}/{{after_string}}/{{next}}">Next<span class="glyphicon glyphicon-chevron-right"></span></a></li>
+																	
+																	
+																	
+																	
+																	
+																	
+																	{% else %}
+																		 <li ><a href="#">Next</a></li>
+																				{% endif %}
+																		  </ul>
+																</div>
+														{% endif %}
+														
+														 {% if string == 'goto' %}
+														
+														 <div class="col-md-12 ">
+														 										<h4 class="card"style="text-align:left; color: #800000">RELETED JOBS </h4>
+
+														  {% for related in related %}
+																 <div class="media">
+																	  <div class="media-left">
+																		<img src="/media/{{ related.ca_img}}" class="media-object" style="width:80px;height:60px">
+																	  </div>
+																	  <div class="media-body">
+																		
+																		<h4><a href="/job/goto/{{related.new_id}}/1">{{related.heading}}</a></h4>
+																	  </div>
+																	</div> 
+																	<hr style="    border: 1px solid #E8C8C8;"></hr>
+																	{% endfor %}
+															</div>
+														 {% endif %}
+														</div><!-- row last end-->
+											
+										
+						<div id="disqus_thread"style="padding:5px"></div>
+							<script>
+
+							/**
+							*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+							*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+							/*
+							var disqus_config = function () {
+							this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+							this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+							};
+							*/
+							(function() { // DON'T EDIT BELOW THIS LINE
+							var d = document, s = d.createElement('script');
+							s.src = 'https://getmyvideo-net.disqus.com/embed.js';
+							s.setAttribute('data-timestamp', +new Date());
+							(d.head || d.body).appendChild(s);
+							})();
+							</script>
+							<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>	
+																	
+																	
+																
+						
+						</div><!--colm 8 -->
+						
+						<div class="col-md-2 nopadding">
+						
+								<div class="panel-group ">
+								
+								<div class="panel ">
+							  <div class="panel-heading" style="background-color:#D04444 ;"><h3 style="color:#ffffff;padding:0px;margin:0px"><u>Statewise Notification</u><h3></div>
+							
+							  <div class="panel-body nopadding">
+							    <ul class="list-group"style="color:#613CCD; font-weight:bold;">
+	<li class="list-group-item"><a style="color:#613CCD; font-weight:bold;" href="/job/state/andaman_nicobar/1">Andaman &amp; Nicobar</a>
+</li>
+	<li class="list-group-item"><a style="color:#613CCD; font-weight:bold;" href="/job/state/andhra_pradesh/1">Andhra Pradesh</a>
+</li>
+	<li class="list-group-item"><a style="color:#613CCD; font-weight:bold;" href="/job/state/arunachal_pradesh/1">Arunachal Pradesh</a>
+</li>
+	<li class="list-group-item"><a href="/job/state/assam/1">Assam</a>
+</li>
+	<li class="list-group-item"><a href="/job/state/bihar/1">Bihar</a>
+</li>
+	<li class="list-group-item"><a href="/job/state/chandigarh/1">Chandigarh</a>
+</li>
+	<li class="list-group-item"><a href="/job/state/chattisgarh/1">Chhattisgarh</a>
+</li>
+	<li class="list-group-item"><a href="/job/state/dadra_nagar_haveli/1">Dadra &amp; Nagar Haveli</a>
+</li>
+	<li class="list-group-item"><a href="/job/state/daman_diu/1">Daman &amp; Diu</a>
+</li>
+	<li class="list-group-item"><a href="/job/state/delhi/1">Delhi</a>
+</li>
+	<li class="list-group-item"><a href="/job/state/goa/1">Goa</a>
+</li>
+	<li class="list-group-item"><a href="/job/state/gujarat/1">Gujarat</a>
+</li>
+	<li class="list-group-item"><a href="/job/state/haryana/1">Haryana</a>
+</li>
+	<li class="list-group-item"><a href="/job/state/himachal_pradesh/1">Himachal Pradesh</a>
+</li>
+	<li class="list-group-item"><a href="/job/state/jammu_kashmir/1">Jammu &amp; Kashmir</a>
+</li>
+<li class="list-group-item"><a href="/job/state/jharkhand/1">Jharkhand</a>
+</li>
+	<li class="list-group-item"><a href="/job/state/karnataka/1">Karnataka</a>
+</li>
+	<li class="list-group-item"><a href="/job/state/kerala/1">Kerala</a>
+</li>
+	<li class="list-group-item"><a href="/job/state/lakshadweep/1">Lakshadweep</a>
+</li>
+	<li class="list-group-item"><a href="/job/state/madhya_pradesh/1">Madhya Pradesh</a>
+</li>
+	<li class="list-group-item"><a href="/job/state/maharashtra/1">Maharashtra</a>
+</li>
+	<li class="list-group-item"><a href="/job/state/manipur/1">Manipur</a>
+</li>
+	<li class="list-group-item"><a href="/job/state/meghalaya/1">Meghalaya</a>
+</li>
+	<li class="list-group-item"><a href="/job/state/mizoram/1">Mizoram</a>
+</li>
+	<li class="list-group-item"><a href="/job/state/nagaland/1">Nagaland</a>
+</li>
+	<li class="list-group-item"><a href="/job/state/orissa/1">Orissa</a>
+</li>
+	<li class="list-group-item"><a href="/job/state/puducherry/1">Puducherry</a>
+</li>
+	<li class="list-group-item"><a href="/job/state/punjab/1">punjab</a>
+</li>
+	<li class="list-group-item"><a href="/job/state/rajasthan/1">Rajasthan</a>
+</li>
+	<li class="list-group-item"><a href="/job/state/sikkim/1">Sikkim</a>
+</li>
+	<li class="list-group-item"><a href="/job/state/tamil_nadu/1">Tamil Nadu</a>
+</li>
+	<li class="list-group-item"><a href="/job/state/telangana/1">Telangana</a>
+</li>
+	<li class="list-group-item"><a href="/job/state/tripura/1">Tripura</a>
+</li>
+	<li class="list-group-item"><a href="/job/state/uttar_pradesh/1">Uttar Pradesh</a>
+</li>
+	<li class="list-group-item"><a href="/job/state/uttarakhand/1">Uttarakhand</a>
+</li>
+<li class="list-group-item"><a href="/job/state/west_bengal/1">West Bengal</a>
+</li>
+</ul>
+							  
+							  
+							  </div>
+							</div>
+						
+								
+								<!-- state end -->
+								
+								
+									
+								
+									
+									</div>
+
+
+
+									
+						</div>
+						
+				</div>
+
+				</div><!-- row end -->
+				
+				
+			</div>	<!-- cintainer end -->
+				
+				
+	
+
+
+
+
+
+
+
+
+<script id="dsq-count-scr" src="//getmyvideo-net.disqus.com/count.js" async></script>
+	
+					 
+
+<script type="text/javascript" >
+$(document).ready(function () {
+
+
+$('.navbar .dropdown').hover(function () {
+        $(this).find('.dropdown-menu').first().stop(true, true).slideDown(150);
+    }, function () {
+        $(this).find('.dropdown-menu').first().stop(true, true).slideUp(105);
+    });
+
+
+
+
+var showChar = 200;
+	var ellipsestext = "...";
+	var moretext = "Read more";
+	var lesstext = "less";
+	$('.more').each(function() {
+		var content = $(this).html();
+
+		if(content.length > showChar) {
+
+			var c = content.substr(0, showChar);
+			var h = content.substr(showChar-1, content.length - showChar);
+
+			var html = c + '<span class="moreelipses">'+ellipsestext+'</span>&nbsp;&nbsp;&nbsp;<a href="" class="morelink"><u>'+moretext+'</u></a></span>';
+
+			$(this).html(html);
+		}
+
+	});
+	
+	
+	
+	
+	//..........................
+	
+	
+		 $("#signup").submit(function (ev)
+	 {
+							
+						
+							//ev.preventDefault();
+		$.ajax({
+            type : 'POST',
+            url: '{% url 'bank:login' %}',
+			dataType: "json",
+			async: true,
+           data : {
+											data1 : $(this).serialize(),
+											csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()
+										  },
+            success: function (response) 
+			{
+         
+				// window.location = response.r;
+
+            },
+			 error: function (data) { $('#below').html("<b>please retry or check url</b>");
+			 
+			 }
+        });
+
+        
+    });
+
+	
+	
+	//.........................
+	
+		//..........................
+	
+	//.........................
+	
+	
+	
+	
+
+
+});
+
+
+
+
+		 $("#login").submit(function (ev)
+	 {
+							
+			ev.preventDefault();			
+							
+		$.ajax({
+            type : 'POST',
+            url: '{% url 'bank:login' %}',
+			
+			
+           data  : $(this).serialize(),
+            success: function (response) 
+			{
+			var r=response;
+				if(r == "true")
+				{
+				window.location = window.location;
+				}
+				else{
+				$('#below').html("<b>"+response+"</b>");
+				}
+
+            },
+			 error: function (data) { $('#below').html("<b>please 55 or check url</b>");
+			
+			 }
+        });
+
+        
+    });
+	
+function add(id,username) {
+var link_id=id;
+var uname=username;
+//$('#myModal').modal('toggle');
+
+	$.ajax({
+            type : 'POST',
+            url: '{% url 'bank:add' %}',
+			
+			
+           data: {link: link_id, user_name: uname,csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()},
+            success: function (response) 
+			{
+			var r=response;
+				if(r == "success")
+				{
+				document.getElementById(link_id).innerHTML ="added";
+				}
+				else{
+				$('#below').html("<b>"+response+"</b>");
+				document.getElementById("link_id").innerHTML = response;
+				}
+
+            },
+			 error: function (data) { $('#link_id').html("<b>please 55 or check url</b>");
+			
+			 }
+        });
+    
+}
+
+	function timer(counter,t){
+	
+	var colckdiv_id='clockdiv'.concat(counter.toString());
+	var colckdiv_id_hash='#clockdiv'.concat(counter.toString());
+	var clock = document.getElementById(colckdiv_id);
+	var min='.minutes'.concat(counter.toString());
+	var sec='.seconds'.concat(counter.toString());
+	var sec_id='#seconds'.concat(counter.toString());
+	var min_id='#minutes'.concat(counter.toString());
+	var smltext_id='#smalltext'.concat(counter.toString());
+
+  var minutesSpan = clock.querySelector(min);
+  var secondsSpan = clock.querySelector(sec);
+
+var sol='sol'.concat(counter.toString());
+var solution_hash='#solution'.concat(counter.toString());
+
+var timer_id='#time'.concat(counter.toString());
+//alert(timer_id);
+  document.getElementById(sol).disabled = true;
+  $(timer_id).toggle(500);
+  $(colckdiv_id_hash).toggle(500);
+var seconds_left = 80;
+/*var interval = setInterval(function() {
+    document.getElementById('seconds').innerHTML = --seconds_left;
+
+    if (seconds_left <= 0)
+    {
+       document.getElementById('seconds').innerHTML = "You are Ready!";
+       clearInterval(interval);
+    }
+}, 1000); */
+
+//new timer
+var fiveMinutes = t,
+        display = $(sec_id),
+		smalltext=$(smltext_id);
+startTimer(fiveMinutes,display,smalltext,colckdiv_id_hash,timer_id,sol,solution_hash);
+
+
+
+	
+	}
+	
+	
+	function startTimer(duration, display,smalltext,colckdiv_id_hash,timer_id,sol,solution_hash) {
+    var timer = duration, minutes, seconds;
+	 
+  var s=  setInterval(function () {
+	var seconds_left = --duration;
+        minutes = parseInt(timer / 60, 10)
+        seconds = parseInt(timer % 60, 10);
+
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+				if(minutes<1){
+        display.text(minutes + ":" + seconds);
+		smalltext.text("seconds")
+        }
+        else{display.text(minutes + ":" + seconds);
+		smalltext.text("Minutes")
+		}
+		
+		if(seconds_left<=-1){clearInterval(s);$(timer_id).toggle(500);
+								$(colckdiv_id_hash).toggle(500);
+								
+								$(solution_hash).toggle(500);
+								document.getElementById(sol).disabled = false; 
+									}
+		
+
+        if (--timer < 0) {
+            timer = duration;
+        }
+    }, 1000);}
+	
+	
+	
+	function op(i){
+	var id=i;
+	$(id).toggle(500);
+	
+	}
+
+
+</script>
+
+</body>
+</html>

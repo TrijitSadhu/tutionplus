@@ -1,0 +1,1479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>TutionPlus.com</title>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <meta content="" name="keywords"> 
+  <meta content="" name="description">
+    
+ 
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i|Raleway:300,400,500,700,800|Montserrat:300,400,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i|Raleway:300,400,500,700,800|Montserrat:300,400,700" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Khula:300,400,600,700&amp;subset=devanagari,latin-ext" rel="stylesheet">
+  
+	<!-- load static File -->
+	 
+	 {% load staticfiles %}
+	 {% load static %}
+	 
+	 
+	  <!-- Favicons -->
+	  <link href="{% static 'img/favicon.png' %}" rel="icon">
+	  <link href="{% static 'img/apple-touch-icon.png' %}" rel="apple-touch-icon">
+	  
+	<link rel="stylesheet" href="{% static 'lib/bootstrap/css/bootstrap.min.css' %}" />
+	 
+	
+	
+	<link rel="stylesheet" href="{% static 'lib/font-awesome/css/font-awesome.min.css' %}" />
+	<link rel="stylesheet" href="{% static 'lib/animate/animate.min.css' %}" />
+	<link rel="stylesheet" href="{% static 'lib/ionicons/css/ionicons.min.css' %}" />
+	<link rel="stylesheet" href="{% static 'lib/owlcarousel/assets/owl.carousel.min.css' %}" />
+	<link rel="stylesheet" href="{% static 'lib/magnific-popup/magnific-popup.css' %}" />
+	<link rel="stylesheet" href="{% static 'lib/ionicons/css/ionicons.min.css' %}" />
+	
+	
+	<link rel="stylesheet" href="{% static 'newcss/style.css' %}" /> 
+  
+	
+</head>
+ 
+<body id="body">
+<style>
+	
+	#mobile_on{
+		display:none;
+	}
+	@media (max-width: 420px){
+		#mobile_on {
+		display:block;
+		}
+	}
+	@media (min-width: 992px){
+		.container {
+		max-width: 1115px;
+			}
+	}
+	@media (min-width: 1200px){
+		.container {
+		max-width: 1273px;
+		}
+	}
+	
+	.list-group-item {
+    padding: 1.5px 8.3px;
+    font-size: 12px;
+		}
+		
+		a {
+    color: #246689;
+    font-weight: 600;
+    
+	}
+	.list_image{ 
+	margin-left: 29px; 
+	display: list-item; 
+	list-style-type: decimal; 
+	
+	color:#8e2020;
+	list-style-image: url(https://static.mediafire.com/images/icons/svg_dark/check_circle_green.svg);
+
+	}
+	.section-header h2 {
+    
+    padding-bottom: 4px;
+	}
+	.list-group {
+    margin-top:31px;
+	}
+	.show-hide {
+	max-height: 500px;
+	overflow: hidden;
+	transition: all 1s ease;
+	}
+	
+	.show-hide.expand {
+	max-height: 100%;
+	}
+	.show-hide1 {
+	max-height: 700px;
+	overflow: hidden;
+	transition: all 1s ease;
+	}
+	.show-hide1.expand {
+	max-height: 100%;
+	}
+	.table td, .table th {
+    font-size: 14px;
+	}
+</style>
+  <!--==========================
+    Header
+  ============================-->
+  <header id="header">
+    <div class="container">
+      <div id="logo" class="pull-left">
+        <h1><a href="#body" class="scrollto">Tution<span>Plus</span></a></h1>
+        <!-- Uncomment below if you prefer to use an image logo -->
+        <!-- <a href="#body"><img src="img/logo.png" alt="" title="" /></a>-->
+      </div>
+      <nav id="nav-menu-container">
+        <ul class="nav-menu">
+          <li class="menu-active"><a href="#body">Currentaffairs</a></li>
+          <li><a href="#about">Latest Jobs</a></li>
+          <li><a href="#services">Math Today</a></li>
+          <li><a href="#portfolio">The Hindu word</a></li>
+          <li><a href="#team">Reasoning</a></li>
+          <li class="menu-has-children"><a href="">GK</a>
+            <ul>
+              <li><a href="#">Drop Down 1</a></li>
+              <li><a href="#">Drop Down 3</a></li>
+              <li><a href="#">Drop Down 4</a></li>
+              <li><a href="#">Drop Down 5</a></li>
+            </ul>
+          </li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav><!-- #nav-menu-container -->
+    </div>
+  </header><!-- #header -->
+   <style>
+	/*--------------------------------------------------------------
+	copy from style.css
+	--------------------------------------------------------------*/
+	#intro {
+	  width: 100%; 
+	  height: 30vh;
+	  position: relative;
+	  background: url("https://www.mcqgk.com/static/img/intro-carousel/1.jpg") no-repeat;
+	  background-size: cover;
+	  background-size:100% 160%;
+	}
+	#intro .intro-content h2 {
+	  color: #0c2e8a;
+		margin-bottom: 30px;
+		font-size: 35px;
+		font-weight: 700;
+	}
+	#intro #intro-carousel::before {
+		content: '';
+		background-color: rgba(255, 255, 255, 0.7);
+		position: absolute;
+		height: 50%;
+		width: 100%;
+		top: 0;
+		right: 0;
+		left: 0;
+		bottom: 0;
+		z-index: 7;
+	}
+	
+	
+	.section-header h2 {
+    font-size: 27px;
+	font-size: 33px;
+	}
+
+	#services {
+	padding: 0px 0 0 0;
+	}
+	#testimonials {
+	padding: 0px 0;
+	}
+	#testimonials .owl-nav, #testimonials .owl-dots {
+	margin-top: -32px;
+	}
+	.btn-warning {
+    color: #0c2e8a;
+    
+	    float: right;
+    margin-top: 18px;
+    font-size: 20px;
+    font-weight: 600;
+	padding: .5px.75rem;
+}
+	
+  </style>
+
+  <!--  Intro Section carousel 
+  ============================-->
+   <style>
+    .carousel-inner img {
+      width: 100%;
+      height: 250px;
+  }
+
+   </style>
+  
+  
+<div id="demo" class="carousel slide" data-ride="carousel">
+  <!-- Indicators -->
+  <ul class="carousel-indicators">
+    <li data-target="#demo" data-slide-to="0" class="active"></li>
+    <li data-target="#demo" data-slide-to="1"></li>
+    <li data-target="#demo" data-slide-to="2"></li>
+  </ul>
+  
+  <!-- The slideshow -->
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img src="/media/media/poster1.jpeg" alt="Los Angeles" width="1100" height="500">
+    </div>
+    <div class="carousel-item">
+      <img src="/media/media/poster2.jpeg" alt="Chicago" width="1100" height="500">
+    </div>
+    <div class="carousel-item">
+      <img src="/media/media/poster3.jpeg" alt="New York" width="1100" height="500">
+    </div>
+  </div>
+  
+  <!-- Left and right controls -->
+  <a class="carousel-control-prev" href="#demo" data-slide="prev">
+    <span class="carousel-control-prev-icon"></span>
+  </a>
+  <a class="carousel-control-next" href="#demo" data-slide="next">
+    <span class="carousel-control-next-icon"></span>
+  </a>
+</div>
+   
+<!-- #intro -->
+	  <!--==========================
+      job css
+    ============================-->
+	<style>
+	@media (max-width: 409px) and (min-width:60px) {
+	#jobimage{
+	    height: 82px;
+    width: 82px;
+		}
+	
+	
+	}
+	@media (max-width: 766px) and (min-width:410px) {
+		#jobimage{
+	    height: 92px;
+    width: 92px;
+		}
+		
+		
+	} 
+	@media (max-width:991px) and (min-width:767px) {
+	#jobimage{
+	    height: 112px;
+    width: 112px;
+		}
+	}
+	@media (max-width: 1600px) and (min-width: 992px) {
+	#jobimage{
+	    height: 132px;
+    width: 132px;
+		}
+	}
+/*--------------copied from style.css-------------*/
+#services .box {
+  padding: 8px;
+  margin-bottom: 16px; 
+ 
+  background: #fff;
+  transition: 0.4s; 
+  border-left:3px solid #dad224;
+  box-shadow:0px 5px 0px rgba(73, 78, 92, 0.1);
+  border-left:5px solid #2434da3b;
+  border-left:6px solid #8c24da;
+  border-radius: 13px;
+/*-----------  border-left: 4px solid yellowgreen; ----------*/
+}
+ #services .box .icon {
+    float: none;
+  
+    padding-bottom: 15px;
+  }
+  
+    @media (max-width: 1600px) and (min-width: 377px) { 
+  
+ #services .box .icon {
+    text-align: left;
+   }
+  }
+  /*--------------copied from style.css end-------------*/
+  
+  @media (max-width: 575px) and (min-width: 470px) { 
+		#jobdetatils{
+		margin-top: -70px;
+		}
+  }
+  
+  
+    @media (max-width: 469px) and (min-width: 377px) { 
+		#jobdetatils{
+			margin-left: 66px;
+			margin-top: -73px;
+			}
+	}
+  
+      @media (max-width: 376px) and (min-width: 100px) { 
+ #jobicon {
+    text-align: center;
+   }
+  }
+  
+   #services .box h4 {
+    margin-left: 36px;
+    font-size: 15px;
+	font-size:14px;
+    color: rebeccapurple;
+	color:#639933; 
+	color:#19250e;
+	
+	
+	
+	}
+  #services .box p {
+    margin-left: 100px;
+	font-size:15px;
+	text-align:left;
+	}
+	
+	.section-header {
+    margin-bottom: -20px;
+	}
+ 
+  /*--------------copied from style.css  end-------------*/
+  
+  .collapsible {
+  cursor: pointer;
+color: white;
+  text-align: left;
+}
+
+.active, .collapsible:hover {
+
+  color:white;
+}
+
+.collapsible:after {
+  content: '\002B';
+  color: red;
+  font-weight: bold;
+  float: right;
+  margin-left: 5px;
+  position: relative;
+  float:right;
+}
+
+
+.active:after {
+  content: "\2212";
+  float:right;
+  color:black;
+  
+}
+.content {
+  max-height: 0px;
+  overflow: hidden;
+  transition: max-height .5s ease-out;
+
+
+ }
+ .list-group-item.active {
+    z-index: 2;
+   
+     background-color: #fff; 
+     border: 1px solid rgba(0,0,0,.125); 
+}
+
+#solutiontable>table, th, td, tr {
+border: 1px solid black;
+padding-right: 15px;
+padding-left: 15px; 
+
+
+}
+	</style> 
+	
+	  <!--==========================
+      job css end
+    ============================-->
+    <section id="services">
+      <div class="container">
+		<div class="row">
+			<div class=" col-sx-2 col-sm-2 col-md-2 col-lg-2 "> 
+				<div class="section-header">
+						
+							<h2 style="color:#2379c5;font-size:24px"><strong style="color:#849818">Current Affairs </strong>Mcq </h2>
+							
+							
+							
+						</div>
+						
+						<ul class="list-group " id="2018">
+							   
+							    <li class="list-group-item " style="background-color:#007bff;color:#fff;font-size:18px;font-weight:600;padding:10px;">MCQ  2018</li>
+								{% for mcq_2018_info in mcq_2018_info %}
+	
+<script>  			 key('{{mcq_2018_info.month_list}}' );
+			
+		function key(a){
+							var user_year='{{user_year}}';
+							var user_month='{{user_month}}';
+							var user_day='{{user_day}}';
+							var comp_date=user_day+' '+user_month.substr(0, 3)+', '+user_year;
+							//alert(comp_date);
+							var suvo_found=1;																	
+							var myarray = a.split(' ');
+							var month='';
+						for(var i = 0; i < myarray.length; i++)
+							{
+							month=myarray[i];
+							if(month=='January')
+							{
+							//alert(myarray[i]+month);
+								month='{{mcq_2018_info.January}}';
+								//alert(month);
+							}
+							else if(month=='February'){
+								month='{{mcq_2018_info.February}}';
+							}
+							else if(month=='March'){
+								month='{{mcq_2018_info.March}}';
+							}
+							else if(month=='April'){
+								month='{{mcq_2018_info.April}}';
+							}
+							else if(month=='May'){
+								month='{{mcq_2018_info.May}}';
+							}
+							else if(month=='June'){
+								month='{{mcq_2018_info.June}}';
+							}
+							else if(month=='July'){
+								month='{{mcq_2018_info.July}}';
+							}
+							else if(month=='August'){
+								month='{{mcq_2018_info.August}}';
+							}
+							else if(month=='September'){
+								month='{{mcq_2018_info.September}}';
+							}
+							else if(month=='October'){
+								month='{{mcq_2018_info.October}}';
+							}
+							else if(month=='November'){
+								month='{{mcq_2018_info.November}}';
+							}
+							else if(month=='December'){
+								month='{{mcq_2018_info.December}}';
+							}
+		
+							var node=document.createElement("LI");
+							node.setAttribute("class", "list-group-item collapsible ");
+							
+							var a=document.createElement("a");
+							a.setAttribute("style", "float:left;font-size:16px");
+							//a.setAttribute('target', '_blank');
+							a.setAttribute('class', 'list_image ');
+							a.innerHTML = '<b>'+myarray[i] +'</b>';
+							a.href = '/current-affairs/mcq/2018/'+myarray[i]+'/1';
+							node.appendChild (a);
+											//2nd loop...........
+											var myarray1 = month.split('///');
+											var ul1;
+											for(var j = 0; j < myarray1.length; j++)
+											{
+											
+												if(j==0)
+												{
+													 ul1=document.createElement("UL");
+													ul1.setAttribute('class', 'content');
+													ul1.setAttribute('style','max-height:0px');
+													//alert(myarray1[j]);
+													if(myarray1[j]==comp_date)
+													{
+													node.setAttribute('id','open_2018');
+													}
+												}
+												else
+												{
+													if(myarray1[j]==comp_date)
+													{
+													node.setAttribute('id','open_2018');
+													}
+												}
+
+												var node1=document.createElement("LI");
+												if(myarray1[j]==comp_date)
+													{
+													node1.innerHTML += 
+			'<a style="float:left;font-size:12px;color:red;font-weight:bold"href="/current-affairs/mcq/current-affairs-'+myarray[i]+'-2018/'+myarray1[j].substr(0, 2)+'">'+myarray1[j]+'</a>';
+													}else{
+													
+													node1.innerHTML += 
+			'<a style="float:left;font-size:12px"href="/current-affairs/mcq/current-affairs-'+myarray[i]+'-2018/'+myarray1[j].substr(0, 2)+'">'+myarray1[j]+'</a>';
+													}
+
+			
+												ul1.appendChild (node1);
+												
+											}//end for
+											console.log(myarray1);																	
+												
+												document.getElementById("2018").appendChild(node);
+												document.getElementById("2018").appendChild(ul1);
+											
+
+							}
+						}//end function
+									</script>
+									
+									{% endfor %}
+						  </ul>
+						  
+		<!--==================================2019 panel=================================== -->		
+<ul class="list-group " id="2019">
+							   
+							    <li class="list-group-item " style="background-color:#91e232;background-color:#f87737;border:none;padding:12px;color:#fff;font-size:18px;font-weight:600">MCQ  2019</li>
+								{% for mcq_2019_info in mcq_2019_info %}
+	
+<script>  			 key('{{mcq_2019_info.month_list}}' );
+			
+		function key(a){
+							var user_year='{{user_year}}';
+							var user_month='{{user_month}}';
+							var user_day='{{user_day}}';
+							var comp_date=user_day+' '+user_month.substr(0, 3)+', '+user_year;
+							//alert(comp_date);
+							var suvo_found=1;																	
+							var myarray = a.split(' ');
+							var month='';
+						for(var i = 0; i < myarray.length; i++)
+							{
+							month=myarray[i];
+							if(month=='January')
+							{
+							//alert(myarray[i]+month);
+								month='{{mcq_2019_info.January}}';
+								//alert(month);
+							}
+							else if(month=='February'){
+								month='{{mcq_2019_info.February}}';
+							}
+							else if(month=='March'){
+								month='{{mcq_2019_info.March}}';
+							}
+							else if(month=='April'){
+								month='{{mcq_2019_info.April}}';
+							}
+							else if(month=='May'){
+								month='{{mcq_2019_info.May}}';
+							}
+							else if(month=='June'){
+								month='{{mcq_2019_info.June}}';
+							}
+							else if(month=='July'){
+								month='{{mcq_2019_info.July}}';
+							}
+							else if(month=='August'){
+								month='{{mcq_2019_info.August}}';
+							}
+							else if(month=='September'){
+								month='{{mcq_2019_info.September}}';
+							}
+							else if(month=='October'){
+								month='{{mcq_2019_info.October}}';
+							}
+							else if(month=='November'){
+								month='{{mcq_2019_info.November}}';
+							}
+							else if(month=='December'){
+								month='{{mcq_2019_info.December}}';
+							}
+		
+							var node=document.createElement("LI");
+							node.setAttribute("class", "list-group-item collapsible ");
+							
+							var a=document.createElement("a");
+							a.setAttribute("style", "float:left;font-size:16px");
+							//a.setAttribute('target', '_blank');
+							a.setAttribute('class', 'list_image ');
+							a.innerHTML = '<b>'+myarray[i] +'</b>';
+							a.href = '/current-affairs/mcq/2019/'+myarray[i]+'/1';
+							node.appendChild (a);
+											//2nd loop...........
+											var myarray1 = month.split('///');
+											var ul1;
+											for(var j = 0; j < myarray1.length; j++)
+											{
+											
+												if(j==0)
+												{
+													 ul1=document.createElement("UL");
+													ul1.setAttribute('class', 'content');
+													ul1.setAttribute('style','max-height:0px');
+													//alert(myarray1[j]);
+													if(myarray1[j]==comp_date)
+													{
+													node.setAttribute('id','open_2018');
+													}
+												}
+												else
+												{
+													if(myarray1[j]==comp_date)
+													{
+													node.setAttribute('id','open_2018');
+													}
+												}
+
+												var node1=document.createElement("LI");
+												if(myarray1[j]==comp_date)
+													{
+													node1.innerHTML += 
+			'<a style="float:left;font-size:12px;color:red;font-weight:bold"href="/current-affairs/mcq/current-affairs-'+myarray[i]+'-2019/'+myarray1[j].substr(0, 2)+'">'+myarray1[j]+'</a>';
+													}else{
+													
+													node1.innerHTML += 
+			'<a style="float:left;font-size:12px"href="/current-affairs/mcq/current-affairs-'+myarray[i]+'-2019/'+myarray1[j].substr(0, 2)+'">'+myarray1[j]+'</a>';
+													}
+
+			
+												ul1.appendChild (node1);
+												
+											}//end for
+											console.log(myarray1);																	
+												
+												document.getElementById("2019").appendChild(node);
+												document.getElementById("2019").appendChild(ul1);
+											
+
+							}
+						}//end function
+									</script>
+									
+									{% endfor %}
+						  </ul>
+		<!-- ========================end 2019 panel ===================================================-->	
+		
+			</div>
+			<div  class=" col-sx-8 col-sm-8 col-md-8 col-lg-8 "> 	
+					<div class="section-header" style="margin-bottom:-6px">
+							  <h2><strong style="color:red;display:inline">MCQ {{user_year}} </strong>{{user_month}}<span style="float:none;display:inline-block;">
+										 <ul class="nav-menu sf-js-enabled sf-arrows" id="mobile_on" style="touch-action: pan-y;">
+													<li class="menu-has-children"><a style="padding:0px;padding-right:22px" href="https://tutionplus.com/" class="sf-with-ul">Category</a>
+													<ul style="display: none;">
+													  <li><a href="https://tutionplus.com/#">Drop Down 1</a></li>
+													  <li><a href="https://tutionplus.com/#">Drop Down 3</a></li>
+													  <li><a href="https://tutionplus.com/#">Drop Down 4</a></li>
+													  <li><a href="https://tutionplus.com/#">Drop Down 5</a></li>
+													</ul>
+												  </li>
+												  
+											</ul></span><span><button type="button" style="float:right;margin-top:10px" class="btn btn-warning"><i class="fa fa-home" aria-hidden="true"></i>
+                                     More Jobs <i class="fa fa-arrow-right" aria-hidden="true"></i></button></span>
+							</h2>
+						</div>
+				 
+				 
+						
+							{% for mcq_all in mcq_all %}
+							  
+							 
+								<div id="" class="box wow fadeInLeft" > 
+									
+										<h4 style="text-align:left; font-family: 'Khula', sans-serif; font-size:1.07rem;line-height: 1.49rem;font-weight:600;color:#7861af;color:black"><span style="margin-right:10px">{{forloop.counter}} ).</span>{{mcq_all.question}}</h4> 
+										
+										
+										<form style="margin-left:30px;padding-left:30px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,
+		'Helvetica Neue',Arial,sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol';padding-top:10px;color:black;margin-top: -17px;">
+										<div style="display: block"> 
+											<input onclick="op({{forloop.counter}}1,{{forloop.counter}}2,{{forloop.counter}}3,
+															{{forloop.counter}}4,{{forloop.counter}}5,{{mcq_all.ans}},
+															solution{{forloop.counter}},{{forloop.counter}})"
+															type="radio" 
+															name="radio1" 
+															id="{{forloop.counter}}1" 
+															value="option1">
+											<label for="{{forloop.counter}}1">
+												{{mcq_all.option_1}}
+											</label>
+											<div id="{{forloop.counter}}w1"style="display:none">
+												<img src="{% static "/c.png" %}" class="img-rounded"> 
+											</div>
+											<div id="{{forloop.counter}}r1"style="display:none">
+												<img src="{% static "/d.png" %}" class="img-rounded"> 
+											</div>
+										</div>
+										<div style="display: block"> 
+											<input onclick="op({{forloop.counter}}1,{{forloop.counter}}2,{{forloop.counter}}3,
+															{{forloop.counter}}4,{{forloop.counter}}5,{{mcq_all.ans}},
+															solution{{forloop.counter}},{{forloop.counter}})"
+															type="radio"
+															name="radio1" 
+															id="{{forloop.counter}}2" 
+															value="option1">
+											<label for="{{forloop.counter}}2">
+												{{mcq_all.option_2}}
+											</label>
+											<div id="{{forloop.counter}}w2"style="display:none">
+												<img src="{% static "/c.png" %}" class="img-rounded"> 
+											</div>
+											<div id="{{forloop.counter}}r2"style="display:none">
+												<img src="{% static "/d.png" %}" class="img-rounded"> 
+											</div>
+										</div>
+										<div style="display: block"> 
+											<input onclick="op({{forloop.counter}}1,{{forloop.counter}}2,{{forloop.counter}}3,
+															{{forloop.counter}}4,{{forloop.counter}}5,{{mcq_all.ans}},
+															solution{{forloop.counter}},{{forloop.counter}})"
+															type="radio" 
+															name="radio1" 
+															id="{{forloop.counter}}3"
+															value="option1">
+											<label for="{{forloop.counter}}3">
+												{{mcq_all.option_3}}
+											</label>
+											<div id="{{forloop.counter}}w3"style="display:none">
+												<img src="{% static "/c.png" %}" class="img-rounded"> 
+											</div>
+											<div id="{{forloop.counter}}r3"style="display:none">
+												<img src="{% static "/d.png" %}" class="img-rounded"> 
+											</div>
+										</div>
+										<div style="display: block"> 
+											<input onclick="op({{forloop.counter}}1,{{forloop.counter}}2,{{forloop.counter}}3,
+															{{forloop.counter}}4,{{forloop.counter}}5,{{mcq_all.ans}},
+															solution{{forloop.counter}},{{forloop.counter}})"
+															type="radio"
+															name="radio1" 
+															id="{{forloop.counter}}4" 
+															value="option1">
+											<label for="{{forloop.counter}}4">
+												{{mcq_all.option_4}}
+											</label>
+											<div id="{{forloop.counter}}w4"style="display:none">
+												<img src="{% static "/c.png" %}" class="img-rounded"> 
+											</div>
+											<div id="{{forloop.counter}}r4"style="display:none">
+												<img src="{% static "/d.png" %}" class="img-rounded"> 
+											</div>
+										</div>
+										</form>
+										
+										<div id="solution{{forloop.counter}}"style="text-align:center;display:none;padding-left:30px;padding-right:3px;padding-bottom:20px;text-align:justify;border:1px solid rebeccapurple;">
+											<p  id="sol_upper{{forloop.counter}}"class="" style="text-align:center;margin-left:1px;"> <b>Correct<img src="{% static "/thh.png" %}" class="img-rounded" ></b> </p> 
+											<p style="margin-left:1px;color:blueviolet"> <b>  Answer :</b></p> 
+											<div  style="font-family:arial,sans-serif-light,sans-serif;display:inline;font-size:14px;color:black;font-size:16px;font-weight:500;">
+											{% autoescape off %}	{{mcq_all.extra}} {% endautoescape %} 
+											</div>
+										</div>
+									
+										   
+								</div>
+								 
+							  
+							  {% endfor %}
+							  <!-- page start-->
+								
+															<div class="row">
+															
+															
+																<div class="col-xs-2 col-sm-2  col-md-2 ">
+																<nav aria-label="Page navigation example">
+																  <ul class="pagination">
+																	
+																	 {% if previous != 0 %}
+																	 <li class="page-item">
+																	  <a class="page-link" href="/current-affairs/mcq/{{tag_page}}/{{previous}}" aria-label="Previous">
+																		<span aria-hidden="true">&laquo; Prev</span>
+																		<span class="sr-only">Previous</span>
+																	  </a>
+																	 </li>
+																	  {% else %}
+																	  <li class="page-item disabled">
+																	  <a class="page-link" href="/current-affairs/mcq/{{tag_page}}/{{previous}}" aria-label="Previous">
+																		<span aria-hidden="true">&laquo;</span>
+																		<span class="sr-only">Previous</span>
+																	  </a>
+																	  {% endif %}
+																	</li>
+																	</ul>
+																	</div>
+																
+																<div class="col-xs-8 col-sm-8  col-md-8 col-lg-8 ">
+																<nav aria-label="Page navigation example">
+																	<ul class="pagination" class="pagination justify-content-center" style="">
+																	{% for pages in page %}
+																			 {% if pages == params %}
+																				<li class="page-item active"><a class="page-link  " href="/current-affairs/mcq/{{tag_page}}/{{pages}}">{{pages}}</a></li>
+																				{% else %}
+																				<li class="page-item"><a class="page-link  " href="/current-affairs/mcq/{{tag_page}}/{{pages}}">{{pages}}</a></li>
+																			{% endif %}
+																			
+																	{% endfor %}
+																	</ul>
+																	</nav>
+																
+																</div>
+																<div class="col-xs-2 col-sm-2  col-md-2 ">
+																<nav aria-label="Page navigation example">
+																	<ul class="pagination">
+																	{% if next != 0 %}
+																	<a class="page-link" href="/current-affairs/mcq/{{tag_page}}/{{next}}" aria-label="Next">
+																		<span aria-hidden="true">Next &raquo;</span>
+																		<span class="sr-only">next</span>
+																	  </a>
+																	  {% else %}
+																	  <a class="page-link" href="#" aria-label="next">
+																		<span aria-hidden="true">Next&raquo;</span>
+																		<span class="sr-only">next</span>
+																	  </a>
+																	  {% endif %}
+																	</ul>
+																	</nav>
+																</div>
+																
+															</div>
+															<!-- page end-->
+														
+			</div>	<!-- end 8 col -->
+			<div class=" col-sx-2 col-sm-2 col-md-2 col-lg-2 ">
+						<div class="section-header">
+							<h2 style="color:#2379c5;font-size:20px"><strong style="color:#849818">Current Affairs </strong>2018 </h2>
+						</div>
+						
+						<ul class="list-group">
+							  
+							    <li class="list-group-item " style="background:#10205d;color:#fff">Todays Top 10</li>
+							   
+								<li class="list-group-item"><a href="/current-affairs/mcq/current-affairs-category-National/01" class="list_image">National</a> </li>
+								<li class="list-group-item"><a href="/current-affairs/mcq/current-affairs-category-Business_Economy_Banking/01" class="list_image">Business Economy Banking</a> </li>
+								
+								<li class="list-group-item"><a href="/current-affairs/mcq/current-affairs-category-Environment/01" class="list_image">Environment</a></li>
+								<li class="list-group-item"><a href="/current-affairs/mcq/current-affairs-category-Defence/01" class="list_image">Defence</a></li>
+									
+								<li class="list-group-item"><a href="/current-affairs/mcq/current-affairs-category-Awards_Honours/01" class="list_image">Awards Honours</a></li>
+								<li class="list-group-item"><a href="/current-affairs/mcq/current-affairs-category-Science_Techonlogy/01" class="list_image">Science & Techonlogy</a></li>
+								<li class="list-group-item"><a href="/current-affairs/mcq/current-affairs-category-Persons-in_-News/01" class="list_image">Persons in News</a></li>
+								<li class="list-group-item"><a href="/current-affairs/mcq/current-affairs-category-International/01" class="list_image">International</a></li>
+								<li class="list-group-item"><a href="/current-affairs/mcq/current-affairs-category-Sports/01" class="list_image">Sports</a></li>
+								<li class="list-group-item"><a href="/current-affairs/mcq/current-affairs-category-Art_Culture/01" class="list_image">Art Culture</a></li>
+								<li class="list-group-item"><a href="/current-affairs/mcq/current-affairs-category-Government_Schemes/01" class="list_image">Government Schemes</a></li>
+								<li class="list-group-item"><a href="/current-affairs/mcq/current-affairs-category-State/01" class="list_image">State</a></li>
+								<li class="list-group-item"><a href="/current-affairs/mcq/current-affairs-category-rank/01" class="list_image">Rank</a></li>
+								<li class="list-group-item"><a href="/current-affairs/mcq/current-affairs-category-State/01" class="list_image">Obituary</a></li>
+								<li class="list-group-item"><a href="/current-affairs/mcq/current-affairs-category-State/01" class="list_image">Static gk</a></li>
+
+						  </ul>
+			</div>	<!-- end 2 -->		
+		</div>
+	</div><!-- CONTAINER  END-->
+    </section><!-- #services -->
+
+    <!--==========================
+      Clients Section
+    ============================-->
+    <section id="clients" class="wow fadeInUp">
+      <div class="container">
+        <div class="section-header">
+          <h2>Clients</h2>
+          <p>Sed tamen tempor magna labore dolore dolor sint tempor duis magna elit veniam aliqua esse amet veniam enim export quid quid veniam aliqua eram noster malis nulla duis fugiat culpa esse aute nulla ipsum velit export irure minim illum fore</p>
+        </div>
+        <div class="owl-carousel clients-carousel">
+          <img src="img/clients/client-1.png" alt="">
+          <img src="img/clients/client-2.png" alt="">
+          <img src="img/clients/client-3.png" alt="">
+          <img src="img/clients/client-4.png" alt="">
+          <img src="img/clients/client-5.png" alt="">
+          <img src="img/clients/client-6.png" alt="">
+          <img src="img/clients/client-7.png" alt="">
+          <img src="img/clients/client-8.png" alt="">
+        </div>
+      </div>
+    </section><!-- #clients -->
+    <!--==========================
+      Our Portfolio Section
+    ============================-->
+    <section id="portfolio" class="wow fadeInUp">
+      <div class="container">
+        <div class="section-header">
+          <h2>Our Portfolio</h2>
+          <p>Sed tamen tempor magna labore dolore dolor sint tempor duis magna elit veniam aliqua esse amet veniam enim export quid quid veniam aliqua eram noster malis nulla duis fugiat culpa esse aute nulla ipsum velit export irure minim illum fore</p>
+        </div>
+      </div>
+      <div class="container-fluid">
+        <div class="row no-gutters">
+          <div class="col-lg-3 col-md-4">
+            <div class="portfolio-item wow fadeInUp">
+              <a href="img/portfolio/1.jpg" class="portfolio-popup">
+                <img src="img/portfolio/1.jpg" alt="">
+                <div class="portfolio-overlay">
+                  <div class="portfolio-info"><h2 class="wow fadeInUp">Portfolio Item 1</h2></div>
+                </div>
+              </a>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-4">
+            <div class="portfolio-item wow fadeInUp">
+              <a href="img/portfolio/2.jpg" class="portfolio-popup">
+                <img src="img/portfolio/2.jpg" alt="">
+                <div class="portfolio-overlay">
+                  <div class="portfolio-info"><h2 class="wow fadeInUp">Portfolio Item 2</h2></div>
+                </div>
+              </a>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-4">
+            <div class="portfolio-item wow fadeInUp">
+              <a href="img/portfolio/3.jpg" class="portfolio-popup">
+                <img src="img/portfolio/3.jpg" alt="">
+                <div class="portfolio-overlay">
+                  <div class="portfolio-info"><h2 class="wow fadeInUp">Portfolio Item 3</h2></div>
+                </div>
+              </a>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-4">
+            <div class="portfolio-item wow fadeInUp">
+              <a href="img/portfolio/4.jpg" class="portfolio-popup">
+                <img src="img/portfolio/4.jpg" alt="">
+                <div class="portfolio-overlay">
+                  <div class="portfolio-info"><h2 class="wow fadeInUp">Portfolio Item 4</h2></div>
+                </div>
+              </a>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-4">
+            <div class="portfolio-item wow fadeInUp">
+              <a href="img/portfolio/5.jpg" class="portfolio-popup">
+                <img src="img/portfolio/5.jpg" alt="">
+                <div class="portfolio-overlay">
+                  <div class="portfolio-info"><h2 class="wow fadeInUp">Portfolio Item 5</h2></div>
+                </div>
+              </a>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-4">
+            <div class="portfolio-item wow fadeInUp">
+              <a href="img/portfolio/6.jpg" class="portfolio-popup">
+                <img src="img/portfolio/6.jpg" alt="">
+                <div class="portfolio-overlay">
+                  <div class="portfolio-info"><h2 class="wow fadeInUp">Portfolio Item 6</h2></div>
+                </div>
+              </a>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-4">
+            <div class="portfolio-item wow fadeInUp">
+              <a href="img/portfolio/7.jpg" class="portfolio-popup">
+                <img src="img/portfolio/7.jpg" alt="">
+                <div class="portfolio-overlay">
+                  <div class="portfolio-info"><h2 class="wow fadeInUp">Portfolio Item 7</h2></div>
+                </div>
+              </a>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-4">
+            <div class="portfolio-item wow fadeInUp">
+              <a href="img/portfolio/8.jpg" class="portfolio-popup">
+                <img src="img/portfolio/8.jpg" alt="">
+                <div class="portfolio-overlay">
+                  <div class="portfolio-info"><h2 class="wow fadeInUp">Portfolio Item 8</h2></div>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section><!-- #portfolio -->
+    <!--==========================
+      Testimonials Section
+    ============================-->
+<!-- #testimonials -->
+    <!--==========================
+      Call To Action Section
+    ============================-->
+    <section id="call-to-action" class="wow fadeInUp">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-9 text-center text-lg-left">
+            <h3 class="cta-title">Call To Action</h3>
+            <p class="cta-text"> Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+          </div>
+          <div class="col-lg-3 cta-btn-container text-center">
+            <a class="cta-btn align-middle" href="#">Call To Action</a>
+          </div>
+        </div>
+      </div>
+    </section><!-- #call-to-action -->
+    <!--==========================
+      Our Team Section
+    ============================-->
+    <section id="team" class="wow fadeInUp">
+      <div class="container">
+        <div class="section-header">
+          <h2>Our Team</h2>
+        </div>
+        <div class="row">
+          <div class="col-lg-3 col-md-6">
+            <div class="member">
+              <div class="pic"><img src="img/team-1.jpg" alt=""></div>
+              <div class="details">
+                <h4>Walter White</h4>
+                <span>Chief Executive Officer</span>
+                <div class="social">
+                  <a href=""><i class="fa fa-twitter"></i></a>
+                  <a href=""><i class="fa fa-facebook"></i></a>
+                  <a href=""><i class="fa fa-google-plus"></i></a>
+                  <a href=""><i class="fa fa-linkedin"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6">
+            <div class="member">
+              <div class="pic"><img src="img/team-2.jpg" alt=""></div>
+              <div class="details">
+                <h4>Sarah Jhinson</h4>
+                <span>Product Manager</span>
+                <div class="social">
+                  <a href=""><i class="fa fa-twitter"></i></a>
+                  <a href=""><i class="fa fa-facebook"></i></a>
+                  <a href=""><i class="fa fa-google-plus"></i></a>
+                  <a href=""><i class="fa fa-linkedin"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6">
+            <div class="member">
+              <div class="pic"><img src="img/team-3.jpg" alt=""></div>
+              <div class="details">
+                <h4>William Anderson</h4>
+                <span>CTO</span>
+                <div class="social">
+                  <a href=""><i class="fa fa-twitter"></i></a>
+                  <a href=""><i class="fa fa-facebook"></i></a>
+                  <a href=""><i class="fa fa-google-plus"></i></a>
+                  <a href=""><i class="fa fa-linkedin"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6">
+            <div class="member">
+              <div class="pic"><img src="img/team-4.jpg" alt=""></div>
+              <div class="details">
+                <h4>Amanda Jepson</h4>
+                <span>Accountant</span>
+                <div class="social">
+                  <a href=""><i class="fa fa-twitter"></i></a>
+                  <a href=""><i class="fa fa-facebook"></i></a>
+                  <a href=""><i class="fa fa-google-plus"></i></a>
+                  <a href=""><i class="fa fa-linkedin"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section><!-- #team -->
+    <!--==========================
+      Contact Section
+    ============================-->
+    <section id="contact" class="wow fadeInUp">
+      <div class="container">
+        <div class="section-header">
+          <h2>Contact Us</h2>
+          <p>Sed tamen tempor magna labore dolore dolor sint tempor duis magna elit veniam aliqua esse amet veniam enim export quid quid veniam aliqua eram noster malis nulla duis fugiat culpa esse aute nulla ipsum velit export irure minim illum fore</p>
+        </div>
+        <div class="row contact-info">
+          <div class="col-md-4">
+            <div class="contact-address">
+              <i class="ion-ios-location-outline"></i>
+              <h3>Address</h3>
+              <address>A108 Adam Street, NY 535022, USA</address>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="contact-phone">
+              <i class="ion-ios-telephone-outline"></i>
+              <h3>Phone Number</h3>
+              <p><a href="tel:+155895548855">+1 5589 55488 55</a></p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="contact-email">
+              <i class="ion-ios-email-outline"></i>
+              <h3>Email</h3>
+              <p><a href="mailto:info@example.com">info@example.com</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="container mb-4">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d22864.11283411948!2d-73.96468908098944!3d40.630720240038435!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c24fa5d33f083b%3A0xc80b8f06e177fe62!2sNew+York%2C+NY%2C+USA!5e0!3m2!1sen!2sbg!4v1540447494452" width="100%" height="380" frameborder="0" style="border:0" allowfullscreen></iframe>
+      </div>
+      <div class="container">
+        <div class="form">
+          <div id="sendmessage">Your message has been sent. Thank you!</div>
+          <div id="errormessage"></div>
+          <form action="" method="post" role="form" class="contactForm">
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" data-rule="minlen:4" data-msg="Please enter at least 4 chars" />
+                <div class="validation"></div>
+              </div>
+              <div class="form-group col-md-6">
+                <input type="email" class="form-control" name="email" id="email" placeholder="Your Email" data-rule="email" data-msg="Please enter a valid email" />
+                <div class="validation"></div>
+              </div>
+            </div>
+            <div class="form-group">
+              <input type="text" class="form-control" name="subject" id="subject" placeholder="Subject" data-rule="minlen:4" data-msg="Please enter at least 8 chars of subject" />
+              <div class="validation"></div>
+            </div>
+            <div class="form-group">
+              <textarea class="form-control" name="message" rows="5" data-rule="required" data-msg="Please write something for us" placeholder="Message"></textarea>
+              <div class="validation"></div>
+            </div>
+            <div class="text-center"><button type="submit">Send Message</button></div>
+          </form>
+        </div>
+      </div>
+    </section><!-- #contact -->
+  </main>
+  <!--==========================
+    Footer
+  ============================-->
+  <footer id="footer">
+    <div class="container">
+      <div class="copyright">
+        &copy; Copyright <strong>Reveal</strong>. All Rights Reserved
+      </div>
+      <div class="credits">
+        <!--
+          All the links in the footer should remain intact.
+          You can delete the links only if you purchased the pro version.
+          Licensing information: https://bootstrapmade.com/license/
+          Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/buy/?theme=Reveal
+        -->
+        Designed by <a href="">Sayan Dutta Trijit Sadhu</a>
+      </div>
+    </div>
+  </footer><!-- #footer -->
+  <a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
+	 <!-- JavaScript Libraries --> 
+  <script type="text/javascript" src="{% static 'lib/jquery/jquery.min.js' %}"> </script>
+  <script type="text/javascript" src="{% static 'lib/jquery/jquery-migrate.min.js' %}"> </script>
+  <script type="text/javascript" src="{% static 'lib/bootstrap/js/bootstrap.bundle.min.js' %}"> </script>
+  <script type="text/javascript" src="{% static 'lib/easing/easing.min.js' %}"> </script>
+  <script type="text/javascript" src="{% static 'lib/superfish/hoverIntent.js' %}"> </script>
+  <script type="text/javascript" src="{% static 'lib/superfish/superfish.min.js' %}"> </script>
+  <script type="text/javascript" src="{% static 'lib/wow/wow.min.js' %}"> </script>
+  <script type="text/javascript" src="{% static 'lib/owlcarousel/owl.carousel.min.js' %}"> </script>
+  <script type="text/javascript" src="{% static 'lib/magnific-popup/magnific-popup.min.js' %}"> </script>
+  <script type="text/javascript" src="{% static 'lib/sticky/sticky.js' %}"> </script>
+  <!-- Contact Form JavaScript File -->
+  <script  src="{% static 'lib/contactform.js' %}"> </script>  
+  
+  
+    <!-- Template Main Javascript File -->
+	<script type="text/javascript">
+	//NOT EDIT......................................................................=======================================================
+		  jQuery(document).ready(function ($) {
+		  	var coll = document.getElementsByClassName("collapsible");
+		var i;
+
+		for (i = 0; i < coll.length; i++) {
+		  coll[i].addEventListener("click", function() {
+			this.classList.toggle("active");
+			var content = this.nextElementSibling;
+			//content = document.getElementById("1_2018");
+			//content=$(this).find("content");
+			 //content=this.querySelector(".content");
+			
+			
+			//alert(content);
+			if ( content.style.maxHeight !=='0px'){
+			//alert();
+			  content.style.maxHeight = '0px';
+			} else {
+			  content.style.maxHeight = content.scrollHeight + "px";
+			//  $('.content').not(this).style.maxHeight = null;
+			// $('.collapsible.active').end().querySelector(".content").css('maxHeight', '0px');
+				$('.collapsible.active').not(this).next().css('max-height', '0px');;
+			    $('.collapsible.active').not(this).removeClass('active');
+			}
+			
+		  });
+		}
+		 $('#open_2018').click(); 
+		  
+	  // Back to top button
+	  $(window).scroll(function () {
+		if ($(this).scrollTop() > 100) {
+		  $('.back-to-top').fadeIn('slow');
+		} else {
+		  $('.back-to-top').fadeOut('slow');
+		}
+	  });
+	  $('.back-to-top').click(function () {
+		$('html, body').animate({
+		  scrollTop: 0
+		}, 1500, 'easeInOutExpo');
+		return false;
+	  });
+	  // Stick the header at top on scroll
+	  $("#header").sticky({
+		topSpacing: 0,
+		zIndex: '50'
+	  });
+	  // Intro background carousel
+	  $("#intro-carousel").owlCarousel({
+		autoplay: true,
+		dots: false,
+		loop: true,
+		animateOut: 'fadeOut',
+		items: 1,
+		
+	  });
+	  // Initiate the wowjs animation library
+	  new WOW().init();
+	  // Initiate superfish on nav menu
+	  $('.nav-menu').superfish({
+		animation: {
+		  opacity: 'show'
+		},
+		speed: 400
+	  });
+	  // Mobile Navigation
+	  if ($('#nav-menu-container').length) {
+		var $mobile_nav = $('#nav-menu-container').clone().prop({
+		  id: 'mobile-nav'
+		});
+		$mobile_nav.find('> ul').attr({
+		  'class': '',
+		  'id': ''
+		});
+		$('body').append($mobile_nav);
+		$('body').prepend('<button type="button" id="mobile-nav-toggle"><i class="fa fa-bars"></i></button>');
+		$('body').append('<div id="mobile-body-overly"></div>');
+		$('#mobile-nav').find('.menu-has-children').prepend('<i class="fa fa-chevron-down"></i>');
+		$(document).on('click', '.menu-has-children i', function (e) {
+		  $(this).next().toggleClass('menu-item-active');
+		  $(this).nextAll('ul').eq(0).slideToggle();
+		  $(this).toggleClass("fa-chevron-up fa-chevron-down");
+		});
+		$(document).on('click', '#mobile-nav-toggle', function (e) {
+		  $('body').toggleClass('mobile-nav-active');
+		  $('#mobile-nav-toggle i').toggleClass('fa-times fa-bars');
+		  $('#mobile-body-overly').toggle();
+		});
+		$(document).click(function (e) {
+		  var container = $("#mobile-nav, #mobile-nav-toggle");
+		  if (!container.is(e.target) && container.has(e.target).length === 0) {
+			if ($('body').hasClass('mobile-nav-active')) {
+			  $('body').removeClass('mobile-nav-active');
+			  $('#mobile-nav-toggle i').toggleClass('fa-times fa-bars');
+			  $('#mobile-body-overly').fadeOut();
+			}
+		  }
+		});
+	  } else if ($("#mobile-nav, #mobile-nav-toggle").length) {
+		$("#mobile-nav, #mobile-nav-toggle").hide();
+	  }
+	  // Smooth scroll for the menu and links with .scrollto classes
+	  $('.nav-menu a, #mobile-nav a, .scrollto').on('click', function () {
+		if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
+		  var target = $(this.hash);
+		  if (target.length) {
+			var top_space = 0;
+			if ($('#header').length) {
+			  top_space = $('#header').outerHeight();
+			  if (!$('#header').hasClass('header-fixed')) {
+				top_space = top_space - 20;
+			  }
+			}
+			$('html, body').animate({
+			  scrollTop: target.offset().top - top_space
+			}, 1500, 'easeInOutExpo');
+			if ($(this).parents('.nav-menu').length) {
+			  $('.nav-menu .menu-active').removeClass('menu-active');
+			  $(this).closest('li').addClass('menu-active');
+			}
+			if ($('body').hasClass('mobile-nav-active')) {
+			  $('body').removeClass('mobile-nav-active');
+			  $('#mobile-nav-toggle i').toggleClass('fa-times fa-bars');
+			  $('#mobile-body-overly').fadeOut();
+			}
+			return false;
+		  }
+		}
+	  });
+	  // Porfolio - uses the magnific popup jQuery plugin
+	  $('.portfolio-popup').magnificPopup({
+		type: 'image',
+		removalDelay: 300,
+		mainClass: 'mfp-fade',
+		gallery: {
+		  enabled: true
+		},
+		zoom: {
+		  enabled: true,
+		  duration: 300,
+		  easing: 'ease-in-out',
+		  opener: function (openerElement) {
+			return openerElement.is('img') ? openerElement : openerElement.find('img');
+		  }
+		}
+	  });
+	  // Testimonials carousel (uses the Owl Carousel library)
+	  $(".testimonials-carousel").owlCarousel({
+		autoplay: true,
+		dots: true,
+		loop: true,
+		autoplayTimeout:5000,
+		slideSpeed:10000,
+		responsive: {
+		  0: {
+			items: 2
+		  },
+		  768: {
+			items: 4
+		  },
+		  900: {
+			items: 4
+		  }
+		}
+	  });
+	  // Clients carousel (uses the Owl Carousel library)
+	  $(".clients-carousel").owlCarousel({
+		autoplay: true,
+		dots: true,
+		loop: true,
+		responsive: {
+		  0: {
+			items: 2
+		  },
+		  768: {
+			items: 4
+		  },
+		  900: {
+			items: 6
+		  }
+		}
+	  });
+	});
+	
+	
+	
+	
+//====================================================================END NOT EDIT===============================================================================================================
+	
+//================================EDIT START===================================================================
+//.......mcq
+	function op(r1,r2,r3,r4,r5,a,i,counter){
+	var radio1 = r1;
+	var radio2=r2;
+	 var radio3=r3;
+	var radio4=r4;
+	var radio5=r5;
+	var ans=a;
+	var id=i;
+	var upper_sol='sol_upper'.concat(counter.toString());
+	var count=counter;
+	var chk=count.toString().concat(ans.toString());
+	var r8=count.toString();
+	var right=r8.concat('r');
+	
+	
+	
+if(document.getElementById(radio1).checked || document.getElementById(radio2).checked || document.getElementById(radio3).checked || document.getElementById(radio4).checked || document.getElementById(radio5).checked ) {
+
+				if(document.getElementById(chk).checked){
+				var right_img= right.concat(chk.slice(-1)) ;
+				//alert(right_img);
+				var x = document.getElementById(right_img);
+				
+
+				//x.innerHTML="<img src=\"http://placehold.it/350x350\" width=\"400px\" height=\"150px\">";
+				var y = document.getElementById(upper_sol);
+				y.innerHTML="<b>Correct<img src=\"{% static "/thh.png" %}\" class=\"img-rounded\" >"
+				x.style.display = 'inline';
+				
+				//$(x).toggle(500); 
+				//var y = document.getElementById(right);
+				//y.style.display = 'inline';
+				}else if(document.getElementById(radio1).checked) {
+				var wrong_img= count.toString().concat('w'.concat('radio1'.slice(-1))) ;
+				var x = document.getElementById(wrong_img);
+				var y = document.getElementById(upper_sol);
+				y.innerHTML="<b>InCorrect<img src=\"{% static "/c.png" %}\" class=\"img-rounded\" >"
+				x.style.display = 'inline';
+				
+				}else if(document.getElementById(radio2).checked) {
+				var wrong_img= count.toString().concat('w'.concat('radio2'.slice(-1))) ;
+				var x = document.getElementById(wrong_img);
+				var y = document.getElementById(upper_sol);
+				y.innerHTML="<b>InCorrect<img src=\"{% static "/c.png" %}\" class=\"img-rounded\" >"
+				x.style.display = 'inline';
+				
+				}else if(document.getElementById(radio3).checked) {
+				var wrong_img= count.toString().concat('w'.concat('radio3'.slice(-1))) ;
+				var x = document.getElementById(wrong_img);
+				var y = document.getElementById(upper_sol);
+				y.innerHTML="<b>InCorrect<img src=\"{% static "/c.png" %}\" class=\"img-rounded\" >"
+				x.style.display = 'inline';
+				
+				}else if(document.getElementById(radio4).checked) {
+				var wrong_img= count.toString().concat('w'.concat('radio4'.slice(-1))) ;
+				var x = document.getElementById(wrong_img);
+				var y = document.getElementById(upper_sol);
+				y.innerHTML="<b>InCorrect<img src=\"{% static "/c.png" %}\" class=\"img-rounded\" >"
+				x.style.display = 'inline';
+				
+				}else if(document.getElementById(radio5).checked) {
+				var wrong_img= count.toString().concat('w'.concat('radio5'.slice(-1))) ;
+				var x = document.getElementById(wrong_img);
+				var y = document.getElementById(upper_sol);
+				y.innerHTML="<b>InCorrect<img src=\"{% static "/c.png" %}\" class=\"img-rounded\" >"
+				x.style.display = 'inline';
+				
+				}
+			
+					
+		}
+					
+					
+				else  {
+
+				var x = document.getElementById(upper_sol);
+				x.style.fontWeight  = 'bold';
+				x.innerHTML="Not Attempted";
+						
+						}
+		if ($(id).css('display') == 'none')
+		{
+			$(id).toggle(500);
+		}
+	
+	}
+
+
+//.........mcq  end 
+function sh(){
+$('.show-hide').addClass("expand");
+}
+function show_eng(){
+$('.show-hide1').addClass("expand");
+}
+//============================================EDIT END============================================================================	
+	
+	
+	</script>
+	<script>
+	
+</script>
+</body>
+</html>
+ 
