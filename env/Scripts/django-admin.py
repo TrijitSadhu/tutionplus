@@ -1,4 +1,4 @@
-#!c:\users\newwe\desktop\tution\env\scripts\python.exe
+#!C:\Users\newwe\Desktop\tution\tutionplus\env_new\Scripts\python.exe
 from django.core import management
 
 if __name__ == "__main__":

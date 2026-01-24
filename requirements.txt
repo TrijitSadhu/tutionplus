@@ -1,8 +1,18 @@
-
 Django==3.0
 netifaces==0.11.0
 pytz==2024.2
 sqlparse==0.4.4
 psycopg2==2.8.6
 
-  
+# GenAI Dependencies - LLM Providers
+google-generativeai>=0.3.0  # Google Gemini Pro (DEFAULT)
+openai>=0.27.0              # OpenAI GPT (BACKUP)
+requests>=2.28.0
+beautifulsoup4>=4.11.0
+PyPDF2>=3.0.0
+pdfplumber>=0.7.0
+python-dotenv>=0.19.0
+
+# Optional dependencies for async tasks
+celery>=5.0.0
+redis>=4.0.0

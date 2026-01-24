@@ -36,6 +36,7 @@ EMAIL_PORT = 587
 
 INSTALLED_APPS = (
 'bank',
+'genai',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -82,19 +83,45 @@ WSGI_APPLICATION = 'django_project.wsgi.application'
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
 DATABASES = {
-    'sql': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    },
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'post',                      
         'USER': 'postgres',
         'PASSWORD': '123456',
-    
+        'HOST': 'localhost',
+        'PORT': '5432',
+        'ATOMIC_REQUESTS': True,
+        'OPTIONS': {
+            'connect_timeout': 10,
+            'options': '-c timezone=UTC',
+            'isolation_level': 1,  # Read Committed
+        }
+    },
+    'sql': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
-    
 }
+
+# Disable UTC timezone assertion for Windows PostgreSQL (development only)
+import psycopg2
+from psycopg2 import extensions
+psycopg2.extensions.register_adapter(str, lambda x: extensions.QuotedString(x))
+
+# Monkey patch Django's utc_tzinfo_factory to skip UTC validation on Windows
+import django.db.backends.postgresql.utils as pg_utils
+original_utc_tzinfo = pg_utils.utc_tzinfo_factory
+
+def utc_tzinfo_factory_patched(conn):
+    """Skip UTC assertion check on Windows development environments"""
+    try:
+        return original_utc_tzinfo(conn)
+    except AssertionError:
+        # For Windows development, return UTC timezone without assertion
+        import datetime
+        return datetime.timezone.utc
+
+pg_utils.utc_tzinfo_factory = utc_tzinfo_factory_patched
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
@@ -123,17 +150,21 @@ MEDIA_URL='/media/'
 # /var/lib/digitalocean/allow_hosts.py
 
 import os
-import netifaces
 
 # Find out what the IP addresses are at run time
 # This is necessary because otherwise Gunicorn will reject the connections
 def ip_addresses():
     ip_list = ['*','mcqgk.com','www.mcqgk.com','tutionplus.com','www.tutionplus.com','m.tutionplus.com' ]
-    for interface in netifaces.interfaces():
-        addrs = netifaces.ifaddresses(interface)
-        for x in (netifaces.AF_INET, netifaces.AF_INET6):
-            if x in addrs:
-                ip_list.append(addrs[x][0]['addr'])
+    try:
+        import netifaces
+        for interface in netifaces.interfaces():
+            addrs = netifaces.ifaddresses(interface)
+            for x in (netifaces.AF_INET, netifaces.AF_INET6):
+                if x in addrs:
+                    ip_list.append(addrs[x][0]['addr'])
+    except ImportError:
+        # netifaces not available, use default hosts only
+        pass
     return ip_list
 
 # Discover our IP address

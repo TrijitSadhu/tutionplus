@@ -29,9 +29,10 @@ import bank
 from django.conf.urls import url,include
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 admin.autodiscover()
-app_name = 'bank'
+
 urlpatterns = [
     re_path(r'^admin/', admin.site.urls),
+    re_path(r'^genai/', include('genai.urls')),
     re_path(r'^', include('bank.urls')),
        
 ]
