@@ -67,9 +67,34 @@ class CurrentAffairsScraper:
             soup = BeautifulSoup(html, 'html.parser')
             content = []
             
-            print(f"    📊 Parsing HTML structure...")
+            print(f"    [EXTRACTION] Parsing HTML structure...")
             
-            # Strategy 1: Look for article containers
+            # Strategy 1: Look for quiz questions specifically (wp_quiz_question class)
+            quiz_questions = soup.find_all('div', class_='wp_quiz_question')
+            if quiz_questions:
+                print(f"    [EXTRACTION] Found {len(quiz_questions)} quiz questions (wp_quiz_question)")
+                # Extract title from page
+                title_elem = soup.find('h1') or soup.find('title')
+                page_title = title_elem.get_text(strip=True) if title_elem else "Quiz"
+                
+                # Combine all quiz questions into one content block
+                all_questions = []
+                for q in quiz_questions:
+                    q_text = q.get_text(strip=True)
+                    if q_text:
+                        all_questions.append(q_text)
+                
+                if all_questions:
+                    quiz_body = " | ".join(all_questions)
+                    content.append({
+                        'title': page_title[:200],
+                        'body': quiz_body[:2000],
+                        'source_url': source_url
+                    })
+                    print(f"    [EXTRACTION] Extracted quiz content: {len(quiz_body)} chars")
+                    return content
+            
+            # Fallback: Look for article containers
             articles = soup.find_all('article')
             if not articles:
                 articles = soup.find_all('div', class_=lambda x: x and ('article' in x.lower() or 'post' in x.lower() or 'content' in x.lower()))
@@ -80,7 +105,7 @@ class CurrentAffairsScraper:
                 if all_divs:
                     articles = all_divs
             
-            print(f"    📊 Found {len(articles)} potential article containers")
+            print(f"    [EXTRACTION] Found {len(articles)} article containers")
             
             for idx, article in enumerate(articles, 1):
                 title = None
@@ -302,22 +327,55 @@ class CurrentAffairsProcessor:
         print(f"    ✓ Using HARDCODED prompt template for MCQ generation")
         return f"""
 You are an expert in creating multiple choice questions for competitive exams.
-Based on the following current affairs article, generate 3 high-quality MCQ questions.
+Based on the following current affairs article, generate 4 high-quality MCQ questions.
 
 Title: {title}
 Content: {body}
+
+CATEGORY CLASSIFICATION:
+After analyzing the article content, classify which of these categories the MCQ belongs to. 
+Select ALL that apply (can be multiple). Use your judgment - if not explicitly mentioned, decide based on content:
+- Science_Techonlogy: For technology, innovation, research, engineering
+- National: For India-specific news, policies, government, national events
+- International: For global news, international relations, foreign countries
+- Business_Economy_Banking: For economy, business, markets, finance, banking, commerce
+- Environment: For environmental issues, climate, pollution, conservation
+- Defence: For military, defence, security, armed forces
+- Sports: For sports events, athletes, tournaments
+- Art_Culture: For arts, culture, heritage, literature, music
+- Awards_Honours: For awards, honors, recognitions, achievements
+- Persons_in_News: For notable personalities, appointments, resignations
+- Government_Schemes: For government programs, policies, schemes
+- State: For state-specific news (if mentioned which state)
+- appointment: For appointments, new positions, leadership changes
+- obituary: For death announcements, obituaries
+- important_day: For special days, commemorations, anniversaries
+- rank: For rankings, ratings, positions
+- mythology: For historical or mythological references
+- agreement: For treaties, agreements, MOUs
+
+For each question, provide:
+- question: Clear question text based on the article content
+- option_1, option_2, option_3, option_4: Four distinct options
+- correct_answer: 1, 2, 3, or 4 (the correct option number)
+- explanation: Detailed bullet-point explanation of why this answer is correct. Use bullet points with the format:
+  • Key point 1 supporting why this is correct
+  • Key point 2 from the article
+  • Key point 3 explaining the concept
+- categories: Array of category names that apply to this question (e.g., ["National", "Business_Economy_Banking"])
 
 Return ONLY a JSON object with this structure:
 {{
     "questions": [
         {{
             "question": "Question text",
-            "option_a": "Option A",
-            "option_b": "Option B",
-            "option_c": "Option C",
-            "option_d": "Option D",
-            "correct_answer": "A",
-            "explanation": "Why this answer is correct"
+            "option_1": "Option 1",
+            "option_2": "Option 2",
+            "option_3": "Option 3",
+            "option_4": "Option 4",
+            "correct_answer": 1,
+            "explanation": "• Key point 1\\n• Key point 2\\n• Key point 3",
+            "categories": ["Category1", "Category2"]
         }}
     ]
 }}
@@ -374,12 +432,12 @@ Return ONLY a JSON object with this structure:
         Returns:
             Generated MCQs data
         """
-        print(f"  📋 [PROCESSOR] process_mcq_content() - Starting MCQ generation")
+        print(f"  [PROCESSOR] process_mcq_content() - Starting MCQ generation")
         try:
             prompt = self.generate_mcq_prompt(title, body, source_url)
-            print(f"    📤 Sending to LLM...")
+            print(f"    [SENDING] Sending to LLM...")
             response = self.llm.generate_json(prompt)
-            print(f"    ✓ LLM response received: {type(response)}")
+            print(f"    [SUCCESS] LLM response received")
             return response
         
         except Exception as e:
@@ -412,13 +470,14 @@ Return ONLY a JSON object with this structure:
             logger.error(f"Error processing descriptive content: {str(e)}")
             return {"error": str(e)}
     
-    def save_mcq_to_database(self, mcq_data: Dict[str, Any], content_type: str = 'currentaffairs_mcq') -> List[Dict]:
+    def save_mcq_to_database(self, mcq_data: Dict[str, Any], content_type: str = 'currentaffairs_mcq', source_url: str = None) -> List[Dict]:
         """
         Save generated MCQs to database
         
         Args:
             mcq_data: MCQ data from LLM
             content_type: 'currentaffairs_mcq' or 'currentaffairs_descriptive'
+            source_url: URL of the source (to fetch content_date from ContentSource)
         
         Returns:
             List of saved MCQ IDs
@@ -433,22 +492,148 @@ Return ONLY a JSON object with this structure:
             else:
                 model = currentaffairs_descriptive
             
+            # Get content_date from ContentSource if source_url is provided
+            year_now = None
+            month = None
+            day_value = None
+            
+            if source_url:
+                from genai.models import ContentSource
+                try:
+                    content_source = ContentSource.objects.filter(url=source_url).first()
+                    if content_source and content_source.content_date:
+                        print(f"      📅 Found ContentSource with date: {content_source.content_date}")
+                        year_now = str(content_source.content_date.year)
+                        # Month names
+                        month_names = {
+                            1: "January", 2: "February", 3: "March", 4: "April",
+                            5: "May", 6: "June", 7: "July", 8: "August",
+                            9: "September", 10: "October", 11: "November", 12: "December"
+                        }
+                        month = month_names.get(content_source.content_date.month, "January")
+                        day_value = content_source.content_date.day
+                        print(f"      ✓ Extracted - Year: {year_now}, Month: {month}, Day: {day_value}")
+                    else:
+                        print(f"      ⚠️  No ContentSource found for URL: {source_url}")
+                except Exception as e:
+                    print(f"      ❌ Error fetching ContentSource: {str(e)}")
+            
             questions = mcq_data.get('questions', [])
             print(f"    📥 Saving {len(questions)} questions...")
             
             for idx, question_data in enumerate(questions, 1):
-                # Create MCQ object - adjust model fields based on your schema
-                mcq = model.objects.create(
-                    upper_heading=question_data.get('question', ''),
-                    yellow_heading=question_data.get('explanation', ''),
-                    key_1=question_data.get('option_a', ''),
-                    key_2=question_data.get('option_b', ''),
-                    key_3=question_data.get('option_c', ''),
-                    key_4=question_data.get('option_d', ''),
-                    day=date.today(),
-                    creation_time=datetime.now().time()
-                )
-                saved_mcqs.append({'id': mcq.id, 'question': mcq.upper_heading})
+                # Create MCQ object - use correct fields for each model
+                if content_type == 'currentaffairs_mcq':
+                    # Map correct answer from LLM (A/B/C/D or 1/2/3/4) to database (1/2/3/4)
+                    correct_answer = question_data.get('correct_answer', 'A')
+                    if isinstance(correct_answer, str):
+                        correct_answer = correct_answer.strip().upper()
+                        # Convert letter to number
+                        if correct_answer in ['A', 'OPTION_1', '1']:
+                            ans_value = 1
+                        elif correct_answer in ['B', 'OPTION_2', '2']:
+                            ans_value = 2
+                        elif correct_answer in ['C', 'OPTION_3', '3']:
+                            ans_value = 3
+                        elif correct_answer in ['D', 'OPTION_4', '4']:
+                            ans_value = 4
+                        else:
+                            ans_value = 1  # Default fallback
+                    else:
+                        ans_value = int(correct_answer) if correct_answer else 1
+                    
+                    # Extract explanation from LLM response
+                    explanation = question_data.get('explanation', '')
+                    if explanation:
+                        # Store explanation in extra field
+                        explanation_text = f"Explanation:\n{explanation}"
+                    else:
+                        explanation_text = ''
+                    
+                    # Also handle option_a/b/c/d from LLM format
+                    # Create the date object from extracted year, month, day
+                    if year_now and month and day_value:
+                        try:
+                            # Convert month name to number
+                            month_names_rev = {
+                                "January": 1, "February": 2, "March": 3, "April": 4,
+                                "May": 5, "June": 6, "July": 7, "August": 8,
+                                "September": 9, "October": 10, "November": 11, "December": 12
+                            }
+                            month_num = month_names_rev.get(month, 1)
+                            mcq_date = datetime(int(year_now), month_num, day_value).date()
+                        except (ValueError, TypeError):
+                            mcq_date = date.today()
+                    else:
+                        mcq_date = date.today()
+                    
+                    mcq = model.objects.create(
+                        question=question_data.get('question', ''),
+                        option_1=question_data.get('option_1', question_data.get('option_a', '')),
+                        option_2=question_data.get('option_2', question_data.get('option_b', '')),
+                        option_3=question_data.get('option_3', question_data.get('option_c', '')),
+                        option_4=question_data.get('option_4', question_data.get('option_d', '')),
+                        ans=ans_value,
+                        year_now=year_now,
+                        month=month,
+                        day=mcq_date,
+                        creation_time=datetime.now().time(),
+                        extra=explanation_text
+                    )
+                    
+                    # Apply categories from LLM classification
+                    categories = question_data.get('categories', [])
+                    print(f"      [{idx}] Categories from LLM: {categories}")
+                    
+                    # Map category names to model fields
+                    category_mapping = {
+                        'Science_Techonlogy': 'Science_Techonlogy',
+                        'National': 'National',
+                        'International': 'International',
+                        'Business_Economy_Banking': 'Business_Economy_Banking',
+                        'Environment': 'Environment',
+                        'Defence': 'Defence',
+                        'Sports': 'Sports',
+                        'Art_Culture': 'Art_Culture',
+                        'Awards_Honours': 'Awards_Honours',
+                        'Persons_in_News': 'Persons_in_News',
+                        'Government_Schemes': 'Government_Schemes',
+                        'State': 'State',
+                        'appointment': 'appointment',
+                        'obituary': 'obituary',
+                        'important_day': 'important_day',
+                        'rank': 'rank',
+                        'mythology': 'mythology',
+                        'agreement': 'agreement',
+                        'medical': 'medical',
+                        'static_gk': 'static_gk'
+                    }
+                    
+                    # Set category fields to True if they appear in LLM's categories list
+                    for category in categories:
+                        if isinstance(category, str):
+                            category = category.strip()
+                            if category in category_mapping:
+                                field_name = category_mapping[category]
+                                setattr(mcq, field_name, True)
+                                print(f"        ✓ Set {field_name} = True")
+                    
+                    # Save MCQ with updated category fields
+                    mcq.save()
+                    
+                    saved_mcqs.append({'id': mcq.id, 'question': mcq.question})
+                else:
+                    mcq = model.objects.create(
+                        upper_heading=question_data.get('question', ''),
+                        yellow_heading=question_data.get('explanation', ''),
+                        key_1=question_data.get('option_a', ''),
+                        key_2=question_data.get('option_b', ''),
+                        key_3=question_data.get('option_c', ''),
+                        key_4=question_data.get('option_d', ''),
+                        day=date.today(),
+                        creation_time=datetime.now().time()
+                    )
+                    saved_mcqs.append({'id': mcq.id, 'question': mcq.upper_heading})
                 print(f"      [{idx}] ✓ Saved MCQ ID: {mcq.id}")
                 logger.info(f"Saved MCQ: {mcq.id}")
         
@@ -497,7 +682,7 @@ Return ONLY a JSON object with this structure:
                 if content_type == 'currentaffairs_mcq':
                     processed = self.process_mcq_content(content['title'], content['body'], source_url)
                     if 'questions' in processed:
-                        saved = self.save_mcq_to_database(processed, content_type)
+                        saved = self.save_mcq_to_database(processed, content_type, source_url)
                         results['processed_items'].extend(saved)
                     else:
                         print(f"    ⚠ No 'questions' key in response")

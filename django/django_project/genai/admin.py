@@ -541,14 +541,14 @@ class ProcessingLogAdmin(admin.ModelAdmin):
 class ContentSourceAdmin(admin.ModelAdmin):
     """Admin interface for managing content sources"""
     
-    list_display = ('name', 'source_type_display', 'url_preview', 'is_active_badge', 'created_at')
+    list_display = ('name', 'source_type_display', 'content_date', 'url_preview', 'is_active_badge', 'created_at')
     list_filter = ('source_type', 'is_active', 'created_at')
     search_fields = ('name', 'url', 'description')
     readonly_fields = ('created_at', 'updated_at')
     
     fieldsets = (
         ('Source Information', {
-            'fields': ('name', 'source_type', 'url', 'description')
+            'fields': ('name', 'source_type', 'url', 'description', 'content_date')
         }),
         ('Status', {
             'fields': ('is_active',)

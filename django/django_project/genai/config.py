@@ -8,10 +8,17 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# LLM Provider Selection (options: 'gemini', 'openai', 'mock')
-DEFAULT_LLM_PROVIDER = os.getenv('DEFAULT_LLM_PROVIDER', 'gemini')
+# LLM Provider Selection (options: 'groq', 'gemini', 'openai', 'mock')
+DEFAULT_LLM_PROVIDER = os.getenv('DEFAULT_LLM_PROVIDER', 'groq')
 
-# Gemini Pro Configuration (DEFAULT)
+# Groq Configuration (DEFAULT)
+# Available Groq Models: openai/gpt-oss-120b, llama-3.3-70b-versatile
+GROQ_API_KEY = os.getenv('GROQ_API_KEY', 'your-groq-api-key-here')
+GROQ_MODEL = os.getenv('GROQ_MODEL', 'openai/gpt-oss-120b')
+GROQ_TEMPERATURE = float(os.getenv('GROQ_TEMPERATURE', '0.7'))
+GROQ_MAX_OUTPUT_TOKENS = int(os.getenv('GROQ_MAX_OUTPUT_TOKENS', '2048'))
+
+# Gemini Pro Configuration (BACKUP)
 GEMINI_API_KEY = os.getenv('GEMINI_API_KEY', 'your-gemini-api-key-here')
 GEMINI_MODEL = os.getenv('GEMINI_MODEL', 'gemini-1.5-flash')
 GEMINI_TEMPERATURE = float(os.getenv('GEMINI_TEMPERATURE', '0.7'))

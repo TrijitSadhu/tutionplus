@@ -8,6 +8,7 @@ import logging
 from typing import Dict, List, Any, Optional
 from genai.config import (
     DEFAULT_LLM_PROVIDER,
+    GROQ_API_KEY, GROQ_MODEL, GROQ_TEMPERATURE, GROQ_MAX_OUTPUT_TOKENS,
     GEMINI_API_KEY, GEMINI_MODEL, GEMINI_TEMPERATURE, GEMINI_MAX_OUTPUT_TOKENS,
     OPENAI_API_KEY, OPENAI_MODEL, OPENAI_TEMPERATURE
 )
@@ -28,6 +29,66 @@ class LLMProvider:
     def generate_json(self, prompt: str, **kwargs) -> Dict[str, Any]:
         """Generate JSON response from the model"""
         raise NotImplementedError
+
+
+class GroqProvider(LLMProvider):
+    """Groq Cloud provider"""
+    
+    def __init__(self, api_key: str = GROQ_API_KEY, model: str = GROQ_MODEL):
+        super().__init__(model)
+        self.api_key = api_key
+        self.model = model
+        self.temperature = GROQ_TEMPERATURE
+        self.max_output_tokens = GROQ_MAX_OUTPUT_TOKENS
+        
+        try:
+            from groq import Groq
+            self.client = Groq(api_key=api_key)
+        except ImportError:
+            logger.error("groq library not installed. Install with: pip install groq")
+            raise
+        except Exception as e:
+            logger.error(f"Failed to initialize Groq: {str(e)}")
+            raise
+    
+    def generate(self, prompt: str, **kwargs) -> str:
+        """
+        Generate text using Groq API
+        
+        Args:
+            prompt: The prompt to send to the model
+            **kwargs: Additional parameters
+        
+        Returns:
+            Generated text from the model
+        """
+        try:
+            chat_completion = self.client.chat.completions.create(
+                model=self.model,
+                max_tokens=self.max_output_tokens,
+                temperature=self.temperature,
+                messages=[
+                    {"role": "user", "content": prompt}
+                ],
+                **kwargs
+            )
+            return chat_completion.choices[0].message.content
+        except Exception as e:
+            logger.error(f"Groq API Error: {str(e)}")
+            raise
+    
+    def generate_json(self, prompt: str, **kwargs) -> Dict[str, Any]:
+        """Generate JSON response from the model"""
+        json_prompt = f"""{prompt}
+
+IMPORTANT: Your response MUST be valid JSON only. Do not include any markdown formatting or explanations."""
+        
+        response_text = self.generate(json_prompt, **kwargs)
+        try:
+            return json.loads(response_text)
+        except json.JSONDecodeError:
+            logger.error(f"Failed to parse JSON response: {response_text}")
+            return {}
 
 
 class GeminiProvider(LLMProvider):
@@ -173,7 +234,7 @@ def get_llm_provider(provider: str = None, **kwargs) -> LLMProvider:
     Get an LLM provider instance
     
     Args:
-        provider: 'gemini' (default), 'openai', 'mock', etc.
+        provider: 'groq' (default), 'gemini', 'openai', 'mock', etc.
         **kwargs: Additional parameters for the provider
     
     Returns:
@@ -181,7 +242,13 @@ def get_llm_provider(provider: str = None, **kwargs) -> LLMProvider:
     """
     provider = provider or DEFAULT_LLM_PROVIDER
     
-    if provider.lower() == "gemini":
+    if provider.lower() == "groq":
+        try:
+            return GroqProvider(**kwargs)
+        except ImportError:
+            logger.warning(f"Groq not available. Falling back to Gemini.")
+            return GeminiProvider(**kwargs)
+    elif provider.lower() == "gemini":
         try:
             return GeminiProvider(**kwargs)
         except ImportError:

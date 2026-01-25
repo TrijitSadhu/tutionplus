@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 import os
+import datetime
 
 
 class PDFUpload(models.Model):
@@ -237,6 +238,12 @@ class ContentSource(models.Model):
     url = models.URLField(max_length=500, help_text="Enter the full URL to fetch content from")
     name = models.CharField(max_length=255, help_text="Display name for this source")
     description = models.TextField(blank=True, null=True, help_text="Optional description of this source")
+    
+    # Content date - MANDATORY - used for MCQ generation
+    content_date = models.DateField(
+        default=datetime.date.today,
+        help_text="Date for which this content is relevant. Year, Month, and Date will be extracted for MCQs"
+    )
     
     # Status
     is_active = models.BooleanField(default=True, help_text="Enable/disable this source")

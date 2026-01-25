@@ -33,8 +33,6 @@ class current_affairs_slide(models.Model):
         return self.day.strftime('%d/%m/%Y') + '     '+ self.upper_heading
 
 
-
-
 class currentaffairs_descriptive(models.Model):
     s= (
     ("2018", "2018"),   
@@ -3292,9 +3290,9 @@ class currentaffairs_mcq(models.Model):
     def __str__(self):
         return self.day.strftime('%d/%m/%Y') + '     '+ self.question
 
-    def save(self):
+    def save(self, *args, **kwargs):
         self.new_id= self.question +'===' +self.day.strftime('%d-%m-%Y')
-        super(currentaffairs_mcq, self).save()
+        super(currentaffairs_mcq, self).save(*args, **kwargs)
 
 
 
