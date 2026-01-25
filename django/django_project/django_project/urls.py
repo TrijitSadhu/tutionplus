@@ -20,6 +20,7 @@ Including another URLconf
 from django.urls import path, re_path
 
 from django.contrib import admin
+from bank.admin import admin_site
 from django.conf.urls import url
 from django.urls import path
 
@@ -31,7 +32,7 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 admin.autodiscover()
 
 urlpatterns = [
-    re_path(r'^admin/', admin.site.urls),
+    re_path(r'^admin/', admin_site.urls),
     re_path(r'^genai/', include('genai.urls')),
     re_path(r'^', include('bank.urls')),
        

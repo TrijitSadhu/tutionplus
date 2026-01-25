@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import current_affairs_slide
-from .models import current_affairs
+from .models import currentaffairs_descriptive
 from .models import the_hindu_word_Header1
 from .models import the_hindu_word_list1
 from .models import the_hindu_word_Header2
@@ -28,21 +28,21 @@ from .models import close
 
 from .models import total_math
 from .models import math
-from .models import mcq
-from .models import mcq_info_2018
-from .models import mcq_info_2019
-from .models import mcq_info_2020
-from .models import mcq_info_2025
-from .models import mcq_info_2026
-from .models import mcq_info_2027
-from .models import mcq_info_2028
-from .models import current_affairs_info_2020
-from .models import current_affairs_info_2018
-from .models import current_affairs_info_2019
-from .models import current_affairs_info_2025
-from .models import current_affairs_info_2026
-from .models import current_affairs_info_2027
-from .models import current_affairs_info_2028
+from .models import currentaffairs_mcq
+from .models import currentaffairs_mcq_info_2018
+from .models import currentaffairs_mcq_info_2019
+from .models import currentaffairs_mcq_info_2020
+from .models import currentaffairs_mcq_info_2025
+from .models import currentaffairs_mcq_info_2026
+from .models import currentaffairs_mcq_info_2027
+from .models import currentaffairs_mcq_info_2028
+from .models import currentaffairs_descriptive_info_2020
+from .models import currentaffairs_descriptive_info_2018
+from .models import currentaffairs_descriptive_info_2019
+from .models import currentaffairs_descriptive_info_2025
+from .models import currentaffairs_descriptive_info_2026
+from .models import currentaffairs_descriptive_info_2027
+from .models import currentaffairs_descriptive_info_2028
 
 from .models import total_mcq
 from .models import polity
@@ -65,10 +65,15 @@ from .models import total_biology
 from django import forms
 from django.db import models
 from django.forms import TextInput, Textarea
+from django.contrib.admin import AdminSite
+from django.urls import reverse
+
+
+
 
 class MessageAdminForm(forms.ModelForm):
     class Meta:
-        model = current_affairs
+        model = currentaffairs_descriptive
         description = forms.CharField( widget=forms.Textarea(attrs={'rows': 5, 'cols': 100})) 
         fields = '__all__'
         exclude = ()
@@ -77,77 +82,179 @@ class MessageAdmin(admin.ModelAdmin):
     form = MessageAdminForm
   
 
-# Register your models here.
-admin.site.register(current_affairs_slide)
-admin.site.register(mcq)
-admin.site.register(total_mcq)
-admin.site.register(mcq_info_2018)
-admin.site.register(mcq_info_2019)
-admin.site.register(mcq_info_2020)
-admin.site.register(mcq_info_2025)
-admin.site.register(mcq_info_2026)
-admin.site.register(mcq_info_2027)
-admin.site.register(mcq_info_2028)
-admin.site.register(current_affairs_info_2020)
-admin.site.register(current_affairs_info_2019)
-admin.site.register(current_affairs_info_2018)
-admin.site.register(current_affairs_info_2025)
-admin.site.register(current_affairs_info_2026)
-admin.site.register(current_affairs_info_2027)
-admin.site.register(current_affairs_info_2028)
+# Register your models here (using custom admin_site)
+# Info table admin groupings for clearer separation
+class CurrentAffairsMCQInfoAdmin(admin.ModelAdmin):
+    list_display = ('total_mcq', 'total_mcq_page')
+    list_filter = ('id',)
+    readonly_fields = ('id',)
 
 
-admin.site.register(current_affairs,MessageAdmin)
+class CurrentAffairsDescriptiveInfoAdmin(admin.ModelAdmin):
+    list_display = ('total_current_affairs', 'total_current_affairs_page')
+    list_filter = ('id',)
+    readonly_fields = ('id',)
 
-admin.site.register(total)
-admin.site.register(the_hindu_word_Header1)
-admin.site.register(the_hindu_word_list1)
-admin.site.register(the_hindu_word_Header2)
-admin.site.register(the_hindu_word_list2)
-admin.site.register(the_economy_word_Header1)
-admin.site.register(the_economy_word_list1)
-admin.site.register(the_economy_word_Header2)
-admin.site.register(the_economy_word_list2)
-admin.site.register(total_english)
-admin.site.register(math)
-admin.site.register(total_math)
-admin.site.register(job)
-admin.site.register(total_job)
-admin.site.register(total_job_category)
-admin.site.register(total_job_state)
+# Lists of models for grouping on admin index
+mcq_info_tables = [
+    currentaffairs_mcq_info_2018,
+    currentaffairs_mcq_info_2019,
+    currentaffairs_mcq_info_2020,
+    currentaffairs_mcq_info_2025,
+    currentaffairs_mcq_info_2026,
+    currentaffairs_mcq_info_2027,
+    currentaffairs_mcq_info_2028,
+]
 
-admin.site.register(home)
-
-
-admin.site.register(user_save)
-admin.site.register(topic)
+descriptive_info_tables = [
+    currentaffairs_descriptive_info_2018,
+    currentaffairs_descriptive_info_2019,
+    currentaffairs_descriptive_info_2020,
+    currentaffairs_descriptive_info_2025,
+    currentaffairs_descriptive_info_2026,
+    currentaffairs_descriptive_info_2027,
+    currentaffairs_descriptive_info_2028,
+]
 
 
-admin.site.register(total_reasoning)
-admin.site.register(reasoning)
+# Custom AdminSite to supply grouped links on the index
+class BankAdminSite(AdminSite):
+    site_header = 'TutionPlus Admin'
+    site_title = 'TutionPlus'
+    index_title = 'Site administration'
+    index_template = 'admin/custom_index.html'
 
-admin.site.register(total_close)
-admin.site.register(close)
+    def index(self, request, extra_context=None):
+        extra = extra_context or {}
+        mcq_links = []
+        desc_links = []
+        for m in mcq_info_tables:
+            app_label = m._meta.app_label
+            model_name = m._meta.model_name
+            try:
+                url = reverse('admin:%s_%s_changelist' % (app_label, model_name))
+            except Exception:
+                url = '#'
+            mcq_links.append({'name': m._meta.verbose_name_plural.title(), 'url': url})
+        for m in descriptive_info_tables:
+            app_label = m._meta.app_label
+            model_name = m._meta.model_name
+            try:
+                url = reverse('admin:%s_%s_changelist' % (app_label, model_name))
+            except Exception:
+                url = '#'
+            desc_links.append({'name': m._meta.verbose_name_plural.title(), 'url': url})
+        extra.update({'mcq_links': mcq_links, 'desc_links': desc_links})
+        return super().index(request, extra_context=extra)
 
-admin.site.register(total_error)
-admin.site.register(error)
+    def app_index(self, request, app_label, extra_context=None):
+        extra = extra_context or {}
+        if app_label == 'bank':
+            mcq_links = []
+            desc_links = []
+            for m in mcq_info_tables:
+                app_label_m = m._meta.app_label
+                model_name = m._meta.model_name
+                try:
+                    url = reverse('admin:%s_%s_changelist' % (app_label_m, model_name))
+                except Exception:
+                    url = '#'
+                mcq_links.append({'name': m._meta.verbose_name_plural.title(), 'url': url})
+            for m in descriptive_info_tables:
+                app_label_m = m._meta.app_label
+                model_name = m._meta.model_name
+                try:
+                    url = reverse('admin:%s_%s_changelist' % (app_label_m, model_name))
+                except Exception:
+                    url = '#'
+                desc_links.append({'name': m._meta.verbose_name_plural.title(), 'url': url})
+            extra.update({'mcq_links': mcq_links, 'desc_links': desc_links})
+        return super().app_index(request, app_label, extra_context=extra)
 
-admin.site.register(total_polity)
-admin.site.register(polity)
+# instantiate custom admin site
+admin_site = BankAdminSite(name='bank_admin')
 
-admin.site.register(total_history)
-admin.site.register(history)
+# Register info tables after admin_site is instantiated
+for m in mcq_info_tables:
+    if m not in [model for model, admin_cls in admin_site._registry.items()]:
+        admin_site.register(m, CurrentAffairsMCQInfoAdmin)
 
-admin.site.register(total_geography)
-admin.site.register(geography)
+for m in descriptive_info_tables:
+    if m not in [model for model, admin_cls in admin_site._registry.items()]:
+        admin_site.register(m, CurrentAffairsDescriptiveInfoAdmin)
 
-admin.site.register(total_economics)
-admin.site.register(economics)
 
-admin.site.register(total_physics)
-admin.site.register(physics)
-admin.site.register(total_chemistry)
-admin.site.register(chemistry)
-admin.site.register(total_biology)
-admin.site.register(biology)
+admin_site.register(currentaffairs_descriptive,MessageAdmin)
+
+# register the basic current affairs models
+admin_site.register(current_affairs_slide)
+admin_site.register(currentaffairs_mcq)
+admin_site.register(total_mcq)
+
+admin_site.register(total)
+admin_site.register(the_hindu_word_Header1)
+admin_site.register(the_hindu_word_list1)
+admin_site.register(the_hindu_word_Header2)
+admin_site.register(the_hindu_word_list2)
+admin_site.register(the_economy_word_Header1)
+admin_site.register(the_economy_word_list1)
+admin_site.register(the_economy_word_Header2)
+admin_site.register(the_economy_word_list2)
+admin_site.register(total_english)
+admin_site.register(math)
+admin_site.register(total_math)
+admin_site.register(job)
+admin_site.register(total_job)
+admin_site.register(total_job_category)
+admin_site.register(total_job_state)
+
+admin_site.register(home)
+
+
+admin_site.register(user_save)
+admin_site.register(topic)
+
+
+admin_site.register(total_reasoning)
+admin_site.register(reasoning)
+
+admin_site.register(total_close)
+admin_site.register(close)
+
+admin_site.register(total_error)
+admin_site.register(error)
+
+admin_site.register(total_polity)
+admin_site.register(polity)
+
+admin_site.register(total_history)
+admin_site.register(history)
+
+admin_site.register(total_geography)
+admin_site.register(geography)
+
+admin_site.register(total_economics)
+admin_site.register(economics)
+
+admin_site.register(total_physics)
+admin_site.register(physics)
+admin_site.register(total_chemistry)
+admin_site.register(chemistry)
+admin_site.register(total_biology)
+admin_site.register(biology)
+
+# Register GenAI app models with our custom admin site so GenAI appears in the custom admin
+try:
+    from genai.models import PDFUpload, CurrentAffairsGeneration, MathProblemGeneration, ProcessingTask, ProcessingLog, ContentSource
+    from genai.admin import PDFUploadAdmin, CurrentAffairsGenerationAdmin, MathProblemGenerationAdmin, ProcessingTaskAdmin, ProcessingLogAdmin, ContentSourceAdmin
+
+    admin_site.register(PDFUpload, PDFUploadAdmin)
+    admin_site.register(CurrentAffairsGeneration, CurrentAffairsGenerationAdmin)
+    admin_site.register(MathProblemGeneration, MathProblemGenerationAdmin)
+    admin_site.register(ProcessingTask, ProcessingTaskAdmin)
+    admin_site.register(ProcessingLog, ProcessingLogAdmin)
+    admin_site.register(ContentSource, ContentSourceAdmin)
+except Exception:
+    # Avoid breaking admin if genai isn't available or imports fail
+    pass
 

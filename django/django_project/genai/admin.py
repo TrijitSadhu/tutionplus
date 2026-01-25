@@ -6,7 +6,8 @@ from django.db.models import Q
 from django.core.management import call_command
 from django.core.management.base import CommandError
 from django.utils import timezone
-from .models import PDFUpload, CurrentAffairsGeneration, MathProblemGeneration, ProcessingTask, ProcessingLog, ContentSource
+from bank.admin import admin_site
+from .models import PDFUpload, CurrentAffairsGeneration, MathProblemGeneration, ProcessingTask, ProcessingLog, ContentSource, LLMPrompt
 
 
 class PDFUploadAdmin(admin.ModelAdmin):
@@ -376,30 +377,91 @@ class ProcessingLogAdmin(admin.ModelAdmin):
     
     def trigger_fetch_both(self, request, queryset):
         """Trigger fetch for both MCQ and Current Affairs"""
+        print("\n" + "="*70)
+        print("🎬 ADMIN ACTION TRIGGERED: trigger_fetch_both()")
+        print(f"   Selected ProcessingLog entries: {queryset.count()}")
+        print("="*70)
+        
+        # Update all selected ProcessingLog entries to 'running' status
+        for log_entry in queryset:
+            print(f"  📝 Updating ProcessingLog ID {log_entry.id} to 'running' status")
+            log_entry.status = 'running'
+            log_entry.started_at = timezone.now()
+            log_entry.save()
+        
         try:
-            call_command('fetch_all_content', type='both')
-            self.message_user(request, "🚀 Started: Fetch Both MCQ & Current Affairs")
+            print(f"  📞 Calling management command: fetch_all_content (type='both')")
+            call_command('fetch_all_content', type='both', log_id=queryset.first().id if queryset.exists() else None)
+            print(f"  ✅ Command completed successfully")
+            self.message_user(request, f"🚀 Started: Fetch Both MCQ & Current Affairs (Updated {queryset.count()} task(s))")
         except CommandError as e:
+            print(f"  ❌ CommandError: {str(e)}")
+            queryset.update(status='failed', error_message=str(e))
+            self.message_user(request, f"❌ Error: {str(e)}", level='ERROR')
+        except Exception as e:
+            print(f"  ❌ Exception: {str(e)}")
+            queryset.update(status='failed', error_message=str(e))
             self.message_user(request, f"❌ Error: {str(e)}", level='ERROR')
     trigger_fetch_both.short_description = "🚀 Fetch Both (MCQ & Current Affairs)"
     
     def trigger_fetch_mcq(self, request, queryset):
-        """Trigger fetch for MCQ only"""
+        """Trigger fetch for Current Affairs MCQ only"""
+        print("\n" + "="*70)
+        print("🎬 ADMIN ACTION TRIGGERED: trigger_fetch_mcq()")
+        print(f"   Selected ProcessingLog entries: {queryset.count()}")
+        print("="*70)
+        
+        # Update all selected ProcessingLog entries to 'running' status
+        for log_entry in queryset:
+            print(f"  📝 Updating ProcessingLog ID {log_entry.id} to 'running' status")
+            log_entry.status = 'running'
+            log_entry.started_at = timezone.now()
+            log_entry.save()
+        
         try:
-            call_command('fetch_all_content', type='mcq')
-            self.message_user(request, "📖 Started: Fetch MCQ Content")
+            print(f"  📞 Calling management command: fetch_all_content (type='currentaffairs_mcq')")
+            call_command('fetch_all_content', type='currentaffairs_mcq', log_id=queryset.first().id if queryset.exists() else None)
+            print(f"  ✅ Command completed successfully")
+            self.message_user(request, f"📖 Started: Fetch Current Affairs MCQ (Updated {queryset.count()} task(s))")
         except CommandError as e:
+            print(f"  ❌ CommandError: {str(e)}")
+            # Mark as failed on error
+            queryset.update(status='failed', error_message=str(e))
             self.message_user(request, f"❌ Error: {str(e)}", level='ERROR')
-    trigger_fetch_mcq.short_description = "📖 Fetch MCQ Only"
+        except Exception as e:
+            print(f"  ❌ Exception: {str(e)}")
+            queryset.update(status='failed', error_message=str(e))
+            self.message_user(request, f"❌ Error: {str(e)}", level='ERROR')
+    trigger_fetch_mcq.short_description = "📖 Fetch Current Affairs MCQ"
     
     def trigger_fetch_ca(self, request, queryset):
-        """Trigger fetch for Current Affairs only"""
+        """Trigger fetch for Current Affairs Descriptive only"""
+        print("\n" + "="*70)
+        print("🎬 ADMIN ACTION TRIGGERED: trigger_fetch_ca()")
+        print(f"   Selected ProcessingLog entries: {queryset.count()}")
+        print("="*70)
+        
+        # Update all selected ProcessingLog entries to 'running' status
+        for log_entry in queryset:
+            print(f"  📝 Updating ProcessingLog ID {log_entry.id} to 'running' status")
+            log_entry.status = 'running'
+            log_entry.started_at = timezone.now()
+            log_entry.save()
+        
         try:
-            call_command('fetch_all_content', type='current_affairs')
-            self.message_user(request, "📰 Started: Fetch Current Affairs")
+            print(f"  📞 Calling management command: fetch_all_content (type='currentaffairs_descriptive')")
+            call_command('fetch_all_content', type='currentaffairs_descriptive', log_id=queryset.first().id if queryset.exists() else None)
+            print(f"  ✅ Command completed successfully")
+            self.message_user(request, f"📰 Started: Fetch Current Affairs Descriptive (Updated {queryset.count()} task(s))")
         except CommandError as e:
+            print(f"  ❌ CommandError: {str(e)}")
+            queryset.update(status='failed', error_message=str(e))
             self.message_user(request, f"❌ Error: {str(e)}", level='ERROR')
-    trigger_fetch_ca.short_description = "📰 Fetch Current Affairs Only"
+        except Exception as e:
+            print(f"  ❌ Exception: {str(e)}")
+            queryset.update(status='failed', error_message=str(e))
+            self.message_user(request, f"❌ Error: {str(e)}", level='ERROR')
+    trigger_fetch_ca.short_description = "📰 Fetch Current Affairs Descriptive"
     
     def generate_mcq_from_pdf(self, request, queryset):
         """Generate MCQ from PDF file"""
@@ -424,19 +486,19 @@ class ProcessingLogAdmin(admin.ModelAdmin):
             
             # Create processing log
             log_entry = ProcessingLog.objects.create(
-                task_type='pdf_mcq',
+                task_type='pdf_currentaffairs_mcq',
                 status='running',
                 pdf_upload=pdf_upload,
                 started_at=timezone.now()
             )
             
             # Call processing command
-            call_command('process_pdf_content', pdf_id=pdf_upload.id, content_type='mcq')
+            call_command('process_pdf_content', pdf_id=pdf_upload.id, content_type='currentaffairs_mcq')
             
-            self.message_user(request, f"📄 Started: Generate MCQ from PDF (Task ID: {log_entry.id})")
+            self.message_user(request, f"📄 Started: Generate Current Affairs MCQ from PDF (Task ID: {log_entry.id})")
         except Exception as e:
             self.message_user(request, f"❌ Error: {str(e)}", level='ERROR')
-    generate_mcq_from_pdf.short_description = "📄 Generate MCQ from PDF"
+    generate_mcq_from_pdf.short_description = "📄 Generate Current Affairs MCQ from PDF"
     
     def generate_ca_from_pdf(self, request, queryset):
         """Generate Current Affairs from PDF file"""
@@ -461,19 +523,19 @@ class ProcessingLogAdmin(admin.ModelAdmin):
             
             # Create processing log
             log_entry = ProcessingLog.objects.create(
-                task_type='pdf_current_affairs',
+                task_type='pdf_currentaffairs_descriptive',
                 status='running',
                 pdf_upload=pdf_upload,
                 started_at=timezone.now()
             )
             
             # Call processing command
-            call_command('process_pdf_content', pdf_id=pdf_upload.id, content_type='current_affairs')
+            call_command('process_pdf_content', pdf_id=pdf_upload.id, content_type='currentaffairs_descriptive')
             
-            self.message_user(request, f"📋 Started: Generate Current Affairs from PDF (Task ID: {log_entry.id})")
+            self.message_user(request, f"📋 Started: Generate Current Affairs Descriptive from PDF (Task ID: {log_entry.id})")
         except Exception as e:
             self.message_user(request, f"❌ Error: {str(e)}", level='ERROR')
-    generate_ca_from_pdf.short_description = "📋 Generate Current Affairs from PDF"
+    generate_ca_from_pdf.short_description = "📋 Generate Current Affairs Descriptive from PDF"
 
 
 class ContentSourceAdmin(admin.ModelAdmin):
@@ -502,8 +564,8 @@ class ContentSourceAdmin(admin.ModelAdmin):
     def source_type_display(self, obj):
         """Display source type with icon"""
         icons = {
-            'mcq': '📖',
-            'current_affairs': '📰'
+            'currentaffairs_mcq': '📖',
+            'currentaffairs_descriptive': '📰'
         }
         icon = icons.get(obj.source_type, '🔗')
         return f"{icon} {obj.get_source_type_display()}"
@@ -542,10 +604,41 @@ class ContentSourceAdmin(admin.ModelAdmin):
     deactivate_sources.short_description = "❌ Deactivate selected sources"
 
 
+class LLMPromptAdmin(admin.ModelAdmin):
+    """Admin interface for managing LLM prompts for MCQ and Descriptive generation"""
+    
+    list_display = ('prompt_type', 'source_url_preview', 'is_default', 'is_active', 'updated_at')
+    list_filter = ('prompt_type', 'is_default', 'is_active', 'created_at')
+    search_fields = ('source_url', 'prompt_text')
+    readonly_fields = ('created_at', 'updated_at')
+    
+    fieldsets = (
+        ('Prompt Configuration', {
+            'fields': ('source_url', 'prompt_type', 'is_default', 'is_active')
+        }),
+        ('Prompt Content', {
+            'fields': ('prompt_text',),
+            'description': 'Use {title} and {content} as placeholders for the article title and content'
+        }),
+        ('Metadata', {
+            'fields': ('created_by', 'created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )
+    
+    def source_url_preview(self, obj):
+        """Display URL with truncation"""
+        if obj.source_url:
+            return obj.source_url[:50] + '...' if len(obj.source_url) > 50 else obj.source_url
+        return '(Default)'
+    source_url_preview.short_description = 'Source URL'
+
+
 # Register models with admin
-admin.site.register(PDFUpload, PDFUploadAdmin)
-admin.site.register(CurrentAffairsGeneration, CurrentAffairsGenerationAdmin)
-admin.site.register(MathProblemGeneration, MathProblemGenerationAdmin)
-admin.site.register(ProcessingTask, ProcessingTaskAdmin)
-admin.site.register(ProcessingLog, ProcessingLogAdmin)
-admin.site.register(ContentSource, ContentSourceAdmin)
+admin_site.register(PDFUpload, PDFUploadAdmin)
+admin_site.register(CurrentAffairsGeneration, CurrentAffairsGenerationAdmin)
+admin_site.register(MathProblemGeneration, MathProblemGenerationAdmin)
+admin_site.register(ProcessingTask, ProcessingTaskAdmin)
+admin_site.register(ProcessingLog, ProcessingLogAdmin)
+admin_site.register(ContentSource, ContentSourceAdmin)
+admin_site.register(LLMPrompt, LLMPromptAdmin)

@@ -35,7 +35,7 @@ class current_affairs_slide(models.Model):
 
 
 
-class current_affairs(models.Model):
+class currentaffairs_descriptive(models.Model):
     s= (
     ("2018", "2018"),   
     ("2019", "2019"),
@@ -170,26 +170,26 @@ class total(models.Model):
 
 
     def save(self):
-        totall=current_affairs.objects.count()
+        totall=currentaffairs_descriptive.objects.count()
         self.total_current_affairs= totall
         self.total_current_affairs_page=int(totall+300)/3
 
-        total_st=current_affairs.objects.filter(Science_Techonlogy=True).count()
-        total_n=current_affairs.objects.filter(National=True).count()
-        total_State=current_affairs.objects.filter(State=True).count()
-        total_International=current_affairs.objects.filter(International=True).count()
-        total_Business_Economy_Banking=current_affairs.objects.filter(Business_Economy_Banking=True).count()
-        total_Environment=current_affairs.objects.filter(Environment=True).count()
-        total_Defence=current_affairs.objects.filter(Defence=True).count()
-        total_Persons_in_News=current_affairs.objects.filter(Persons_in_News=True).count()
-        total_Awards_Honours=current_affairs.objects.filter(Awards_Honours=True).count()
-        total_Sports=current_affairs.objects.filter(Sports=True).count()
-        total_Art_Culture=current_affairs.objects.filter(Art_Culture=True).count()
-        total_Government_Schemes=current_affairs.objects.filter(Government_Schemes=True).count()
-        total_rank=current_affairs.objects.filter(rank=True).count()
-        total_appointment=current_affairs.objects.filter(appointment=True).count()
-        total_obituary=current_affairs.objects.filter(obituary=True).count()
-        total_static_gk=current_affairs.objects.filter(static_gk=True).count()
+        total_st=currentaffairs_descriptive.objects.filter(Science_Techonlogy=True).count()
+        total_n=currentaffairs_descriptive.objects.filter(National=True).count()
+        total_State=currentaffairs_descriptive.objects.filter(State=True).count()
+        total_International=currentaffairs_descriptive.objects.filter(International=True).count()
+        total_Business_Economy_Banking=currentaffairs_descriptive.objects.filter(Business_Economy_Banking=True).count()
+        total_Environment=currentaffairs_descriptive.objects.filter(Environment=True).count()
+        total_Defence=currentaffairs_descriptive.objects.filter(Defence=True).count()
+        total_Persons_in_News=currentaffairs_descriptive.objects.filter(Persons_in_News=True).count()
+        total_Awards_Honours=currentaffairs_descriptive.objects.filter(Awards_Honours=True).count()
+        total_Sports=currentaffairs_descriptive.objects.filter(Sports=True).count()
+        total_Art_Culture=currentaffairs_descriptive.objects.filter(Art_Culture=True).count()
+        total_Government_Schemes=currentaffairs_descriptive.objects.filter(Government_Schemes=True).count()
+        total_rank=currentaffairs_descriptive.objects.filter(rank=True).count()
+        total_appointment=currentaffairs_descriptive.objects.filter(appointment=True).count()
+        total_obituary=currentaffairs_descriptive.objects.filter(obituary=True).count()
+        total_static_gk=currentaffairs_descriptive.objects.filter(static_gk=True).count()
         if total_st !=0:
             
             if(int(total_st)%3==0):
@@ -3210,7 +3210,7 @@ class total_close(models.Model):
 
 
 
-class mcq(models.Model):
+class currentaffairs_mcq(models.Model):
     s= (
     ("2018", "2018"),   
     ("2019", "2019"),
@@ -3294,7 +3294,7 @@ class mcq(models.Model):
 
     def save(self):
         self.new_id= self.question +'===' +self.day.strftime('%d-%m-%Y')
-        super(mcq, self).save()
+        super(currentaffairs_mcq, self).save()
 
 
 
@@ -3345,27 +3345,27 @@ class total_mcq(models.Model):
 
 
     def save(self):
-        totall=mcq.objects.count()
+        totall=currentaffairs_mcq.objects.count()
         self.total_mcq= totall
         self.total_mcq_page=int(totall+300)/3
 
-        total_st=mcq.objects.filter(Science_Techonlogy=True).count()
-        total_n=mcq.objects.filter(National=True).count()
-        total_State=mcq.objects.filter(State=True).count()
-        total_International=mcq.objects.filter(International=True).count()
-        total_Business_Economy_Banking=mcq.objects.filter(Business_Economy_Banking=True).count()
-        total_Environment=mcq.objects.filter(Environment=True).count()
-        total_Defence=mcq.objects.filter(Defence=True).count()
-        total_Persons_in_News=mcq.objects.filter(Persons_in_News=True).count()
-        total_Awards_Honours=mcq.objects.filter(Awards_Honours=True).count()
-        total_Sports=mcq.objects.filter(Sports=True).count()
-        total_Art_Culture=mcq.objects.filter(Art_Culture=True).count()
-        total_Government_Schemes=mcq.objects.filter(Government_Schemes=True).count()
-        total_medical=mcq.objects.filter(medical=True).count()
-        total_rank=mcq.objects.filter(rank=True).count()
-        total_obituary=mcq.objects.filter(obituary=True).count()
-        total_appointment=mcq.objects.filter(appointment=True).count()
-        total_static_gk =mcq.objects.filter(static_gk=True).count()
+        total_st=currentaffairs_mcq.objects.filter(Science_Techonlogy=True).count()
+        total_n=currentaffairs_mcq.objects.filter(National=True).count()
+        total_State=currentaffairs_mcq.objects.filter(State=True).count()
+        total_International=currentaffairs_mcq.objects.filter(International=True).count()
+        total_Business_Economy_Banking=currentaffairs_mcq.objects.filter(Business_Economy_Banking=True).count()
+        total_Environment=currentaffairs_mcq.objects.filter(Environment=True).count()
+        total_Defence=currentaffairs_mcq.objects.filter(Defence=True).count()
+        total_Persons_in_News=currentaffairs_mcq.objects.filter(Persons_in_News=True).count()
+        total_Awards_Honours=currentaffairs_mcq.objects.filter(Awards_Honours=True).count()
+        total_Sports=currentaffairs_mcq.objects.filter(Sports=True).count()
+        total_Art_Culture=currentaffairs_mcq.objects.filter(Art_Culture=True).count()
+        total_Government_Schemes=currentaffairs_mcq.objects.filter(Government_Schemes=True).count()
+        total_medical=currentaffairs_mcq.objects.filter(medical=True).count()
+        total_rank=currentaffairs_mcq.objects.filter(rank=True).count()
+        total_obituary=currentaffairs_mcq.objects.filter(obituary=True).count()
+        total_appointment=currentaffairs_mcq.objects.filter(appointment=True).count()
+        total_static_gk =currentaffairs_mcq.objects.filter(static_gk=True).count()
         if total_st !=0:
             
             if(int(total_st)%3==0):
@@ -3521,7 +3521,7 @@ class total_mcq(models.Model):
         super(total_mcq, self).save()
 
 
-class mcq_info_2018(models.Model):
+class currentaffairs_mcq_info_2018(models.Model):
     
     total_mcq = models.IntegerField (db_index=True,default=3)
     total_mcq_page = models.IntegerField (db_index=True,default=3)
@@ -3563,7 +3563,7 @@ class mcq_info_2018(models.Model):
 
 
     def save(self):
-        totall=mcq.objects.count()
+        totall=currentaffairs_mcq.objects.count()
         self.total_mcq= totall
         self.total_mcq_page=int(totall+300)/3
         jan=1
@@ -3580,7 +3580,7 @@ class mcq_info_2018(models.Model):
         dec=12
         sort_list=[]
 
-        list_month=(mcq.objects.values_list('month',flat=True).filter(year_now='2018').order_by('month').distinct('month'))
+        list_month=(currentaffairs_mcq.objects.values_list('month',flat=True).filter(year_now='2018').order_by('month').distinct('month'))
         print(str(list_month))
         month_str=''# month_str :-this string is unnecessary stilli didnt delete it
         
@@ -3598,7 +3598,7 @@ class mcq_info_2018(models.Model):
                 #print(month_real)
                 month_str=month_str+" "+str(val)
 
-            list_date=(mcq.objects.values_list('day',flat=True).filter(month=month_real,year_now='2018').order_by('day').distinct('day'))
+            list_date=(currentaffairs_mcq.objects.values_list('day',flat=True).filter(month=month_real,year_now='2018').order_by('day').distinct('day'))
             
             date_str=''
             count_date=0
@@ -3810,11 +3810,11 @@ class mcq_info_2018(models.Model):
                 
 
         
-        super(mcq_info_2018, self).save()
+        super(currentaffairs_mcq_info_2018, self).save()
 
 
 
-class mcq_info_2019(models.Model):
+class currentaffairs_mcq_info_2019(models.Model):
     
     total_mcq = models.IntegerField (db_index=True,default=3)
     total_mcq_page = models.IntegerField (db_index=True,default=3)
@@ -3856,7 +3856,7 @@ class mcq_info_2019(models.Model):
 
 
     def save(self):
-        totall=mcq.objects.count()
+        totall=currentaffairs_mcq.objects.count()
         self.total_mcq= totall
         self.total_mcq_page=int(totall+300)/3
         jan=1
@@ -3873,7 +3873,7 @@ class mcq_info_2019(models.Model):
         dec=12
         sort_list=[]
 
-        list_month=(mcq.objects.values_list('month',flat=True).filter(year_now='2019').order_by('month').distinct('month'))
+        list_month=(currentaffairs_mcq.objects.values_list('month',flat=True).filter(year_now='2019').order_by('month').distinct('month'))
       
         month_str=''# month_str :-this string is unnecessary stilli didnt delete it
         
@@ -3891,7 +3891,7 @@ class mcq_info_2019(models.Model):
                 #print(month_real)
                 month_str=month_str+" "+str(val)
 
-            list_date=(mcq.objects.values_list('day',flat=True).filter(month=month_real,year_now='2019').order_by('day').distinct('day'))
+            list_date=(currentaffairs_mcq.objects.values_list('day',flat=True).filter(month=month_real,year_now='2019').order_by('day').distinct('day'))
             
             date_str=''
             count_date=0
@@ -4103,9 +4103,9 @@ class mcq_info_2019(models.Model):
                 
 
         
-        super(mcq_info_2019, self).save()
+        super(currentaffairs_mcq_info_2019, self).save()
 
-class mcq_info_2020(models.Model):
+class currentaffairs_mcq_info_2020(models.Model):
     
     total_mcq = models.IntegerField (db_index=True,default=3)
     total_mcq_page = models.IntegerField (db_index=True,default=3)
@@ -4147,7 +4147,7 @@ class mcq_info_2020(models.Model):
 
 
     def save(self):
-        totall=mcq.objects.count()
+        totall=currentaffairs_mcq.objects.count()
         self.total_mcq= totall
         self.total_mcq_page=int(totall+300)/3
         jan=1
@@ -4164,7 +4164,7 @@ class mcq_info_2020(models.Model):
         dec=12
         sort_list=[]
 
-        list_month=(mcq.objects.values_list('month',flat=True).filter(year_now='2020').order_by('month').distinct('month'))
+        list_month=(currentaffairs_mcq.objects.values_list('month',flat=True).filter(year_now='2020').order_by('month').distinct('month'))
         print(str(list_month))
         month_str=''# month_str :-this string is unnecessary stilli didnt delete it
         
@@ -4182,7 +4182,7 @@ class mcq_info_2020(models.Model):
                 #print(month_real)
                 month_str=month_str+" "+str(val)
 
-            list_date=(mcq.objects.values_list('day',flat=True).filter(month=month_real,year_now='2020').order_by('day').distinct('day'))
+            list_date=(currentaffairs_mcq.objects.values_list('day',flat=True).filter(month=month_real,year_now='2020').order_by('day').distinct('day'))
             
             date_str=''
             count_date=0
@@ -4394,11 +4394,11 @@ class mcq_info_2020(models.Model):
                 
 
         
-        super(mcq_info_2020, self).save()
+        super(currentaffairs_mcq_info_2020, self).save()
 
 
 
-class mcq_info_2026(models.Model):
+class currentaffairs_mcq_info_2026(models.Model):
     
     total_mcq = models.IntegerField (db_index=True,default=3)
     total_mcq_page = models.IntegerField (db_index=True,default=3)
@@ -4440,7 +4440,7 @@ class mcq_info_2026(models.Model):
 
 
     def save(self):
-        totall=mcq.objects.count()
+        totall=currentaffairs_mcq.objects.count()
         self.total_mcq= totall
         self.total_mcq_page=int(totall+300)/3
         jan=1
@@ -4457,7 +4457,7 @@ class mcq_info_2026(models.Model):
         dec=12
         sort_list=[]
 
-        list_month=(mcq.objects.values_list('month',flat=True).filter(year_now='2026').order_by('month').distinct('month'))
+        list_month=(currentaffairs_mcq.objects.values_list('month',flat=True).filter(year_now='2026').order_by('month').distinct('month'))
         print(str(list_month))
         month_str=''# month_str :-this string is unnecessary stilli didnt delete it
         
@@ -4475,7 +4475,7 @@ class mcq_info_2026(models.Model):
                 #print(month_real)
                 month_str=month_str+" "+str(val)
 
-            list_date=(mcq.objects.values_list('day',flat=True).filter(month=month_real,year_now='2026').order_by('day').distinct('day'))
+            list_date=(currentaffairs_mcq.objects.values_list('day',flat=True).filter(month=month_real,year_now='2026').order_by('day').distinct('day'))
             
             date_str=''
             count_date=0
@@ -4687,10 +4687,10 @@ class mcq_info_2026(models.Model):
                 
 
         
-        super(mcq_info_2026, self).save()
+        super(currentaffairs_mcq_info_2026, self).save()
 
 
-class mcq_info_2025(models.Model):
+class currentaffairs_mcq_info_2025(models.Model):
     total_mcq = models.IntegerField(db_index=True, default=3)
     total_mcq_page = models.IntegerField(db_index=True, default=3)
     month_list = models.TextField(default='',null=True,blank=True)
@@ -4720,10 +4720,10 @@ class mcq_info_2025(models.Model):
     December_page = models.IntegerField(default=0)
 
     def save(self):
-        totall=mcq.objects.filter(year_now='2025').count()
+        totall=currentaffairs_mcq.objects.filter(year_now='2025').count()
         self.total_mcq=totall
         self.total_mcq_page=int((totall+2)/3)
-        list_month=(mcq.objects.values_list('month',flat=True).filter(year_now='2025').order_by('month').distinct('month'))
+        list_month=(currentaffairs_mcq.objects.values_list('month',flat=True).filter(year_now='2025').order_by('month').distinct('month'))
         month_str=''
         month_real=''
         sort_list=[]
@@ -4734,7 +4734,7 @@ class mcq_info_2025(models.Model):
             else:
                 month_real=str(val)
                 month_str=month_str+" "+str(val)
-            list_date=(mcq.objects.values_list('day',flat=True).filter(month=month_real,year_now='2025').order_by('day').distinct('day'))
+            list_date=(currentaffairs_mcq.objects.values_list('day',flat=True).filter(month=month_real,year_now='2025').order_by('day').distinct('day'))
             date_str=''
             count_date=0
             for e in list_date:
@@ -4809,10 +4809,10 @@ class mcq_info_2025(models.Model):
             elif val==12: month_list_new.append('December')
         final_month_list=' '.join(month_list_new)
         self.month_list=final_month_list
-        super(mcq_info_2025, self).save()
+        super(currentaffairs_mcq_info_2025, self).save()
 
 
-class mcq_info_2027(models.Model):
+class currentaffairs_mcq_info_2027(models.Model):
     total_mcq = models.IntegerField(db_index=True, default=3)
     total_mcq_page = models.IntegerField(db_index=True, default=3)
     month_list = models.TextField(default='',null=True,blank=True)
@@ -4842,10 +4842,10 @@ class mcq_info_2027(models.Model):
     December_page = models.IntegerField(default=0)
 
     def save(self):
-        totall=mcq.objects.filter(year_now='2027').count()
+        totall=currentaffairs_mcq.objects.filter(year_now='2027').count()
         self.total_mcq=totall
         self.total_mcq_page=int((totall+2)/3)
-        list_month=(mcq.objects.values_list('month',flat=True).filter(year_now='2027').order_by('month').distinct('month'))
+        list_month=(currentaffairs_mcq.objects.values_list('month',flat=True).filter(year_now='2027').order_by('month').distinct('month'))
         month_str=''
         month_real=''
         sort_list=[]
@@ -4856,7 +4856,7 @@ class mcq_info_2027(models.Model):
             else:
                 month_real=str(val)
                 month_str=month_str+" "+str(val)
-            list_date=(mcq.objects.values_list('day',flat=True).filter(month=month_real,year_now='2027').order_by('day').distinct('day'))
+            list_date=(currentaffairs_mcq.objects.values_list('day',flat=True).filter(month=month_real,year_now='2027').order_by('day').distinct('day'))
             date_str=''
             count_date=0
             for e in list_date:
@@ -4931,10 +4931,10 @@ class mcq_info_2027(models.Model):
             elif val==12: month_list_new.append('December')
         final_month_list=' '.join(month_list_new)
         self.month_list=final_month_list
-        super(mcq_info_2027, self).save()
+        super(currentaffairs_mcq_info_2027, self).save()
 
 
-class mcq_info_2028(models.Model):
+class currentaffairs_mcq_info_2028(models.Model):
     total_mcq = models.IntegerField(db_index=True, default=3)
     total_mcq_page = models.IntegerField(db_index=True, default=3)
     month_list = models.TextField(default='',null=True,blank=True)
@@ -4964,10 +4964,10 @@ class mcq_info_2028(models.Model):
     December_page = models.IntegerField(default=0)
 
     def save(self):
-        totall=mcq.objects.filter(year_now='2028').count()
+        totall=currentaffairs_mcq.objects.filter(year_now='2028').count()
         self.total_mcq=totall
         self.total_mcq_page=int((totall+2)/3)
-        list_month=(mcq.objects.values_list('month',flat=True).filter(year_now='2028').order_by('month').distinct('month'))
+        list_month=(currentaffairs_mcq.objects.values_list('month',flat=True).filter(year_now='2028').order_by('month').distinct('month'))
         month_str=''
         month_real=''
         sort_list=[]
@@ -4978,7 +4978,7 @@ class mcq_info_2028(models.Model):
             else:
                 month_real=str(val)
                 month_str=month_str+" "+str(val)
-            list_date=(mcq.objects.values_list('day',flat=True).filter(month=month_real,year_now='2028').order_by('day').distinct('day'))
+            list_date=(currentaffairs_mcq.objects.values_list('day',flat=True).filter(month=month_real,year_now='2028').order_by('day').distinct('day'))
             date_str=''
             count_date=0
             for e in list_date:
@@ -5053,10 +5053,10 @@ class mcq_info_2028(models.Model):
             elif val==12: month_list_new.append('December')
         final_month_list=' '.join(month_list_new)
         self.month_list=final_month_list
-        super(mcq_info_2028, self).save()
+        super(currentaffairs_mcq_info_2028, self).save()
 
 
-class current_affairs_info_2020(models.Model):
+class currentaffairs_descriptive_info_2020(models.Model):
     
     total_current_affairs = models.IntegerField (db_index=True,default=3)
     total_current_affairs_page = models.IntegerField (db_index=True,default=3)
@@ -5098,7 +5098,7 @@ class current_affairs_info_2020(models.Model):
 
 
     def save(self):
-        totall=current_affairs.objects.count()
+        totall=currentaffairs_descriptive.objects.count()
         self.total_current_affairs= totall
         self.total_current_affairs_page=int(totall+300)/3
         jan=1
@@ -5115,7 +5115,7 @@ class current_affairs_info_2020(models.Model):
         dec=12
         sort_list=[]
 
-        list_month=(current_affairs.objects.values_list('month',flat=True).filter(year_now='2020').order_by('month').distinct('month'))
+        list_month=(currentaffairs_descriptive.objects.values_list('month',flat=True).filter(year_now='2020').order_by('month').distinct('month'))
         print(str(list_month))
         month_str=''# month_str :-this string is unnecessary stilli didnt delete it
         
@@ -5133,7 +5133,7 @@ class current_affairs_info_2020(models.Model):
                 #print(month_real)
                 month_str=month_str+" "+str(val)
 
-            list_date=(current_affairs.objects.values_list('day',flat=True).filter(month=month_real,year_now='2020').order_by('day').distinct('day'))
+            list_date=(currentaffairs_descriptive.objects.values_list('day',flat=True).filter(month=month_real,year_now='2020').order_by('day').distinct('day'))
             
             date_str=''
             count_date=0
@@ -5345,11 +5345,11 @@ class current_affairs_info_2020(models.Model):
                 
 
         
-        super(current_affairs_info_2020, self).save()
+        super(currentaffairs_descriptive_info_2020, self).save()
 
 
 
-class current_affairs_info_2019(models.Model):
+class currentaffairs_descriptive_info_2019(models.Model):
     
     total_current_affairs = models.IntegerField (db_index=True,default=3)
     total_current_affairs_page = models.IntegerField (db_index=True,default=3)
@@ -5391,7 +5391,7 @@ class current_affairs_info_2019(models.Model):
 
 
     def save(self):
-        totall=current_affairs.objects.count()
+        totall=currentaffairs_descriptive.objects.count()
         self.total_current_affairs= totall
         self.total_current_affairs_page=int(totall+300)/3
         jan=1
@@ -5408,7 +5408,7 @@ class current_affairs_info_2019(models.Model):
         dec=12
         sort_list=[]
 
-        list_month=(current_affairs.objects.values_list('month',flat=True).filter(year_now='2019').order_by('month').distinct('month'))
+        list_month=(currentaffairs_descriptive.objects.values_list('month',flat=True).filter(year_now='2019').order_by('month').distinct('month'))
         print(str(list_month))
         month_str=''# month_str :-this string is unnecessary stilli didnt delete it
         
@@ -5426,7 +5426,7 @@ class current_affairs_info_2019(models.Model):
                 #print(month_real)
                 month_str=month_str+" "+str(val)
 
-            list_date=(current_affairs.objects.values_list('day',flat=True).filter(month=month_real,year_now='2019').order_by('day').distinct('day'))
+            list_date=(currentaffairs_descriptive.objects.values_list('day',flat=True).filter(month=month_real,year_now='2019').order_by('day').distinct('day'))
             print(list_date)
             
             date_str=''
@@ -5641,10 +5641,10 @@ class current_affairs_info_2019(models.Model):
                 
 
         
-        super(current_affairs_info_2019, self).save()
+        super(currentaffairs_descriptive_info_2019, self).save()
 
 
-class current_affairs_info_2018(models.Model):
+class currentaffairs_descriptive_info_2018(models.Model):
     
     total_current_affairs = models.IntegerField (db_index=True,default=3)
     total_current_affairs_page = models.IntegerField (db_index=True,default=3)
@@ -5686,7 +5686,7 @@ class current_affairs_info_2018(models.Model):
 
 
     def save(self):
-        totall=current_affairs.objects.count()
+        totall=currentaffairs_descriptive.objects.count()
         self.total_current_affairs= totall
         self.total_current_affairs_page=int(totall+300)/3
         jan=1
@@ -5703,7 +5703,7 @@ class current_affairs_info_2018(models.Model):
         dec=12
         sort_list=[]
 
-        list_month=(current_affairs.objects.values_list('month',flat=True).filter(year_now='2018').order_by('month').distinct('month'))
+        list_month=(currentaffairs_descriptive.objects.values_list('month',flat=True).filter(year_now='2018').order_by('month').distinct('month'))
         print(str(list_month))
         month_str=''# month_str :-this string is unnecessary stilli didnt delete it
         
@@ -5721,7 +5721,7 @@ class current_affairs_info_2018(models.Model):
                 print(month_real)
                 month_str=month_str+" "+str(val)
 
-            list_date=(current_affairs.objects.values_list('day',flat=True).filter(month=month_real,year_now='2018').order_by('day').distinct('day'))
+            list_date=(currentaffairs_descriptive.objects.values_list('day',flat=True).filter(month=month_real,year_now='2018').order_by('day').distinct('day'))
             
             date_str=''
             count_date=0
@@ -5924,10 +5924,10 @@ class current_affairs_info_2018(models.Model):
         self.month_list= final_month_list    
         #print(month_str)
         #print(list_date)        
-        super(current_affairs_info_2018, self).save()
+        super(currentaffairs_descriptive_info_2018, self).save()
 
 
-class current_affairs_info_2026(models.Model):
+class currentaffairs_descriptive_info_2026(models.Model):
     
     total_current_affairs = models.IntegerField (db_index=True,default=3)
     total_current_affairs_page = models.IntegerField (db_index=True,default=3)
@@ -5969,7 +5969,7 @@ class current_affairs_info_2026(models.Model):
 
 
     def save(self):
-        totall=current_affairs.objects.count()
+        totall=currentaffairs_descriptive.objects.count()
         self.total_current_affairs= totall
         self.total_current_affairs_page=int(totall+300)/3
         jan=1
@@ -5986,7 +5986,7 @@ class current_affairs_info_2026(models.Model):
         dec=12
         sort_list=[]
 
-        list_month=(current_affairs.objects.values_list('month',flat=True).filter(year_now='2026').order_by('month').distinct('month'))
+        list_month=(currentaffairs_descriptive.objects.values_list('month',flat=True).filter(year_now='2026').order_by('month').distinct('month'))
         print(str(list_month))
         month_str=''
         
@@ -6004,7 +6004,7 @@ class current_affairs_info_2026(models.Model):
                 print(month_real)
                 month_str=month_str+" "+str(val)
 
-            list_date=(current_affairs.objects.values_list('day',flat=True).filter(month=month_real,year_now='2026').order_by('day').distinct('day'))
+            list_date=(currentaffairs_descriptive.objects.values_list('day',flat=True).filter(month=month_real,year_now='2026').order_by('day').distinct('day'))
             
             date_str=''
             count_date=0
@@ -6194,10 +6194,10 @@ class current_affairs_info_2026(models.Model):
         self.month_list= final_month_list    
 
                 
-        super(current_affairs_info_2026, self).save()
+        super(currentaffairs_descriptive_info_2026, self).save()
 
 
-class current_affairs_info_2025(models.Model):
+class currentaffairs_descriptive_info_2025(models.Model):
     total_current_affairs = models.IntegerField(db_index=True, default=3)
     total_current_affairs_page = models.IntegerField(db_index=True, default=3)
     month_list = models.TextField(default='',null=True,blank=True)
@@ -6227,13 +6227,13 @@ class current_affairs_info_2025(models.Model):
     December_page = models.IntegerField(default=0)
 
     def save(self):
-        totall = current_affairs.objects.filter(year_now='2025').count()
+        totall = currentaffairs_descriptive.objects.filter(year_now='2025').count()
         self.total_current_affairs = totall
         self.total_current_affairs_page = int((totall + 2) / 3)
-        super(current_affairs_info_2025, self).save()
+        super(currentaffairs_descriptive_info_2025, self).save()
 
 
-class current_affairs_info_2027(models.Model):
+class currentaffairs_descriptive_info_2027(models.Model):
     total_current_affairs = models.IntegerField(db_index=True, default=3)
     total_current_affairs_page = models.IntegerField(db_index=True, default=3)
     month_list = models.TextField(default='',null=True,blank=True)
@@ -6263,13 +6263,13 @@ class current_affairs_info_2027(models.Model):
     December_page = models.IntegerField(default=0)
 
     def save(self):
-        totall = current_affairs.objects.filter(year_now='2027').count()
+        totall = currentaffairs_descriptive.objects.filter(year_now='2027').count()
         self.total_current_affairs = totall
         self.total_current_affairs_page = int((totall + 2) / 3)
-        super(current_affairs_info_2027, self).save()
+        super(currentaffairs_descriptive_info_2027, self).save()
 
 
-class current_affairs_info_2028(models.Model):
+class currentaffairs_descriptive_info_2028(models.Model):
     total_current_affairs = models.IntegerField(db_index=True, default=3)
     total_current_affairs_page = models.IntegerField(db_index=True, default=3)
     month_list = models.TextField(default='',null=True,blank=True)
@@ -6299,10 +6299,10 @@ class current_affairs_info_2028(models.Model):
     December_page = models.IntegerField(default=0)
 
     def save(self):
-        totall = current_affairs.objects.filter(year_now='2028').count()
+        totall = currentaffairs_descriptive.objects.filter(year_now='2028').count()
         self.total_current_affairs = totall
         self.total_current_affairs_page = int((totall + 2) / 3)
-        super(current_affairs_info_2028, self).save()
+        super(currentaffairs_descriptive_info_2028, self).save()
 
 
 class polity(models.Model):
@@ -7352,3 +7352,5 @@ class total_chemistry(models.Model):
 
         
         super(total_chemistry, self).save()
+
+

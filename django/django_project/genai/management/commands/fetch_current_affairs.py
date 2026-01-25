@@ -14,7 +14,7 @@ class Command(BaseCommand):
         parser.add_argument(
             '--type',
             type=str,
-            default='mcq',
+            default='currentaffairs_mcq',
             help='Content type: mcq or descriptive'
         )
     

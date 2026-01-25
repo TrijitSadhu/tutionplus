@@ -154,11 +154,11 @@ class ProcessingLog(models.Model):
     """Track processing logs for MCQ and Current Affairs fetches with status monitoring"""
     
     TASK_TYPES = [
-        ('mcq_fetch', 'MCQ Fetch from URL'),
-        ('current_affairs_fetch', 'Current Affairs Fetch from URL'),
+        ('currentaffairs_mcq_fetch', 'Current Affairs MCQ Fetch from URL'),
+        ('currentaffairs_descriptive_fetch', 'Current Affairs Descriptive Fetch from URL'),
         ('both', 'Both MCQ & Current Affairs from URL'),
-        ('pdf_mcq', 'MCQ Generation from PDF'),
-        ('pdf_current_affairs', 'Current Affairs Generation from PDF'),
+        ('pdf_currentaffairs_mcq', 'Current Affairs MCQ Generation from PDF'),
+        ('pdf_currentaffairs_descriptive', 'Current Affairs Descriptive Generation from PDF'),
     ]
     
     STATUS_CHOICES = [
@@ -229,11 +229,11 @@ class ProcessingLog(models.Model):
 class ContentSource(models.Model):
     """Model to store and manage content sources (URLs) for MCQ and Current Affairs"""
     SOURCE_TYPE_CHOICES = [
-        ('mcq', 'MCQ Source'),
-        ('current_affairs', 'Current Affairs Source'),
+        ('currentaffairs_mcq', 'Current Affairs MCQ Source'),
+        ('currentaffairs_descriptive', 'Current Affairs Descriptive Source'),
     ]
     
-    source_type = models.CharField(max_length=20, choices=SOURCE_TYPE_CHOICES)
+    source_type = models.CharField(max_length=40, choices=SOURCE_TYPE_CHOICES)
     url = models.URLField(max_length=500, help_text="Enter the full URL to fetch content from")
     name = models.CharField(max_length=255, help_text="Display name for this source")
     description = models.TextField(blank=True, null=True, help_text="Optional description of this source")
@@ -254,3 +254,57 @@ class ContentSource(models.Model):
     
     def __str__(self):
         return f"{self.name} ({self.get_source_type_display()})"
+
+
+class LLMPrompt(models.Model):
+    """Store and manage LLM prompts for MCQ and Descriptive generation"""
+    PROMPT_TYPE_CHOICES = [
+        ('mcq', 'MCQ'),
+        ('descriptive', 'Descriptive'),
+    ]
+    
+    source_url = models.URLField(
+        max_length=500,
+        blank=True,
+        null=True,
+        help_text="Source URL or leave blank for default prompt (e.g., https://example.com/news)"
+    )
+    prompt_type = models.CharField(
+        max_length=20,
+        choices=PROMPT_TYPE_CHOICES,
+        help_text="Type of prompt: MCQ or Descriptive"
+    )
+    prompt_text = models.TextField(
+        help_text="The actual prompt to send to LLM. Use {title} and {content} as placeholders."
+    )
+    is_default = models.BooleanField(
+        default=False,
+        help_text="Check if this is the default prompt for this type"
+    )
+    is_active = models.BooleanField(
+        default=True,
+        help_text="Deactivate to disable this prompt without deleting"
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    
+    class Meta:
+        unique_together = ('source_url', 'prompt_type')
+        verbose_name = 'LLM Prompt'
+        verbose_name_plural = 'LLM Prompts'
+        ordering = ['-is_default', 'source_url', 'prompt_type']
+    
+    def __str__(self):
+        source = self.source_url if self.source_url else 'Default'
+        return f"{self.get_prompt_type_display()} - {source}"
+    
+    def save(self, *args, **kwargs):
+        # If this is set as default, unset other defaults of the same type and source
+        if self.is_default:
+            LLMPrompt.objects.filter(
+                prompt_type=self.prompt_type,
+                source_url=self.source_url
+            ).exclude(id=self.id).update(is_default=False)
+        super(LLMPrompt, self).save(*args, **kwargs)
+

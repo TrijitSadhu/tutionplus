@@ -13,7 +13,7 @@ DEFAULT_LLM_PROVIDER = os.getenv('DEFAULT_LLM_PROVIDER', 'gemini')
 
 # Gemini Pro Configuration (DEFAULT)
 GEMINI_API_KEY = os.getenv('GEMINI_API_KEY', 'your-gemini-api-key-here')
-GEMINI_MODEL = os.getenv('GEMINI_MODEL', 'gemini-pro')
+GEMINI_MODEL = os.getenv('GEMINI_MODEL', 'gemini-1.5-flash')
 GEMINI_TEMPERATURE = float(os.getenv('GEMINI_TEMPERATURE', '0.7'))
 GEMINI_MAX_OUTPUT_TOKENS = int(os.getenv('GEMINI_MAX_OUTPUT_TOKENS', '2048'))
 
@@ -25,15 +25,13 @@ OPENAI_TEMPERATURE = float(os.getenv('OPENAI_TEMPERATURE', '0.7'))
 # Alternative LLM Providers (add as needed)
 # ANTHROPIC_API_KEY = os.getenv('ANTHROPIC_API_KEY')
 
-# Web Scraping Configuration
+# Web Scraping Configuration - HARDCODED FALLBACK (use database for main sources)
 CURRENT_AFFAIRS_SOURCES = {
-    'mcq': [
-        'https://example-mcq-site.com',  # Add your MCQ current affairs site
-        'https://another-mcq-site.com',
+    'currentaffairs_mcq': [
+        'https://www.gktoday.in/daily-current-affairs-quiz-january-24-2026/',
     ],
-    'descriptive': [
-        'https://example-descriptive-site.com',  # Add your descriptive current affairs site
-        'https://another-descriptive-site.com',
+    'currentaffairs_descriptive': [
+        'https://example-descriptive-site.com',
     ]
 }
 

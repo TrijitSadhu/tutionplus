@@ -25,7 +25,7 @@ from .models import reasoning
 import datetime
 from .models import total_error
 from .models import error
-from .models import current_affairs
+from .models import currentaffairs_descriptive
 from .models import the_hindu_word_list1
 from .models import the_economy_word_list1
 from .models import the_hindu_word_list2
@@ -39,11 +39,11 @@ from .models import total_job_state
 from .models import total_job_category
 from .models import total_mcq
 from .models import home
-from .models import mcq
-from .models import mcq_info_2018
-from .models import mcq_info_2019
-from .models import current_affairs_info_2018
-from .models import current_affairs_info_2019
+from .models import currentaffairs_mcq
+from .models import currentaffairs_mcq_info_2018
+from .models import currentaffairs_mcq_info_2019
+from .models import currentaffairs_descriptive_info_2018
+from .models import currentaffairs_descriptive_info_2019
 from .models import total_history
 from .models import history
 from .models import total_polity
@@ -181,7 +181,7 @@ def index(request):
                     context = {
                             "form": form,
                             }
-                    slide = current_affairs.objects.values('upper_heading','yellow_heading','key_1','key_2','key_3','day','new_id','paragraph','all_key_points','ca_img').filter(is_live=True).order_by('-id')[:10][::-1]
+                    slide = currentaffairs_descriptive.objects.values('upper_heading','yellow_heading','key_1','key_2','key_3','day','new_id','paragraph','all_key_points','ca_img').filter(is_live=True).order_by('-id')[:10][::-1]
                     return HttpResponseRedirect('/')
         context = {
             "form": form,
@@ -190,7 +190,7 @@ def index(request):
 
    
     else:
-        slide = current_affairs.objects.values('link','url','upper_heading','yellow_heading','key_1','key_2','key_3','day','new_id','paragraph','all_key_points','ca_img').filter(is_live=True).order_by('-day')[:10]
+        slide = currentaffairs_descriptive.objects.values('link','url','upper_heading','yellow_heading','key_1','key_2','key_3','day','new_id','paragraph','all_key_points','ca_img').filter(is_live=True).order_by('-day')[:10]
         return render(request,'home/new.html',{'close':cloze,'job': jobs,'reasoning':reasoningh,'math':mathh,'word_e2_day':word_e2_day,'word_e1_day':word_e1_day,'word2_day':word2_day,'word1_day':word1_day,'word1':word1,'word_e1':word_e1,'word2':word2,'word_e2':word_e2,'header1':header1,'header2':header2,'header_e1':header_e1,'header_e2':header_e2,'p':'','slide': slide,'form':userform,'login':login})
 
 
@@ -254,11 +254,11 @@ def ca(request,user_year_month,user_page_no):
         print('month='+user_month)
         page_var=user_month.title() +'_page'
         if user_year=='2018':     
-            obj=current_affairs_info_2018.objects.values(page_var)
+            obj=currentaffairs_descriptive_info_2018.objects.values(page_var)
             t= int(obj[0][page_var])
             print('date wise'+ str(t))
         elif user_year=='2019':     
-            obj=current_affairs_info_2019.objects.values(page_var)
+            obj=currentaffairs_descriptive_info_2019.objects.values(page_var)
             t= int(obj[0][page_var])
             print('date wise 2019'+ str(t))
     page=['2','3']
@@ -464,22 +464,22 @@ def ca(request,user_year_month,user_page_no):
                     
                         
                             
-    current_affairs_2018_info = current_affairs_info_2018.objects.values('month_list',page_var,'January','February','March','April','May','June','July','August','September','October','November','December')
+    current_affairs_2018_info = currentaffairs_descriptive_info_2018.objects.values('month_list',page_var,'January','February','March','April','May','June','July','August','September','October','November','December')
     #ultimate_date=(current_affairs_2018_info[0][user_month]).split('///')
     #ultimate_date=ultimate_date[int(user_page_no)]
     #ultimate_date=ultimate_date[0:2]
     #print('df'+ultimate_date)
-    current_affairs_2019_info = current_affairs_info_2019.objects.values('month_list',page_var,'January','February','March','April','May','June','July','August','September','October','November','December')
+    current_affairs_2019_info = currentaffairs_descriptive_info_2019.objects.values('month_list',page_var,'January','February','March','April','May','June','July','August','September','October','November','December')
     print('2019='+str(current_affairs_2019_info))
     jobs = job.objects.values('extra_day','first_day','last_day','heading','eligibility','age','amount','day','new_id','des','ca_img').filter(home=True).order_by('-day','-creation_time')
  
     #jobs = job.objects.values('extra_day','first_day','last_day','heading','eligibility','age','amount','day','new_id','des','ca_img').filter(home=True).order_by('-day','-creation_time')
     if today==1:
         #current_affairs_all = current_affairs.objects.values('year_now','month','question','option_1','option_2','option_3','option_4','option_5','extra').order_by('-day','-creation_time')[p:mul]
-        slide = current_affairs.objects.values('year_now','month','link','url','upper_heading','yellow_heading','key_1','key_2','key_3','day','new_id','paragraph','all_key_points','ca_img').filter(is_live=True).order_by('-day','-creation_time')[p:mul]
+        slide = currentaffairs_descriptive.objects.values('year_now','month','link','url','upper_heading','yellow_heading','key_1','key_2','key_3','day','new_id','paragraph','all_key_points','ca_img').filter(is_live=True).order_by('-day','-creation_time')[p:mul]
         
     elif category==1:
-        slide = current_affairs.objects.values('year_now','month','link','url','upper_heading','yellow_heading','key_1','key_2','key_3','day','new_id','paragraph','all_key_points','ca_img').filter(**{user_category: True}, is_live=True).order_by('-day','-creation_time')[p:mul]
+        slide = currentaffairs_descriptive.objects.values('year_now','month','link','url','upper_heading','yellow_heading','key_1','key_2','key_3','day','new_id','paragraph','all_key_points','ca_img').filter(**{user_category: True}, is_live=True).order_by('-day','-creation_time')[p:mul]
         #return render(request,'home/current_affairs.html',{'current_affairs_all': current_affairs_all,'form':userform,'login':login,'p':diff_from_top,'page':page,'params':params_int,'next':next,'previous':previous,'tag_page':'current-affairs-category-'+user_category})
         return render(request,'home/current_descriptive.html',{'user_year':user_year,'user_month':user_month,'user_day':user_page_no,'current_affairs_2019_info': current_affairs_2019_info,
                                                            'current_affairs_2018_info': current_affairs_2018_info,'job': jobs,'slide': slide,
@@ -489,7 +489,7 @@ def ca(request,user_year_month,user_page_no):
 
     else:
         #date wise..      
-        slide = current_affairs.objects.values('year_now','month','link','url','upper_heading','yellow_heading','key_1','key_2','key_3','day','new_id','paragraph','all_key_points','ca_img').filter(year_now=user_year,month=user_month,day=user_date,is_live=True).order_by('-day','-creation_time')
+        slide = currentaffairs_descriptive.objects.values('year_now','month','link','url','upper_heading','yellow_heading','key_1','key_2','key_3','day','new_id','paragraph','all_key_points','ca_img').filter(year_now=user_year,month=user_month,day=user_date,is_live=True).order_by('-day','-creation_time')
         #return render(request,'home/current_affairs.html',{'current_affairs_2019_info': current_affairs_2019_info,'current_affairs_2018_info': current_affairs_2018_info,'current_affairs_all': current_affairs_all,'user_year':user_year,'user_month':user_month,'user_day':user_page_no,'form':userform,'login':login,'p':diff_from_top,'page':page,'params':params_int,'next':next,'previous':previous,'tag_page':tag_page})
         return render(request,'home/current_descriptive.html',{'user_year':user_year,'user_month':user_month,'user_day':user_page_no,'current_affairs_2019_info': current_affairs_2019_info,
                                                            'current_affairs_2018_info': current_affairs_2018_info,'job': jobs,
@@ -755,7 +755,7 @@ def url_redirect(request,params):
     mul=params*3
     p=mul-2
 
-    slide = current_affairs.objects.values_list('upper_heading','yellow_heading','key_1','key_2','key_3','day','new_id','paragraph','all_key_points','ca_img').filter(is_live=True).order_by('-id')[:10][::-1]
+    slide = currentaffairs_descriptive.objects.values_list('upper_heading','yellow_heading','key_1','key_2','key_3','day','new_id','paragraph','all_key_points','ca_img').filter(is_live=True).order_by('-id')[:10][::-1]
     return render(request,'home/current_home.html',{'slide': slide})
     
     
@@ -953,7 +953,7 @@ def current(request,params,string):
                 
 
 
-    slide = current_affairs.objects.values('upper_heading','yellow_heading','key_1','key_2','key_3','day','new_id','paragraph','all_key_points','ca_img').filter(**{field_name: True}, is_live=True).order_by('-day','-creation_time')[p:mul]
+    slide = currentaffairs_descriptive.objects.values('upper_heading','yellow_heading','key_1','key_2','key_3','day','new_id','paragraph','all_key_points','ca_img').filter(**{field_name: True}, is_live=True).order_by('-day','-creation_time')[p:mul]
     return render(request,'home/ca.html',{'job': jobs,'slide': slide,'form':userform,'login':login,'p':t,'page':page,'params':params_int,'next':next,'previous':previous})
 
 
@@ -980,7 +980,7 @@ def cuttent_affirs_single(request,string):
     jobs = job.objects.values('extra_day','first_day','last_day','heading','eligibility','age','amount','day','new_id','des','ca_img').filter(home=True).order_by('-day','-creation_time')
 
 
-    slide = current_affairs.objects.values('upper_heading','yellow_heading','key_1','key_2','key_3','day','new_id','paragraph','all_key_points','ca_img').filter(new_id=id, is_live=True)
+    slide = currentaffairs_descriptive.objects.values('upper_heading','yellow_heading','key_1','key_2','key_3','day','new_id','paragraph','all_key_points','ca_img').filter(new_id=id, is_live=True)
     return render(request,'home/ca.html',{'job': jobs,'slide': slide,'form':userform,'login':login,'p':12})    
     
 
@@ -2151,7 +2151,7 @@ def reasoning_single(request,string):
                 
 
 
-    slide = current_affairs.objects.values('upper_heading','yellow_heading','key_1','key_2','key_3','day','new_id','paragraph','all_key_points','ca_img').filter(new_id=id, is_live=True)
+    slide = currentaffairs_descriptive.objects.values('upper_heading','yellow_heading','key_1','key_2','key_3','day','new_id','paragraph','all_key_points','ca_img').filter(new_id=id, is_live=True)
     reasoningh = reasoning.objects.values().filter(new_id=id).all()
     
     return render(request,'home/reasoning_single.html',{'job': jobs,'reasoning':reasoningh,'form':userform,'login':login,'p':12})
@@ -2811,11 +2811,11 @@ def mcq_current(request,user_year_month,user_page_no):
         print('month='+user_month)
         page_var=user_month.title() +'_page'
         if user_year=='2018':     
-            obj=mcq_info_2018.objects.values(page_var)
+            obj=currentaffairs_mcq_info_2018.objects.values(page_var)
             t= int(obj[0][page_var])
             print('date wise'+ str(t))
         elif user_year=='2019':     
-            obj=mcq_info_2019.objects.values(page_var)
+            obj=currentaffairs_mcq_info_2019.objects.values(page_var)
             t= int(obj[0][page_var])
             print('date wise 2019'+ str(t))
     
@@ -2975,25 +2975,25 @@ def mcq_current(request,user_year_month,user_page_no):
                     page=[first,dot,mile1_bottom,dot,one,tow,three,four,five,dot,mile1_top,dot,last]
                     
                         
-    mcq_2018_info = mcq_info_2018.objects.values('month_list',page_var,'January','February','March','April','May','June','July','August','September','October','November','December')
+    mcq_2018_info = currentaffairs_mcq_info_2018.objects.values('month_list',page_var,'January','February','March','April','May','June','July','August','September','October','November','December')
     #ultimate_date=(mcq_2018_info[0][user_month]).split('///')
     #ultimate_date=ultimate_date[int(user_page_no)]
     #ultimate_date=ultimate_date[0:2]
     #print('df'+ultimate_date)
-    mcq_2019_info = mcq_info_2019.objects.values('month_list',page_var,'January','February','March','April','May','June','July','August','September','October','November','December')
+    mcq_2019_info = currentaffairs_mcq_info_2019.objects.values('month_list',page_var,'January','February','March','April','May','June','July','August','September','October','November','December')
      
     #jobs = job.objects.values('extra_day','first_day','last_day','heading','eligibility','age','amount','day','new_id','des','ca_img').filter(home=True).order_by('-day','-creation_time')
     if user_year=='latest':
-        mcq_all = mcq.objects.values('ans','year_now','month','question','option_1','option_2','option_3','option_4','option_5','extra').filter(is_live=True).order_by('-day','-creation_time')[p:mul]
+        mcq_all = currentaffairs_mcq.objects.values('ans','year_now','month','question','option_1','option_2','option_3','option_4','option_5','extra').filter(is_live=True).order_by('-day','-creation_time')[p:mul]
         
     elif category==1:
-        mcq_all = mcq.objects.values('ans','year_now','month','question','option_1','option_2','option_3','option_4','option_5','extra').filter(**{user_category: True}, is_live=True).order_by('-day','-creation_time')[p:mul]
+        mcq_all = currentaffairs_mcq.objects.values('ans','year_now','month','question','option_1','option_2','option_3','option_4','option_5','extra').filter(**{user_category: True}, is_live=True).order_by('-day','-creation_time')[p:mul]
         return render(request,'home/mcq.html',{'mcq_2019_info': mcq_2019_info,'mcq_2018_info': mcq_2018_info,'mcq_all': mcq_all,'user_year':user_year,'user_month':user_month,'user_day':user_page_no,'form':userform,'login':login,'p':diff_from_top,'page':page,'params':params_int,'next':next,'previous':previous,'tag_page':'current-affairs-category-'+user_category})
 
 
     else:
                
-        mcq_all = mcq.objects.values('ans','year_now','month','question','option_1','option_2','option_3','option_4','option_5','extra').filter(year_now=user_year,month=user_month,day=user_date,is_live=True).order_by('-day','-creation_time')
+        mcq_all = currentaffairs_mcq.objects.values('ans','year_now','month','question','option_1','option_2','option_3','option_4','option_5','extra').filter(year_now=user_year,month=user_month,day=user_date,is_live=True).order_by('-day','-creation_time')
         return render(request,'home/mcq.html',{'mcq_2019_info': mcq_2019_info,'mcq_2018_info': mcq_2018_info,'mcq_all': mcq_all,'user_year':user_year,'user_month':user_month,'user_day':user_page_no,'form':userform,'login':login,'p':diff_from_top,'page':page,'params':params_int,'next':next,'previous':previous,'tag_page':tag_page})
         
    

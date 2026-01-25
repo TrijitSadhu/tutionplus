@@ -1,0 +1,133 @@
+# Quick Reference: Source-Specific Prompts
+
+## The Answer: YES ✅
+
+**Different prompts for different URL sources work perfectly!**
+
+---
+
+## How to Use
+
+### Step 1: Go to Admin
+```
+http://127.0.0.1:8000/admin/bank/llmprompt/
+```
+
+### Step 2: Add New Prompt
+Click **"Add LLM Prompt"** button
+
+### Step 3: Fill In
+```
+Source URL: https://example-news.com/news
+Prompt Type: MCQ (or Descriptive)
+Prompt Text: [Your custom prompt with {title} and {content}]
+Is Default: [unchecked - since it's source-specific]
+Is Active: [checked]
+```
+
+### Step 4: Save
+Click **"Save"** - Done!
+
+---
+
+## Example Setups
+
+### Setup 1: One Prompt Per Source
+```
+- Times of India MCQ prompt
+- NDTV MCQ prompt  
+- BBC MCQ prompt
+- Default MCQ (fallback)
+```
+
+### Setup 2: Different Styles
+```
+- Finance site → Finance-focused prompt
+- News site → General current affairs prompt
+- Tech site → Technology-focused prompt
+- Default → Catch-all for others
+```
+
+### Setup 3: Exam Types
+```
+- IBPS news → Banking exam style
+- General news → General knowledge style
+- Current affairs → Quick summary style
+- Default → Balanced style
+```
+
+---
+
+## How It Works Behind The Scenes
+
+```
+Article scraped from: https://timesofindia.com/news
+                          ↓
+Does prompt exist for this source? 
+  Yes → Use source-specific prompt ✅
+  No  → Use default prompt ✅
+        No? → Use hardcoded fallback ✅
+```
+
+---
+
+## Current Prompts (What's Already Created)
+
+| Source | Type | Status |
+|--------|------|--------|
+| (Global) | MCQ | DEFAULT |
+| (Global) | Descriptive | DEFAULT |
+| Times of India | MCQ | ACTIVE |
+| NDTV | Descriptive | ACTIVE |
+| BBC | MCQ | ACTIVE |
+
+---
+
+## Key Points
+
+1. ✅ **Source URLs are tracked** - No manual setup needed
+2. ✅ **Automatic selection** - System picks the right prompt
+3. ✅ **Fallback to defaults** - Always works even without specific prompt
+4. ✅ **No code changes** - Pure admin configuration
+5. ✅ **Easy management** - Add/edit/delete from UI
+
+---
+
+## Template Placeholders
+
+Use these in your prompts:
+- `{title}` → Article title
+- `{content}` → Article body
+
+Example:
+```
+You are creating MCQs about {title}
+Content: {content}
+```
+
+---
+
+## Troubleshooting
+
+| Issue | Solution |
+|-------|----------|
+| Prompt not used | Check if marked **Active** |
+| Source not matching | Verify **exact URL** |
+| Type mismatch | Check **MCQ vs Descriptive** |
+| Not showing in admin | Refresh page, check permissions |
+
+---
+
+## Admin Panel
+
+**Create new:** `/admin/bank/llmprompt/add/`
+**View all:** `/admin/bank/llmprompt/`
+**Edit prompt:** Click on it in the list
+
+---
+
+## That's It!
+
+Your system is ready to use different prompts for different sources.
+
+**No additional setup or coding required!** 🎉

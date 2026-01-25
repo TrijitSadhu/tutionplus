@@ -27,8 +27,8 @@ class Command(BaseCommand):
             '--type',
             type=str,
             default='both',
-            choices=['mcq', 'current_affairs', 'both'],
-            help='Content type to fetch: mcq, current_affairs, or both'
+            choices=['currentaffairs_mcq', 'currentaffairs_descriptive', 'both'],
+            help='Content type to fetch: currentaffairs_mcq, currentaffairs_descriptive, or both'
         )
         parser.add_argument(
             '--schedule',
@@ -36,19 +36,49 @@ class Command(BaseCommand):
             default=None,
             help='Schedule for daily run (format: HH:MM, e.g., 14:30)'
         )
+        parser.add_argument(
+            '--log-id',
+            type=int,
+            default=None,
+            help='Optional ProcessingLog ID to update instead of creating new'
+        )
     
     def handle(self, *args, **options):
         content_type = options['type']
         schedule_time = options.get('schedule')
+        log_id = options.get('log_id')
         
-        # Create processing log entry
-        log_entry = ProcessingLog.objects.create(
-            task_type='both' if content_type == 'both' else f'{content_type}_fetch',
-            status='running',
-            started_at=timezone.now(),
-            is_scheduled=bool(schedule_time),
-            scheduled_time=self._parse_schedule(schedule_time) if schedule_time else None
-        )
+        print("\n" + "="*70)
+        print(f"📋 MANAGEMENT COMMAND STARTED: fetch_all_content")
+        print(f"   Content Type: {content_type}")
+        print(f"   Schedule Time: {schedule_time}")
+        print(f"   Log ID: {log_id}")
+        print("="*70)
+        
+        # Use existing log entry if log_id provided, otherwise create new one
+        if log_id:
+            try:
+                log_entry = ProcessingLog.objects.get(id=log_id)
+                print(f"  ✅ Using existing ProcessingLog entry (ID: {log_entry.id})")
+            except ProcessingLog.DoesNotExist:
+                print(f"  ❌ ProcessingLog with ID {log_id} not found, creating new entry")
+                log_entry = ProcessingLog.objects.create(
+                    task_type='both' if content_type == 'both' else f'{content_type}_fetch',
+                    status='running',
+                    started_at=timezone.now(),
+                    is_scheduled=bool(schedule_time),
+                    scheduled_time=self._parse_schedule(schedule_time) if schedule_time else None
+                )
+        else:
+            # Create new processing log entry
+            log_entry = ProcessingLog.objects.create(
+                task_type='both' if content_type == 'both' else f'{content_type}_fetch',
+                status='running',
+                started_at=timezone.now(),
+                is_scheduled=bool(schedule_time),
+                scheduled_time=self._parse_schedule(schedule_time) if schedule_time else None
+            )
+            print(f"  ✅ Created new ProcessingLog entry (ID: {log_entry.id})")
         
         self.stdout.write(
             self.style.SUCCESS(f'🚀 Starting fetch task (ID: {log_entry.id})...')
@@ -58,19 +88,25 @@ class Command(BaseCommand):
             results = {}
             log_data = {}
             
-            # Fetch MCQ
-            if content_type in ['mcq', 'both']:
-                self.stdout.write('📖 Fetching MCQ content...')
+            # Fetch Current Affairs MCQ
+            if content_type in ['currentaffairs_mcq', 'both']:
+                self.stdout.write('📖 Fetching Current Affairs MCQ content...')
+                print(f"  📞 Calling fetch_and_process_current_affairs('currentaffairs_mcq')...")
                 try:
-                    mcq_result = fetch_and_process_current_affairs('mcq')
-                    results['mcq'] = mcq_result
+                    mcq_result = fetch_and_process_current_affairs('currentaffairs_mcq')
+                    print(f"  ✅ MCQ processing completed, result: {mcq_result}")
+                    results['currentaffairs_mcq'] = mcq_result
                     log_entry.mcq_status = '✓ Completed'
-                    log_entry.success_count += mcq_result.get('processed_count', 0)
-                    log_data['mcq'] = mcq_result
+                    processed_count = len(mcq_result.get('processed_items', []))
+                    log_entry.success_count += processed_count
+                    log_data['currentaffairs_mcq'] = mcq_result
                     self.stdout.write(
-                        self.style.SUCCESS(f'  ✓ MCQ: {mcq_result.get("processed_count", 0)} items processed')
+                        self.style.SUCCESS(f'  ✓ MCQ: {processed_count} items processed')
                     )
                 except Exception as e:
+                    print(f"  ❌ ERROR in MCQ fetch: {str(e)}")
+                    import traceback
+                    traceback.print_exc()
                     log_entry.mcq_status = f'✗ Failed: {str(e)}'
                     log_entry.error_count += 1
                     logger.error(f"MCQ fetch error: {e}")
@@ -78,19 +114,25 @@ class Command(BaseCommand):
                         self.style.ERROR(f'  ✗ MCQ Error: {str(e)}')
                     )
             
-            # Fetch Current Affairs
-            if content_type in ['current_affairs', 'both']:
-                self.stdout.write('📰 Fetching Current Affairs content...')
+            # Fetch Current Affairs Descriptive
+            if content_type in ['currentaffairs_descriptive', 'both']:
+                self.stdout.write('📰 Fetching Current Affairs Descriptive content...')
+                print(f"  📞 Calling fetch_and_process_current_affairs('currentaffairs_descriptive')...")
                 try:
-                    ca_result = fetch_and_process_current_affairs('descriptive')
-                    results['current_affairs'] = ca_result
+                    ca_result = fetch_and_process_current_affairs('currentaffairs_descriptive')
+                    print(f"  ✅ Descriptive processing completed, result: {ca_result}")
+                    results['currentaffairs_descriptive'] = ca_result
                     log_entry.current_affairs_status = '✓ Completed'
-                    log_entry.success_count += ca_result.get('processed_count', 0)
-                    log_data['current_affairs'] = ca_result
+                    processed_count = len(ca_result.get('processed_items', []))
+                    log_entry.success_count += processed_count
+                    log_data['currentaffairs_descriptive'] = ca_result
                     self.stdout.write(
-                        self.style.SUCCESS(f'  ✓ Current Affairs: {ca_result.get("processed_count", 0)} items processed')
+                        self.style.SUCCESS(f'  ✓ Current Affairs: {processed_count} items processed')
                     )
                 except Exception as e:
+                    print(f"  ❌ ERROR in Descriptive fetch: {str(e)}")
+                    import traceback
+                    traceback.print_exc()
                     log_entry.current_affairs_status = f'✗ Failed: {str(e)}'
                     log_entry.error_count += 1
                     logger.error(f"Current Affairs fetch error: {e}")
@@ -114,6 +156,9 @@ class Command(BaseCommand):
             )
             
         except Exception as e:
+            print(f"\n❌ OUTER EXCEPTION in fetch_all_content: {str(e)}")
+            import traceback
+            traceback.print_exc()
             log_entry.status = 'failed'
             log_entry.error_message = str(e)
             log_entry.completed_at = timezone.now()

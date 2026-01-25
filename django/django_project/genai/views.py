@@ -234,7 +234,7 @@ def genai_status(request):
         'status': 'active',
         'available_tasks': [
             'current_affairs_mcq',
-            'current_affairs_descriptive',
+            'currentaffairs_descriptive',
             'subject_pdf_processing',
             'math_problem_processing',
             'batch_math_processing'
@@ -277,13 +277,13 @@ def trigger_fetch(request):
     """
     Trigger fetch task for MCQ and/or Current Affairs
     POST params:
-    - task_type: 'mcq', 'current_affairs', or 'both'
+    - task_type: 'currentaffairs_mcq', 'currentaffairs_descriptive', or 'both'
     """
     try:
         task_type = request.POST.get('task_type', 'both')
         
         # Validate task type
-        if task_type not in ['mcq', 'current_affairs', 'both']:
+        if task_type not in ['currentaffairs_mcq', 'currentaffairs_descriptive', 'both']:
             return JsonResponse({
                 'success': False,
                 'error': 'Invalid task type'
