@@ -32,9 +32,17 @@ from .models import mcq
 from .models import mcq_info_2018
 from .models import mcq_info_2019
 from .models import mcq_info_2020
+from .models import mcq_info_2025
+from .models import mcq_info_2026
+from .models import mcq_info_2027
+from .models import mcq_info_2028
 from .models import current_affairs_info_2020
 from .models import current_affairs_info_2018
 from .models import current_affairs_info_2019
+from .models import current_affairs_info_2025
+from .models import current_affairs_info_2026
+from .models import current_affairs_info_2027
+from .models import current_affairs_info_2028
 
 from .models import total_mcq
 from .models import polity
@@ -76,9 +84,17 @@ admin.site.register(total_mcq)
 admin.site.register(mcq_info_2018)
 admin.site.register(mcq_info_2019)
 admin.site.register(mcq_info_2020)
+admin.site.register(mcq_info_2025)
+admin.site.register(mcq_info_2026)
+admin.site.register(mcq_info_2027)
+admin.site.register(mcq_info_2028)
 admin.site.register(current_affairs_info_2020)
 admin.site.register(current_affairs_info_2019)
 admin.site.register(current_affairs_info_2018)
+admin.site.register(current_affairs_info_2025)
+admin.site.register(current_affairs_info_2026)
+admin.site.register(current_affairs_info_2027)
+admin.site.register(current_affairs_info_2028)
 
 
 admin.site.register(current_affairs,MessageAdmin)

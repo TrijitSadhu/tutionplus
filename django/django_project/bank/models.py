@@ -40,6 +40,10 @@ class current_affairs(models.Model):
     ("2018", "2018"),   
     ("2019", "2019"),
     ("2020", "2020"),
+    ("2025", "2025"),
+    ("2026", "2026"),
+    ("2027", "2027"),
+    ("2028", "2028"),
     )
     year_now = models.CharField(max_length=10,
                           choices=s,
@@ -104,6 +108,7 @@ class current_affairs(models.Model):
     static_gk =models.BooleanField(default=False)
     ca_img = models.FileField(upload_to='ca/%Y/%m/%d')
     new_id=models.CharField(max_length=300,default='',blank=True,null=True,db_index=True)
+    is_live = models.BooleanField(default=True, db_index=True, help_text="Check to show on webpage")
     
 
     class Meta:
@@ -3210,6 +3215,10 @@ class mcq(models.Model):
     ("2018", "2018"),   
     ("2019", "2019"),
     ("2020", "2020"),
+    ("2025", "2025"),
+    ("2026", "2026"),
+    ("2027", "2027"),
+    ("2028", "2028"),
     )
     year_now = models.CharField(max_length=10,
                           choices=s,
@@ -3267,7 +3276,7 @@ class mcq(models.Model):
     agreement =models.BooleanField(default=False)
     mythology =models.BooleanField(default=False)
     
-
+    is_live = models.BooleanField(default=True, db_index=True, help_text="Check to show on webpage")
 
     extra=models.TextField(default='',blank=True,null=True)
     new_id=models.CharField(max_length=300,default='',blank=True,null=True,db_index=True)
@@ -4389,6 +4398,664 @@ class mcq_info_2020(models.Model):
 
 
 
+class mcq_info_2026(models.Model):
+    
+    total_mcq = models.IntegerField (db_index=True,default=3)
+    total_mcq_page = models.IntegerField (db_index=True,default=3)
+    
+    month_list = models.TextField(default='',null=True,blank=True)
+
+    January = models.TextField(default='',null=True,blank=True)
+    February = models.TextField(default='',null=True,blank=True)
+    March = models.TextField(default='',null=True,blank=True)
+    April = models.TextField(default='',null=True,blank=True)
+    May = models.TextField(default='',null=True,blank=True)
+    June = models.TextField(default='',null=True,blank=True)
+    July = models.TextField(default='',null=True,blank=True)
+    August = models.TextField(default='',null=True,blank=True)
+    September = models.TextField(default='',null=True,blank=True)
+    October = models.TextField(default='',null=True,blank=True)
+    November = models.TextField(default='',null=True,blank=True)
+    December = models.TextField(default='',null=True,blank=True)
+
+    January_page = models.CharField(max_length=5,blank=True, null=True)
+    February_page =models.CharField(max_length=5,blank=True, null=True)
+    March_page = models.CharField(max_length=5,blank=True, null=True)
+    April_page =models.CharField(max_length=5,blank=True, null=True)
+    May_page =models.CharField(max_length=5,blank=True, null=True)
+    June_page = models.CharField(max_length=5,blank=True, null=True)
+    July_page = models.CharField(max_length=5,blank=True, null=True)
+    August_page = models.CharField(max_length=5,blank=True, null=True)
+    September_page = models.CharField(max_length=5,blank=True, null=True)
+    October_page = models.CharField(max_length=5,blank=True, null=True)
+    November_page = models.CharField(max_length=5,blank=True, null=True)
+    December_page =models.CharField(max_length=5,blank=True, null=True)
+
+        
+
+    
+   
+    
+    
+
+
+    def save(self):
+        totall=mcq.objects.count()
+        self.total_mcq= totall
+        self.total_mcq_page=int(totall+300)/3
+        jan=1
+        feb=2
+        mar=3
+        apr=4
+        may=5
+        jun=6
+        jul=7
+        aug=8
+        sep=9
+        oct=10
+        nov=11
+        dec=12
+        sort_list=[]
+
+        list_month=(mcq.objects.values_list('month',flat=True).filter(year_now='2026').order_by('month').distinct('month'))
+        print(str(list_month))
+        month_str=''# month_str :-this string is unnecessary stilli didnt delete it
+        
+        month_real=''
+        month_real=''
+        for  val in (list_month):
+            
+            if month_str == '':
+                month_real=str(val)
+                month_str=str(val)
+                
+                
+            else:
+                month_real=str(val)
+                #print(month_real)
+                month_str=month_str+" "+str(val)
+
+            list_date=(mcq.objects.values_list('day',flat=True).filter(month=month_real,year_now='2026').order_by('day').distinct('day'))
+            
+            date_str=''
+            count_date=0
+            for e in list_date:
+                if date_str == '':
+                    date_str=str(e)
+                    if(month_real =='January'):     
+                        date_str =date_str.replace('2026-01-', '')
+                        date_str=date_str +' Jan, 2026'
+                    elif(month_real == 'February'):
+                        date_str =date_str.replace('2026-02-', '')
+                        date_str=date_str +' Feb, 2026'
+                    elif(month_real =='March'):
+                        date_str =date_str.replace('2026-03-', '')
+                        date_str=date_str +' Mar, 2026'
+                    elif(month_real =='April'):
+                        date_str =date_str.replace('2026-04-', '')
+                        date_str=date_str +' Apr, 2026'
+                    elif(month_real =='May'):
+                        date_str =date_str.replace('2026-05-', '')
+                        date_str=date_str +' May, 2026'
+                    elif(month_real =='June'):
+                        date_str =date_str.replace('2026-06-', '')
+                        date_str=date_str +' Jun, 2026'
+                    elif(month_real =='July'):
+                        date_str =date_str.replace('2026-07-', '')
+                        date_str=date_str +' Jul, 2026'
+                    elif(month_real =='August'):
+                        date_str =date_str.replace('2026-08-', '')
+                        date_str=date_str +' Aug, 2026'
+                    elif(month_real =='September'):
+                        date_str =date_str.replace('2026-09-', '')
+                        date_str=date_str +' Sept, 2026'
+                    elif(month_real =='October'):
+                        date_str =date_str.replace('2026-10-', '')
+                        date_str=date_str +' Oct, 2026'
+                    elif(month_real =='November'):
+                        date_str =date_str.replace('2026-11-', '')
+                        date_str=date_str +' Nov, 2026'
+                    elif(month_real =='December'):
+                        date_str =date_str.replace('2026-12-', '')
+                        date_str=date_str +' Dec, 2026'
+                else:
+                    date_str_replace=str(e)
+                    
+                    if(month_real =='January'):     
+                        date_str_replace =date_str_replace.replace('2026-01-', '')
+                        date_str_replace=date_str_replace +' Jan, 2026'
+                        date_str=date_str+"///"+date_str_replace
+                    elif(month_real == 'February'):
+                        date_str_replace =date_str_replace.replace('2026-02-', '')
+                        date_str_replace=date_str_replace +' Feb, 2026'
+                        date_str=date_str+"///"+date_str_replace
+                    elif(month_real =='March'):
+                        date_str_replace =date_str_replace.replace('2026-03-', '')
+                        date_str_replace=date_str_replace +' Mar, 2026'
+                        date_str=date_str+"///"+date_str_replace
+                    elif(month_real =='April'):
+                        date_str_replace =date_str_replace.replace('2026-04-', '')
+                        date_str_replace=date_str_replace +' Apr, 2026'
+                        date_str=date_str+"///"+date_str_replace
+                    elif(month_real =='May'):
+                        date_str_replace =date_str_replace.replace('2026-05-', '')
+                        date_str_replace=date_str_replace +' May, 2026'
+                        date_str=date_str+"///"+date_str_replace
+                    elif(month_real =='June'):
+                        date_str_replace =date_str_replace.replace('2026-06-', '')
+                        date_str_replace=date_str_replace +' Jun, 2026'
+                        date_str=date_str+"///"+date_str_replace
+                    elif(month_real =='July'):
+                        date_str_replace =date_str_replace.replace('2026-07-', '')
+                        date_str_replace=date_str_replace +' Jul, 2026'
+                        date_str=date_str+"///"+date_str_replace
+                    elif(month_real =='August'):
+                        date_str_replace =date_str_replace.replace('2026-08-', '')
+                        date_str_replace=date_str_replace +' Aug, 2026'
+                        date_str=date_str+"///"+date_str_replace
+                    elif(month_real =='September'):
+                        date_str_replace =date_str_replace.replace('2026-09-', '')
+                        date_str_replace=date_str_replace +' Sep, 2026'
+                        date_str=date_str+"///"+date_str_replace
+                    elif(month_real =='October'):
+                        date_str_replace =date_str_replace.replace('2026-10-', '')
+                        date_str_replace=date_str_replace +' Oct, 2026'
+                        date_str=date_str+"///"+date_str_replace
+                    elif(month_real =='November'):
+                        date_str_replace =date_str_replace.replace('2026-11-', '')
+                        date_str_replace=date_str_replace +' Nov, 2026'
+                        date_str=date_str+"///"+date_str_replace
+                    elif(month_real =='December'):
+                        date_str_replace =date_str_replace.replace('2026-12-', '')
+                        date_str_replace=date_str_replace +' Dec, 2026'
+                        date_str=date_str+"///"+date_str_replace
+                count_date=count_date+1
+            print(count_date)
+
+            print('m='+month_real)
+            if(month_real =='January'):
+                sort_list.append(1)
+                
+                self.January=date_str
+                self.January_page=str(count_date)
+            elif(month_real == 'February'):
+                sort_list.append(2)
+                self.February=date_str
+                self.February_page=str(count_date)
+            elif(month_real =='March'):
+                sort_list.append(3)
+                self.March=date_str
+                self.March_page=str(count_date)
+            elif(month_real =='April'):
+                sort_list.append(4)
+                self.April=date_str
+                self.April_page=str(count_date)
+            elif(month_real =='May'):
+                sort_list.append(5)
+                self.May=date_str
+                self.May_page=str(count_date)
+            elif(month_real =='June'):
+                sort_list.append(6)
+                self.June=date_str
+                self.June_page=str(count_date)
+            elif(month_real =='July'):
+                sort_list.append(7)
+                self.July=date_str
+                self.July_page=str(count_date)
+            elif(month_real =='August'):
+                sort_list.append(8)
+                self.August=date_str
+                self.August_page=str(count_date)
+            elif(month_real =='September'):
+                sort_list.append(9)
+                self.September=date_str
+                self.September_page=str(count_date)
+            elif(month_real =='October'):
+                sort_list.append(10)
+                self.October=date_str
+                self.October_page=str(count_date)
+            elif(month_real =='November'):
+                sort_list.append(11)
+                self.November=date_str
+                self.November_page=str(count_date)
+            elif(month_real =='December'):
+                sort_list.append(12)
+                self.December=date_str
+                self.December_page=str(count_date)
+            #print(val.values())
+
+            #print(date_str)
+            
+
+            '''for e in (mcq.objects.values_list('day',flat=True).filter(month=month_real).order_by().distinct('day')):
+                print(e.day)
+            for val_date in enumerate(list_date):
+                if date_str == '':
+                    date_str=(''.join(val_date.values()))
+                else:
+                    date_str=date_str+" "+(''.join(val_date.values()))
+
+            print(date_str)'''
+                
+        sort_list = [int(x) for x in sort_list]
+        sort_list.sort()
+        print(sort_list)
+        month_list_new=[]
+        final_month_list=''
+        for  val in (sort_list):
+            if val==1:
+                month_list_new.append('January')
+            elif val==2:
+                month_list_new.append('February')
+            elif val==3:
+                month_list_new.append('March')
+            elif val==4:
+                month_list_new.append('April')
+            elif val==5:
+                month_list_new.append('May')
+            elif val==6:
+                month_list_new.append('June')
+            elif val==7:
+                month_list_new.append('July')
+            elif val==8:
+                month_list_new.append('August')
+            elif val==9:
+                month_list_new.append('September')
+            elif val==10:
+                month_list_new.append('October')
+            elif val==11:
+                month_list_new.append('November')
+            elif val==12:
+                month_list_new.append('December')
+
+        for  val in (month_list_new):
+            
+            if final_month_list == '':
+                final_month_list=str(val)
+            else:
+                final_month_list=final_month_list+" "+str(val)
+                
+        self.month_list= final_month_list    
+        #print(month_str)
+        #print(list_date)
+        
+
+                
+                
+
+
+                
+
+        
+        super(mcq_info_2026, self).save()
+
+
+class mcq_info_2025(models.Model):
+    total_mcq = models.IntegerField(db_index=True, default=3)
+    total_mcq_page = models.IntegerField(db_index=True, default=3)
+    month_list = models.TextField(default='',null=True,blank=True)
+    January = models.TextField(default='',null=True,blank=True)
+    February = models.TextField(default='',null=True,blank=True)
+    March = models.TextField(default='',null=True,blank=True)
+    April = models.TextField(default='',null=True,blank=True)
+    May = models.TextField(default='',null=True,blank=True)
+    June = models.TextField(default='',null=True,blank=True)
+    July = models.TextField(default='',null=True,blank=True)
+    August = models.TextField(default='',null=True,blank=True)
+    September = models.TextField(default='',null=True,blank=True)
+    October = models.TextField(default='',null=True,blank=True)
+    November = models.TextField(default='',null=True,blank=True)
+    December = models.TextField(default='',null=True,blank=True)
+    January_page = models.IntegerField(default=0)
+    February_page = models.IntegerField(default=0)
+    March_page = models.IntegerField(default=0)
+    April_page = models.IntegerField(default=0)
+    May_page = models.IntegerField(default=0)
+    June_page = models.IntegerField(default=0)
+    July_page = models.IntegerField(default=0)
+    August_page = models.IntegerField(default=0)
+    September_page = models.IntegerField(default=0)
+    October_page = models.IntegerField(default=0)
+    November_page = models.IntegerField(default=0)
+    December_page = models.IntegerField(default=0)
+
+    def save(self):
+        totall=mcq.objects.filter(year_now='2025').count()
+        self.total_mcq=totall
+        self.total_mcq_page=int((totall+2)/3)
+        list_month=(mcq.objects.values_list('month',flat=True).filter(year_now='2025').order_by('month').distinct('month'))
+        month_str=''
+        month_real=''
+        sort_list=[]
+        for val in (list_month):
+            if month_str == '':
+                month_real=str(val)
+                month_str=str(val)
+            else:
+                month_real=str(val)
+                month_str=month_str+" "+str(val)
+            list_date=(mcq.objects.values_list('day',flat=True).filter(month=month_real,year_now='2025').order_by('day').distinct('day'))
+            date_str=''
+            count_date=0
+            for e in list_date:
+                if date_str == '':
+                    date_str=str(e)
+                else:
+                    date_str=date_str+"///"+str(e)
+                count_date=count_date+1
+            if(month_real =='January'):
+                sort_list.append(1)
+                self.January=date_str
+                self.January_page=count_date
+            elif(month_real == 'February'):
+                sort_list.append(2)
+                self.February=date_str
+                self.February_page=count_date
+            elif(month_real =='March'):
+                sort_list.append(3)
+                self.March=date_str
+                self.March_page=count_date
+            elif(month_real =='April'):
+                sort_list.append(4)
+                self.April=date_str
+                self.April_page=count_date
+            elif(month_real =='May'):
+                sort_list.append(5)
+                self.May=date_str
+                self.May_page=count_date
+            elif(month_real =='June'):
+                sort_list.append(6)
+                self.June=date_str
+                self.June_page=count_date
+            elif(month_real =='July'):
+                sort_list.append(7)
+                self.July=date_str
+                self.July_page=count_date
+            elif(month_real =='August'):
+                sort_list.append(8)
+                self.August=date_str
+                self.August_page=count_date
+            elif(month_real =='September'):
+                sort_list.append(9)
+                self.September=date_str
+                self.September_page=count_date
+            elif(month_real =='October'):
+                sort_list.append(10)
+                self.October=date_str
+                self.October_page=count_date
+            elif(month_real =='November'):
+                sort_list.append(11)
+                self.November=date_str
+                self.November_page=count_date
+            elif(month_real =='December'):
+                sort_list.append(12)
+                self.December=date_str
+                self.December_page=count_date
+        sort_list = [int(x) for x in sort_list]
+        sort_list.sort()
+        month_list_new=[]
+        for val in (sort_list):
+            if val==1: month_list_new.append('January')
+            elif val==2: month_list_new.append('February')
+            elif val==3: month_list_new.append('March')
+            elif val==4: month_list_new.append('April')
+            elif val==5: month_list_new.append('May')
+            elif val==6: month_list_new.append('June')
+            elif val==7: month_list_new.append('July')
+            elif val==8: month_list_new.append('August')
+            elif val==9: month_list_new.append('September')
+            elif val==10: month_list_new.append('October')
+            elif val==11: month_list_new.append('November')
+            elif val==12: month_list_new.append('December')
+        final_month_list=' '.join(month_list_new)
+        self.month_list=final_month_list
+        super(mcq_info_2025, self).save()
+
+
+class mcq_info_2027(models.Model):
+    total_mcq = models.IntegerField(db_index=True, default=3)
+    total_mcq_page = models.IntegerField(db_index=True, default=3)
+    month_list = models.TextField(default='',null=True,blank=True)
+    January = models.TextField(default='',null=True,blank=True)
+    February = models.TextField(default='',null=True,blank=True)
+    March = models.TextField(default='',null=True,blank=True)
+    April = models.TextField(default='',null=True,blank=True)
+    May = models.TextField(default='',null=True,blank=True)
+    June = models.TextField(default='',null=True,blank=True)
+    July = models.TextField(default='',null=True,blank=True)
+    August = models.TextField(default='',null=True,blank=True)
+    September = models.TextField(default='',null=True,blank=True)
+    October = models.TextField(default='',null=True,blank=True)
+    November = models.TextField(default='',null=True,blank=True)
+    December = models.TextField(default='',null=True,blank=True)
+    January_page = models.IntegerField(default=0)
+    February_page = models.IntegerField(default=0)
+    March_page = models.IntegerField(default=0)
+    April_page = models.IntegerField(default=0)
+    May_page = models.IntegerField(default=0)
+    June_page = models.IntegerField(default=0)
+    July_page = models.IntegerField(default=0)
+    August_page = models.IntegerField(default=0)
+    September_page = models.IntegerField(default=0)
+    October_page = models.IntegerField(default=0)
+    November_page = models.IntegerField(default=0)
+    December_page = models.IntegerField(default=0)
+
+    def save(self):
+        totall=mcq.objects.filter(year_now='2027').count()
+        self.total_mcq=totall
+        self.total_mcq_page=int((totall+2)/3)
+        list_month=(mcq.objects.values_list('month',flat=True).filter(year_now='2027').order_by('month').distinct('month'))
+        month_str=''
+        month_real=''
+        sort_list=[]
+        for val in (list_month):
+            if month_str == '':
+                month_real=str(val)
+                month_str=str(val)
+            else:
+                month_real=str(val)
+                month_str=month_str+" "+str(val)
+            list_date=(mcq.objects.values_list('day',flat=True).filter(month=month_real,year_now='2027').order_by('day').distinct('day'))
+            date_str=''
+            count_date=0
+            for e in list_date:
+                if date_str == '':
+                    date_str=str(e)
+                else:
+                    date_str=date_str+"///"+str(e)
+                count_date=count_date+1
+            if(month_real =='January'):
+                sort_list.append(1)
+                self.January=date_str
+                self.January_page=count_date
+            elif(month_real == 'February'):
+                sort_list.append(2)
+                self.February=date_str
+                self.February_page=count_date
+            elif(month_real =='March'):
+                sort_list.append(3)
+                self.March=date_str
+                self.March_page=count_date
+            elif(month_real =='April'):
+                sort_list.append(4)
+                self.April=date_str
+                self.April_page=count_date
+            elif(month_real =='May'):
+                sort_list.append(5)
+                self.May=date_str
+                self.May_page=count_date
+            elif(month_real =='June'):
+                sort_list.append(6)
+                self.June=date_str
+                self.June_page=count_date
+            elif(month_real =='July'):
+                sort_list.append(7)
+                self.July=date_str
+                self.July_page=count_date
+            elif(month_real =='August'):
+                sort_list.append(8)
+                self.August=date_str
+                self.August_page=count_date
+            elif(month_real =='September'):
+                sort_list.append(9)
+                self.September=date_str
+                self.September_page=count_date
+            elif(month_real =='October'):
+                sort_list.append(10)
+                self.October=date_str
+                self.October_page=count_date
+            elif(month_real =='November'):
+                sort_list.append(11)
+                self.November=date_str
+                self.November_page=count_date
+            elif(month_real =='December'):
+                sort_list.append(12)
+                self.December=date_str
+                self.December_page=count_date
+        sort_list = [int(x) for x in sort_list]
+        sort_list.sort()
+        month_list_new=[]
+        for val in (sort_list):
+            if val==1: month_list_new.append('January')
+            elif val==2: month_list_new.append('February')
+            elif val==3: month_list_new.append('March')
+            elif val==4: month_list_new.append('April')
+            elif val==5: month_list_new.append('May')
+            elif val==6: month_list_new.append('June')
+            elif val==7: month_list_new.append('July')
+            elif val==8: month_list_new.append('August')
+            elif val==9: month_list_new.append('September')
+            elif val==10: month_list_new.append('October')
+            elif val==11: month_list_new.append('November')
+            elif val==12: month_list_new.append('December')
+        final_month_list=' '.join(month_list_new)
+        self.month_list=final_month_list
+        super(mcq_info_2027, self).save()
+
+
+class mcq_info_2028(models.Model):
+    total_mcq = models.IntegerField(db_index=True, default=3)
+    total_mcq_page = models.IntegerField(db_index=True, default=3)
+    month_list = models.TextField(default='',null=True,blank=True)
+    January = models.TextField(default='',null=True,blank=True)
+    February = models.TextField(default='',null=True,blank=True)
+    March = models.TextField(default='',null=True,blank=True)
+    April = models.TextField(default='',null=True,blank=True)
+    May = models.TextField(default='',null=True,blank=True)
+    June = models.TextField(default='',null=True,blank=True)
+    July = models.TextField(default='',null=True,blank=True)
+    August = models.TextField(default='',null=True,blank=True)
+    September = models.TextField(default='',null=True,blank=True)
+    October = models.TextField(default='',null=True,blank=True)
+    November = models.TextField(default='',null=True,blank=True)
+    December = models.TextField(default='',null=True,blank=True)
+    January_page = models.IntegerField(default=0)
+    February_page = models.IntegerField(default=0)
+    March_page = models.IntegerField(default=0)
+    April_page = models.IntegerField(default=0)
+    May_page = models.IntegerField(default=0)
+    June_page = models.IntegerField(default=0)
+    July_page = models.IntegerField(default=0)
+    August_page = models.IntegerField(default=0)
+    September_page = models.IntegerField(default=0)
+    October_page = models.IntegerField(default=0)
+    November_page = models.IntegerField(default=0)
+    December_page = models.IntegerField(default=0)
+
+    def save(self):
+        totall=mcq.objects.filter(year_now='2028').count()
+        self.total_mcq=totall
+        self.total_mcq_page=int((totall+2)/3)
+        list_month=(mcq.objects.values_list('month',flat=True).filter(year_now='2028').order_by('month').distinct('month'))
+        month_str=''
+        month_real=''
+        sort_list=[]
+        for val in (list_month):
+            if month_str == '':
+                month_real=str(val)
+                month_str=str(val)
+            else:
+                month_real=str(val)
+                month_str=month_str+" "+str(val)
+            list_date=(mcq.objects.values_list('day',flat=True).filter(month=month_real,year_now='2028').order_by('day').distinct('day'))
+            date_str=''
+            count_date=0
+            for e in list_date:
+                if date_str == '':
+                    date_str=str(e)
+                else:
+                    date_str=date_str+"///"+str(e)
+                count_date=count_date+1
+            if(month_real =='January'):
+                sort_list.append(1)
+                self.January=date_str
+                self.January_page=count_date
+            elif(month_real == 'February'):
+                sort_list.append(2)
+                self.February=date_str
+                self.February_page=count_date
+            elif(month_real =='March'):
+                sort_list.append(3)
+                self.March=date_str
+                self.March_page=count_date
+            elif(month_real =='April'):
+                sort_list.append(4)
+                self.April=date_str
+                self.April_page=count_date
+            elif(month_real =='May'):
+                sort_list.append(5)
+                self.May=date_str
+                self.May_page=count_date
+            elif(month_real =='June'):
+                sort_list.append(6)
+                self.June=date_str
+                self.June_page=count_date
+            elif(month_real =='July'):
+                sort_list.append(7)
+                self.July=date_str
+                self.July_page=count_date
+            elif(month_real =='August'):
+                sort_list.append(8)
+                self.August=date_str
+                self.August_page=count_date
+            elif(month_real =='September'):
+                sort_list.append(9)
+                self.September=date_str
+                self.September_page=count_date
+            elif(month_real =='October'):
+                sort_list.append(10)
+                self.October=date_str
+                self.October_page=count_date
+            elif(month_real =='November'):
+                sort_list.append(11)
+                self.November=date_str
+                self.November_page=count_date
+            elif(month_real =='December'):
+                sort_list.append(12)
+                self.December=date_str
+                self.December_page=count_date
+        sort_list = [int(x) for x in sort_list]
+        sort_list.sort()
+        month_list_new=[]
+        for val in (sort_list):
+            if val==1: month_list_new.append('January')
+            elif val==2: month_list_new.append('February')
+            elif val==3: month_list_new.append('March')
+            elif val==4: month_list_new.append('April')
+            elif val==5: month_list_new.append('May')
+            elif val==6: month_list_new.append('June')
+            elif val==7: month_list_new.append('July')
+            elif val==8: month_list_new.append('August')
+            elif val==9: month_list_new.append('September')
+            elif val==10: month_list_new.append('October')
+            elif val==11: month_list_new.append('November')
+            elif val==12: month_list_new.append('December')
+        final_month_list=' '.join(month_list_new)
+        self.month_list=final_month_list
+        super(mcq_info_2028, self).save()
+
+
 class current_affairs_info_2020(models.Model):
     
     total_current_affairs = models.IntegerField (db_index=True,default=3)
@@ -5258,6 +5925,384 @@ class current_affairs_info_2018(models.Model):
         #print(month_str)
         #print(list_date)        
         super(current_affairs_info_2018, self).save()
+
+
+class current_affairs_info_2026(models.Model):
+    
+    total_current_affairs = models.IntegerField (db_index=True,default=3)
+    total_current_affairs_page = models.IntegerField (db_index=True,default=3)
+    
+    month_list = models.TextField(default='',null=True,blank=True)
+
+    January = models.TextField(default='',null=True,blank=True)
+    February = models.TextField(default='',null=True,blank=True)
+    March = models.TextField(default='',null=True,blank=True)
+    April = models.TextField(default='',null=True,blank=True)
+    May = models.TextField(default='',null=True,blank=True)
+    June = models.TextField(default='',null=True,blank=True)
+    July = models.TextField(default='',null=True,blank=True)
+    August = models.TextField(default='',null=True,blank=True)
+    September = models.TextField(default='',null=True,blank=True)
+    October = models.TextField(default='',null=True,blank=True)
+    November = models.TextField(default='',null=True,blank=True)
+    December = models.TextField(default='',null=True,blank=True)
+
+    January_page = models.CharField(max_length=5,blank=True, null=True)
+    February_page =models.CharField(max_length=5,blank=True, null=True)
+    March_page = models.CharField(max_length=5,blank=True, null=True)
+    April_page =models.CharField(max_length=5,blank=True, null=True)
+    May_page =models.CharField(max_length=5,blank=True, null=True)
+    June_page = models.CharField(max_length=5,blank=True, null=True)
+    July_page = models.CharField(max_length=5,blank=True, null=True)
+    August_page = models.CharField(max_length=5,blank=True, null=True)
+    September_page = models.CharField(max_length=5,blank=True, null=True)
+    October_page = models.CharField(max_length=5,blank=True, null=True)
+    November_page = models.CharField(max_length=5,blank=True, null=True)
+    December_page =models.CharField(max_length=5,blank=True, null=True)
+
+        
+
+    
+   
+    
+    
+
+
+    def save(self):
+        totall=current_affairs.objects.count()
+        self.total_current_affairs= totall
+        self.total_current_affairs_page=int(totall+300)/3
+        jan=1
+        feb=2
+        mar=3
+        apr=4
+        may=5
+        jun=6
+        jul=7
+        aug=8
+        sep=9
+        oct=10
+        nov=11
+        dec=12
+        sort_list=[]
+
+        list_month=(current_affairs.objects.values_list('month',flat=True).filter(year_now='2026').order_by('month').distinct('month'))
+        print(str(list_month))
+        month_str=''
+        
+        month_real=''
+        month_real=''
+        for  val in (list_month):
+            
+            if month_str == '':
+                month_real=str(val)
+                month_str=str(val)
+                
+                
+            else:
+                month_real=str(val)
+                print(month_real)
+                month_str=month_str+" "+str(val)
+
+            list_date=(current_affairs.objects.values_list('day',flat=True).filter(month=month_real,year_now='2026').order_by('day').distinct('day'))
+            
+            date_str=''
+            count_date=0
+            for e in list_date:
+                if date_str == '':
+                    date_str=str(e)
+                    if(month_real =='January'):     
+                        date_str =date_str.replace('2026-01-', '')
+                        date_str=date_str +' Jan, 2026'
+                    elif(month_real == 'February'):
+                        date_str =date_str.replace('2026-02-', '')
+                        date_str=date_str +' Feb, 2026'
+                    elif(month_real =='March'):
+                        date_str =date_str.replace('2026-03-', '')
+                        date_str=date_str +' Mar, 2026'
+                    elif(month_real =='April'):
+                        date_str =date_str.replace('2026-04-', '')
+                        date_str=date_str +' Apr, 2026'
+                    elif(month_real =='May'):
+                        date_str =date_str.replace('2026-05-', '')
+                        date_str=date_str +' May, 2026'
+                    elif(month_real =='June'):
+                        date_str =date_str.replace('2026-06-', '')
+                        date_str=date_str +' Jun, 2026'
+                    elif(month_real =='July'):
+                        date_str =date_str.replace('2026-07-', '')
+                        date_str=date_str +' Jul, 2026'
+                    elif(month_real =='August'):
+                        date_str =date_str.replace('2026-08-', '')
+                        date_str=date_str +' Aug, 2026'
+                    elif(month_real =='September'):
+                        date_str =date_str.replace('2026-09-', '')
+                        date_str=date_str +' Sept, 2026'
+                    elif(month_real =='October'):
+                        date_str =date_str.replace('2026-10-', '')
+                        date_str=date_str +' Oct, 2026'
+                    elif(month_real =='November'):
+                        date_str =date_str.replace('2026-11-', '')
+                        date_str=date_str +' Nov, 2026'
+                    elif(month_real =='December'):
+                        date_str =date_str.replace('2026-12-', '')
+                        date_str=date_str +' Dec, 2026'
+                else:
+                    date_str_replace=str(e)
+                    
+                    if(month_real =='January'):     
+                        date_str_replace =date_str_replace.replace('2026-01-', '')
+                        date_str_replace=date_str_replace +' Jan, 2026'
+                        date_str=date_str+"///"+date_str_replace
+                    elif(month_real == 'February'):
+                        date_str_replace =date_str_replace.replace('2026-02-', '')
+                        date_str_replace=date_str_replace +' Feb, 2026'
+                        date_str=date_str+"///"+date_str_replace
+                    elif(month_real =='March'):
+                        date_str_replace =date_str_replace.replace('2026-03-', '')
+                        date_str_replace=date_str_replace +' Mar, 2026'
+                        date_str=date_str+"///"+date_str_replace
+                    elif(month_real =='April'):
+                        date_str_replace =date_str_replace.replace('2026-04-', '')
+                        date_str_replace=date_str_replace +' Apr, 2026'
+                        date_str=date_str+"///"+date_str_replace
+                    elif(month_real =='May'):
+                        date_str_replace =date_str_replace.replace('2026-05-', '')
+                        date_str_replace=date_str_replace +' May, 2026'
+                        date_str=date_str+"///"+date_str_replace
+                    elif(month_real =='June'):
+                        date_str_replace =date_str_replace.replace('2026-06-', '')
+                        date_str_replace=date_str_replace +' Jun, 2026'
+                        date_str=date_str+"///"+date_str_replace
+                    elif(month_real =='July'):
+                        date_str_replace =date_str_replace.replace('2026-07-', '')
+                        date_str_replace=date_str_replace +' Jul, 2026'
+                        date_str=date_str+"///"+date_str_replace
+                    elif(month_real =='August'):
+                        date_str_replace =date_str_replace.replace('2026-08-', '')
+                        date_str_replace=date_str_replace +' Aug, 2026'
+                        date_str=date_str+"///"+date_str_replace
+                    elif(month_real =='September'):
+                        date_str_replace =date_str_replace.replace('2026-09-', '')
+                        date_str_replace=date_str_replace +' Sep, 2026'
+                        date_str=date_str+"///"+date_str_replace
+                    elif(month_real =='October'):
+                        date_str_replace =date_str_replace.replace('2026-10-', '')
+                        date_str_replace=date_str_replace +' Oct, 2026'
+                        date_str=date_str+"///"+date_str_replace
+                    elif(month_real =='November'):
+                        date_str_replace =date_str_replace.replace('2026-11-', '')
+                        date_str_replace=date_str_replace +' Nov, 2026'
+                        date_str=date_str+"///"+date_str_replace
+                    elif(month_real =='December'):
+                        date_str_replace =date_str_replace.replace('2026-12-', '')
+                        date_str_replace=date_str_replace +' Dec, 2026'
+                        date_str=date_str+"///"+date_str_replace
+                count_date=count_date+1
+            print(count_date)
+
+            print('m='+month_real)
+            if(month_real =='January'):
+                sort_list.append(1)
+                
+                self.January=date_str
+                self.January_page=str(count_date)
+            elif(month_real == 'February'):
+                sort_list.append(2)
+                self.February=date_str
+                self.February_page=str(count_date)
+            elif(month_real =='March'):
+                sort_list.append(3)
+                self.March=date_str
+                self.March_page=str(count_date)
+            elif(month_real =='April'):
+                sort_list.append(4)
+                self.April=date_str
+                self.April_page=str(count_date)
+            elif(month_real =='May'):
+                sort_list.append(5)
+                self.May=date_str
+                self.May_page=str(count_date)
+            elif(month_real =='June'):
+                sort_list.append(6)
+                self.June=date_str
+                self.June_page=str(count_date)
+            elif(month_real =='July'):
+                sort_list.append(7)
+                self.July=date_str
+                self.July_page=str(count_date)
+            elif(month_real =='August'):
+                sort_list.append(8)
+                self.August=date_str
+                self.August_page=str(count_date)
+            elif(month_real =='September'):
+                sort_list.append(9)
+                self.September=date_str
+                self.September_page=str(count_date)
+            elif(month_real =='October'):
+                sort_list.append(10)
+                self.October=date_str
+                self.October_page=str(count_date)
+            elif(month_real =='November'):
+                sort_list.append(11)
+                self.November=date_str
+                self.November_page=str(count_date)
+            elif(month_real =='December'):
+                sort_list.append(12)
+                self.December=date_str
+                self.December_page=str(count_date)
+
+            
+        sort_list = [int(x) for x in sort_list]
+        sort_list.sort()
+        print(sort_list)
+        month_list_new=[]
+        final_month_list=''
+        for  val in (sort_list):
+            if val==1:
+                month_list_new.append('January')
+            elif val==2:
+                month_list_new.append('February')
+            elif val==3:
+                month_list_new.append('March')
+            elif val==4:
+                month_list_new.append('April')
+            elif val==5:
+                month_list_new.append('May')
+            elif val==6:
+                month_list_new.append('June')
+            elif val==7:
+                month_list_new.append('July')
+            elif val==8:
+                month_list_new.append('August')
+            elif val==9:
+                month_list_new.append('September')
+            elif val==10:
+                month_list_new.append('October')
+            elif val==11:
+                month_list_new.append('November')
+            elif val==12:
+                month_list_new.append('December')
+
+        for  val in (month_list_new):
+            
+            if final_month_list == '':
+                final_month_list=str(val)
+            else:
+                final_month_list=final_month_list+" "+str(val)
+                
+        self.month_list= final_month_list    
+
+                
+        super(current_affairs_info_2026, self).save()
+
+
+class current_affairs_info_2025(models.Model):
+    total_current_affairs = models.IntegerField(db_index=True, default=3)
+    total_current_affairs_page = models.IntegerField(db_index=True, default=3)
+    month_list = models.TextField(default='',null=True,blank=True)
+    January = models.TextField(default='',null=True,blank=True)
+    February = models.TextField(default='',null=True,blank=True)
+    March = models.TextField(default='',null=True,blank=True)
+    April = models.TextField(default='',null=True,blank=True)
+    May = models.TextField(default='',null=True,blank=True)
+    June = models.TextField(default='',null=True,blank=True)
+    July = models.TextField(default='',null=True,blank=True)
+    August = models.TextField(default='',null=True,blank=True)
+    September = models.TextField(default='',null=True,blank=True)
+    October = models.TextField(default='',null=True,blank=True)
+    November = models.TextField(default='',null=True,blank=True)
+    December = models.TextField(default='',null=True,blank=True)
+    January_page = models.IntegerField(default=0)
+    February_page = models.IntegerField(default=0)
+    March_page = models.IntegerField(default=0)
+    April_page = models.IntegerField(default=0)
+    May_page = models.IntegerField(default=0)
+    June_page = models.IntegerField(default=0)
+    July_page = models.IntegerField(default=0)
+    August_page = models.IntegerField(default=0)
+    September_page = models.IntegerField(default=0)
+    October_page = models.IntegerField(default=0)
+    November_page = models.IntegerField(default=0)
+    December_page = models.IntegerField(default=0)
+
+    def save(self):
+        totall = current_affairs.objects.filter(year_now='2025').count()
+        self.total_current_affairs = totall
+        self.total_current_affairs_page = int((totall + 2) / 3)
+        super(current_affairs_info_2025, self).save()
+
+
+class current_affairs_info_2027(models.Model):
+    total_current_affairs = models.IntegerField(db_index=True, default=3)
+    total_current_affairs_page = models.IntegerField(db_index=True, default=3)
+    month_list = models.TextField(default='',null=True,blank=True)
+    January = models.TextField(default='',null=True,blank=True)
+    February = models.TextField(default='',null=True,blank=True)
+    March = models.TextField(default='',null=True,blank=True)
+    April = models.TextField(default='',null=True,blank=True)
+    May = models.TextField(default='',null=True,blank=True)
+    June = models.TextField(default='',null=True,blank=True)
+    July = models.TextField(default='',null=True,blank=True)
+    August = models.TextField(default='',null=True,blank=True)
+    September = models.TextField(default='',null=True,blank=True)
+    October = models.TextField(default='',null=True,blank=True)
+    November = models.TextField(default='',null=True,blank=True)
+    December = models.TextField(default='',null=True,blank=True)
+    January_page = models.IntegerField(default=0)
+    February_page = models.IntegerField(default=0)
+    March_page = models.IntegerField(default=0)
+    April_page = models.IntegerField(default=0)
+    May_page = models.IntegerField(default=0)
+    June_page = models.IntegerField(default=0)
+    July_page = models.IntegerField(default=0)
+    August_page = models.IntegerField(default=0)
+    September_page = models.IntegerField(default=0)
+    October_page = models.IntegerField(default=0)
+    November_page = models.IntegerField(default=0)
+    December_page = models.IntegerField(default=0)
+
+    def save(self):
+        totall = current_affairs.objects.filter(year_now='2027').count()
+        self.total_current_affairs = totall
+        self.total_current_affairs_page = int((totall + 2) / 3)
+        super(current_affairs_info_2027, self).save()
+
+
+class current_affairs_info_2028(models.Model):
+    total_current_affairs = models.IntegerField(db_index=True, default=3)
+    total_current_affairs_page = models.IntegerField(db_index=True, default=3)
+    month_list = models.TextField(default='',null=True,blank=True)
+    January = models.TextField(default='',null=True,blank=True)
+    February = models.TextField(default='',null=True,blank=True)
+    March = models.TextField(default='',null=True,blank=True)
+    April = models.TextField(default='',null=True,blank=True)
+    May = models.TextField(default='',null=True,blank=True)
+    June = models.TextField(default='',null=True,blank=True)
+    July = models.TextField(default='',null=True,blank=True)
+    August = models.TextField(default='',null=True,blank=True)
+    September = models.TextField(default='',null=True,blank=True)
+    October = models.TextField(default='',null=True,blank=True)
+    November = models.TextField(default='',null=True,blank=True)
+    December = models.TextField(default='',null=True,blank=True)
+    January_page = models.IntegerField(default=0)
+    February_page = models.IntegerField(default=0)
+    March_page = models.IntegerField(default=0)
+    April_page = models.IntegerField(default=0)
+    May_page = models.IntegerField(default=0)
+    June_page = models.IntegerField(default=0)
+    July_page = models.IntegerField(default=0)
+    August_page = models.IntegerField(default=0)
+    September_page = models.IntegerField(default=0)
+    October_page = models.IntegerField(default=0)
+    November_page = models.IntegerField(default=0)
+    December_page = models.IntegerField(default=0)
+
+    def save(self):
+        totall = current_affairs.objects.filter(year_now='2028').count()
+        self.total_current_affairs = totall
+        self.total_current_affairs_page = int((totall + 2) / 3)
+        super(current_affairs_info_2028, self).save()
 
 
 class polity(models.Model):

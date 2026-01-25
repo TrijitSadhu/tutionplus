@@ -21,4 +21,9 @@ urlpatterns = [
     
     # Status endpoint
     path('api/status/', views.genai_status, name='status'),
+    
+    # Admin Dashboard - Processing Management
+    path('admin/dashboard/', views.processing_dashboard, name='processing_dashboard'),
+    path('admin/trigger-fetch/', views.trigger_fetch, name='trigger_fetch'),
+    path('admin/task-status/<int:task_id>/', views.task_status, name='task_status'),
 ]

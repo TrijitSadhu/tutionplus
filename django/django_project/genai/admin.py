@@ -3,7 +3,10 @@ from django import forms
 from django.utils.html import format_html
 from django.urls import reverse
 from django.db.models import Q
-from .models import PDFUpload, CurrentAffairsGeneration, MathProblemGeneration, ProcessingTask
+from django.core.management import call_command
+from django.core.management.base import CommandError
+from django.utils import timezone
+from .models import PDFUpload, CurrentAffairsGeneration, MathProblemGeneration, ProcessingTask, ProcessingLog, ContentSource
 
 
 class PDFUploadAdmin(admin.ModelAdmin):
@@ -240,8 +243,309 @@ class ProcessingTaskAdmin(admin.ModelAdmin):
     duration.short_description = 'Duration'
 
 
+class ProcessingLogAdmin(admin.ModelAdmin):
+    """Admin interface for Processing Logs with status tracking"""
+    
+    list_display = ('id', 'task_type_display', 'status_badge', 'progress_bar', 'duration_display', 'created_at', 'admin_action_buttons')
+    list_filter = ('status', 'task_type', 'created_at')
+    search_fields = ('id', 'mcq_status', 'current_affairs_status')
+    readonly_fields = ('id', 'created_at', 'updated_at', 'started_at', 'completed_at', 'duration_display', 'progress_percentage_display', 'log_details_formatted')
+    
+    fieldsets = (
+        ('Task Information', {
+            'fields': ('id', 'task_type', 'status', 'created_by')
+        }),
+        ('Timing', {
+            'fields': ('created_at', 'updated_at', 'started_at', 'completed_at', 'duration_display'),
+            'classes': ('collapse',)
+        }),
+        ('Progress Tracking', {
+            'fields': ('total_items', 'processed_items', 'success_count', 'error_count', 'progress_percentage_display')
+        }),
+        ('Status Details', {
+            'fields': ('mcq_status', 'current_affairs_status', 'error_message')
+        }),
+        ('Scheduling', {
+            'fields': ('is_scheduled', 'scheduled_time'),
+            'classes': ('collapse',)
+        }),
+        ('Log Details', {
+            'fields': ('log_details_formatted',),
+            'classes': ('collapse',)
+        }),
+    )
+    
+    actions = ['mark_completed', 'mark_failed', 'clear_error', 'trigger_fetch_both', 'trigger_fetch_mcq', 'trigger_fetch_ca', 'generate_mcq_from_pdf', 'generate_ca_from_pdf']
+    
+    def task_type_display(self, obj):
+        return obj.get_task_type_display()
+    task_type_display.short_description = 'Task Type'
+    
+    def status_badge(self, obj):
+        """Display status as colored badge"""
+        colors = {
+            'pending': '#FFA500',
+            'running': '#FF6B6B',
+            'completed': '#51CF66',
+            'failed': '#C92A2A',
+        }
+        color = colors.get(obj.status, '#999999')
+        emoji = {'pending': '⏳', 'running': '⚙️', 'completed': '✅', 'failed': '❌'}.get(obj.status, '❓')
+        return format_html(
+            '<span style="background-color: {}; color: white; padding: 5px 10px; border-radius: 3px; font-weight: bold;">{} {}</span>',
+            color,
+            emoji,
+            obj.get_status_display()
+        )
+    status_badge.short_description = 'Status'
+    
+    def progress_bar(self, obj):
+        """Display progress as HTML bar"""
+        if obj.total_items == 0:
+            percentage = 0
+        else:
+            percentage = obj.progress_percentage
+        
+        bar_color = '#51CF66' if percentage == 100 else '#4DABF7' if percentage > 50 else '#FFD43B'
+        
+        return format_html(
+            '<div style="width: 100%; background-color: #e0e0e0; border-radius: 3px; height: 20px; position: relative;">'
+            '<div style="width: {}%; background-color: {}; height: 20px; border-radius: 3px; display: flex; align-items: center; justify-content: center;">'
+            '<span style="color: white; font-size: 12px; font-weight: bold;">{}/{}' 
+            '</span></div></div>',
+            percentage,
+            bar_color,
+            obj.processed_items,
+            obj.total_items
+        )
+    progress_bar.short_description = 'Progress'
+    
+    def duration_display(self, obj):
+        """Display task duration"""
+        if obj.duration is None:
+            return "-"
+        minutes, seconds = divmod(int(obj.duration), 60)
+        if minutes > 0:
+            return f"{minutes}m {seconds}s"
+        return f"{seconds}s"
+    duration_display.short_description = 'Duration'
+    
+    def progress_percentage_display(self, obj):
+        """Display progress percentage"""
+        return f"{obj.progress_percentage}%"
+    progress_percentage_display.short_description = 'Progress %'
+    
+    def log_details_formatted(self, obj):
+        """Display log details as formatted JSON"""
+        if not obj.log_details:
+            return "No log details available"
+        try:
+            import json
+            formatted = json.dumps(json.loads(obj.log_details), indent=2)
+            return format_html('<pre style="background-color: #f5f5f5; padding: 10px; border-radius: 3px; overflow: auto;">{}</pre>', formatted)
+        except:
+            return obj.log_details
+    log_details_formatted.short_description = 'Log Details'
+    
+    def admin_action_buttons(self, obj):
+        """Show quick action buttons in list view"""
+        status_url = reverse('genai:task_status', args=[obj.id])
+        return format_html(
+            '<a class="button" href="{}">View Status</a>',
+            status_url
+        )
+    admin_action_buttons.short_description = 'Actions'
+    
+    def mark_completed(self, request, queryset):
+        """Mark selected tasks as completed"""
+        updated = queryset.update(status='completed')
+        self.message_user(request, f"✅ Marked {updated} task(s) as completed")
+    mark_completed.short_description = "✅ Mark selected as completed"
+    
+    def mark_failed(self, request, queryset):
+        """Mark selected tasks as failed"""
+        updated = queryset.update(status='failed')
+        self.message_user(request, f"❌ Marked {updated} task(s) as failed")
+    mark_failed.short_description = "❌ Mark selected as failed"
+    
+    def clear_error(self, request, queryset):
+        """Clear error messages"""
+        updated = queryset.update(error_message='')
+        self.message_user(request, f"✓ Cleared errors for {updated} task(s)")
+    clear_error.short_description = "✓ Clear error messages"
+    
+    def trigger_fetch_both(self, request, queryset):
+        """Trigger fetch for both MCQ and Current Affairs"""
+        try:
+            call_command('fetch_all_content', type='both')
+            self.message_user(request, "🚀 Started: Fetch Both MCQ & Current Affairs")
+        except CommandError as e:
+            self.message_user(request, f"❌ Error: {str(e)}", level='ERROR')
+    trigger_fetch_both.short_description = "🚀 Fetch Both (MCQ & Current Affairs)"
+    
+    def trigger_fetch_mcq(self, request, queryset):
+        """Trigger fetch for MCQ only"""
+        try:
+            call_command('fetch_all_content', type='mcq')
+            self.message_user(request, "📖 Started: Fetch MCQ Content")
+        except CommandError as e:
+            self.message_user(request, f"❌ Error: {str(e)}", level='ERROR')
+    trigger_fetch_mcq.short_description = "📖 Fetch MCQ Only"
+    
+    def trigger_fetch_ca(self, request, queryset):
+        """Trigger fetch for Current Affairs only"""
+        try:
+            call_command('fetch_all_content', type='current_affairs')
+            self.message_user(request, "📰 Started: Fetch Current Affairs")
+        except CommandError as e:
+            self.message_user(request, f"❌ Error: {str(e)}", level='ERROR')
+    trigger_fetch_ca.short_description = "📰 Fetch Current Affairs Only"
+    
+    def generate_mcq_from_pdf(self, request, queryset):
+        """Generate MCQ from PDF file"""
+        if not request.FILES:
+            self.message_user(request, "❌ Please upload a PDF file", level='ERROR')
+            return
+        
+        try:
+            uploaded_file = request.FILES.get('pdf_file')
+            if not uploaded_file:
+                self.message_user(request, "❌ No PDF file provided", level='ERROR')
+                return
+            
+            # Create PDFUpload record
+            pdf_upload = PDFUpload.objects.create(
+                title=uploaded_file.name,
+                pdf_file=uploaded_file,
+                subject='genai',
+                uploaded_by=request.user,
+                status='processing'
+            )
+            
+            # Create processing log
+            log_entry = ProcessingLog.objects.create(
+                task_type='pdf_mcq',
+                status='running',
+                pdf_upload=pdf_upload,
+                started_at=timezone.now()
+            )
+            
+            # Call processing command
+            call_command('process_pdf_content', pdf_id=pdf_upload.id, content_type='mcq')
+            
+            self.message_user(request, f"📄 Started: Generate MCQ from PDF (Task ID: {log_entry.id})")
+        except Exception as e:
+            self.message_user(request, f"❌ Error: {str(e)}", level='ERROR')
+    generate_mcq_from_pdf.short_description = "📄 Generate MCQ from PDF"
+    
+    def generate_ca_from_pdf(self, request, queryset):
+        """Generate Current Affairs from PDF file"""
+        if not request.FILES:
+            self.message_user(request, "❌ Please upload a PDF file", level='ERROR')
+            return
+        
+        try:
+            uploaded_file = request.FILES.get('pdf_file')
+            if not uploaded_file:
+                self.message_user(request, "❌ No PDF file provided", level='ERROR')
+                return
+            
+            # Create PDFUpload record
+            pdf_upload = PDFUpload.objects.create(
+                title=uploaded_file.name,
+                pdf_file=uploaded_file,
+                subject='genai',
+                uploaded_by=request.user,
+                status='processing'
+            )
+            
+            # Create processing log
+            log_entry = ProcessingLog.objects.create(
+                task_type='pdf_current_affairs',
+                status='running',
+                pdf_upload=pdf_upload,
+                started_at=timezone.now()
+            )
+            
+            # Call processing command
+            call_command('process_pdf_content', pdf_id=pdf_upload.id, content_type='current_affairs')
+            
+            self.message_user(request, f"📋 Started: Generate Current Affairs from PDF (Task ID: {log_entry.id})")
+        except Exception as e:
+            self.message_user(request, f"❌ Error: {str(e)}", level='ERROR')
+    generate_ca_from_pdf.short_description = "📋 Generate Current Affairs from PDF"
+
+
+class ContentSourceAdmin(admin.ModelAdmin):
+    """Admin interface for managing content sources"""
+    
+    list_display = ('name', 'source_type_display', 'url_preview', 'is_active_badge', 'created_at')
+    list_filter = ('source_type', 'is_active', 'created_at')
+    search_fields = ('name', 'url', 'description')
+    readonly_fields = ('created_at', 'updated_at')
+    
+    fieldsets = (
+        ('Source Information', {
+            'fields': ('name', 'source_type', 'url', 'description')
+        }),
+        ('Status', {
+            'fields': ('is_active',)
+        }),
+        ('Metadata', {
+            'fields': ('created_by', 'created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )
+    
+    actions = ['activate_sources', 'deactivate_sources']
+    
+    def source_type_display(self, obj):
+        """Display source type with icon"""
+        icons = {
+            'mcq': '📖',
+            'current_affairs': '📰'
+        }
+        icon = icons.get(obj.source_type, '🔗')
+        return f"{icon} {obj.get_source_type_display()}"
+    source_type_display.short_description = 'Type'
+    
+    def url_preview(self, obj):
+        """Display URL with link"""
+        return format_html(
+            '<a href="{}" target="_blank" style="word-break: break-all;">{}</a>',
+            obj.url,
+            obj.url[:50] + '...' if len(obj.url) > 50 else obj.url
+        )
+    url_preview.short_description = 'URL'
+    
+    def is_active_badge(self, obj):
+        """Display active status as badge"""
+        if obj.is_active:
+            return format_html(
+                '<span style="background-color: #51CF66; color: white; padding: 5px 10px; border-radius: 3px;">✅ Active</span>'
+            )
+        return format_html(
+            '<span style="background-color: #C92A2A; color: white; padding: 5px 10px; border-radius: 3px;">❌ Inactive</span>'
+        )
+    is_active_badge.short_description = 'Status'
+    
+    def activate_sources(self, request, queryset):
+        """Activate selected sources"""
+        updated = queryset.update(is_active=True)
+        self.message_user(request, f"✅ Activated {updated} source(s)")
+    activate_sources.short_description = "✅ Activate selected sources"
+    
+    def deactivate_sources(self, request, queryset):
+        """Deactivate selected sources"""
+        updated = queryset.update(is_active=False)
+        self.message_user(request, f"❌ Deactivated {updated} source(s)")
+    deactivate_sources.short_description = "❌ Deactivate selected sources"
+
+
 # Register models with admin
 admin.site.register(PDFUpload, PDFUploadAdmin)
 admin.site.register(CurrentAffairsGeneration, CurrentAffairsGenerationAdmin)
 admin.site.register(MathProblemGeneration, MathProblemGenerationAdmin)
 admin.site.register(ProcessingTask, ProcessingTaskAdmin)
+admin.site.register(ProcessingLog, ProcessingLogAdmin)
+admin.site.register(ContentSource, ContentSourceAdmin)
