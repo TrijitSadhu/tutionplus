@@ -119,9 +119,9 @@ class currentaffairs_descriptive(models.Model):
     def __str__(self):
         return self.day.strftime('%d/%m/%Y') + '     '+ self.upper_heading
 
-    def save(self):
+    def save(self, *args, **kwargs):
         self.new_id= self.upper_heading +'===' +self.day.strftime('%d-%m-%Y')
-        super(current_affairs, self).save()
+        super(currentaffairs_descriptive, self).save(*args, **kwargs)
 
 
 
@@ -167,7 +167,7 @@ class total(models.Model):
     
 
 
-    def save(self):
+    def save(self, *args, **kwargs):
         totall=currentaffairs_descriptive.objects.count()
         self.total_current_affairs= totall
         self.total_current_affairs_page=int(totall+300)/3
@@ -328,7 +328,7 @@ class total(models.Model):
             self.static_gk= total_page_static_gk
 
             
-        super(total, self).save()
+        super(total, self).save(*args, **kwargs)
 
 
 
@@ -346,9 +346,9 @@ class the_hindu_word_Header1(models.Model):
     def __str__(self):
         return self.day.strftime('%d/%m/%Y')+ self.Heading_for_list1[:100]
 
-    def save(self):
+    def save(self, *args, **kwargs):
         self.new_id= 'the_hindu_header1' +self.day.strftime('%d-%m-%Y')
-        super(the_hindu_word_Header1, self).save()
+        super(the_hindu_word_Header1, self).save(*args, **kwargs)
 
 
     
@@ -373,9 +373,9 @@ class the_hindu_word_Header2(models.Model):
     def __str__(self):
         return self.day.strftime('%d/%m/%Y')+self.Heading_for_list2[:30]
 
-    def save(self):
+    def save(self, *args, **kwargs):
         self.new_id= 'the_hindu_header2' +self.day.strftime('%d-%m-%Y')
-        super(the_hindu_word_Header2, self).save()       
+        super(the_hindu_word_Header2, self).save(*args, **kwargs)       
         
         
 class the_hindu_word_list1(models.Model):
@@ -402,9 +402,9 @@ class the_hindu_word_list1(models.Model):
     def __str__(self):
         return self.day.strftime('%d/%m/%Y') + '...'+ self.word
 
-    def save(self):
+    def save(self, *args, **kwargs):
         self.new_id= self.word +self.day.strftime('%d-%m-%Y')
-        super(the_hindu_word_list1, self).save()    
+        super(the_hindu_word_list1, self).save(*args, **kwargs)    
 
 
 
@@ -436,9 +436,9 @@ class the_hindu_word_list2(models.Model):
     def __str__(self):
         return self.day.strftime('%d/%m/%Y') + '...'+ self.word
 
-    def save(self):
+    def save(self, *args, **kwargs):
         self.new_id= self.word+self.day.strftime('%d-%m-%Y') 
-        super(the_hindu_word_list2, self).save()
+        super(the_hindu_word_list2, self).save(*args, **kwargs)
 
 
 
@@ -457,9 +457,9 @@ class the_economy_word_Header1(models.Model):
     def __str__(self):
         return self.day.strftime('%d/%m/%Y')+self.Heading_for_list1[:30]
 
-    def save(self):
+    def save(self, *args, **kwargs):
         self.new_id= 'the_economy_header1' +self.day.strftime('%d-%m-%Y')
-        super(the_economy_word_Header1, self).save()
+        super(the_economy_word_Header1, self).save(*args, **kwargs)
 
 
     
@@ -484,9 +484,9 @@ class the_economy_word_Header2(models.Model):
     def __str__(self):
         return self.day.strftime('%d/%m/%Y')
 
-    def save(self):
+    def save(self, *args, **kwargs):
         self.new_id= 'the_economy_header2' +self.day.strftime('%d-%m-%Y')
-        super(the_economy_word_Header2, self).save()       
+        super(the_economy_word_Header2, self).save(*args, **kwargs)       
                
 
 
@@ -512,9 +512,9 @@ class the_economy_word_list1(models.Model):
     def __str__(self):
         return self.day.strftime('%d/%m/%Y') + '...'+ self.word
 
-    def save(self):
+    def save(self, *args, **kwargs):
         self.new_id= self.word+self.day.strftime('%d-%m-%Y') 
-        super(the_economy_word_list1, self).save()
+        super(the_economy_word_list1, self).save(*args, **kwargs)
     
 
 
@@ -543,9 +543,9 @@ class the_economy_word_list2(models.Model):
     def __str__(self):
         return self.day.strftime('%d/%m/%Y') + '...'+ self.word
 
-    def save(self):
+    def save(self, *args, **kwargs):
         self.new_id= self.word+self.day.strftime('%d-%m-%Y')
-        super(the_economy_word_list2, self).save()
+        super(the_economy_word_list2, self).save(*args, **kwargs)
 
 
 class home(models.Model):
@@ -572,9 +572,9 @@ class home(models.Model):
     def __str__(self):
         return self.day.strftime('%d/%m/%Y') + '...'+ str(self.creation_time)
 
-    def save(self):
+    def save(self, *args, **kwargs):
         
-        super(home, self).save()
+        super(home, self).save(*args, **kwargs)
 
 
 
@@ -600,7 +600,7 @@ class total_english(models.Model):
     
     
 
-    def save(self):
+    def save(self, *args, **kwargs):
         totall=the_hindu_word_list1.objects.all().distinct('day').count()
         self.total_page= totall
         date_object_from_hindu_one = the_hindu_word_list1.objects.values('day').order_by('-day')[:1]
@@ -652,7 +652,7 @@ class total_english(models.Model):
 
 
             
-        super(total_english, self).save()
+        super(total_english, self).save(*args, **kwargs)
         
 
 class math(models.Model):
@@ -833,7 +833,7 @@ class total_math(models.Model):
     
 
 
-    def save(self):
+    def save(self, *args, **kwargs):
         totall_profit_n_loss=math.objects.filter(chapter='profit_n_loss').count()
         totall_squre_n_cube=math.objects.filter(chapter='squre_n_cube').count()
         totall_simplification=math.objects.filter(chapter='simplification').count()
@@ -1065,7 +1065,7 @@ class total_math(models.Model):
 
 
             
-        super(total_math, self).save()
+        super(total_math, self).save(*args, **kwargs)
 
 class job(models.Model):
     top =models.BooleanField(default=False,db_index=True)
@@ -1215,9 +1215,9 @@ class job(models.Model):
     def __str__(self):
         return self.day.strftime('%d/%m/%Y') + '     '+ self.heading
 
-    def save(self):
+    def save(self, *args, **kwargs):
         self.new_id= self.heading +'===' +self.day.strftime('%d-%m-%Y')
-        super(job, self).save()
+        super(job, self).save(*args, **kwargs)
         
 
 
@@ -1263,7 +1263,7 @@ class total_job(models.Model):
     
 
 
-    def save(self):
+    def save(self, *args, **kwargs):
         totall=job.objects.count()
         self.total_job= totall
         self.total_job_page=int(totall+300)/10
@@ -1338,7 +1338,7 @@ class total_job(models.Model):
      
 
             
-        super(total_job, self).save()
+        super(total_job, self).save(*args, **kwargs)
 
 
 
@@ -1454,7 +1454,7 @@ class total_job_category(models.Model):
     
 
 
-    def save(self):
+    def save(self, *args, **kwargs):
         
 
         total_graduate_only=job.objects.filter(graduate_only=True).count()
@@ -1811,7 +1811,7 @@ class total_job_category(models.Model):
             
 
 
-        super(total_job_category, self).save()
+        super(total_job_category, self).save(*args, **kwargs)
 
 
 
@@ -1942,7 +1942,7 @@ class total_job_state(models.Model):
     
 
 
-    def save(self):
+    def save(self, *args, **kwargs):
         
 
         total_andaman_nicobar=job.objects.filter(state='andaman_nicobar').count()
@@ -2347,7 +2347,7 @@ class total_job_state(models.Model):
             
             
 
-            super(total_job_state, self).save()
+            super(total_job_state, self).save(*args, **kwargs)
         
         
 
@@ -2374,9 +2374,9 @@ class topic(models.Model):
     def __str__(self):
         return self.day.strftime('%d/%m/%Y') + '...'+ self.headline
 
-    def save(self):
+    def save(self, *args, **kwargs):
         self.new_id= self.headline +self.day.strftime('%d-%m-%Y')
-        super(topic, self).save()
+        super(topic, self).save(*args, **kwargs)
 
 
 
@@ -2406,8 +2406,8 @@ class user_save(models.Model):
     def __str__(self):
         return self.day.strftime('%d/%m/%Y') + '...'+ self.user_id+ '...'+self.headline
 
-    def save(self):
-        super(user_save, self).save()
+    def save(self, *args, **kwargs):
+        super(user_save, self).save(*args, **kwargs)
 
 
 
@@ -2501,13 +2501,13 @@ class reasoning(models.Model):
     
     
 
-    def save(self):
+    def save(self, *args, **kwargs):
         
         self.new_id= str(self.day)+str(self.creation_time)+self.question[:30]
        
 
     
-        super(reasoning, self).save()
+        super(reasoning, self).save(*args, **kwargs)
         
     
 
@@ -2587,7 +2587,7 @@ class total_reasoning(models.Model):
     
 
 
-    def save(self):
+    def save(self, *args, **kwargs):
         totall_analogy=reasoning.objects.filter(chapter='analogy').count()
         totall_classification=reasoning.objects.filter(chapter='classification').count()
         totall_alpha_numaric_symbol=reasoning.objects.filter(chapter='alpha_numaric_symbol').count()
@@ -2814,7 +2814,7 @@ class total_reasoning(models.Model):
 
 
             
-        super(total_reasoning, self).save()
+        super(total_reasoning, self).save(*args, **kwargs)
 
 
 class close(models.Model):
@@ -2874,13 +2874,13 @@ class close(models.Model):
     
     
 
-    def save(self):
+    def save(self, *args, **kwargs):
         
         self.new_id= str(self.day)+str(self.creation_time)+self.question[:30]
        
 
     
-        super(close, self).save()
+        super(close, self).save(*args, **kwargs)
 
 
 class error(models.Model):
@@ -2959,13 +2959,13 @@ class error(models.Model):
     
     
 
-    def save(self):
+    def save(self, *args, **kwargs):
         
         self.new_id= str(self.day)+str(self.creation_time)+self.question[:30]
        
 
     
-        super(error, self).save()
+        super(error, self).save(*args, **kwargs)
 
 
 
@@ -3019,7 +3019,7 @@ class total_error(models.Model):
     
 
 
-    def save(self):
+    def save(self, *args, **kwargs):
         totall_noun=reasoning.objects.filter(chapter='noun').count()
         self.total_noun=totall_noun
         totall_pronoun=reasoning.objects.filter(chapter='pronoun').count()
@@ -3157,7 +3157,7 @@ class total_error(models.Model):
 
 
             
-        super(total_error, self).save()
+        super(total_error, self).save(*args, **kwargs)
 
 
 
@@ -3178,7 +3178,7 @@ class total_close(models.Model):
     
 
 
-    def save(self):
+    def save(self, *args, **kwargs):
         totall_close=close.objects.count()
         self.total_close=totall_close
      
@@ -3201,7 +3201,7 @@ class total_close(models.Model):
 
 
             
-        super(total_close, self).save()
+        super(total_close, self).save(*args, **kwargs)
 
 
 
@@ -3342,7 +3342,7 @@ class total_mcq(models.Model):
     
 
 
-    def save(self):
+    def save(self, *args, **kwargs):
         totall=currentaffairs_mcq.objects.count()
         self.total_mcq= totall
         self.total_mcq_page=int(totall+300)/3
@@ -3516,7 +3516,7 @@ class total_mcq(models.Model):
 
 
         
-        super(total_mcq, self).save()
+        super(total_mcq, self).save(*args, **kwargs)
 
 
 class currentaffairs_mcq_info_2018(models.Model):
@@ -3560,7 +3560,7 @@ class currentaffairs_mcq_info_2018(models.Model):
     
 
 
-    def save(self):
+    def save(self, *args, **kwargs):
         totall=currentaffairs_mcq.objects.count()
         self.total_mcq= totall
         self.total_mcq_page=int(totall+300)/3
@@ -3808,7 +3808,7 @@ class currentaffairs_mcq_info_2018(models.Model):
                 
 
         
-        super(currentaffairs_mcq_info_2018, self).save()
+        super(currentaffairs_mcq_info_2018, self).save(*args, **kwargs)
 
 
 
@@ -3853,7 +3853,7 @@ class currentaffairs_mcq_info_2019(models.Model):
     
 
 
-    def save(self):
+    def save(self, *args, **kwargs):
         totall=currentaffairs_mcq.objects.count()
         self.total_mcq= totall
         self.total_mcq_page=int(totall+300)/3
@@ -4101,7 +4101,7 @@ class currentaffairs_mcq_info_2019(models.Model):
                 
 
         
-        super(currentaffairs_mcq_info_2019, self).save()
+        super(currentaffairs_mcq_info_2019, self).save(*args, **kwargs)
 
 class currentaffairs_mcq_info_2020(models.Model):
     
@@ -4144,7 +4144,7 @@ class currentaffairs_mcq_info_2020(models.Model):
     
 
 
-    def save(self):
+    def save(self, *args, **kwargs):
         totall=currentaffairs_mcq.objects.count()
         self.total_mcq= totall
         self.total_mcq_page=int(totall+300)/3
@@ -4392,7 +4392,7 @@ class currentaffairs_mcq_info_2020(models.Model):
                 
 
         
-        super(currentaffairs_mcq_info_2020, self).save()
+        super(currentaffairs_mcq_info_2020, self).save(*args, **kwargs)
 
 
 
@@ -4437,7 +4437,7 @@ class currentaffairs_mcq_info_2026(models.Model):
     
 
 
-    def save(self):
+    def save(self, *args, **kwargs):
         totall=currentaffairs_mcq.objects.count()
         self.total_mcq= totall
         self.total_mcq_page=int(totall+300)/3
@@ -4685,7 +4685,7 @@ class currentaffairs_mcq_info_2026(models.Model):
                 
 
         
-        super(currentaffairs_mcq_info_2026, self).save()
+        super(currentaffairs_mcq_info_2026, self).save(*args, **kwargs)
 
 
 class currentaffairs_mcq_info_2025(models.Model):
@@ -4717,7 +4717,7 @@ class currentaffairs_mcq_info_2025(models.Model):
     November_page = models.IntegerField(default=0)
     December_page = models.IntegerField(default=0)
 
-    def save(self):
+    def save(self, *args, **kwargs):
         totall=currentaffairs_mcq.objects.filter(year_now='2025').count()
         self.total_mcq=totall
         self.total_mcq_page=int((totall+2)/3)
@@ -4807,7 +4807,7 @@ class currentaffairs_mcq_info_2025(models.Model):
             elif val==12: month_list_new.append('December')
         final_month_list=' '.join(month_list_new)
         self.month_list=final_month_list
-        super(currentaffairs_mcq_info_2025, self).save()
+        super(currentaffairs_mcq_info_2025, self).save(*args, **kwargs)
 
 
 class currentaffairs_mcq_info_2027(models.Model):
@@ -4839,7 +4839,7 @@ class currentaffairs_mcq_info_2027(models.Model):
     November_page = models.IntegerField(default=0)
     December_page = models.IntegerField(default=0)
 
-    def save(self):
+    def save(self, *args, **kwargs):
         totall=currentaffairs_mcq.objects.filter(year_now='2027').count()
         self.total_mcq=totall
         self.total_mcq_page=int((totall+2)/3)
@@ -4929,7 +4929,7 @@ class currentaffairs_mcq_info_2027(models.Model):
             elif val==12: month_list_new.append('December')
         final_month_list=' '.join(month_list_new)
         self.month_list=final_month_list
-        super(currentaffairs_mcq_info_2027, self).save()
+        super(currentaffairs_mcq_info_2027, self).save(*args, **kwargs)
 
 
 class currentaffairs_mcq_info_2028(models.Model):
@@ -4961,7 +4961,7 @@ class currentaffairs_mcq_info_2028(models.Model):
     November_page = models.IntegerField(default=0)
     December_page = models.IntegerField(default=0)
 
-    def save(self):
+    def save(self, *args, **kwargs):
         totall=currentaffairs_mcq.objects.filter(year_now='2028').count()
         self.total_mcq=totall
         self.total_mcq_page=int((totall+2)/3)
@@ -5051,7 +5051,7 @@ class currentaffairs_mcq_info_2028(models.Model):
             elif val==12: month_list_new.append('December')
         final_month_list=' '.join(month_list_new)
         self.month_list=final_month_list
-        super(currentaffairs_mcq_info_2028, self).save()
+        super(currentaffairs_mcq_info_2028, self).save(*args, **kwargs)
 
 
 class currentaffairs_descriptive_info_2020(models.Model):
@@ -5095,7 +5095,7 @@ class currentaffairs_descriptive_info_2020(models.Model):
     
 
 
-    def save(self):
+    def save(self, *args, **kwargs):
         totall=currentaffairs_descriptive.objects.count()
         self.total_current_affairs= totall
         self.total_current_affairs_page=int(totall+300)/3
@@ -5343,7 +5343,7 @@ class currentaffairs_descriptive_info_2020(models.Model):
                 
 
         
-        super(currentaffairs_descriptive_info_2020, self).save()
+        super(currentaffairs_descriptive_info_2020, self).save(*args, **kwargs)
 
 
 
@@ -5388,7 +5388,7 @@ class currentaffairs_descriptive_info_2019(models.Model):
     
 
 
-    def save(self):
+    def save(self, *args, **kwargs):
         totall=currentaffairs_descriptive.objects.count()
         self.total_current_affairs= totall
         self.total_current_affairs_page=int(totall+300)/3
@@ -5639,7 +5639,7 @@ class currentaffairs_descriptive_info_2019(models.Model):
                 
 
         
-        super(currentaffairs_descriptive_info_2019, self).save()
+        super(currentaffairs_descriptive_info_2019, self).save(*args, **kwargs)
 
 
 class currentaffairs_descriptive_info_2018(models.Model):
@@ -5683,7 +5683,7 @@ class currentaffairs_descriptive_info_2018(models.Model):
     
 
 
-    def save(self):
+    def save(self, *args, **kwargs):
         totall=currentaffairs_descriptive.objects.count()
         self.total_current_affairs= totall
         self.total_current_affairs_page=int(totall+300)/3
@@ -5922,7 +5922,7 @@ class currentaffairs_descriptive_info_2018(models.Model):
         self.month_list= final_month_list    
         #print(month_str)
         #print(list_date)        
-        super(currentaffairs_descriptive_info_2018, self).save()
+        super(currentaffairs_descriptive_info_2018, self).save(*args, **kwargs)
 
 
 class currentaffairs_descriptive_info_2026(models.Model):
@@ -5966,7 +5966,7 @@ class currentaffairs_descriptive_info_2026(models.Model):
     
 
 
-    def save(self):
+    def save(self, *args, **kwargs):
         totall=currentaffairs_descriptive.objects.count()
         self.total_current_affairs= totall
         self.total_current_affairs_page=int(totall+300)/3
@@ -6192,7 +6192,7 @@ class currentaffairs_descriptive_info_2026(models.Model):
         self.month_list= final_month_list    
 
                 
-        super(currentaffairs_descriptive_info_2026, self).save()
+        super(currentaffairs_descriptive_info_2026, self).save(*args, **kwargs)
 
 
 class currentaffairs_descriptive_info_2025(models.Model):
@@ -6224,11 +6224,11 @@ class currentaffairs_descriptive_info_2025(models.Model):
     November_page = models.IntegerField(default=0)
     December_page = models.IntegerField(default=0)
 
-    def save(self):
+    def save(self, *args, **kwargs):
         totall = currentaffairs_descriptive.objects.filter(year_now='2025').count()
         self.total_current_affairs = totall
         self.total_current_affairs_page = int((totall + 2) / 3)
-        super(currentaffairs_descriptive_info_2025, self).save()
+        super(currentaffairs_descriptive_info_2025, self).save(*args, **kwargs)
 
 
 class currentaffairs_descriptive_info_2027(models.Model):
@@ -6260,11 +6260,11 @@ class currentaffairs_descriptive_info_2027(models.Model):
     November_page = models.IntegerField(default=0)
     December_page = models.IntegerField(default=0)
 
-    def save(self):
+    def save(self, *args, **kwargs):
         totall = currentaffairs_descriptive.objects.filter(year_now='2027').count()
         self.total_current_affairs = totall
         self.total_current_affairs_page = int((totall + 2) / 3)
-        super(currentaffairs_descriptive_info_2027, self).save()
+        super(currentaffairs_descriptive_info_2027, self).save(*args, **kwargs)
 
 
 class currentaffairs_descriptive_info_2028(models.Model):
@@ -6296,11 +6296,11 @@ class currentaffairs_descriptive_info_2028(models.Model):
     November_page = models.IntegerField(default=0)
     December_page = models.IntegerField(default=0)
 
-    def save(self):
+    def save(self, *args, **kwargs):
         totall = currentaffairs_descriptive.objects.filter(year_now='2028').count()
         self.total_current_affairs = totall
         self.total_current_affairs_page = int((totall + 2) / 3)
-        super(currentaffairs_descriptive_info_2028, self).save()
+        super(currentaffairs_descriptive_info_2028, self).save(*args, **kwargs)
 
 
 class polity(models.Model):
@@ -6372,9 +6372,9 @@ class polity(models.Model):
     def __str__(self):
         return self.day.strftime('%d/%m/%Y') + '     '+ self.question +'--->chapter='+self.chapter+'---'+self.difficulty
 
-    def save(self):
+    def save(self, *args, **kwargs):
         self.new_id= self.question[:100] +'===' +self.day.strftime('%d-%m-%Y')
-        super(polity, self).save()
+        super(polity, self).save(*args, **kwargs)
 
 
 
@@ -6428,7 +6428,7 @@ class total_polity(models.Model):
 
 
 
-    def save(self):
+    def save(self, *args, **kwargs):
         totall=polity.objects.count()
         self.total_polity= totall
         self.total_polity_page=int(totall)/5
@@ -6449,7 +6449,7 @@ class total_polity(models.Model):
 
 
         
-        super(total_polity, self).save()
+        super(total_polity, self).save(*args, **kwargs)
 
 
 
@@ -6524,9 +6524,9 @@ class history(models.Model):
     def __str__(self):
         return self.day.strftime('%d/%m/%Y') + '     '+ self.question +'--->chapter='+self.chapter+'---'+self.difficulty
 
-    def save(self):
+    def save(self, *args, **kwargs):
         self.new_id= self.question[:100] +'===' +self.day.strftime('%d-%m-%Y')
-        super(history, self).save()
+        super(history, self).save(*args, **kwargs)
 
 
 
@@ -6580,7 +6580,7 @@ class total_history(models.Model):
 
 
 
-    def save(self):
+    def save(self, *args, **kwargs):
         totall=history.objects.count()
         self.total_history= totall
         self.total_history_page=int(totall)/5
@@ -6601,7 +6601,7 @@ class total_history(models.Model):
 
 
         
-        super(total_history, self).save()
+        super(total_history, self).save(*args, **kwargs)
 
 
 
@@ -6676,9 +6676,9 @@ class geography(models.Model):
     def __str__(self):
         return self.day.strftime('%d/%m/%Y') + '     '+ self.question +'--->chapter='+self.chapter+'---'+self.difficulty
 
-    def save(self):
+    def save(self, *args, **kwargs):
         self.new_id= self.question[:100] +'===' +self.day.strftime('%d-%m-%Y')
-        super(geography, self).save()
+        super(geography, self).save(*args, **kwargs)
 
 
 
@@ -6732,7 +6732,7 @@ class total_geography(models.Model):
 
 
 
-    def save(self):
+    def save(self, *args, **kwargs):
         totall=geography.objects.count()
         self.total_geography= totall
         self.total_geography_page=int(totall)/5
@@ -6753,7 +6753,7 @@ class total_geography(models.Model):
 
 
         
-        super(total_geography, self).save()
+        super(total_geography, self).save(*args, **kwargs)
 
 
 
@@ -6826,9 +6826,9 @@ class economics(models.Model):
     def __str__(self):
         return self.day.strftime('%d/%m/%Y') + '     '+ self.question +'--->chapter='+self.chapter+'---'+self.difficulty
 
-    def save(self):
+    def save(self, *args, **kwargs):
         self.new_id= self.question[:100] +'===' +self.day.strftime('%d-%m-%Y')
-        super(economics, self).save()
+        super(economics, self).save(*args, **kwargs)
 
 
 
@@ -6882,7 +6882,7 @@ class total_economics(models.Model):
 
 
 
-    def save(self):
+    def save(self, *args, **kwargs):
         totall=economics.objects.count()
         self.total_economics= totall
         self.total_economics_page=int(totall)/5
@@ -6903,7 +6903,7 @@ class total_economics(models.Model):
 
 
         
-        super(total_economics, self).save()
+        super(total_economics, self).save(*args, **kwargs)
 
 class physics(models.Model):
     chapter= (
@@ -6974,9 +6974,9 @@ class physics(models.Model):
     def __str__(self):
         return self.day.strftime('%d/%m/%Y') + '     '+ self.question +'--->chapter='+self.chapter+'---'+self.difficulty
 
-    def save(self):
+    def save(self, *args, **kwargs):
         self.new_id= self.question[:100] +'===' +self.day.strftime('%d-%m-%Y')
-        super(physics, self).save()
+        super(physics, self).save(*args, **kwargs)
 
 
 
@@ -7030,7 +7030,7 @@ class total_physics(models.Model):
 
 
 
-    def save(self):
+    def save(self, *args, **kwargs):
         totall=physics.objects.count()
         self.total_physics= totall
         self.total_physics_page=int(totall)/5
@@ -7051,7 +7051,7 @@ class total_physics(models.Model):
 
 
         
-        super(total_physics, self).save()
+        super(total_physics, self).save(*args, **kwargs)
 
 
 class biology(models.Model):
@@ -7123,9 +7123,9 @@ class biology(models.Model):
     def __str__(self):
         return self.day.strftime('%d/%m/%Y') + '     '+ self.question +'--->chapter='+self.chapter+'---'+self.difficulty
 
-    def save(self):
+    def save(self, *args, **kwargs):
         self.new_id= self.question[:100] +'===' +self.day.strftime('%d-%m-%Y')
-        super(biology, self).save()
+        super(biology, self).save(*args, **kwargs)
 
 
 
@@ -7179,7 +7179,7 @@ class total_biology(models.Model):
 
 
 
-    def save(self):
+    def save(self, *args, **kwargs):
         totall=biology.objects.count()
         self.total_biology= totall
         self.total_biology_page=int(totall)/5
@@ -7200,7 +7200,7 @@ class total_biology(models.Model):
 
 
         
-        super(total_biology, self).save()
+        super(total_biology, self).save(*args, **kwargs)
 
 
 class chemistry(models.Model):
@@ -7272,9 +7272,9 @@ class chemistry(models.Model):
     def __str__(self):
         return self.day.strftime('%d/%m/%Y') + '     '+ self.question +'--->chapter='+self.chapter+'---'+self.difficulty
 
-    def save(self):
+    def save(self, *args, **kwargs):
         self.new_id= self.question[:100] +'===' +self.day.strftime('%d-%m-%Y')
-        super(chemistry, self).save()
+        super(chemistry, self).save(*args, **kwargs)
 
 
 
@@ -7328,7 +7328,7 @@ class total_chemistry(models.Model):
 
 
 
-    def save(self):
+    def save(self, *args, **kwargs):
         totall=chemistry.objects.count()
         self.total_chemistry= totall
         self.total_chemistry_page=int(totall)/5
@@ -7349,6 +7349,6 @@ class total_chemistry(models.Model):
 
 
         
-        super(total_chemistry, self).save()
+        super(total_chemistry, self).save(*args, **kwargs)
 
 

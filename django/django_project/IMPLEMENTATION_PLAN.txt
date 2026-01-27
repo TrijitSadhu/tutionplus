@@ -1,0 +1,41 @@
+"""
+IMPLEMENTATION PLAN FOR DUAL-MODE MCQ SYSTEM
+
+Two Modes:
+1. DESCRIPTIVE TO MCQ: LLM creates Q, Ans, Options from scratch based on difficulty
+2. MCQ TO MCQ: Extract existing Q/Ans, check for options, simplify language or create options
+
+Key Changes Needed:
+1. Modify prompts to include detection and dual-mode logic
+2. Update pdf_processor.py to analyze content and call appropriate mode
+3. Enhance admin form to allow unlimited MCQ count (remove max 20)
+4. Add page range selection for descriptive mode
+5. Map difficulty level to subject table difficulty field
+6. Create content analyzer to detect if PDF has questions/options
+
+Content Detection Logic:
+- Look for patterns: "Q.", "Ans.", "Option", "Q1.", "Question 1", etc.
+- If patterns found: MCQ mode (extract)
+- If not found: Descriptive mode (create)
+
+Flow:
+Form Input: num_mcqs (any number), difficulty (easy/medium/hard), page_from, page_to
+    |
+    v
+Detect Content Type
+    |
+    +-- MCQ Content Detected --> MCQ to MCQ Mode
+    |   - Extract questions and answers
+    |   - Check if 4+ options exist
+    |   - If yes: Simplify language to "very easy"
+    |   - If no: Create options (with difficulty level)
+    |
+    +-- Descriptive Content --> Descriptive to MCQ Mode
+        - Create questions from scratch
+        - Generate answers
+        - Generate options based on difficulty level
+        - num_mcqs and difficulty used here
+"""
+
+# This is a planning document
+# Actual implementation follows

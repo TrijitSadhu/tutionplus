@@ -9,6 +9,21 @@ from typing import List, Dict, Any, Tuple, Optional
 from bs4 import BeautifulSoup
 from datetime import datetime, date
 import json
+import time
+
+# Selenium imports
+try:
+    from selenium import webdriver
+    from selenium.webdriver.common.by import By
+    from selenium.webdriver.support.ui import WebDriverWait
+    from selenium.webdriver.support import expected_conditions as EC
+    from selenium.webdriver.chrome.options import Options
+    from webdriver_manager.chrome import ChromeDriverManager
+    from selenium.webdriver.chrome.service import Service
+    SELENIUM_AVAILABLE = True
+except ImportError:
+    SELENIUM_AVAILABLE = False
+    logging.warning("Selenium not installed. Install with: pip install selenium webdriver-manager")
 
 from genai.utils.llm_provider import default_llm
 from genai.config import CURRENT_AFFAIRS_SOURCES, REQUEST_HEADERS, MAX_RETRIES, RETRY_DELAY
@@ -25,10 +40,12 @@ class CurrentAffairsScraper:
         self.headers = REQUEST_HEADERS
         self.max_retries = MAX_RETRIES
         self.retry_delay = RETRY_DELAY
+        self.selenium_available = SELENIUM_AVAILABLE
     
-    def fetch_page(self, url: str) -> Optional[str]:
+    def fetch_page_selenium(self, url: str) -> Optional[str]:
         """
-        Fetch a webpage with retry logic
+        Fetch a webpage using Selenium (handles JavaScript-rendered content)
+        Uses webdriver-manager for automatic ChromeDriver management
         
         Args:
             url: The URL to fetch
@@ -36,12 +53,74 @@ class CurrentAffairsScraper:
         Returns:
             HTML content or None
         """
-        import time
+        if not SELENIUM_AVAILABLE:
+            logger.warning("Selenium not available, falling back to requests")
+            return None
         
+        driver = None
+        try:
+            # Configure Chrome options
+            chrome_options = Options()
+            chrome_options.add_argument('--headless')  # Run in background
+            chrome_options.add_argument('--no-sandbox')
+            chrome_options.add_argument('--disable-dev-shm-usage')
+            chrome_options.add_argument('--disable-blink-features=AutomationControlled')
+            chrome_options.add_argument(f'user-agent={self.headers.get("User-Agent", "")}')
+            
+            print(f"    [SELENIUM] Starting WebDriver for: {url[:50]}...")
+            # Use webdriver-manager for automatic driver management
+            service = Service(ChromeDriverManager().install())
+            driver = webdriver.Chrome(service=service, options=chrome_options)
+            driver.get(url)
+            
+            # Wait for content to load (up to 10 seconds)
+            print(f"    [SELENIUM] Waiting for page to load...")
+            WebDriverWait(driver, 10).until(
+                EC.presence_of_all_elements_located((By.TAG_NAME, "body"))
+            )
+            
+            # Additional wait for dynamic content
+            time.sleep(3)
+            
+            html = driver.page_source
+            print(f"    [SELENIUM] ✅ Successfully fetched {len(html)} bytes")
+            return html
+            
+        except Exception as e:
+            logger.error(f"[SELENIUM] Error fetching {url}: {str(e)}")
+            print(f"    [SELENIUM] ❌ Error: {str(e)}")
+            return None
+        finally:
+            if driver:
+                try:
+                    driver.quit()
+                except:
+                    pass
+    
+    def fetch_page(self, url: str) -> Optional[str]:
+        """
+        Fetch a webpage - tries Selenium first, then falls back to requests
+        
+        Args:
+            url: The URL to fetch
+        
+        Returns:
+            HTML content or None
+        """
+        # Try Selenium first (default choice)
+        if SELENIUM_AVAILABLE:
+            print(f"    [FETCH] Attempting Selenium (JavaScript support)...")
+            html = self.fetch_page_selenium(url)
+            if html:
+                return html
+        
+        # Fallback to requests
+        print(f"    [FETCH] Falling back to requests...")
         for attempt in range(self.max_retries):
             try:
                 response = requests.get(url, headers=self.headers, timeout=10)
                 response.raise_for_status()
+                print(f"    [FETCH] ✅ Requests succeeded ({len(response.text)} bytes)")
                 return response.text
             except Exception as e:
                 logger.warning(f"Attempt {attempt + 1} failed for {url}: {str(e)}")
@@ -94,6 +173,30 @@ class CurrentAffairsScraper:
                     print(f"    [EXTRACTION] Extracted quiz content: {len(quiz_body)} chars")
                     return content
             
+            # Strategy 1b: Look for IndiaBIX specific content (exam preparation content)
+            indiabix_content = soup.find_all(['section', 'div'], class_=lambda x: x and any(keyword in (x.lower() if x else '') for keyword in ['mcq', 'question', 'exam', 'practice', 'quiz', 'topic']))
+            if indiabix_content and len(indiabix_content) > 0:
+                print(f"    [EXTRACTION] Found {len(indiabix_content)} IndiaBIX content sections")
+                title_elem = soup.find('h1') or soup.find('h2') or soup.find('title')
+                page_title = title_elem.get_text(strip=True) if title_elem else "Current Affairs"
+                
+                all_content = []
+                for section in indiabix_content[:5]:  # Take first 5 sections
+                    section_text = section.get_text(strip=True)
+                    if section_text and len(section_text) > 50 and '©' not in section_text and '™' not in section_text:
+                        all_content.append(section_text)
+                
+                if all_content:
+                    body = " ".join(all_content)
+                    if len(body) > 50:
+                        content.append({
+                            'title': page_title[:200],
+                            'body': body[:2000],
+                            'source_url': source_url
+                        })
+                        print(f"    [EXTRACTION] Extracted IndiaBIX content: {len(body)} chars")
+                        return content
+            
             # Fallback: Look for article containers
             articles = soup.find_all('article')
             if not articles:
@@ -127,14 +230,16 @@ class CurrentAffairsScraper:
                             body = body_text
                             break
                 
-                # Extract all text as fallback
                 if not body:
                     body = article.get_text(strip=True)
                     # Remove title from body if it's there
                     if title and body.startswith(title):
                         body = body[len(title):].strip()
+                    # Skip if body is just copyright/trademark symbols
+                    if body and (body == title or len(body) < 50 or '©' in body[:30]):
+                        continue
                 
-                if title and body and len(body) > 20:
+                if title and body and len(body) > 50:
                     content.append({
                         'title': title[:200],  # Limit title length
                         'body': body[:2000],   # Limit body length
@@ -244,13 +349,23 @@ class CurrentAffairsScraper:
             
             if html:
                 print(f"    ✓ HTML fetched, extracting content...")
-                content = self.extract_content(html, source_url)  # Pass source_url
-                print(f"    ✓ Extracted {len(content)} items")
-                all_content.extend(content)
+                extracted_items = self.extract_content(html, source_url)  # Pass source_url
+                print(f"    ✓ Extracted {len(extracted_items)} items from URL")
+                
+                # COMBINE all articles from same URL into ONE content block
+                # This ensures 1 URL = 1 LLM call (treating multiple articles as sections)
+                if extracted_items:
+                    combined_content = {
+                        'title': extracted_items[0]['title'],  # Use first article as main heading
+                        'body': '\n\n---\n\n'.join([item['body'] for item in extracted_items]),  # Separate articles with delimiter
+                        'source_url': source_url
+                    }
+                    print(f"    ✓ Combined {len(extracted_items)} items into 1 content block for LLM")
+                    all_content.append(combined_content)
             else:
                 print(f"    ✗ Failed to fetch HTML")
         
-        print(f"\n📋 [SCRAPER] Total content extracted: {len(all_content)} items\n")
+        print(f"\n📋 [SCRAPER] Total content items for processing: {len(all_content)} (1 per source URL)\n")
         return all_content
 
 
@@ -302,9 +417,22 @@ class CurrentAffairsProcessor:
             logger.error(f"Error fetching prompt from database: {str(e)}")
             return None
     
-    def generate_mcq_prompt(self, title: str, body: str, source_url: str = None) -> str:
+    def generate_mcq_prompt(self, title: str, body: str, source_url: str = None, skip_scraping: bool = False) -> str:
         """Generate a prompt for MCQ creation"""
-        print(f"  📋 [PROMPT_GEN] generate_mcq_prompt() - Source: {source_url[:40] if source_url else 'default'}")
+        print(f"  📋 [PROMPT_GEN] generate_mcq_prompt() - Source: {source_url[:40] if source_url else 'default'}, SkipMode: {skip_scraping}")
+        
+        # In skip-scraping mode, try to use the special skip-scraping prompt first
+        if skip_scraping:
+            print(f"    🔍 [SKIP MODE] Looking for skip-scraping specific prompt")
+            db_prompt = self.get_prompt_from_database('mcq', 'skip_scraping_mode')
+            if db_prompt:
+                print(f"    ✓ Using SKIP-SCRAPING prompt (LLM will fetch URL)")
+                try:
+                    formatted = db_prompt.format(title=title, content=body)
+                    return formatted
+                except (KeyError, ValueError):
+                    formatted = db_prompt.replace('{title}', title).replace('{content}', body)
+                    return formatted
         
         # Try to fetch custom prompt from database
         db_prompt = self.get_prompt_from_database('mcq', source_url)
@@ -420,21 +548,23 @@ Return ONLY a JSON object with this structure:
 }}
 """
     
-    def process_mcq_content(self, title: str, body: str, source_url: str = None) -> Dict[str, Any]:
+    def process_mcq_content(self, title: str, body: str, source_url: str = None, skip_scraping: bool = False) -> Dict[str, Any]:
         """
         Process current affairs and generate MCQs
         
         Args:
             title: Article title
-            body: Article content
+            body: Article content (or URL if skip_scraping=True)
             source_url: Optional source URL for fetching source-specific prompts
+            skip_scraping: If True, body contains URL and LLM should fetch it
         
         Returns:
             Generated MCQs data
         """
-        print(f"  [PROCESSOR] process_mcq_content() - Starting MCQ generation")
+        mode_label = "[SKIP-MODE]" if skip_scraping else "[STANDARD]"
+        print(f"  {mode_label} [PROCESSOR] process_mcq_content() - Starting MCQ generation")
         try:
-            prompt = self.generate_mcq_prompt(title, body, source_url)
+            prompt = self.generate_mcq_prompt(title, body, source_url, skip_scraping=skip_scraping)
             print(f"    [SENDING] Sending to LLM...")
             response = self.llm.generate_json(prompt)
             print(f"    [SUCCESS] LLM response received")
@@ -644,43 +774,251 @@ Return ONLY a JSON object with this structure:
         print(f"    ✓ Total saved: {len(saved_mcqs)} MCQs\n")
         return saved_mcqs
     
-    def run_complete_pipeline(self, content_type: str = 'mcq') -> Dict[str, Any]:
+    def save_descriptive_to_database(self, desc_data: Dict[str, Any], source_url: str = None) -> List[Dict]:
+        """
+        Save generated descriptive content to database
+        
+        Args:
+            desc_data: Descriptive data from LLM (upper_heading, yellow_heading, key_1-4, all_key_points, categories)
+            source_url: URL of the source (to fetch content_date from ContentSource)
+        
+        Returns:
+            List of saved descriptive instances
+        """
+        from bank.models import currentaffairs_descriptive
+        
+        print(f"  📋 [SAVER] save_descriptive_to_database()")
+        saved_items = []
+        
+        try:
+            # Get content_date from ContentSource if source_url is provided
+            year_now = None
+            month = None
+            day_value = None
+            
+            if source_url:
+                from genai.models import ContentSource
+                try:
+                    content_source = ContentSource.objects.filter(url=source_url).first()
+                    if content_source and content_source.content_date:
+                        print(f"      📅 Found ContentSource with date: {content_source.content_date}")
+                        year_now = str(content_source.content_date.year)
+                        # Month names
+                        month_names = {
+                            1: "January", 2: "February", 3: "March", 4: "April",
+                            5: "May", 6: "June", 7: "July", 8: "August",
+                            9: "September", 10: "October", 11: "November", 12: "December"
+                        }
+                        month = month_names.get(content_source.content_date.month, "January")
+                        day_value = content_source.content_date.day
+                        print(f"      ✓ Extracted - Year: {year_now}, Month: {month}, Day: {day_value}")
+                    else:
+                        print(f"      ⚠️  No ContentSource found for URL: {source_url}")
+                except Exception as e:
+                    print(f"      ❌ Error fetching ContentSource: {str(e)}")
+            
+            # Create date object
+            if year_now and month and day_value:
+                try:
+                    month_names_rev = {
+                        "January": 1, "February": 2, "March": 3, "April": 4,
+                        "May": 5, "June": 6, "July": 7, "August": 8,
+                        "September": 9, "October": 10, "November": 11, "December": 12
+                    }
+                    month_num = month_names_rev.get(month, 1)
+                    desc_date = datetime(int(year_now), month_num, day_value).date()
+                except (ValueError, TypeError):
+                    desc_date = date.today()
+            else:
+                desc_date = date.today()
+            
+            # Extract fields from LLM response
+            upper_heading = desc_data.get('upper_heading', '')
+            yellow_heading = desc_data.get('yellow_heading', '')
+            key_1 = desc_data.get('key_1', '')
+            key_2 = desc_data.get('key_2', '')
+            key_3 = desc_data.get('key_3', '')
+            key_4 = desc_data.get('key_4', '')
+            all_key_points = desc_data.get('all_key_points', '')
+            
+            print(f"    ✓ Creating descriptive entry: {upper_heading[:50]}...")
+            
+            # Create descriptive object
+            descriptive = currentaffairs_descriptive.objects.create(
+                upper_heading=upper_heading,
+                yellow_heading=yellow_heading,
+                key_1=key_1,
+                key_2=key_2,
+                key_3=key_3,
+                key_4=key_4,
+                all_key_points=all_key_points,
+                day=desc_date,
+                year_now=year_now,
+            )
+            
+            # Apply categories from LLM classification
+            categories = desc_data.get('categories', [])
+            print(f"      Categories from LLM: {categories}")
+            
+            # Map category names to model fields
+            category_mapping = {
+                'Science_Techonlogy': 'Science_Techonlogy',
+                'Science_Technology': 'Science_Techonlogy',  # Handle spelling variant
+                'National': 'National',
+                'International': 'International',
+                'Business_Economy_Banking': 'Business_Economy_Banking',
+                'Environment': 'Environment',
+                'Defence': 'Defence',
+                'Sports': 'Sports',
+                'Art_Culture': 'Art_Culture',
+                'Awards_Honours': 'Awards_Honours',
+                'Persons_in_News': 'Persons_in_News',
+                'Government_Schemes': 'Government_Schemes',
+                'State': 'State',
+                'appointment': 'appointment',
+                'obituary': 'obituary',
+                'important_day': 'important_day',
+                'rank': 'rank',
+                'mythology': 'mythology',
+                'agreement': 'agreement',
+                'medical': 'medical',
+                'static_gk': 'static_gk'
+            }
+            
+            # Set category fields to True if they appear in LLM's categories list
+            for category in categories:
+                if isinstance(category, str):
+                    category = category.strip()
+                    if category in category_mapping:
+                        field_name = category_mapping[category]
+                        setattr(descriptive, field_name, True)
+                        print(f"        ✓ Set {field_name} = True")
+            
+            # Save descriptive with updated category fields
+            descriptive.save()
+            saved_items.append(descriptive)
+            
+            print(f"    ✅ Saved descriptive entry (ID: {descriptive.id})")
+            
+        except Exception as e:
+            print(f"    [ERROR] ERROR saving descriptive: {str(e)}")
+            import traceback
+            traceback.print_exc()
+            logger.error(f"Error saving descriptive content: {str(e)}")
+        
+        return saved_items
+    
+    def run_complete_pipeline(self, content_type: str = 'mcq', skip_scraping: bool = False) -> Dict[str, Any]:
         """
         Run the complete pipeline: scrape -> process -> save
+        Or skip scraping and send URLs directly to LLM
         
         Args:
             content_type: 'mcq' or 'descriptive'
+            skip_scraping: If True, skip web scraping and send URLs directly to LLM
         
         Returns:
             Results dictionary
         """
         print(f"\n{'='*70}")
         print(f"🚀 PIPELINE START - Content Type: {content_type}")
+        if skip_scraping:
+            print(f"⚡ MODE: Direct-to-LLM (Scraping Skipped)")
         print(f"{'='*70}")
-        logger.info(f"Starting Current Affairs pipeline for {content_type}")
+        logger.info(f"Starting Current Affairs pipeline for {content_type} (skip_scraping={skip_scraping})")
         
-        # Step 1: Scrape
-        print(f"\n[STEP 1] SCRAPING...")
-        content_list = self.scraper.scrape_from_sources(content_type)
-        print(f"\n✅ [STEP 1] Scraped {len(content_list)} articles")
-        logger.info(f"Scraped {len(content_list)} articles")
+        # Step 1: Get Content (either scrape or get URLs for direct LLM)
+        if skip_scraping:
+            # Skip scraping - get URLs directly from ContentSource and send to LLM as-is
+            print(f"\n[STEP 1] GETTING URLS FOR DIRECT LLM PROCESSING (No Scraping)...")
+            from genai.models import ContentSource
+            
+            type_mapping = {
+                'currentaffairs_mcq': 'currentaffairs_mcq',
+                'currentaffairs_descriptive': 'currentaffairs_descriptive'
+            }
+            source_type = type_mapping.get(content_type, content_type)
+            
+            sources = ContentSource.objects.filter(
+                is_active=True,
+                source_type=source_type
+            )
+            
+            if sources.exists():
+                # Create content items with URL only (no fetching, no scraping)
+                content_list = [
+                    {
+                        'source_url': str(src.url),
+                        'title': f'Direct-to-LLM: {src.url}',
+                        'body': f'URL: {src.url}',  # Body contains only the URL
+                        'is_url_only': True  # Flag indicating this is URL-only mode
+                    }
+                    for src in sources
+                ]
+                print(f"\n✅ [STEP 1] Found {len(content_list)} URLs for direct LLM processing")
+                print(f"   Note: URLs will be sent directly to LLM WITHOUT fetching or scraping")
+            else:
+                print(f"\n⚠ [STEP 1] No content sources found")
+                content_list = []
+        else:
+            # Standard scraping mode
+            print(f"\n[STEP 1] SCRAPING...")
+            content_list = self.scraper.scrape_from_sources(content_type)
+            print(f"\n✅ [STEP 1] Scraped {len(content_list)} articles")
+        
+        logger.info(f"Retrieved {len(content_list)} content items (skip_scraping={skip_scraping})")
         
         results = {
             'content_type': content_type,
             'articles_scraped': len(content_list),
             'processed_items': [],
-            'errors': []
+            'errors': [],
+            'mode': 'direct-to-llm' if skip_scraping else 'standard'
         }
         
         # Step 2: Process and Save
         print(f"\n[STEP 2] PROCESSING & SAVING...")
         for idx, content in enumerate(content_list, 1):
-            print(f"\n  [{idx}/{len(content_list)}] Processing article: {content['title'][:50]}...")
+            display_title = content.get('title', 'Unknown')[:50]
+            if skip_scraping:
+                display_title = content.get('source_url', 'Unknown')[:60]
+            
+            print(f"\n  [{idx}/{len(content_list)}] Processing: {display_title}...")
             try:
                 source_url = content.get('source_url')
                 print(f"    Source URL: {source_url}")
+                
+                if skip_scraping:
+                    # In skip-scraping mode, fetch the page content and send to LLM
+                    # This way LLM gets actual content without needing online access
+                    print(f"    📥 SKIP-MODE: Downloading page content...")
+                    try:
+                        # Fetch page using Selenium (same scraper instance)
+                        print(f"      [FETCH] Attempting Selenium...")
+                        html_content = self.scraper.fetch_page_selenium(source_url)
+                        
+                        if html_content:
+                            print(f"      ✅ Successfully fetched {len(html_content)} bytes")
+                            # Extract text from HTML
+                            soup = BeautifulSoup(html_content, 'html.parser')
+                            # Remove script and style elements
+                            for script in soup(["script", "style"]):
+                                script.decompose()
+                            # Get text
+                            text = soup.get_text(separator=' ', strip=True)
+                            # Clean up whitespace
+                            text = ' '.join(text.split())
+                            content['body'] = text[:5000]  # Limit to 5000 chars
+                            print(f"      ✅ Extracted {len(content['body'])} chars of content")
+                        else:
+                            print(f"      ❌ Failed to fetch content, falling back to URL")
+                            content['body'] = source_url
+                    except Exception as e:
+                        print(f"      ⚠️  Fetch error: {str(e)}, using URL as fallback")
+                        content['body'] = source_url
+                
                 if content_type == 'currentaffairs_mcq':
-                    processed = self.process_mcq_content(content['title'], content['body'], source_url)
+                    processed = self.process_mcq_content(content['title'], content['body'], source_url, skip_scraping=skip_scraping)
                     if 'questions' in processed:
                         saved = self.save_mcq_to_database(processed, content_type, source_url)
                         results['processed_items'].extend(saved)
@@ -688,7 +1026,14 @@ Return ONLY a JSON object with this structure:
                         print(f"    ⚠ No 'questions' key in response")
                 else:
                     processed = self.process_descriptive_content(content['title'], content['body'], source_url)
-                    results['processed_items'].append(processed)
+                    # Save descriptive content to database
+                    if processed and not processed.get('error'):
+                        saved = self.save_descriptive_to_database(processed, source_url)
+                        if saved:
+                            results['processed_items'].extend(saved)
+                            print(f"    ✓ Saved {len(saved)} descriptive item(s) to database")
+                    else:
+                        print(f"    ⚠ No valid response to save")
             
             except Exception as e:
                 print(f"    ❌ ERROR: {str(e)}")
@@ -697,20 +1042,22 @@ Return ONLY a JSON object with this structure:
         
         print(f"\n{'='*70}")
         print(f"✅ PIPELINE COMPLETE")
+        print(f"  Mode: {'Direct-to-LLM' if skip_scraping else 'Standard Scraping'}")
         print(f"  Total Processed: {len(results['processed_items'])}")
         print(f"  Errors: {len(results['errors'])}")
         print(f"{'='*70}\n")
-        logger.info(f"Pipeline completed. Processed {len(results['processed_items'])} items")
+        logger.info(f"Pipeline completed. Processed {len(results['processed_items'])} items (mode={'direct-to-llm' if skip_scraping else 'standard'})")
         return results
 
 
 # Utility functions
-def fetch_and_process_current_affairs(content_type: str = 'currentaffairs_mcq') -> Dict[str, Any]:
+def fetch_and_process_current_affairs(content_type: str = 'currentaffairs_mcq', skip_scraping: bool = False) -> Dict[str, Any]:
     """
     Main function to fetch and process current affairs content
     
     Args:
         content_type: 'currentaffairs_mcq' or 'current_affairs_descriptive'
+        skip_scraping: If True, skip web scraping and send URLs directly to LLM
     
     Returns:
         Processing results
@@ -718,6 +1065,7 @@ def fetch_and_process_current_affairs(content_type: str = 'currentaffairs_mcq') 
     print("\n" + "="*70)
     print(f"🎯 fetch_and_process_current_affairs() CALLED")
     print(f"   Content Type: {content_type}")
+    print(f"   Skip Scraping: {skip_scraping}")
     print("="*70)
     
     try:
@@ -725,8 +1073,8 @@ def fetch_and_process_current_affairs(content_type: str = 'currentaffairs_mcq') 
         processor = CurrentAffairsProcessor()
         print(f"  ✓ Processor initialized successfully")
         
-        print(f"  📞 Calling processor.run_complete_pipeline({content_type})...")
-        result = processor.run_complete_pipeline(content_type)
+        print(f"  📞 Calling processor.run_complete_pipeline('{content_type}', skip_scraping={skip_scraping})...")
+        result = processor.run_complete_pipeline(content_type, skip_scraping=skip_scraping)
         print(f"  ✅ Pipeline completed, returning result")
         return result
     except Exception as e:

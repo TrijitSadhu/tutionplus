@@ -63,6 +63,16 @@ class GroqProvider(LLMProvider):
             Generated text from the model
         """
         try:
+            print(f"\n{'='*80}")
+            print(f"[GROQ API CALL]")
+            print(f"{'='*80}")
+            print(f"Model: {self.model}")
+            print(f"Max Tokens is: {self.max_output_tokens}")
+            print(f"Temperature: {self.temperature}")
+            print(f"Prompt Length: {len(prompt)} chars")
+            print(f"Prompt Preview (first 300 chars):\n{prompt[:300]}")
+            print(f"{'='*80}\n")
+            
             chat_completion = self.client.chat.completions.create(
                 model=self.model,
                 max_tokens=self.max_output_tokens,
@@ -72,9 +82,23 @@ class GroqProvider(LLMProvider):
                 ],
                 **kwargs
             )
-            return chat_completion.choices[0].message.content
+            response_content = chat_completion.choices[0].message.content
+            
+            print(f"\n{'='*80}")
+            print(f"[GROQ RESPONSE]")
+            print(f"{'='*80}")
+            print(f"Response Length: {len(response_content) if response_content else 0}")
+            print(f"Response Preview:\n{response_content[:500] if response_content else 'EMPTY'}")
+            print(f"{'='*80}\n")
+            
+            return response_content
         except Exception as e:
             logger.error(f"Groq API Error: {str(e)}")
+            print(f"\n{'='*80}")
+            print(f"[GROQ ERROR]")
+            print(f"{'='*80}")
+            print(f"Error: {str(e)}")
+            print(f"{'='*80}\n")
             raise
     
     def generate_json(self, prompt: str, **kwargs) -> Dict[str, Any]:
@@ -84,11 +108,50 @@ class GroqProvider(LLMProvider):
 IMPORTANT: Your response MUST be valid JSON only. Do not include any markdown formatting or explanations."""
         
         response_text = self.generate(json_prompt, **kwargs)
+        
+        # Print raw LLM response for debugging
+        print(f"\n{'='*80}")
+        print(f"[LLM RAW RESPONSE]")
+        print(f"{'='*80}")
+        print(f"Response Type: {type(response_text).__name__}")
+        print(f"Response Length: {len(response_text) if response_text else 0}")
+        print(f"Response Empty: {not response_text}")
+        if response_text:
+            print(f"First 500 chars:\n{response_text[:500]}")
+            print(f"\nLast 200 chars:\n{response_text[-200:]}")
+        else:
+            print(f"Response is None or empty!")
+        print(f"{'='*80}\n")
+        
+        # Try to parse as is first
         try:
             return json.loads(response_text)
         except json.JSONDecodeError:
-            logger.error(f"Failed to parse JSON response: {response_text}")
-            return {}
+            pass
+        
+        # Try to extract JSON from markdown code blocks
+        import re
+        json_match = re.search(r'```(?:json)?\s*(.*?)\s*```', response_text, re.DOTALL)
+        if json_match:
+            try:
+                json_text = json_match.group(1).strip()
+                return json.loads(json_text)
+            except json.JSONDecodeError:
+                pass
+        
+        # Try to find JSON object in response
+        try:
+            # Find first { and last }
+            start = response_text.find('{')
+            end = response_text.rfind('}')
+            if start != -1 and end != -1 and end > start:
+                json_text = response_text[start:end+1]
+                return json.loads(json_text)
+        except json.JSONDecodeError:
+            pass
+        
+        logger.error(f"Failed to parse JSON response: {response_text}")
+        return {}
 
 
 class GeminiProvider(LLMProvider):
@@ -263,4 +326,8 @@ def get_llm_provider(provider: str = None, **kwargs) -> LLMProvider:
 
 
 # Default instance (uses config setting)
-default_llm = get_llm_provider()
+try:
+    default_llm = get_llm_provider()
+except Exception as e:
+    logger.warning(f"Failed to initialize default LLM provider during import: {str(e)}")
+    default_llm = None

@@ -160,6 +160,16 @@ class ProcessingLog(models.Model):
         ('both', 'Both MCQ & Current Affairs from URL'),
         ('pdf_currentaffairs_mcq', 'Current Affairs MCQ Generation from PDF'),
         ('pdf_currentaffairs_descriptive', 'Current Affairs Descriptive Generation from PDF'),
+        ('pdf_to_mcq', 'PDF to Generic MCQ'),
+        ('pdf_to_descriptive', 'PDF to Generic Descriptive'),
+        ('pdf_to_polity', 'PDF to Polity MCQ'),
+        ('pdf_to_economics', 'PDF to Economics MCQ'),
+        ('pdf_to_math', 'PDF to Math MCQ'),
+        ('pdf_to_physics', 'PDF to Physics MCQ'),
+        ('pdf_to_chemistry', 'PDF to Chemistry MCQ'),
+        ('pdf_to_history', 'PDF to History MCQ'),
+        ('pdf_to_geography', 'PDF to Geography MCQ'),
+        ('pdf_to_biology', 'PDF to Biology MCQ'),
     ]
     
     STATUS_CHOICES = [
@@ -195,6 +205,100 @@ class ProcessingLog(models.Model):
     # Scheduling
     scheduled_time = models.DateTimeField(null=True, blank=True)
     is_scheduled = models.BooleanField(default=False)
+    
+    # LLM-Direct Mode
+    skip_scraping = models.BooleanField(default=False, help_text="Skip web scraping and send URLs directly to LLM with prompt")
+    
+    # NEW FIELDS FOR SUBJECT-BASED ROUTING (Task Router Support)
+    subject = models.CharField(
+        max_length=50,
+        choices=[
+            ('polity', 'Polity'),
+            ('economics', 'Economics'),
+            ('math', 'Mathematics'),
+            ('physics', 'Physics'),
+            ('chemistry', 'Chemistry'),
+            ('history', 'History'),
+            ('geography', 'Geography'),
+            ('biology', 'Biology'),
+            ('other', 'Other'),
+        ],
+        default='other',
+        blank=True,
+        null=True,
+        db_index=True,
+        help_text="Subject for routing to subject-specific processor"
+    )
+    
+    output_format = models.CharField(
+        max_length=20,
+        choices=[
+            ('json', 'JSON'),
+            ('markdown', 'Markdown'),
+            ('text', 'Plain Text'),
+        ],
+        default='json',
+        blank=True,
+        null=True,
+        help_text="Format for output (MCQ/Descriptive)"
+    )
+    
+    start_page = models.IntegerField(
+        blank=True,
+        null=True,
+        help_text="Start page for PDF processing"
+    )
+    
+    end_page = models.IntegerField(
+        blank=True,
+        null=True,
+        help_text="End page for PDF processing"
+    )
+    
+    difficulty_level = models.CharField(
+        max_length=20,
+        choices=[
+            ('easy', 'Easy'),
+            ('medium', 'Medium'),
+            ('hard', 'Hard'),
+        ],
+        default='medium',
+        blank=True,
+        null=True,
+        help_text="Difficulty level for generated content"
+    )
+    
+    num_items = models.IntegerField(
+        default=5,
+        blank=True,
+        null=True,
+        help_text="Number of MCQs/Descriptive answers to generate"
+    )
+    
+    # Current Affairs specific fields
+    ca_date = models.DateField(
+        null=True,
+        blank=True,
+        help_text="Date for current affairs (if provided by user)"
+    )
+    
+    ca_year = models.CharField(
+        max_length=10,
+        null=True,
+        blank=True,
+        choices=[
+            ('2025', '2025'),
+            ('2026', '2026'),
+            ('2027', '2027'),
+            ('2028', '2028'),
+        ],
+        help_text="Year for current affairs"
+    )
+    
+    ca_auto_date = models.BooleanField(
+        default=False,
+        help_text="If True, LLM decides date/year from content"
+    )
     
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

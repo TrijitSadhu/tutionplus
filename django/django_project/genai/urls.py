@@ -4,6 +4,7 @@ GenAI URL Configuration
 
 from django.urls import path, re_path
 from . import views
+from . import admin as admin_views
 
 app_name = 'genai'
 
@@ -26,4 +27,7 @@ urlpatterns = [
     path('admin/dashboard/', views.processing_dashboard, name='processing_dashboard'),
     path('admin/trigger-fetch/', views.trigger_fetch, name='trigger_fetch'),
     path('admin/task-status/<int:task_id>/', views.task_status, name='task_status'),
+    
+    # PDF Processing Form (with chapter and difficulty selection)
+    path('process-pdf-form/', admin_views.process_pdf_with_options, name='process_pdf_form'),
 ]

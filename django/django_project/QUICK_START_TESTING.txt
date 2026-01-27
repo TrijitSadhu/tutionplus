@@ -1,0 +1,173 @@
+DUAL-MODE MCQ SYSTEM - QUICK REFERENCE
+========================================================================
+
+WHAT'S NEW:
+───────────
+✓ Automatic content type detection (MCQ vs Descriptive)
+✓ Smart option handling (extract or create)
+✓ Difficulty-based question generation
+✓ Unlimited MCQ generation (no 20 limit)
+✓ Page range selection
+✓ Enhanced logging for debugging
+
+TWO WORKING MODES:
+──────────────────
+
+MODE 1: MCQ to MCQ (Questions exist in PDF)
+  Input: PDF with Q1, Q2, ... + Ans + maybe Options
+  Process: Extract Q&A, use/create Options
+  Output: Questions with options at selected difficulty
+
+MODE 2: Descriptive to MCQ (Pure text PDF)
+  Input: PDF with paragraphs about concepts
+  Process: Create Q&A&Options from scratch
+  Output: Generated questions at selected difficulty
+
+FORM FIELDS (Admin Panel):
+──────────────────────────
+1. Chapter (Optional): Select 1-41 or blank
+2. Difficulty (REQUIRED): Easy / Medium / Hard
+3. Num MCQs (Required): Any number (was max 20, now unlimited)
+4. Page From (Optional): Start page (0-indexed)
+5. Page To (Optional): End page (inclusive)
+
+CONSOLE OUTPUT TO MONITOR:
+──────────────────────────
+Look for:
+  [CONTENT ANALYSIS]
+    Content Type Detected: MCQ or Descriptive
+    Has Options in Content: True or False
+    MODE: Which processing mode being used
+
+  [LLM INPUT]
+    Prompt Type: mcq or descriptive
+    Content Type: mcq or descriptive
+    Options Available: True or False
+    Difficulty: easy, medium, or hard
+
+  [LLM OUTPUT]
+    Response Type: Should be dict
+    Questions Generated: Number
+    Response Keys: Should have 'questions'
+
+TESTING QUICK FLOW:
+────────────────────
+1. Start server: python manage.py runserver
+2. Go to: http://localhost:8000/admin/
+3. Genai → PDF Upload
+4. Select/Upload PDF
+5. Click "Process to MCQ" or "Process to Descriptive"
+6. Form appears - fill it:
+   - Difficulty: Pick one (Easy/Medium/Hard)
+   - Num MCQs: Enter number (5, 10, 50, etc.)
+   - Page Range: Leave blank or set specific pages
+7. Submit
+8. Watch console for [CONTENT ANALYSIS]
+9. Verify questions generated and saved
+
+FILES THAT CHANGED:
+────────────────────
+1. genai/admin.py - Form enhanced
+2. genai/tasks/pdf_processor.py - Content detection added
+3. genai/utils/content_analyzer.py - NEW MODULE
+4. All 24 prompts in database - Updated
+
+EXPECTED BEHAVIOR:
+────────────────────
+PDF with Questions + No Options:
+  → System detects: MCQ content, No options
+  → System creates: 5 options at your difficulty
+  → Result: Complete questions with generated options
+
+PDF with Questions + Options:
+  → System detects: MCQ content, Options exist
+  → System uses: Existing options, simplifies language
+  → Result: Same questions, easier language
+
+PDF Descriptive Only:
+  → System detects: Descriptive content
+  → System creates: Questions + Answers + Options
+  → System applies: Difficulty level
+  → Result: Complete generated questions
+
+DIFFICULTY MAPPING:
+────────────────────
+Easy:
+  - Simple, straightforward questions
+  - Suitable for beginners
+  - Basic facts and concepts
+
+Medium:
+  - Standard difficulty questions
+  - Requires understanding
+  - Typical exam level
+
+Hard:
+  - Complex questions
+  - Deep understanding required
+  - UPSC Civil Services level
+
+These are APPLIED to:
+  1. Question difficulty when creating from descriptive
+  2. Option creation difficulty when extracting Q&A
+  3. Saved in database for each question
+
+SUPPORTED SUBJECTS:
+────────────────────
+✓ Polity
+✓ Economics
+✓ History
+✓ Geography
+✓ Physics
+✓ Chemistry
+✓ Biology
+✓ Mathematics
+✓ Computer Science
+✓ Science (general)
+✓ English
+✓ Other
+
+Each has its own specialized prompt.
+
+WHAT TO TEST:
+──────────────
+□ MCQ PDF (no options) - Should create options
+□ MCQ PDF (with options) - Should extract & simplify
+□ Descriptive PDF - Should generate questions
+□ Different difficulties - Should vary complexity
+□ Large MCQ count - Test with 50, 100 MCQs
+□ Page ranges - Test specific page extraction
+□ All subjects - Verify each subject works
+□ Console logging - Verify analysis output shows
+
+TROUBLESHOOTING:
+─────────────────
+Issue: "No questions generated"
+  → Check console for [LLM OUTPUT] section
+  → Verify LLM returned valid JSON
+  → Check error messages
+
+Issue: "Wrong content type detected"
+  → System uses regex patterns
+  → If PDF format unusual, might misdetect
+  → Can manually force mode in prompt
+
+Issue: "Max 20 MCQs error"
+  → Form field should have no max_value now
+  → If error persists, verify admin.py updated
+  → Reload page/server
+
+Issue: "Page range not working"
+  → page_from: 0-indexed (0 = first page)
+  → page_to: inclusive
+  → Leave both blank for full PDF
+
+========================================================================
+
+SYSTEM IS READY - PROCEED WITH YOUR 3 TEST CASES!
+
+Test 1: PDF with Q&A, no options
+Test 2: PDF with Q&A, with options  
+Test 3: Purely descriptive PDF
+
+All should work correctly now.

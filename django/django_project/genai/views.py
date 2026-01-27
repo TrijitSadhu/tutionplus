@@ -90,60 +90,108 @@ def process_current_affairs_descriptive(request):
 @require_http_methods(["POST"])
 def process_subject_pdf_view(request):
     """
-    Process subject PDF and generate MCQs
+    Process subject PDF and generate MCQs/Descriptive using task router
     
     POST data:
-    - pdf_file: File upload
-    - chapter: Chapter name
-    - topic: Topic name
+    - pdf_file: File upload (REQUIRED)
+    - subject: Subject name (polity, economics, math, etc.)
+    - task_type: Task type for routing (pdf_to_polity, pdf_to_economics, etc.)
+    - difficulty_level: easy, medium, hard
+    - output_format: json, markdown, text
+    - num_items: Number of MCQs/descriptive answers
     - start_page: (optional) Starting page
     - end_page: (optional) Ending page
-    - num_questions: (optional) Number of questions
     """
     try:
+        from genai.tasks.task_router import route_pdf_processing_task
+        from genai.models import PDFUpload, ProcessingLog
+        
+        print("\n" + "═"*80)
+        print("[VIEW] process_subject_pdf_view()")
+        print("═"*80)
+        
         # Handle file upload
         if 'pdf_file' not in request.FILES:
+            print("  ❌ ERROR: No PDF file provided\n")
             return JsonResponse({
                 'success': False,
                 'error': 'No PDF file provided'
             }, status=400)
         
         pdf_file = request.FILES['pdf_file']
-        chapter = request.POST.get('chapter', '')
-        topic = request.POST.get('topic', '')
-        start_page = int(request.POST.get('start_page', 0))
-        end_page = request.POST.get('end_page')
+        print(f"  FILE: {pdf_file.name} ({pdf_file.size} bytes)")
+        
+        # Extract all parameters from request
+        subject = request.POST.get('subject', 'other')
+        task_type = request.POST.get('task_type', 'pdf_to_mcq')
+        difficulty_level = request.POST.get('difficulty_level', 'medium')
+        output_format = request.POST.get('output_format', 'json')
+        num_items = int(request.POST.get('num_items', 5))
+        start_page = request.POST.get('start_page', '')
+        end_page = request.POST.get('end_page', '')
+        
+        print(f"  PARAMS: subject={subject}, task_type={task_type}")
+        print(f"          difficulty={difficulty_level}, format={output_format}, items={num_items}")
+        
+        start_page = int(start_page) if start_page else None
         end_page = int(end_page) if end_page else None
-        num_questions = int(request.POST.get('num_questions', 5))
         
-        # Save uploaded file temporarily
-        file_path = default_storage.save(f'temp/{pdf_file.name}', ContentFile(pdf_file.read()))
+        if start_page or end_page:
+            print(f"          page_range={start_page}-{end_page}")
         
-        logger.info(f"Processing PDF: {chapter} - {topic}")
-        result = process_subject_pdf(
-            file_path,
-            chapter,
-            topic,
-            start_page=start_page,
-            end_page=end_page,
-            num_questions=num_questions
+        print("  Creating PDFUpload record...")
+        
+        # Create PDFUpload record
+        pdf_upload = PDFUpload.objects.create(
+            title=pdf_file.name,
+            subject=subject,
+            pdf_file=pdf_file,
+            uploaded_by=request.user if request.user.is_authenticated else None,
+            status='processing'
         )
         
-        # Clean up
-        default_storage.delete(file_path)
+        print(f"  ✅ PDFUpload created: ID={pdf_upload.id}")
+        
+        print("  Creating ProcessingLog record...")
+        
+        # Create ProcessingLog with task routing info
+        log = ProcessingLog.objects.create(
+            task_type=task_type,
+            subject=subject,
+            pdf_upload=pdf_upload,
+            difficulty_level=difficulty_level,
+            output_format=output_format,
+            num_items=num_items,
+            start_page=start_page,
+            end_page=end_page,
+            status='pending',
+            created_by=request.user if request.user.is_authenticated else None
+        )
+        
+        print(f"  ✅ ProcessingLog created: ID={log.id}")
+        print(f"  Routing to task processor...")
+        
+        # Route to appropriate processor (THIS IS THE KEY CHANGE!)
+        result = route_pdf_processing_task(log)
+        
+        print(f"  ✅ Route completed: success={result['success']}")
+        print(f"  OUTPUT: saved_items={result.get('saved_items', 0)}\n")
         
         return JsonResponse({
-            'success': True,
-            'message': 'PDF processing completed',
-            'data': result
+            'success': result['success'],
+            'task_id': log.id,
+            'message': f"Generated {result.get('saved_items', 0)} items" if result['success'] else result.get('error'),
+            'data': {
+                'task_type': result.get('task_type'),
+                'subject': result.get('subject'),
+                'saved_items': result.get('saved_items', 0)
+            }
         })
-    
+        
     except Exception as e:
+        print(f"  ❌ ERROR: {str(e)}\n")
         logger.error(f"Error in process_subject_pdf_view: {str(e)}")
-        return JsonResponse({
-            'success': False,
-            'error': str(e)
-        }, status=400)
+        return JsonResponse({'success': False, 'error': str(e)}, status=400)
 
 
 @csrf_exempt

@@ -13,6 +13,10 @@ PyPDF2>=3.0.0
 pdfplumber>=0.7.0
 python-dotenv>=0.19.0
 
+# Web scraping with JavaScript support
+selenium>=4.0.0          # Scrape JavaScript-rendered content
+webdriver-manager>=3.8.0 # Automatic ChromeDriver management
+
 # Optional dependencies for async tasks
 celery>=5.0.0
 redis>=4.0.0

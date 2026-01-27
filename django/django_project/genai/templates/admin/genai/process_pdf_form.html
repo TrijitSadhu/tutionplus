@@ -1,0 +1,394 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block title %}Process PDFs - Select Options{% endblock %}
+
+{% block content %}
+<div id="content-main">
+    <h1>Process PDFs - Select Options</h1>
+    
+    <div style="background-color: #f9f9f9; padding: 20px; border-radius: 5px; margin-bottom: 30px;">
+        <h2>📄 Selected PDFs ({{ pdfs.count }})</h2>
+        <ul style="margin: 15px 0;">
+            {% for pdf in pdfs %}
+            <li style="padding: 8px 0; border-bottom: 1px solid #eee;">
+                <strong>{{ pdf.title }}</strong>
+                <span style="color: #666; margin-left: 10px;">
+                    (Subject: <strong>{{ pdf.get_subject_display }}</strong>)
+                </span>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    
+    <div style="background-color: #fffbea; padding: 20px; border-radius: 5px; margin-bottom: 30px; border-left: 4px solid #ff9800;">
+        <h3>⚙️ Processing Options</h3>
+        <p style="color: #666; margin-top: 10px;">
+            Configure the options below for processing these PDFs to 
+            <strong>{{ process_type|upper }}</strong>
+        </p>
+    </div>
+    
+    <form method="post" style="background-color: #fff; padding: 30px; border-radius: 5px; border: 1px solid #ddd;">
+        {% csrf_token %}
+        
+        <!-- Processing Type Selector -->
+        <div style="margin-bottom: 30px; background-color: #e3f2fd; padding: 20px; border-radius: 5px; border-left: 4px solid #2196F3;">
+            <label style="display: block; margin-bottom: 15px; font-weight: bold; color: #333; font-size: 16px;">
+                🎯 {{ form.processing_type.label }}
+            </label>
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+                {% for radio in form.processing_type %}
+                <label style="display: flex; align-items: center; font-weight: normal; color: #555; cursor: pointer; padding: 10px; border-radius: 4px; background-color: white; border: 1px solid #ddd;">
+                    {{ radio.tag }}
+                    <span style="margin-left: 10px;">{{ radio.choice_label }}</span>
+                </label>
+                {% endfor %}
+            </div>
+            {% if form.processing_type.help_text %}
+            <p style="color: #666; font-size: 12px; margin-top: 10px; margin-bottom: 0;">
+                {{ form.processing_type.help_text|safe }}
+            </p>
+            {% endif %}
+            {% if form.processing_type.errors %}
+            <ul style="color: #dc3545; margin-top: 5px;">
+                {% for error in form.processing_type.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+        
+        <!-- Subject-based MCQ Fields (shown by default) -->
+        <div id="subject-fields" style="display: block;">
+        
+        <div style="margin-bottom: 25px;">
+            <label for="{{ form.chapter.id_for_label }}" style="display: block; margin-bottom: 8px; font-weight: bold; color: #333;">
+                {{ form.chapter.label }}
+            </label>
+            {{ form.chapter }}
+            {% if form.chapter.help_text %}
+            <p style="color: #666; font-size: 12px; margin-top: 5px;">
+                {{ form.chapter.help_text|safe }}
+            </p>
+            {% endif %}
+            {% if form.chapter.errors %}
+            <ul style="color: #dc3545; margin-top: 5px;">
+                {% for error in form.chapter.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+        
+        <div style="margin-bottom: 25px;">
+            <label for="{{ form.difficulty.id_for_label }}" style="display: block; margin-bottom: 8px; font-weight: bold; color: #333;">
+                {{ form.difficulty.label }}
+            </label>
+            {{ form.difficulty }}
+            {% if form.difficulty.help_text %}
+            <p style="color: #666; font-size: 12px; margin-top: 5px;">
+                {{ form.difficulty.help_text|safe }}
+            </p>
+            {% endif %}
+            {% if form.difficulty.errors %}
+            <ul style="color: #dc3545; margin-top: 5px;">
+                {% for error in form.difficulty.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+        
+        <div style="margin-bottom: 25px; background-color: #fff3cd; padding: 15px; border-radius: 4px; border-left: 4px solid #ffc107;">
+            <label style="display: flex; align-items: center; margin-bottom: 0; font-weight: bold; color: #333; cursor: pointer;">
+                {{ form.extract_all }}
+                <span style="margin-left: 10px;">{{ form.extract_all.label }}</span>
+            </label>
+            {% if form.extract_all.help_text %}
+            <p style="color: #666; font-size: 12px; margin-top: 8px; margin-bottom: 0;">
+                {{ form.extract_all.help_text|safe }}
+            </p>
+            {% endif %}
+            {% if form.extract_all.errors %}
+            <ul style="color: #dc3545; margin-top: 5px;">
+                {% for error in form.extract_all.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+        
+        <div style="margin-bottom: 25px;">
+            <label for="{{ form.num_items.id_for_label }}" style="display: block; margin-bottom: 8px; font-weight: bold; color: #333;">
+                {{ form.num_items.label }}
+            </label>
+            {{ form.num_items }}
+            {% if form.num_items.help_text %}
+            <p style="color: #666; font-size: 12px; margin-top: 5px;">
+                {{ form.num_items.help_text|safe }}
+            </p>
+            {% endif %}
+            {% if form.num_items.errors %}
+            <ul style="color: #dc3545; margin-top: 5px;">
+                {% for error in form.num_items.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+        
+        <div style="margin-bottom: 25px;">
+            <label for="{{ form.page_from.id_for_label }}" style="display: block; margin-bottom: 8px; font-weight: bold; color: #333;">
+                {{ form.page_from.label }}
+            </label>
+            {{ form.page_from }}
+            {% if form.page_from.help_text %}
+            <p style="color: #666; font-size: 12px; margin-top: 5px;">
+                {{ form.page_from.help_text|safe }}
+            </p>
+            {% endif %}
+            {% if form.page_from.errors %}
+            <ul style="color: #dc3545; margin-top: 5px;">
+                {% for error in form.page_from.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+        
+        <div style="margin-bottom: 25px;">
+            <label for="{{ form.page_to.id_for_label }}" style="display: block; margin-bottom: 8px; font-weight: bold; color: #333;">
+                {{ form.page_to.label }}
+            </label>
+            {{ form.page_to }}
+            {% if form.page_to.help_text %}
+            <p style="color: #666; font-size: 12px; margin-top: 5px;">
+                {{ form.page_to.help_text|safe }}
+            </p>
+            {% endif %}
+            {% if form.page_to.errors %}
+            <ul style="color: #dc3545; margin-top: 5px;">
+                {% for error in form.page_to.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+        
+        </div>  <!-- End subject-fields -->
+        
+        <!-- Current Affairs Specific Fields (hidden by default) -->
+        <div id="ca-fields" style="display: none;">
+        
+        <div style="margin-bottom: 25px;">
+            <label for="{{ form.ca_date.id_for_label }}" style="display: block; margin-bottom: 8px; font-weight: bold; color: #333;">
+                📅 {{ form.ca_date.label }}
+            </label>
+            {{ form.ca_date }}
+            {% if form.ca_date.help_text %}
+            <p style="color: #666; font-size: 12px; margin-top: 5px;">
+                {{ form.ca_date.help_text|safe }}
+            </p>
+            {% endif %}
+            {% if form.ca_date.errors %}
+            <ul style="color: #dc3545; margin-top: 5px;">
+                {% for error in form.ca_date.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+        
+        <div style="margin-bottom: 25px;">
+            <label for="{{ form.ca_year.id_for_label }}" style="display: block; margin-bottom: 8px; font-weight: bold; color: #333;">
+                📆 {{ form.ca_year.label }}
+            </label>
+            {{ form.ca_year }}
+            {% if form.ca_year.help_text %}
+            <p style="color: #666; font-size: 12px; margin-top: 5px;">
+                {{ form.ca_year.help_text|safe }}
+            </p>
+            {% endif %}
+            {% if form.ca_year.errors %}
+            <ul style="color: #dc3545; margin-top: 5px;">
+                {% for error in form.ca_year.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+        
+        <div style="margin-bottom: 25px; background-color: #e8f5e9; padding: 15px; border-radius: 4px; border-left: 4px solid #4CAF50;">
+            <label style="display: flex; align-items: center; margin-bottom: 0; font-weight: bold; color: #333; cursor: pointer;">
+                {{ form.ca_auto_date }}
+                <span style="margin-left: 10px;">{{ form.ca_auto_date.label }}</span>
+            </label>
+            {% if form.ca_auto_date.help_text %}
+            <p style="color: #666; font-size: 12px; margin-top: 8px; margin-bottom: 0;">
+                {{ form.ca_auto_date.help_text|safe }}
+            </p>
+            {% endif %}
+            {% if form.ca_auto_date.errors %}
+            <ul style="color: #dc3545; margin-top: 5px;">
+                {% for error in form.ca_auto_date.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+        
+        <div style="margin-bottom: 25px;">
+            <label for="{{ form.num_items.id_for_label }}" style="display: block; margin-bottom: 8px; font-weight: bold; color: #333;">
+                {{ form.num_items.label }}
+            </label>
+            {{ form.num_items }}
+            {% if form.num_items.help_text %}
+            <p style="color: #666; font-size: 12px; margin-top: 5px;">
+                {{ form.num_items.help_text|safe }}
+            </p>
+            {% endif %}
+            {% if form.num_items.errors %}
+            <ul style="color: #dc3545; margin-top: 5px;">
+                {% for error in form.num_items.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+        
+        <div style="margin-bottom: 25px;">
+            <label for="{{ form.page_from.id_for_label }}" style="display: block; margin-bottom: 8px; font-weight: bold; color: #333;">
+                {{ form.page_from.label }}
+            </label>
+            {{ form.page_from }}
+            {% if form.page_from.help_text %}
+            <p style="color: #666; font-size: 12px; margin-top: 5px;">
+                {{ form.page_from.help_text|safe }}
+            </p>
+            {% endif %}
+            {% if form.page_from.errors %}
+            <ul style="color: #dc3545; margin-top: 5px;">
+                {% for error in form.page_from.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+        
+        <div style="margin-bottom: 25px;">
+            <label for="{{ form.page_to.id_for_label }}" style="display: block; margin-bottom: 8px; font-weight: bold; color: #333;">
+                {{ form.page_to.label }}
+            </label>
+            {{ form.page_to }}
+            {% if form.page_to.help_text %}
+            <p style="color: #666; font-size: 12px; margin-top: 5px;">
+                {{ form.page_to.help_text|safe }}
+            </p>
+            {% endif %}
+            {% if form.page_to.errors %}
+            <ul style="color: #dc3545; margin-top: 5px;">
+                {% for error in form.page_to.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+        
+        </div>  <!-- End ca-fields -->
+        
+        <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd;">
+            <button type="submit" class="button default" style="background-color: #417690; padding: 10px 20px; font-size: 14px;">
+                ✓ Start Processing
+            </button>
+            <a href="/admin/genai/pdfupload/" class="button" style="background-color: #999; padding: 10px 20px; font-size: 14px; margin-left: 10px;">
+                Cancel
+            </a>
+        </div>
+    </form>
+    
+    <div style="background-color: #e8f4f8; padding: 15px; border-radius: 5px; margin-top: 30px; border-left: 4px solid #0099cc;">
+        <h3 style="margin-top: 0; color: #0099cc;">ℹ️ Information</h3>
+        <ul style="margin: 10px 0; color: #333;">
+            <li><strong>Chapter:</strong> Leave blank to process the entire document without chapter filtering</li>
+            <li><strong>Difficulty Level:</strong> Controls the complexity of generated questions (Easy, Medium, Hard)</li>
+            <li><strong>Extract ALL MCQs:</strong> Check this box to extract ALL MCQs from the PDF (ignores "Number of MCQs" field)</li>
+            <li><strong>Number of MCQs:</strong> How many MCQs to generate (ignored if "Extract ALL" is checked). Enter any number - no limit!</li>
+            <li><strong>Page Range:</strong> (Optional) Specify starting and ending pages to process only a portion of the PDF</li>
+        </ul>
+    </div>
+</div>
+
+<style>
+    form select, form input[type="text"], form input[type="number"] {
+        width: 100%;
+        max-width: 400px;
+        padding: 8px 12px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+        background-color: #fff;
+    }
+    
+    form input[type="checkbox"] {
+        width: auto;
+        padding: 0;
+        margin-right: 8px;
+        cursor: pointer;
+        accent-color: #417690;
+    }
+    
+    form select:focus, form input:focus {
+        border-color: #417690;
+        outline: none;
+        box-shadow: 0 0 5px rgba(65, 118, 144, 0.2);
+    }
+    
+    .button {
+        display: inline-block;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        color: white;
+        cursor: pointer;
+        text-decoration: none;
+    }
+    
+    .button:hover {
+        opacity: 0.9;
+    }
+    
+    .button.default:hover {
+        background-color: #205067 !important;
+    }
+</style>
+
+<script>
+    // Handle field visibility based on processing_type selection
+    function updateFieldVisibility() {
+        const processingType = document.querySelector('input[name="processing_type"]:checked');
+        const subjectFields = document.getElementById('subject-fields');
+        const caFields = document.getElementById('ca-fields');
+        
+        if (!processingType) return;
+        
+        if (processingType.value === 'subject_mcq') {
+            subjectFields.style.display = 'block';
+            caFields.style.display = 'none';
+        } else if (processingType.value === 'ca_mcq' || processingType.value === 'ca_descriptive') {
+            subjectFields.style.display = 'none';
+            caFields.style.display = 'block';
+        }
+    }
+    
+    // Add event listeners to all processing_type radio buttons
+    document.addEventListener('DOMContentLoaded', function() {
+        const radioButtons = document.querySelectorAll('input[name="processing_type"]');
+        radioButtons.forEach(radio => {
+            radio.addEventListener('change', updateFieldVisibility);
+        });
+        
+        // Initialize on page load
+        updateFieldVisibility();
+    });
+</script>
+{% endblock %}
