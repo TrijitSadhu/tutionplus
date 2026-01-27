@@ -417,13 +417,14 @@ class CurrentAffairsProcessor:
             logger.error(f"Error fetching prompt from database: {str(e)}")
             return None
     
-    def generate_mcq_prompt(self, title: str, body: str, source_url: str = None, skip_scraping: bool = False) -> str:
+    def generate_mcq_prompt(self, title: str, body: str, source_url: str = None, skip_scraping: bool = False, send_url_directly: bool = False) -> str:
         """Generate a prompt for MCQ creation"""
-        print(f"  📋 [PROMPT_GEN] generate_mcq_prompt() - Source: {source_url[:40] if source_url else 'default'}, SkipMode: {skip_scraping}")
+        mode_indicator = "URL-ONLY" if send_url_directly else ("SKIP-SCRAPING" if skip_scraping else "STANDARD")
+        print(f"  📋 [PROMPT_GEN] generate_mcq_prompt() - Source: {source_url[:40] if source_url else 'default'}, Mode: {mode_indicator}")
         
-        # In skip-scraping mode, try to use the special skip-scraping prompt first
-        if skip_scraping:
-            print(f"    🔍 [SKIP MODE] Looking for skip-scraping specific prompt")
+        # In skip-scraping or URL-only mode, try to use the special prompt
+        if skip_scraping or send_url_directly:
+            print(f"    🔍 [MODE: {mode_indicator}] Looking for mode-specific prompt")
             db_prompt = self.get_prompt_from_database('mcq', 'skip_scraping_mode')
             if db_prompt:
                 print(f"    ✓ Using SKIP-SCRAPING prompt (LLM will fetch URL)")
@@ -548,7 +549,7 @@ Return ONLY a JSON object with this structure:
 }}
 """
     
-    def process_mcq_content(self, title: str, body: str, source_url: str = None, skip_scraping: bool = False) -> Dict[str, Any]:
+    def process_mcq_content(self, title: str, body: str, source_url: str = None, skip_scraping: bool = False, send_url_directly: bool = False) -> Dict[str, Any]:
         """
         Process current affairs and generate MCQs
         
@@ -557,14 +558,15 @@ Return ONLY a JSON object with this structure:
             body: Article content (or URL if skip_scraping=True)
             source_url: Optional source URL for fetching source-specific prompts
             skip_scraping: If True, body contains URL and LLM should fetch it
+            send_url_directly: If True, URL-only mode (body already contains downloaded content)
         
         Returns:
             Generated MCQs data
         """
-        mode_label = "[SKIP-MODE]" if skip_scraping else "[STANDARD]"
+        mode_label = "[URL-ONLY]" if send_url_directly else ("[SKIP-MODE]" if skip_scraping else "[STANDARD]")
         print(f"  {mode_label} [PROCESSOR] process_mcq_content() - Starting MCQ generation")
         try:
-            prompt = self.generate_mcq_prompt(title, body, source_url, skip_scraping=skip_scraping)
+            prompt = self.generate_mcq_prompt(title, body, source_url, skip_scraping=skip_scraping, send_url_directly=send_url_directly)
             print(f"    [SENDING] Sending to LLM...")
             response = self.llm.generate_json(prompt)
             print(f"    [SUCCESS] LLM response received")
@@ -908,173 +910,352 @@ Return ONLY a JSON object with this structure:
         
         return saved_items
     
-    def run_complete_pipeline(self, content_type: str = 'mcq', skip_scraping: bool = False) -> Dict[str, Any]:
+    def run_complete_pipeline(self, content_type: str = 'mcq', skip_scraping: bool = False, send_url_directly: bool = False, use_playwright: bool = False) -> Dict[str, Any]:
         """
         Run the complete pipeline: scrape -> process -> save
         Or skip scraping and send URLs directly to LLM
         
         Args:
             content_type: 'mcq' or 'descriptive'
-            skip_scraping: If True, skip web scraping and send URLs directly to LLM
+            skip_scraping: If True, download content via Selenium before sending to LLM
+            send_url_directly: If True, send URL only to LLM (takes precedence over skip_scraping)
+            use_playwright: If True, use Playwright as download engine
         
         Returns:
             Results dictionary
         """
+        # Log all parameters at entry
         print(f"\n{'='*70}")
-        print(f"🚀 PIPELINE START - Content Type: {content_type}")
-        if skip_scraping:
-            print(f"⚡ MODE: Direct-to-LLM (Scraping Skipped)")
+        print(f"📥 [ENTRY] run_complete_pipeline() called with:")
+        print(f"   - content_type: {content_type}")
+        print(f"   - skip_scraping: {skip_scraping}")
+        print(f"   - send_url_directly: {send_url_directly}")
+        print(f"   - use_playwright: {use_playwright} (TYPE: {type(use_playwright).__name__})")
         print(f"{'='*70}")
-        logger.info(f"Starting Current Affairs pipeline for {content_type} (skip_scraping={skip_scraping})")
+        logger.info(f"run_complete_pipeline() called with: content_type={content_type}, skip_scraping={skip_scraping}, send_url_directly={send_url_directly}, use_playwright={use_playwright}")
         
-        # Step 1: Get Content (either scrape or get URLs for direct LLM)
-        if skip_scraping:
-            # Skip scraping - get URLs directly from ContentSource and send to LLM as-is
-            print(f"\n[STEP 1] GETTING URLS FOR DIRECT LLM PROCESSING (No Scraping)...")
-            from genai.models import ContentSource
-            
-            type_mapping = {
-                'currentaffairs_mcq': 'currentaffairs_mcq',
-                'currentaffairs_descriptive': 'currentaffairs_descriptive'
-            }
-            source_type = type_mapping.get(content_type, content_type)
-            
-            sources = ContentSource.objects.filter(
-                is_active=True,
-                source_type=source_type
-            )
-            
-            if sources.exists():
-                # Create content items with URL only (no fetching, no scraping)
-                content_list = [
-                    {
-                        'source_url': str(src.url),
-                        'title': f'Direct-to-LLM: {src.url}',
-                        'body': f'URL: {src.url}',  # Body contains only the URL
-                        'is_url_only': True  # Flag indicating this is URL-only mode
-                    }
-                    for src in sources
-                ]
-                print(f"\n✅ [STEP 1] Found {len(content_list)} URLs for direct LLM processing")
-                print(f"   Note: URLs will be sent directly to LLM WITHOUT fetching or scraping")
-            else:
-                print(f"\n⚠ [STEP 1] No content sources found")
-                content_list = []
+        # Route to Playwright pipeline if use_playwright flag is True
+        if use_playwright:
+            print(f"\n{'='*70}")
+            print(f"🎯 USE_PLAYWRIGHT=True ({use_playwright}), routing to Playwright pipeline...")
+            print(f"{'='*70}")
+            logger.info(f"Routing to Playwright pipeline (use_playwright={use_playwright})")
+            return self.run_playwright(content_type, skip_scraping, send_url_directly)
         else:
-            # Standard scraping mode
-            print(f"\n[STEP 1] SCRAPING...")
-            content_list = self.scraper.scrape_from_sources(content_type)
-            print(f"\n✅ [STEP 1] Scraped {len(content_list)} articles")
-        
-        logger.info(f"Retrieved {len(content_list)} content items (skip_scraping={skip_scraping})")
-        
-        results = {
-            'content_type': content_type,
-            'articles_scraped': len(content_list),
-            'processed_items': [],
-            'errors': [],
-            'mode': 'direct-to-llm' if skip_scraping else 'standard'
-        }
-        
-        # Step 2: Process and Save
-        print(f"\n[STEP 2] PROCESSING & SAVING...")
-        for idx, content in enumerate(content_list, 1):
-            display_title = content.get('title', 'Unknown')[:50]
-            if skip_scraping:
-                display_title = content.get('source_url', 'Unknown')[:60]
+            print(f"\n{'='*70}")
+            print(f"🚀 PIPELINE START - Content Type: {content_type}")
+            print(f"   use_playwright={use_playwright} (Standard pipeline)")
+            if send_url_directly:
+                print(f"⚡ MODE: URL-Only (Send URL directly to LLM)")
+            elif skip_scraping:
+                print(f"⚡ MODE: Skip-Scraping (Download & Send Content)")
+            else:
+                print(f"⚡ MODE: Standard Scraping")
+            print(f"{'='*70}")
+            logger.info(f"Starting Current Affairs pipeline for {content_type} (skip_scraping={skip_scraping}, send_url_directly={send_url_directly}, use_playwright={use_playwright})")
             
-            print(f"\n  [{idx}/{len(content_list)}] Processing: {display_title}...")
-            try:
-                source_url = content.get('source_url')
-                print(f"    Source URL: {source_url}")
+            # Step 1: Get Content (either scrape or get URLs for direct LLM)
+            if send_url_directly or skip_scraping:
+                # Skip scraping - get URLs directly from ContentSource and send to LLM as-is
+                print(f"\n[STEP 1] GETTING URLS FOR DIRECT LLM PROCESSING (No Scraping)...")
+                from genai.models import ContentSource
                 
-                if skip_scraping:
-                    # In skip-scraping mode, fetch the page content and send to LLM
-                    # This way LLM gets actual content without needing online access
-                    print(f"    📥 SKIP-MODE: Downloading page content...")
-                    try:
-                        # Fetch page using Selenium (same scraper instance)
-                        print(f"      [FETCH] Attempting Selenium...")
-                        html_content = self.scraper.fetch_page_selenium(source_url)
-                        
-                        if html_content:
-                            print(f"      ✅ Successfully fetched {len(html_content)} bytes")
-                            # Extract text from HTML
-                            soup = BeautifulSoup(html_content, 'html.parser')
-                            # Remove script and style elements
-                            for script in soup(["script", "style"]):
-                                script.decompose()
-                            # Get text
-                            text = soup.get_text(separator=' ', strip=True)
-                            # Clean up whitespace
-                            text = ' '.join(text.split())
-                            content['body'] = text[:5000]  # Limit to 5000 chars
-                            print(f"      ✅ Extracted {len(content['body'])} chars of content")
-                        else:
-                            print(f"      ❌ Failed to fetch content, falling back to URL")
-                            content['body'] = source_url
-                    except Exception as e:
-                        print(f"      ⚠️  Fetch error: {str(e)}, using URL as fallback")
-                        content['body'] = source_url
+                type_mapping = {
+                    'currentaffairs_mcq': 'currentaffairs_mcq',
+                    'currentaffairs_descriptive': 'currentaffairs_descriptive'
+                }
+                source_type = type_mapping.get(content_type, content_type)
                 
-                if content_type == 'currentaffairs_mcq':
-                    processed = self.process_mcq_content(content['title'], content['body'], source_url, skip_scraping=skip_scraping)
-                    if 'questions' in processed:
-                        saved = self.save_mcq_to_database(processed, content_type, source_url)
-                        results['processed_items'].extend(saved)
+                sources = ContentSource.objects.filter(
+                    is_active=True,
+                    source_type=source_type
+                )
+                
+                # Store source info for later (to check send_url_directly flag)
+                # NOTE: send_url_directly flag will be passed as function parameter, not from source object
+                
+                if sources.exists():
+                    # Create content items with URL only (no fetching, no scraping)
+                    content_list = [
+                        {
+                            'source_url': str(src.url),
+                            'title': f'Direct-to-LLM: {src.url}',
+                            'body': f'URL: {src.url}',  # Body contains only the URL
+                            'is_url_only': True  # Flag indicating this is URL-only mode
+                        }
+                        for src in sources
+                    ]
+                    print(f"\n✅ [STEP 1] Found {len(content_list)} URLs for direct LLM processing")
+                    if send_url_directly:
+                        print(f"   Mode: URL-ONLY (sending URLs directly to LLM, no download)")
                     else:
-                        print(f"    ⚠ No 'questions' key in response")
+                        print(f"   Mode: SKIP-SCRAPING (will download and extract content before LLM)")
                 else:
-                    processed = self.process_descriptive_content(content['title'], content['body'], source_url)
-                    # Save descriptive content to database
-                    if processed and not processed.get('error'):
-                        saved = self.save_descriptive_to_database(processed, source_url)
-                        if saved:
-                            results['processed_items'].extend(saved)
-                            print(f"    ✓ Saved {len(saved)} descriptive item(s) to database")
-                    else:
-                        print(f"    ⚠ No valid response to save")
+                    print(f"\n⚠ [STEP 1] No content sources found")
+                    content_list = []
+            else:
+                # Standard scraping mode
+                print(f"\n[STEP 1] SCRAPING...")
+                content_list = self.scraper.scrape_from_sources(content_type)
+                print(f"\n✅ [STEP 1] Scraped {len(content_list)} articles")
             
-            except Exception as e:
-                print(f"    ❌ ERROR: {str(e)}")
-                logger.error(f"Error processing content: {str(e)}")
-                results['errors'].append(str(e))
-        
+            logger.info(f"Retrieved {len(content_list)} content items (skip_scraping={skip_scraping})")
+            
+            results = {
+                'content_type': content_type,
+                'articles_scraped': len(content_list),
+                'processed_items': [],
+                'errors': [],
+                'mode': 'direct-to-llm' if skip_scraping else 'standard'
+            }
+            
+            # Step 2: Process and Save
+            print(f"\n[STEP 2] PROCESSING & SAVING...")
+            for idx, content in enumerate(content_list, 1):
+                display_title = content.get('title', 'Unknown')[:50]
+                if send_url_directly or skip_scraping:
+                    display_title = content.get('source_url', 'Unknown')[:60]
+                
+                print(f"\n  [{idx}/{len(content_list)}] Processing: {display_title}...")
+                try:
+                    source_url = content.get('source_url')
+                    print(f"    Source URL: {source_url}")
+                    
+                    if send_url_directly:
+                        # URL-ONLY MODE: Send only URL string to LLM (empty response is ok)
+                        print(f"    🔗 URL-ONLY MODE: Sending URL only to LLM")
+                        content['body'] = source_url  # Keep only URL
+                        print(f"      ✅ URL ready: {source_url[:60]}...")
+                    elif skip_scraping:
+                        # SKIP-SCRAPING MODE: Download entire website content
+                        print(f"    📥 SKIP-MODE: Downloading entire website content...")
+                        try:
+                            print(f"      [FETCH] Attempting Selenium...")
+                            html_content = self.scraper.fetch_page_selenium(source_url)
+                            
+                            if html_content:
+                                print(f"      ✅ Successfully fetched {len(html_content)} bytes")
+                                # Extract text from HTML (NO LIMIT)
+                                soup = BeautifulSoup(html_content, 'html.parser')
+                                # Remove script and style elements
+                                for script in soup(["script", "style"]):
+                                    script.decompose()
+                                # Get text
+                                text = soup.get_text(separator=' ', strip=True)
+                                # Clean up whitespace
+                                text = ' '.join(text.split())
+                                content['body'] = text  # ENTIRE content, no limit
+                                print(f"      ✅ Extracted {len(content['body'])} chars of full content")
+                            else:
+                                print(f"      ❌ Failed to fetch content")
+                                content['body'] = source_url
+                        except Exception as e:
+                            print(f"      ⚠️  Fetch error: {str(e)}")
+                            content['body'] = source_url
+                    
+                    if content_type == 'currentaffairs_mcq':
+                        processed = self.process_mcq_content(content['title'], content['body'], source_url, skip_scraping=skip_scraping, send_url_directly=send_url_directly)
+                        if 'questions' in processed:
+                            saved = self.save_mcq_to_database(processed, content_type, source_url)
+                            results['processed_items'].extend(saved)
+                        else:
+                            print(f"    ⚠ No 'questions' key in response")
+                    else:
+                        processed = self.process_descriptive_content(content['title'], content['body'], source_url)
+                        # Save descriptive content to database
+                        if processed and not processed.get('error'):
+                            saved = self.save_descriptive_to_database(processed, source_url)
+                            if saved:
+                                results['processed_items'].extend(saved)
+                                print(f"    ✓ Saved {len(saved)} descriptive item(s) to database")
+                        else:
+                            print(f"    ⚠ No valid response to save")
+                
+                except Exception as e:
+                    print(f"    ❌ ERROR: {str(e)}")
+                    logger.error(f"Error processing content: {str(e)}")
+                    results['errors'].append(str(e))
+            
+            print(f"\n{'='*70}")
+            print(f"✅ PIPELINE COMPLETE")
+            print(f"  Mode: {'Direct-to-LLM' if skip_scraping else 'Standard Scraping'}")
+            print(f"  Total Processed: {len(results['processed_items'])}")
+            print(f"  Errors: {len(results['errors'])}")
+            print(f"{'='*70}\n")
+            logger.info(f"Pipeline completed. Processed {len(results['processed_items'])} items (mode={'direct-to-llm' if skip_scraping else 'standard'})")
+            return results
+
+    def run_playwright(
+        self,
+        content_type: str = 'mcq',
+        skip_scraping: bool = False,
+        send_url_directly: bool = False
+) -> Dict[str, Any]:
+
+        from genai.models import ContentSource
+        from playwright.sync_api import sync_playwright
+        from bs4 import BeautifulSoup
+
         print(f"\n{'='*70}")
-        print(f"✅ PIPELINE COMPLETE")
-        print(f"  Mode: {'Direct-to-LLM' if skip_scraping else 'Standard Scraping'}")
+        print(f"🚀 PLAYWRIGHT PIPELINE START - Content Type: {content_type}")
+        print(f"   Parameters:")
+        print(f"   - skip_scraping: {skip_scraping}")
+        print(f"   - send_url_directly: {send_url_directly}")
+        print(f"   - Pipeline Mode: PLAYWRIGHT (use_playwright=True)")
+        print(f"{'='*70}")
+        logger.info(f"Playwright pipeline started: content_type={content_type}, skip_scraping={skip_scraping}, send_url_directly={send_url_directly}")
+
+        type_mapping = {
+            'currentaffairs_mcq': 'currentaffairs_mcq',
+            'currentaffairs_descriptive': 'currentaffairs_descriptive'
+        }
+        source_type = type_mapping.get(content_type, content_type)
+
+        # FETCH ALL SOURCES INTO MEMORY BEFORE ASYNC OPERATIONS
+        # This prevents "You cannot call this from an async context" error
+        sources = list(ContentSource.objects.filter(
+            is_active=True,
+            source_type=source_type
+        ))
+        print(f"  📥 Fetched {len(sources)} active sources from database")
+
+        content_list = []
+
+        # STEP 1: GET CONTENT
+        if send_url_directly:
+            for src in sources:
+                content_list.append({
+                    "source_url": str(src.url),
+                    "title": f"Direct-to-LLM: {src.url}",
+                    "body": str(src.url)
+                })
+        else:
+            with sync_playwright() as p:
+                browser = p.chromium.launch(headless=True, args=["--no-sandbox"])
+                page = browser.new_page()
+
+                for src in sources:
+                    url = str(src.url)
+                    print(f"  🌐 Fetching (Playwright): {url}")
+
+                    try:
+                        page.goto(url, wait_until="networkidle", timeout=30000)
+                        page.wait_for_timeout(2000)
+
+                        html = page.content()
+
+                        soup = BeautifulSoup(html, "html.parser")
+                        for tag in soup(["script", "style", "noscript"]):
+                            tag.decompose()
+
+                        text = soup.get_text(separator=" ", strip=True)
+                        text = " ".join(text.split())
+
+                        content_list.append({
+                            "source_url": url,
+                            "title": soup.title.string[:200] if soup.title else url,
+                            "body": text if skip_scraping else text[:5000]
+                        })
+
+                        print(f"    ✅ Extracted {len(text)} chars")
+
+                    except Exception as e:
+                        print(f"    ❌ Playwright error: {e}")
+                        content_list.append({
+                            "source_url": url,
+                            "title": url,
+                            "body": url
+                        })
+
+                browser.close()
+
+        # STEP 2: PROCESS & SAVE
+        results = {
+            "content_type": content_type,
+            "articles_scraped": len(content_list),
+            "processed_items": [],
+            "errors": [],
+            "mode": "playwright"
+        }
+
+        for idx, content in enumerate(content_list, 1):
+            try:
+                print(f"\n  [{idx}/{len(content_list)}] Processing {content['source_url']}")
+
+                if content_type == "currentaffairs_mcq":
+                    processed = self.process_mcq_content(
+                        content["title"],
+                        content["body"],
+                        content["source_url"],
+                        skip_scraping=skip_scraping,
+                        send_url_directly=send_url_directly
+                    )
+
+                    if "questions" in processed:
+                        saved = self.save_mcq_to_database(
+                            processed,
+                            content_type,
+                            content["source_url"]
+                        )
+                        results["processed_items"].extend(saved)
+
+                else:
+                    processed = self.process_descriptive_content(
+                        content["title"],
+                        content["body"],
+                        content["source_url"]
+                    )
+
+                    if processed and not processed.get("error"):
+                        saved = self.save_descriptive_to_database(
+                            processed,
+                            content["source_url"]
+                        )
+                        results["processed_items"].extend(saved)
+
+            except Exception as e:
+                print(f"    ❌ ERROR: {e}")
+                results["errors"].append(str(e))
+
+        print(f"\n{'='*70}")
+        print(f"✅ PLAYWRIGHT PIPELINE COMPLETE")
         print(f"  Total Processed: {len(results['processed_items'])}")
         print(f"  Errors: {len(results['errors'])}")
         print(f"{'='*70}\n")
-        logger.info(f"Pipeline completed. Processed {len(results['processed_items'])} items (mode={'direct-to-llm' if skip_scraping else 'standard'})")
+
         return results
 
-
 # Utility functions
-def fetch_and_process_current_affairs(content_type: str = 'currentaffairs_mcq', skip_scraping: bool = False) -> Dict[str, Any]:
+def fetch_and_process_current_affairs(content_type: str = 'currentaffairs_mcq', skip_scraping: bool = False, send_url_directly: bool = False, use_playwright: bool = False) -> Dict[str, Any]:
     """
     Main function to fetch and process current affairs content
     
     Args:
         content_type: 'currentaffairs_mcq' or 'current_affairs_descriptive'
-        skip_scraping: If True, skip web scraping and send URLs directly to LLM
+        skip_scraping: If True, download content via Selenium before sending to LLM
+        send_url_directly: If True, send URL only to LLM (takes precedence over skip_scraping)
+        use_playwright: If True, use Playwright as download engine
     
     Returns:
         Processing results
     """
     print("\n" + "="*70)
-    print(f"🎯 fetch_and_process_current_affairs() CALLED")
-    print(f"   Content Type: {content_type}")
-    print(f"   Skip Scraping: {skip_scraping}")
+    print(f"🎯 fetch_and_process_current_affairs() ENTRY POINT")
+    print(f"   ✅ Parameters received:")
+    print(f"      - content_type: {content_type}")
+    print(f"      - skip_scraping: {skip_scraping} (type: {type(skip_scraping).__name__})")
+    print(f"      - send_url_directly: {send_url_directly} (type: {type(send_url_directly).__name__})")
+    print(f"      - use_playwright: {use_playwright} (type: {type(use_playwright).__name__})")
     print("="*70)
+    logger.info(f"fetch_and_process_current_affairs() called: content_type={content_type}, skip_scraping={skip_scraping}, send_url_directly={send_url_directly}, use_playwright={use_playwright}")
     
     try:
         print(f"  📍 Initializing CurrentAffairsProcessor...")
         processor = CurrentAffairsProcessor()
         print(f"  ✓ Processor initialized successfully")
         
-        print(f"  📞 Calling processor.run_complete_pipeline('{content_type}', skip_scraping={skip_scraping})...")
-        result = processor.run_complete_pipeline(content_type, skip_scraping=skip_scraping)
+        print(f"  📞 Calling processor.run_complete_pipeline('{content_type}', skip_scraping={skip_scraping}, send_url_directly={send_url_directly}, use_playwright={use_playwright})...")
+        result = processor.run_complete_pipeline(content_type, skip_scraping=skip_scraping, send_url_directly=send_url_directly, use_playwright=use_playwright)
         print(f"  ✅ Pipeline completed, returning result")
         return result
     except Exception as e:

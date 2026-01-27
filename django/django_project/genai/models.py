@@ -207,7 +207,9 @@ class ProcessingLog(models.Model):
     is_scheduled = models.BooleanField(default=False)
     
     # LLM-Direct Mode
-    skip_scraping = models.BooleanField(default=False, help_text="Skip web scraping and send URLs directly to LLM with prompt")
+    skip_scraping = models.BooleanField(default=False, help_text="Skip intelligent article extraction and send downloaded content to LLM")
+    send_url_directly = models.BooleanField(default=False, help_text="Send URL directly to LLM without fetching content (takes precedence over skip_scraping)")
+    use_playwright = models.BooleanField(default=False, help_text="It's a separate download engine")
     
     # NEW FIELDS FOR SUBJECT-BASED ROUTING (Task Router Support)
     subject = models.CharField(

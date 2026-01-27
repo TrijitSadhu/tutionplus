@@ -371,7 +371,7 @@ class ProcessingLogAdmin(admin.ModelAdmin):
     """Admin interface for Processing Logs with status tracking and task routing"""
     
     list_display = ('id', 'task_type_display', 'subject_display', 'status_badge', 'difficulty_display', 'num_items', 'duration_display', 'created_at')
-    list_filter = ('status', 'task_type', 'subject', 'difficulty_level', 'created_at', 'skip_scraping')
+    list_filter = ('status', 'task_type', 'subject', 'difficulty_level', 'created_at', 'skip_scraping', 'send_url_directly', 'use_playwright')
     search_fields = ('id', 'mcq_status', 'current_affairs_status')
     readonly_fields = ('id', 'created_at', 'updated_at', 'started_at', 'completed_at', 'duration_display', 'progress_percentage_display', 'log_details_formatted')
     
@@ -398,8 +398,8 @@ class ProcessingLogAdmin(admin.ModelAdmin):
             'fields': ('mcq_status', 'current_affairs_status', 'error_message')
         }),
         ('Processing Options', {
-            'fields': ('skip_scraping',),
-            'description': 'Skip web scraping and send URLs directly to LLM with prompt'
+            'fields': ('skip_scraping', 'send_url_directly', 'use_playwright'),
+            'description': 'skip_scraping: Download content before sending to LLM | send_url_directly: Send URL only (takes precedence) | use_playwright: It\'s a separate download engine'
         }),
         ('Scheduling', {
             'fields': ('is_scheduled', 'scheduled_time'),

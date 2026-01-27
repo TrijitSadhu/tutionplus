@@ -91,9 +91,14 @@ class Command(BaseCommand):
             # Fetch Current Affairs MCQ
             if content_type in ['currentaffairs_mcq', 'both']:
                 self.stdout.write('📖 Fetching Current Affairs MCQ content...')
-                print(f"  📞 Calling fetch_and_process_current_affairs('currentaffairs_mcq')...")
+                print(f"  📞 Calling fetch_and_process_current_affairs('currentaffairs_mcq', skip_scraping={log_entry.skip_scraping}, send_url_directly={log_entry.send_url_directly}, use_playwright={log_entry.use_playwright})...")
                 try:
-                    mcq_result = fetch_and_process_current_affairs('currentaffairs_mcq')
+                    mcq_result = fetch_and_process_current_affairs(
+                        'currentaffairs_mcq',
+                        skip_scraping=log_entry.skip_scraping,
+                        send_url_directly=log_entry.send_url_directly,
+                        use_playwright=log_entry.use_playwright
+                    )
                     print(f"  ✅ MCQ processing completed, result: {mcq_result}")
                     results['currentaffairs_mcq'] = mcq_result
                     log_entry.mcq_status = '✓ Completed'
@@ -117,9 +122,14 @@ class Command(BaseCommand):
             # Fetch Current Affairs Descriptive
             if content_type in ['currentaffairs_descriptive', 'both']:
                 self.stdout.write('📰 Fetching Current Affairs Descriptive content...')
-                print(f"  📞 Calling fetch_and_process_current_affairs('currentaffairs_descriptive')...")
+                print(f"  📞 Calling fetch_and_process_current_affairs('currentaffairs_descriptive', skip_scraping={log_entry.skip_scraping}, send_url_directly={log_entry.send_url_directly}, use_playwright={log_entry.use_playwright})...")
                 try:
-                    ca_result = fetch_and_process_current_affairs('currentaffairs_descriptive')
+                    ca_result = fetch_and_process_current_affairs(
+                        'currentaffairs_descriptive',
+                        skip_scraping=log_entry.skip_scraping,
+                        send_url_directly=log_entry.send_url_directly,
+                        use_playwright=log_entry.use_playwright
+                    )
                     print(f"  ✅ Descriptive processing completed, result: {ca_result}")
                     results['currentaffairs_descriptive'] = ca_result
                     log_entry.current_affairs_status = '✓ Completed'
