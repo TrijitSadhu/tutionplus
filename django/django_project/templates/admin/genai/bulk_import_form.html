@@ -1,0 +1,184 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block extrahead %}
+<script>
+console.log('📋 [TEMPLATE] bulk_import_form.html loaded');
+</script>
+{% endblock %}
+
+{% block content %}
+<div id="content-main">
+    <div class="app-auth login-form" style="margin: 50px auto; max-width: 600px;">
+        <h1>{{ title }}</h1>
+        
+        <div style="background-color: #f0f7ff; padding: 15px; border-radius: 5px; margin-bottom: 20px; border-left: 4px solid #2196F3;">
+            <strong>📋 Selected Records:</strong> {{ queryset.count }}
+            {% for obj in queryset %}
+            <br>
+            ✓ {{ obj.get_to_table_display }} ({{ obj.created_at|date:"d M Y" }})
+            {% endfor %}
+        </div>
+        
+        <form method="post" action="" id="bulk-import-form" name="bulk-import-form" style="border: 2px solid #417690; padding: 20px; border-radius: 5px;">
+            {% csrf_token %}
+            
+            <!-- Hidden fields to preserve context -->
+            <input type="hidden" name="action" value="bulk_import_action">
+            {% for selected_id in selected_ids %}
+            <input type="hidden" name="_selected_action" value="{{ selected_id }}">
+            {% endfor %}
+            <input type="hidden" name="select_across" value="0">
+            
+            <fieldset class="module aligned">
+                <div class="form-row">
+                    <label for="id_import_date" style="font-weight: bold;">📅 Import Date:</label>
+                    <input 
+                        type="date" 
+                        name="import_date" 
+                        id="id_import_date" 
+                        required 
+                        style="padding: 8px; width: 100%; max-width: 300px; border: 1px solid #ccc; border-radius: 3px;">
+                    
+                    <p class="help" style="color: #666; margin-top: 8px;">
+                        This date will be used for records that don't have year_now, month, or day fields in the JSON.
+                    </p>
+                </div>
+            </fieldset>
+            
+            <div style="margin-top: 20px;">
+                <button 
+                    type="button" 
+                    id="proceed-btn"
+                    class="button default" 
+                    style="background-color: #417690; padding: 10px 20px; cursor: pointer; font-weight: bold;" 
+                    onclick="proceedWithImport(); return false;">
+                    ✅ Proceed with Import
+                </button>
+                <a href="{% url 'admin:genai_jsonimport_changelist' %}" class="button" style="margin-left: 10px;">
+                    ❌ Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+console.log('');
+console.log('==================================================');
+console.log('🔧 [SCRIPT] bulk_import_form.html Script Loading');
+console.log('==================================================');
+
+// Auto-set date on page load
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('');
+    console.log('==================================================');
+    console.log('📄 [LOAD] Page DOMContentLoaded event fired');
+    console.log('==================================================');
+    
+    const dateInput = document.getElementById('id_import_date');
+    const form = document.getElementById('bulk-import-form');
+    const btn = document.getElementById('proceed-btn');
+    
+    console.log('[LOAD] ✓ Looking for elements...');
+    console.log('[LOAD]   Form:', form ? '✅' : '❌');
+    console.log('[LOAD]   Date Input:', dateInput ? '✅' : '❌');
+    console.log('[LOAD]   Button:', btn ? '✅' : '❌');
+    
+    if (dateInput) {
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, '0');
+        const dd = String(today.getDate()).padStart(2, '0');
+        const todayDate = `${yyyy}-${mm}-${dd}`;
+        
+        dateInput.value = todayDate;
+        console.log(`[LOAD] ✅ Date set to: ${todayDate}`);
+    } else {
+        console.log('[LOAD] ❌ Date input not found');
+    }
+    
+    if (btn) {
+        console.log('[LOAD] ✓ Button click handler attached');
+        btn.addEventListener('click', function(e) {
+            console.log('[BTN] Proceed button clicked');
+            proceedWithImport();
+        });
+    }
+    
+    console.log('==================================================');
+});
+
+// Handle form submission with detailed logging
+function proceedWithImport() {
+    console.log('');
+    console.log('==================================================');
+    console.log('🎯 [PROCEED] proceedWithImport() CALLED');
+    console.log('==================================================');
+    
+    // Get elements
+    const form = document.getElementById('bulk-import-form');
+    const dateInput = document.getElementById('id_import_date');
+    
+    console.log('[PROCEED] ✓ Finding form and date input...');
+    if (!form) {
+        alert('❌ ERROR: Form element not found!');
+        console.log('[PROCEED] ❌ Form not found! ID: bulk-import-form');
+        return false;
+    }
+    
+    if (!dateInput) {
+        alert('❌ ERROR: Date input not found!');
+        console.log('[PROCEED] ❌ Date input not found! ID: id_import_date');
+        return false;
+    }
+    
+    console.log('[PROCEED] ✅ Both elements found');
+    
+    // Set date if empty
+    console.log('[PROCEED] ✓ Checking date value...');
+    if (!dateInput.value) {
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, '0');
+        const dd = String(today.getDate()).padStart(2, '0');
+        const todayDate = `${yyyy}-${mm}-${dd}`;
+        dateInput.value = todayDate;
+        console.log(`[PROCEED] ✅ Date auto-filled: ${todayDate}`);
+    } else {
+        console.log(`[PROCEED] ✅ Date already set: ${dateInput.value}`);
+    }
+    
+    // Log form data
+    console.log('[PROCEED] ✓ Form data to be submitted:');
+    const formData = new FormData(form);
+    for (let [key, value] of formData.entries()) {
+        if (key === 'csrfmiddlewaretoken') {
+            console.log(`  - ${key}: [CSRF Token]`);
+        } else {
+            console.log(`  - ${key}: ${value}`);
+        }
+    }
+    
+    // Submit
+    console.log('[PROCEED] ✓ Submitting form...');
+    console.log('[PROCEED] ✅ About to call form.submit()');
+    
+    try {
+        form.submit();
+        console.log('[PROCEED] ✅ Form submitted successfully');
+    } catch (err) {
+        console.log('[PROCEED] ❌ Error submitting form:', err);
+        alert('❌ Error submitting form: ' + err.message);
+        return false;
+    }
+    
+    console.log('==================================================');
+    return false;
+}
+
+console.log('✅ [SCRIPT] Form script fully loaded and ready');
+console.log('==================================================\n');
+</script>
+
+{% endblock %}

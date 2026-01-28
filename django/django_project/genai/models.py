@@ -421,3 +421,64 @@ class LLMPrompt(models.Model):
             ).exclude(id=self.id).update(is_default=False)
         super(LLMPrompt, self).save(*args, **kwargs)
 
+
+class JsonImport(models.Model):
+    """Model to store JSON data for bulk import into bank models"""
+    
+    TABLE_CHOICES = [
+        # Subject MCQ Tables
+        ('polity', 'Polity'),
+        ('history', 'History'),
+        ('geography', 'Geography'),
+        ('economics', 'Economics'),
+        ('physics', 'Physics'),
+        ('chemistry', 'Chemistry'),
+        ('biology', 'Biology'),
+        ('reasoning', 'Reasoning'),
+        ('error', 'Error/Grammar'),
+        ('mcq', 'MCQ General'),
+        # Current Affairs Tables
+        ('currentaffairs_mcq', 'Current Affairs MCQ'),
+        ('currentaffairs_descriptive', 'Current Affairs Descriptive'),
+        ('current_affairs_slide', 'Current Affairs Slide'),
+        # Other Tables
+        ('total', 'Total'),
+        ('total_english', 'Total English'),
+        ('total_math', 'Total Math'),
+        ('total_job', 'Total Job'),
+        ('total_job_category', 'Total Job Category'),
+        ('total_job_state', 'Total Job State'),
+        ('home', 'Home'),
+        ('topic', 'Topic'),
+        ('math', 'Math'),
+        ('job', 'Job'),
+        ('the_hindu_word_Header1', 'The Hindu Word Header 1'),
+        ('the_hindu_word_Header2', 'The Hindu Word Header 2'),
+        ('the_hindu_word_list1', 'The Hindu Word List 1'),
+        ('the_hindu_word_list2', 'The Hindu Word List 2'),
+        ('the_economy_word_Header1', 'The Economy Word Header 1'),
+        ('the_economy_word_Header2', 'The Economy Word Header 2'),
+        ('the_economy_word_list1', 'The Economy Word List 1'),
+        ('the_economy_word_list2', 'The Economy Word List 2'),
+    ]
+    
+    to_table = models.CharField(
+        max_length=50,
+        choices=TABLE_CHOICES,
+        help_text="Select which bank model table to import data to"
+    )
+    json_data = models.TextField(
+        help_text="Paste JSON array of objects here. Each object represents a record to be imported."
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    
+    class Meta:
+        verbose_name = 'JSON Import'
+        verbose_name_plural = 'JSON Imports'
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return f"{self.get_to_table_display()} - {self.created_at.strftime('%d/%m/%Y %H:%M')}"
+

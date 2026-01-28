@@ -8,8 +8,10 @@ from django.core.management.base import CommandError
 from django.utils import timezone
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
+from django.template.response import TemplateResponse
 from bank.admin import admin_site
-from .models import PDFUpload, CurrentAffairsGeneration, MathProblemGeneration, ProcessingTask, ProcessingLog, ContentSource, LLMPrompt
+from .models import PDFUpload, CurrentAffairsGeneration, MathProblemGeneration, ProcessingTask, ProcessingLog, ContentSource, LLMPrompt, JsonImport
+from .bulk_import import BulkImporter
 
 
 class ProcessPDFForm(forms.Form):
@@ -1050,6 +1052,181 @@ def process_pdf_with_options(request):
     return TemplateResponse(request, 'admin/genai/process_pdf_form.html', context)
 
 
+class BulkImportForm(forms.Form):
+    """Intermediate form for bulk import with date selection"""
+    import_date = forms.DateField(
+        required=True,
+        widget=forms.DateInput(attrs={'type': 'date'}),
+        help_text='Date to use for records that don\'t have year_now, month, or day fields'
+    )
+
+
+class JsonImportAdmin(admin.ModelAdmin):
+    """Admin interface for JSON Import"""
+    list_display = ['to_table_display', 'created_at', 'record_count', 'created_by']
+    list_filter = ['to_table', 'created_at']
+    search_fields = ['to_table']
+    readonly_fields = ['created_at', 'updated_at', 'created_by']
+    
+    fieldsets = (
+        ('Configuration', {
+            'fields': ('to_table', 'json_data'),
+            'description': 'Select the target table and paste your JSON array of objects'
+        }),
+        ('Metadata', {
+            'fields': ('created_by', 'created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )
+    
+    actions = ['bulk_import_action']
+    
+    def to_table_display(self, obj):
+        """Display table name with color"""
+        return format_html(
+            '<span style="background-color: #e3f2fd; padding: 3px 8px; border-radius: 3px;">{}</span>',
+            obj.get_to_table_display()
+        )
+    to_table_display.short_description = 'Target Table'
+    
+    def record_count(self, obj):
+        """Count records in JSON"""
+        try:
+            import json
+            data = json.loads(obj.json_data)
+            if isinstance(data, list):
+                return len(data)
+            return 1
+        except:
+            return 0
+    record_count.short_description = 'Records'
+    
+    def save_model(self, request, obj, form, change):
+        if not change:
+            obj.created_by = request.user
+        super().save_model(request, obj, form, change)
+    
+    def bulk_import_action(self, request, queryset):
+        """Custom action to trigger bulk import with date selection"""
+        print("\n" + "="*80)
+        print(f"🎯 [ADMIN] bulk_import_action() CALLED")
+        print(f"   Method: {request.method}")
+        print(f"   Path: {request.path}")
+        print(f"   Selected Records: {queryset.count()}")
+        print("="*80)
+        
+        if request.method == 'POST':
+            print(f"\n📋 [ADMIN] POST REQUEST received")
+            print(f"   All POST data:")
+            for key, value in request.POST.items():
+                if len(str(value)) > 100:
+                    print(f"      {key}: {str(value)[:100]}... (truncated)")
+                else:
+                    print(f"      {key}: {value}")
+            
+            print(f"\n   POST Keys: {list(request.POST.keys())}")
+            
+            # Check if this is from changelist action form or from bulk_import_form
+            is_action_form = 'action' in request.POST or '_selected_action' in request.POST
+            is_import_form = 'import_date' in request.POST
+            
+            print(f"   Is changelist action form: {is_action_form}")
+            print(f"   Is import_date form: {is_import_form}")
+            
+            if is_action_form and not is_import_form:
+                print(f"\n   📊 [FLOW] This is the INITIAL action form - showing the date selection form")
+                form = BulkImportForm()
+            else:
+                print(f"\n   📊 [FLOW] This is the IMPORT form submission - processing the import")
+                form = BulkImportForm(request.POST)
+                print(f"   Form is_bound: {form.is_bound}")
+            
+            if form.is_bound and form.is_valid():
+                print(f"   ✅ Form is VALID")
+                import_date = form.cleaned_data['import_date']
+                print(f"   📅 Import Date extracted: {import_date}")
+                from datetime import time
+                
+                # Process each selected JsonImport record
+                success_count = 0
+                error_count = 0
+                
+                print(f"\n📥 [ADMIN] Processing {queryset.count()} JsonImport records...")
+                for idx, json_import in enumerate(queryset, 1):
+                    print(f"\n   [{idx}/{queryset.count()}] Processing: {json_import.to_table}")
+                    print(f"      - ID: {json_import.id}")
+                    print(f"      - JSON Data Length: {len(json_import.json_data)} chars")
+                    
+                    # Run the importer
+                    print(f"      [INIT] Creating BulkImporter instance...")
+                    importer = BulkImporter(
+                        table_name=json_import.to_table,
+                        json_data=json_import.json_data,
+                        form_date=import_date,
+                        form_time=time(10, 0, 0)  # Default time
+                    )
+                    print(f"      ✅ BulkImporter created")
+                    
+                    print(f"      [IMPORT] Calling import_data()...")
+                    result = importer.import_data()
+                    print(f"      ✅ import_data() returned")
+                    print(f"      Result: {result}")
+                    
+                    if result['success'] or result['created'] > 0:
+                        success_count += result['created'] + result['updated']
+                        print(f"      ✅ Added {result['created'] + result['updated']} records")
+                    else:
+                        error_count += len(result['errors'])
+                        print(f"      ❌ {len(result['errors'])} errors occurred")
+                        for err in result['errors'][:3]:
+                            print(f"         - {err}")
+                
+                print(f"\n✅ [ADMIN] Processing Complete")
+                print(f"   Total Created/Updated: {success_count}")
+                print(f"   Total Errors: {error_count}")
+                
+                # Show success message
+                message = f'✅ Bulk import completed! Records created/updated: {success_count}. Errors: {error_count}'
+                print(f"   Message: {message}")
+                self.message_user(request, message)
+                print(f"   [REDIRECT] Redirecting to {request.path}")
+                return redirect(request.path)
+            elif form.is_bound:
+                print(f"   ❌ Form is INVALID")
+                print(f"   Form Errors: {form.errors}")
+                print(f"   Form error_dict: {form.errors.as_data() if hasattr(form.errors, 'as_data') else 'N/A'}")
+        else:
+            print(f"\n📋 [ADMIN] GET REQUEST received - showing action form")
+            form = BulkImportForm()
+            print(f"   ✅ Form instance created")
+        
+        # Show the intermediate form
+        print(f"\n📄 [ADMIN] Rendering bulk_import_form.html")
+        
+        # Extract selected IDs from queryset
+        selected_ids = list(queryset.values_list('id', flat=True))
+        print(f"   Selected IDs: {selected_ids}")
+        
+        context = {
+            'form': form,
+            'title': 'Bulk Import - Select Import Date',
+            'queryset': queryset,
+            'selected_ids': selected_ids,
+            'opts': self.model._meta,
+            'has_change_permission': True,
+        }
+        print(f"   Context prepared with {queryset.count()} records")
+        print(f"   Selected IDs passed to template: {selected_ids}")
+        print("="*80 + "\n")
+        return TemplateResponse(
+            request,
+            'admin/genai/bulk_import_form.html',
+            context
+        )
+    
+    bulk_import_action.short_description = '📥 Bulk Import (Select records & proceed)'
+
+
 # Register models with admin
 admin_site.register(PDFUpload, PDFUploadAdmin)
 admin_site.register(CurrentAffairsGeneration, CurrentAffairsGenerationAdmin)
@@ -1058,3 +1235,4 @@ admin_site.register(ProcessingTask, ProcessingTaskAdmin)
 admin_site.register(ProcessingLog, ProcessingLogAdmin)
 admin_site.register(ContentSource, ContentSourceAdmin)
 admin_site.register(LLMPrompt, LLMPromptAdmin)
+admin_site.register(JsonImport, JsonImportAdmin)
