@@ -30,4 +30,7 @@ urlpatterns = [
     
     # PDF Processing Form (with chapter and difficulty selection)
     path('process-pdf-form/', admin_views.process_pdf_with_options, name='process_pdf_form'),
+    
+    # Math PDF Processing Form (GO button handler)
+    path('admin/math-pdf-processing/<int:pk>/', views.math_pdf_processing_form, name='math_pdf_processing_form'),
 ]

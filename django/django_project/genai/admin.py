@@ -261,14 +261,14 @@ class CurrentAffairsGenerationAdmin(admin.ModelAdmin):
 class MathProblemGenerationAdmin(admin.ModelAdmin):
     """Admin interface for math problem generation"""
     
-    list_display = ('expression_preview', 'difficulty', 'status_badge', 'created_at', 'has_latex')
-    list_filter = ('difficulty', 'status', 'created_at')
-    search_fields = ('expression',)
-    readonly_fields = ('created_at', 'processed_at')
+    list_display = ('expression_preview', 'chapter', 'difficulty', 'status_badge', 'has_pdf', 'has_latex', 'has_mcqs', 'processed_at', 'go_button', 'created_at')
+    list_filter = ('difficulty', 'status', 'created_at', 'chapter')
+    search_fields = ('expression', 'chapter', 'error_message')
+    readonly_fields = ('created_at', 'processed_at', 'latex_output', 'generated_mcqs')
     
     fieldsets = (
         ('Math Input', {
-            'fields': ('expression', 'difficulty')
+            'fields': ('expression', 'difficulty', 'chapter', 'pdf_file')
         }),
         ('Processing Status', {
             'fields': ('status', 'created_at', 'processed_at', 'error_message')
@@ -281,10 +281,84 @@ class MathProblemGenerationAdmin(admin.ModelAdmin):
     
     actions = ['convert_to_latex', 'generate_math_mcqs']
     
+    def get_form(self, request, obj=None, **kwargs):
+        """Dynamically populate chapter choices"""
+        form = super().get_form(request, obj, **kwargs)
+        if 'chapter' in form.base_fields:
+            from genai.models import MathProblemGeneration
+            chapter_choices = MathProblemGeneration.get_chapter_choices()
+            form.base_fields['chapter'].widget = forms.Select(choices=[('', '-------')] + chapter_choices)
+        return form
+    
     def expression_preview(self, obj):
+        if not obj.expression:
+            return '(No expression)'
         preview = obj.expression[:50] + '...' if len(obj.expression) > 50 else obj.expression
         return preview
     expression_preview.short_description = 'Expression'
+    
+    def has_pdf(self, obj):
+        if obj.pdf_file:
+            return format_html('<span style="color: green;">✓ PDF</span>')
+        return format_html('<span style="color: gray;">✗</span>')
+    has_pdf.short_description = 'PDF'
+    
+    def has_mcqs(self, obj):
+        if obj.generated_mcqs:
+            return format_html('<span style="color: green;">✓ MCQs</span>')
+        return format_html('<span style="color: gray;">✗</span>')
+    has_mcqs.short_description = 'MCQs'
+    
+    def go_button(self, obj):
+        """Per-row GO button with dropdown menu for actions"""
+        from django.urls import reverse
+        from django.utils.safestring import mark_safe
+        
+        # URL for Generate MCQ (PDF Processing Form)
+        mcq_url = reverse('genai:math_pdf_processing_form', args=[obj.pk])
+        
+        # URL for Convert to LaTeX (also uses math_pdf_processing_form)
+        latex_url = reverse('genai:math_pdf_processing_form', args=[obj.pk])
+        
+        # Create dropdown button using string concatenation
+        html = (
+            '<div class="dropdown" style="position: relative; display: inline-block;">'
+            '<button class="button" style="background: #417690; color: white; padding: 5px 15px; '
+            'text-decoration: none; border-radius: 3px; cursor: pointer; border: none;" '
+            'onclick="event.preventDefault(); this.nextElementSibling.style.display = this.nextElementSibling.style.display === \'block\' ? \'none\' : \'block\';">'
+            'GO ▼'
+            '</button>'
+            '<div style="display: none; position: absolute; background: white; min-width: 200px; '
+            'box-shadow: 0px 8px 16px rgba(0,0,0,0.2); z-index: 1000; border-radius: 3px; margin-top: 2px;">'
+            '<a href="' + mcq_url + '" style="color: black; padding: 12px 16px; text-decoration: none; '
+            'display: block; border-bottom: 1px solid #eee;" '
+            'onmouseover="this.style.backgroundColor=\'#f1f1f1\'" '
+            'onmouseout="this.style.backgroundColor=\'white\'">'
+            '📝 Generate MCQ'
+            '</a>'
+            '<a href="' + latex_url + '" '
+            'style="color: black; padding: 12px 16px; text-decoration: none; display: block;" '
+            'onmouseover="this.style.backgroundColor=\'#f1f1f1\'" '
+            'onmouseout="this.style.backgroundColor=\'white\'">'
+            '🔤 Convert to LaTeX'
+            '</a>'
+            '</div>'
+            '</div>'
+            '<script>'
+            'document.addEventListener("click", function(e) {'
+            'var dropdowns = document.querySelectorAll(".dropdown > div");'
+            'dropdowns.forEach(function(dropdown) {'
+            'if (!dropdown.previousElementSibling.contains(e.target) && !dropdown.contains(e.target)) {'
+            'dropdown.style.display = "none";'
+            '}'
+            '});'
+            '});'
+            '</script>'
+        )
+        
+        return mark_safe(html)
+    go_button.short_description = 'Action'
+    go_button.allow_tags = True
     
     def status_badge(self, obj):
         colors = {
@@ -306,17 +380,166 @@ class MathProblemGenerationAdmin(admin.ModelAdmin):
     has_latex.short_description = 'LaTeX Done'
     
     def convert_to_latex(self, request, queryset):
+        """Convert math expressions to LaTeX format"""
+        from genai.tasks.math_processor import LaTeXConverter
+        from django.utils import timezone
+        import json
+        
+        converter = LaTeXConverter()
+        success_count = 0
+        error_count = 0
+        
         for item in queryset:
-            item.status = 'processing'
-            item.save()
-        self.message_user(request, f"Started LaTeX conversion for {queryset.count()} item(s)")
+            try:
+                # Validate expression exists
+                if not item.expression or not item.expression.strip():
+                    item.status = 'failed'
+                    item.error_message = 'No expression provided for conversion'
+                    item.save()
+                    error_count += 1
+                    continue
+                
+                # Update status to processing
+                item.status = 'processing'
+                item.save()
+                
+                print(f"\n{'='*80}")
+                print(f"[LATEX CONVERSION] Processing: {item.expression[:50]}...")
+                print(f"{'='*80}")
+                
+                # Perform conversion
+                result = converter.convert_to_latex(item.expression)
+                
+                if 'error' in result:
+                    # Conversion failed
+                    item.status = 'failed'
+                    item.error_message = f"LaTeX conversion error: {result['error']}"
+                    item.processed_at = timezone.now()
+                    print(f"❌ Conversion failed: {result['error']}")
+                    error_count += 1
+                else:
+                    # Conversion succeeded
+                    item.latex_output = result.get('latex', '')
+                    item.status = 'completed'
+                    item.error_message = None
+                    item.processed_at = timezone.now()
+                    print(f"✅ Conversion successful: {item.latex_output[:50]}...")
+                    success_count += 1
+                
+                item.save()
+                print(f"{'='*80}\n")
+                
+            except Exception as e:
+                # Handle unexpected errors
+                item.status = 'failed'
+                item.error_message = f"Unexpected error: {str(e)}"
+                item.processed_at = timezone.now()
+                item.save()
+                error_count += 1
+                print(f"❌ Unexpected error processing {item.id}: {str(e)}\n")
+        
+        # Show summary message
+        if success_count > 0 and error_count == 0:
+            self.message_user(request, f"✅ Successfully converted {success_count} item(s) to LaTeX", level='SUCCESS')
+        elif success_count > 0 and error_count > 0:
+            self.message_user(request, f"⚠️ Converted {success_count} item(s), {error_count} failed", level='WARNING')
+        else:
+            self.message_user(request, f"❌ All {error_count} conversion(s) failed", level='ERROR')
+    
     convert_to_latex.short_description = "Convert to LaTeX"
     
     def generate_math_mcqs(self, request, queryset):
+        """Generate MCQs from math problems (includes LaTeX conversion if needed)"""
+        from genai.tasks.math_processor import MathMCQGenerator
+        from django.utils import timezone
+        import json
+        
+        generator = MathMCQGenerator()
+        success_count = 0
+        error_count = 0
+        
         for item in queryset:
-            item.status = 'processing'
-            item.save()
-        self.message_user(request, f"Started MCQ generation for {queryset.count()} math problem(s)")
+            try:
+                # Validate expression exists
+                if not item.expression or not item.expression.strip():
+                    item.status = 'failed'
+                    item.error_message = 'No expression provided for MCQ generation'
+                    item.save()
+                    error_count += 1
+                    continue
+                
+                # Update status to processing
+                item.status = 'processing'
+                item.save()
+                
+                print(f"\n{'='*80}")
+                print(f"[MCQ GENERATION] Processing: {item.expression[:50]}...")
+                print(f"Difficulty: {item.difficulty}")
+                print(f"{'='*80}")
+                
+                # Process problem (includes LaTeX conversion + MCQ generation)
+                result = generator.process_math_problem(
+                    problem=item.expression,
+                    difficulty=item.difficulty
+                )
+                
+                if 'error' in result:
+                    # Generation failed
+                    item.status = 'failed'
+                    item.error_message = f"MCQ generation error: {result['error']}"
+                    item.processed_at = timezone.now()
+                    print(f"❌ Generation failed: {result['error']}")
+                    error_count += 1
+                else:
+                    # Generation succeeded
+                    # Store LaTeX output
+                    latex_conversion = result.get('latex_conversion', {})
+                    item.latex_output = latex_conversion.get('latex', '')
+                    
+                    # Store MCQ data as JSON
+                    mcq_data = {
+                        'problem_latex': result.get('problem_latex', ''),
+                        'question': result.get('question', ''),
+                        'option_a': result.get('option_a', ''),
+                        'option_b': result.get('option_b', ''),
+                        'option_c': result.get('option_c', ''),
+                        'option_d': result.get('option_d', ''),
+                        'correct_answer': result.get('correct_answer', ''),
+                        'explanation': result.get('explanation', ''),
+                        'difficulty': result.get('difficulty', item.difficulty),
+                        'concepts_tested': result.get('concepts_tested', [])
+                    }
+                    item.generated_mcqs = json.dumps(mcq_data, indent=2)
+                    
+                    item.status = 'completed'
+                    item.error_message = None
+                    item.processed_at = timezone.now()
+                    
+                    print(f"✅ MCQ generated successfully")
+                    print(f"   LaTeX: {item.latex_output[:50]}...")
+                    print(f"   Question: {mcq_data['question'][:50]}...")
+                    success_count += 1
+                
+                item.save()
+                print(f"{'='*80}\n")
+                
+            except Exception as e:
+                # Handle unexpected errors
+                item.status = 'failed'
+                item.error_message = f"Unexpected error: {str(e)}"
+                item.processed_at = timezone.now()
+                item.save()
+                error_count += 1
+                print(f"❌ Unexpected error processing {item.id}: {str(e)}\n")
+        
+        # Show summary message
+        if success_count > 0 and error_count == 0:
+            self.message_user(request, f"✅ Successfully generated {success_count} MCQ(s)", level='SUCCESS')
+        elif success_count > 0 and error_count > 0:
+            self.message_user(request, f"⚠️ Generated {success_count} MCQ(s), {error_count} failed", level='WARNING')
+        else:
+            self.message_user(request, f"❌ All {error_count} generation(s) failed", level='ERROR')
+    
     generate_math_mcqs.short_description = "Generate MCQs for selected items"
 
 

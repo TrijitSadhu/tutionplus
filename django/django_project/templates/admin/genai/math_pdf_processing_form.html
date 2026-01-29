@@ -1,0 +1,346 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block title %}Process Math Problem #{{ math_problem.id }}{% endblock %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+    .math-processing-form {
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 8px;
+    }
+    
+    .form-section {
+        background: white;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+        border: 1px solid #dee2e6;
+    }
+    
+    .form-section h3 {
+        margin-top: 0;
+        color: #417690;
+        border-bottom: 2px solid #417690;
+        padding-bottom: 10px;
+    }
+    
+    .problem-info {
+        background: #e7f3ff;
+        padding: 15px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        border-left: 4px solid #2196F3;
+    }
+    
+    .problem-info-item {
+        margin: 5px 0;
+    }
+    
+    .problem-info-label {
+        font-weight: bold;
+        color: #333;
+    }
+    
+    .checkbox-group {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .checkbox-item {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        background: #f8f9fa;
+        border-radius: 4px;
+    }
+    
+    .checkbox-item input[type="checkbox"] {
+        margin-right: 10px;
+        width: 18px;
+        height: 18px;
+    }
+    
+    .checkbox-item label {
+        margin: 0;
+        cursor: pointer;
+    }
+    
+    .help-text {
+        font-size: 0.9em;
+        color: #6c757d;
+        margin-left: 28px;
+        display: block;
+    }
+    
+    .number-input-group {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+    
+    .number-input-item {
+        flex: 1;
+        min-width: 200px;
+    }
+    
+    .number-input-item label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+    
+    .number-input-item input {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+    }
+    
+    .submit-section {
+        text-align: center;
+        padding: 20px;
+    }
+    
+    .btn-process {
+        background: #417690;
+        color: white;
+        padding: 12px 40px;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+    
+    .btn-process:hover {
+        background: #2c5266;
+    }
+    
+    .btn-cancel {
+        background: #6c757d;
+        color: white;
+        padding: 12px 40px;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        margin-left: 10px;
+        text-decoration: none;
+        display: inline-block;
+    }
+    
+    .btn-cancel:hover {
+        background: #5a6268;
+        color: white;
+    }
+    
+    .alert {
+        padding: 12px 20px;
+        margin: 10px 0;
+        border-radius: 4px;
+    }
+    
+    .alert-warning {
+        background: #fff3cd;
+        border-left: 4px solid #ffc107;
+        color: #856404;
+    }
+    
+    .alert-info {
+        background: #d1ecf1;
+        border-left: 4px solid #17a2b8;
+        color: #0c5460;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="math-processing-form">
+    <h1>📊 Process Math Problem #{{ math_problem.id }}</h1>
+    
+    <div class="problem-info">
+        <h3>Current Problem Details</h3>
+        <div class="problem-info-item">
+            <span class="problem-info-label">Expression:</span>
+            {{ math_problem.expression|default:"(None)" }}
+        </div>
+        <div class="problem-info-item">
+            <span class="problem-info-label">Chapter:</span>
+            {{ math_problem.chapter|default:"(Not set)" }}
+        </div>
+        <div class="problem-info-item">
+            <span class="problem-info-label">Difficulty:</span>
+            {{ math_problem.get_difficulty_display }}
+        </div>
+        <div class="problem-info-item">
+            <span class="problem-info-label">PDF File:</span>
+            {% if math_problem.pdf_file %}
+                ✅ Uploaded: {{ math_problem.pdf_file.name }}
+            {% else %}
+                ❌ No PDF uploaded
+            {% endif %}
+        </div>
+        <div class="problem-info-item">
+            <span class="problem-info-label">Status:</span>
+            {{ math_problem.get_status_display }}
+        </div>
+    </div>
+    
+    {% if not has_pdf and not has_expression %}
+    <div class="alert alert-warning">
+        ⚠️ <strong>Warning:</strong> No PDF file or expression provided. Please add at least one before processing.
+    </div>
+    {% endif %}
+    
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+    
+    <form method="post">
+        {% csrf_token %}
+        
+        <!-- LLM Decision Controls -->
+        <div class="form-section">
+            <h3>🤖 LLM Decision Controls</h3>
+            <div class="checkbox-group">
+                <div class="checkbox-item">
+                    {{ form.chapter_decide_by_llm }}
+                    <label for="{{ form.chapter_decide_by_llm.id_for_label }}">
+                        {{ form.chapter_decide_by_llm.label }}
+                    </label>
+                </div>
+                <span class="help-text">{{ form.chapter_decide_by_llm.help_text }}</span>
+                
+                <div class="checkbox-item">
+                    {{ form.difficulty_level_decide_by_llm }}
+                    <label for="{{ form.difficulty_level_decide_by_llm.id_for_label }}">
+                        {{ form.difficulty_level_decide_by_llm.label }}
+                    </label>
+                </div>
+                <span class="help-text">{{ form.difficulty_level_decide_by_llm.help_text }}</span>
+            </div>
+            
+            {% if chapter_choices %}
+            <div class="alert alert-info" style="margin-top: 15px;">
+                <strong>Available Chapters:</strong> {{ chapter_choices|length }} chapters found in database
+            </div>
+            {% endif %}
+        </div>
+        
+        <!-- OCR Engine Selection -->
+        <div class="form-section">
+            <h3>👁️ OCR Engine Selection</h3>
+            <div class="alert alert-info">
+                Select OCR engines in order of preference. First selected engine will be tried first, with fallback to next if it fails.
+            </div>
+            <div class="checkbox-group">
+                <div class="checkbox-item">
+                    {{ form.use_paddle_ocr }}
+                    <label for="{{ form.use_paddle_ocr.id_for_label }}">
+                        {{ form.use_paddle_ocr.label }}
+                    </label>
+                </div>
+                <span class="help-text">{{ form.use_paddle_ocr.help_text }}</span>
+                
+                <div class="checkbox-item">
+                    {{ form.use_easy_ocr }}
+                    <label for="{{ form.use_easy_ocr.id_for_label }}">
+                        {{ form.use_easy_ocr.label }}
+                    </label>
+                </div>
+                <span class="help-text">{{ form.use_easy_ocr.help_text }}</span>
+                
+                <div class="checkbox-item">
+                    {{ form.use_tesseract }}
+                    <label for="{{ form.use_tesseract.id_for_label }}">
+                        {{ form.use_tesseract.label }}
+                    </label>
+                </div>
+                <span class="help-text">{{ form.use_tesseract.help_text }}</span>
+            </div>
+        </div>
+        
+        <!-- PDF Processing Mode -->
+        <div class="form-section">
+            <h3>📄 Processing Mode</h3>
+            <div class="checkbox-item">
+                {{ form.process_pdf }}
+                <label for="{{ form.process_pdf.id_for_label }}">
+                    {{ form.process_pdf.label }}
+                </label>
+            </div>
+            <span class="help-text">{{ form.process_pdf.help_text }}</span>
+        </div>
+        
+        <!-- Page Controls -->
+        <div class="form-section">
+            <h3>📑 Page Controls</h3>
+            <div class="number-input-group">
+                <div class="number-input-item">
+                    <label for="{{ form.page_from.id_for_label }}">{{ form.page_from.label }}</label>
+                    {{ form.page_from }}
+                    <span class="help-text">{{ form.page_from.help_text }}</span>
+                </div>
+                <div class="number-input-item">
+                    <label for="{{ form.page_to.id_for_label }}">{{ form.page_to.label }}</label>
+                    {{ form.page_to }}
+                    <span class="help-text">{{ form.page_to.help_text }}</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- MCQ Extraction Modes -->
+        <div class="form-section">
+            <h3>📝 MCQ Extraction Modes</h3>
+            <div class="checkbox-group">
+                <div class="checkbox-item">
+                    {{ form.process_all_the_mcq_of_the_pageRange }}
+                    <label for="{{ form.process_all_the_mcq_of_the_pageRange.id_for_label }}">
+                        {{ form.process_all_the_mcq_of_the_pageRange.label }}
+                    </label>
+                </div>
+                <span class="help-text">{{ form.process_all_the_mcq_of_the_pageRange.help_text }}</span>
+                
+                <div class="number-input-item" style="margin-top: 15px;">
+                    <label for="{{ form.no_of_pages_at_a_time_For_EntirePDF.id_for_label }}">
+                        {{ form.no_of_pages_at_a_time_For_EntirePDF.label }}
+                    </label>
+                    {{ form.no_of_pages_at_a_time_For_EntirePDF }}
+                    <span class="help-text">{{ form.no_of_pages_at_a_time_For_EntirePDF.help_text }}</span>
+                </div>
+                
+                <div class="checkbox-item" style="margin-top: 15px;">
+                    {{ form.process_all_the_mcq_all_pages }}
+                    <label for="{{ form.process_all_the_mcq_all_pages.id_for_label }}">
+                        {{ form.process_all_the_mcq_all_pages.label }}
+                    </label>
+                </div>
+                <span class="help-text">{{ form.process_all_the_mcq_all_pages.help_text }}</span>
+            </div>
+        </div>
+        
+        {% if form.errors %}
+        <div class="alert alert-warning">
+            <strong>Please correct the following errors:</strong>
+            {{ form.errors }}
+        </div>
+        {% endif %}
+        
+        <!-- Submit Section -->
+        <div class="submit-section">
+            <button type="submit" class="btn-process">🚀 Proceed with Processing</button>
+            <a href="{% url 'admin:genai_mathproblemgeneration_change' math_problem.pk %}" class="btn-cancel">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

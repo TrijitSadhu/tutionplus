@@ -89,8 +89,10 @@ class MathProblemGeneration(models.Model):
         ('hard', 'Hard'),
     ]
     
-    expression = models.TextField(help_text="Math expression to convert to LaTeX")
+    expression = models.TextField(blank=True, null=True, help_text="Math expression to convert to LaTeX (optional)")
     difficulty = models.CharField(max_length=20, choices=DIFFICULTY_CHOICES, default='medium')
+    chapter = models.CharField(max_length=50, blank=True, null=True, help_text="Chapter name (optional, can be decided by LLM)")
+    pdf_file = models.FileField(upload_to='math/pdfs/', blank=True, null=True, help_text="PDF file for math problem extraction")
     
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
     created_at = models.DateTimeField(auto_now_add=True)
@@ -101,8 +103,19 @@ class MathProblemGeneration(models.Model):
     
     error_message = models.TextField(blank=True, null=True)
     
+    @staticmethod
+    def get_chapter_choices():
+        """Get chapter choices dynamically from math table"""
+        try:
+            from bank.models import math
+            chapters = math.objects.values_list('chapter', flat=True).distinct().order_by('chapter')
+            return [(ch, ch) for ch in chapters if ch]
+        except:
+            return []
+    
     def __str__(self):
-        return f"Math Problem - {self.difficulty} ({self.status})"
+        expr = self.expression[:30] + '...' if self.expression and len(self.expression) > 30 else self.expression or 'No expression'
+        return f"Math: {expr} - {self.difficulty} ({self.status})"
     
     class Meta:
         ordering = ['-created_at']

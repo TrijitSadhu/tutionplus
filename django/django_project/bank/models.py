@@ -1204,6 +1204,7 @@ class job(models.Model):
     
     des = models.FileField(upload_to='job/%Y/%m/%d',blank=True,null=True)
     new_id=models.CharField(max_length=300,default='',blank=True,null=True,db_index=True)
+    other_info = models.TextField(blank=True, null=True)
 
     class Meta:
         ordering = ['-day','-creation_time']

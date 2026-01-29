@@ -11,15 +11,18 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib import messages
 from django.utils import timezone
 from django.db.models import Q
 
 from genai.tasks.current_affairs import fetch_and_process_current_affairs
 from genai.tasks.pdf_processor import process_subject_pdf
 from genai.tasks.math_processor import process_math_problem, batch_process_math_problems
-from genai.models import ProcessingLog
+from genai.models import ProcessingLog, MathProblemGeneration, LLMPrompt
+from genai.forms import MathPDFProcessingForm
 
 logger = logging.getLogger(__name__)
 
@@ -422,4 +425,121 @@ def task_status(request, task_id):
             'success': False,
             'error': str(e)
         }, status=400)
+
+
+# Math PDF Processing Views
+
+@staff_member_required
+def math_pdf_processing_form(request, pk):
+    """
+    Intermediate form for configuring PDF processing options
+    Accessed via the GO button in admin
+    """
+    math_problem = get_object_or_404(MathProblemGeneration, pk=pk)
+    
+    if request.method == 'POST':
+        form = MathPDFProcessingForm(request.POST)
+        
+        if form.is_valid():
+            print(f"\n{'='*80}")
+            print(f"[MATH PDF PROCESSING] Starting for ID: {pk}")
+            print(f"{'='*80}\n")
+            
+            # Extract form data
+            config = {
+                'chapter_decide_by_llm': form.cleaned_data['chapter_decide_by_llm'],
+                'difficulty_level_decide_by_llm': form.cleaned_data['difficulty_level_decide_by_llm'],
+                'use_paddle_ocr': form.cleaned_data['use_paddle_ocr'],
+                'use_easy_ocr': form.cleaned_data['use_easy_ocr'],
+                'use_tesseract': form.cleaned_data['use_tesseract'],
+                'process_pdf': form.cleaned_data['process_pdf'],
+                'page_from': form.cleaned_data['page_from'],
+                'page_to': form.cleaned_data['page_to'],
+                'process_all_the_mcq_of_the_pageRange': form.cleaned_data['process_all_the_mcq_of_the_pageRange'],
+                'no_of_pages_at_a_time_For_EntirePDF': form.cleaned_data['no_of_pages_at_a_time_For_EntirePDF'],
+                'process_all_the_mcq_all_pages': form.cleaned_data['process_all_the_mcq_all_pages'],
+            }
+            
+            print(f"[CONFIG] Processing Configuration:")
+            for key, value in config.items():
+                print(f"  {key}: {value}")
+            print()
+            
+            # Create ProcessingLog entry
+            log_entry = ProcessingLog.objects.create(
+                task_type='math_pdf_to_mcq',
+                status='pending',
+                log_details=json.dumps({
+                    'math_problem_id': pk,
+                    'config': config,
+                    'has_pdf': bool(math_problem.pdf_file),
+                    'has_expression': bool(math_problem.expression),
+                })
+            )
+            
+            # Update math problem status
+            math_problem.status = 'processing'
+            math_problem.save()
+            
+            # Process synchronously
+            try:
+                from genai.tasks.math_processor import MathPDFProcessor
+                processor = MathPDFProcessor()
+                result = processor.process_math_problem_with_config(
+                    math_problem=math_problem,
+                    config=config,
+                    log_entry=log_entry
+                )
+                
+                if result.get('success'):
+                    messages.success(request, f"✅ Successfully processed math problem. Generated {result.get('mcq_count', 0)} MCQs.")
+                else:
+                    messages.error(request, f"❌ Processing failed: {result.get('error', 'Unknown error')}")
+                    
+            except Exception as e:
+                import traceback
+                traceback.print_exc()
+                messages.error(request, f"❌ Unexpected error: {str(e)}")
+                math_problem.status = 'failed'
+                math_problem.error_message = str(e)
+                math_problem.save()
+                
+                log_entry.status = 'failed'
+                log_entry.error_message = str(e)
+                log_entry.save()
+            
+            # Redirect back to admin
+            return redirect('admin:genai_mathproblemgeneration_change', pk)
+    
+    else:
+        # GET request - show form
+        initial_data = {
+            'process_pdf': bool(math_problem.pdf_file),
+            'chapter_decide_by_llm': not bool(math_problem.chapter),
+            'difficulty_level_decide_by_llm': False,
+            'use_paddle_ocr': False,  # Disabled by default - has DLL issues
+            'use_easy_ocr': False,     # Disabled by default - has DLL issues
+            'use_tesseract': True,     # Enabled by default - works reliably
+            'page_from': 1,  # 1-based: first page
+            'page_to': 0,    # 0 means last page
+            'no_of_pages_at_a_time_For_EntirePDF': 2,
+            'process_all_the_mcq_of_the_pageRange': False,
+            'process_all_the_mcq_all_pages': False,
+        }
+        form = MathPDFProcessingForm(initial=initial_data)
+    
+    # Get chapter choices dynamically
+    chapter_choices = MathProblemGeneration.get_chapter_choices()
+    
+    context = {
+        'form': form,
+        'math_problem': math_problem,
+        'chapter_choices': chapter_choices,
+        'has_pdf': bool(math_problem.pdf_file),
+        'has_expression': bool(math_problem.expression),
+        'title': f'Process Math Problem #{pk}',
+        'opts': MathProblemGeneration._meta,
+    }
+    
+    return render(request, 'admin/genai/math_pdf_processing_form.html', context)
 
