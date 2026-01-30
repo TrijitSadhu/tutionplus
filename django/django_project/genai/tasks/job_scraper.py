@@ -1,6 +1,7 @@
 import logging
 import re
 import json
+import time
 from datetime import datetime
 from decimal import Decimal
 from typing import Dict, List, Optional, Tuple
@@ -57,7 +58,7 @@ def _parse_date(text: str) -> Optional[datetime.date]:
     print(f"_parse_date cleaned: '{cleaned}'")
     for fmt in ("%d/%m/%Y", "%d-%m-%Y", "%d.%m.%Y", "%d %b %Y", "%d %B %Y","%d %B %Y","%Y-%m-%d"):
         try:
-            print(f"Trying format: {fmt}")
+            #print(f"Trying format: {fmt}")
             return datetime.strptime(cleaned, fmt).date()
         except ValueError:
             continue
@@ -337,7 +338,7 @@ def _save_job(data: Dict[str, Optional[str]], canonical_id: Optional[str], canon
     return obj
 
 
-def scrape_freejobalert(max_jobs_to_fetch: int, llm_prompt_text: str, use_llm: bool, prune_html: bool) -> Dict[str, int]:
+def scrape_freejobalert(max_jobs_to_fetch: int, llm_prompt_text: str, use_llm: bool, prune_html: bool, pause_every_n: int = 0, pause_seconds: int = 0) -> Dict[str, int]:
     _log("[JOBFETCH] Starting freejobalert scrape")
     _log(f"[JOBFETCH] Params max_jobs={max_jobs_to_fetch} use_llm={use_llm} prune_html={prune_html}")
     summary = {
@@ -348,6 +349,7 @@ def scrape_freejobalert(max_jobs_to_fetch: int, llm_prompt_text: str, use_llm: b
         "duplicates": 0,
         "errors": 0,
     }
+    inserted_since_pause = 0
     listing_html = download_url(LISTING_URL_FREEJOBALERT)
     _log(f"[JOBFETCH] Listing downloaded from {LISTING_URL_FREEJOBALERT}")
     soup = BeautifulSoup(listing_html, "html.parser")
@@ -494,7 +496,18 @@ def scrape_freejobalert(max_jobs_to_fetch: int, llm_prompt_text: str, use_llm: b
 
             _save_job(merged, canonical_id, canonical_conf, listing_detail_link)
             summary["inserted"] += 1
+            inserted_since_pause += 1
             _log(f"[JOBFETCH] Row {idx}: saved job with canonical={canonical_id} conf={canonical_conf}")
+
+            if pause_every_n and pause_seconds and inserted_since_pause >= pause_every_n:
+                _log(
+                    f"[JOBFETCH] Pause triggered: inserted_since_pause={inserted_since_pause} total_inserted={summary['inserted']} "
+                    f"(every {pause_every_n}); sleeping {pause_seconds}s"
+                )
+                for remaining in range(pause_seconds, 0, -1):
+                    _log(f"[JOBFETCH] Pause countdown: {remaining}s remaining")
+                    time.sleep(1)
+                inserted_since_pause = 0
         except Exception as exc:  # pragma: no cover - runtime safety
             logger.exception("Error processing job row %s", idx)
             summary["errors"] += 1
@@ -505,8 +518,8 @@ def scrape_freejobalert(max_jobs_to_fetch: int, llm_prompt_text: str, use_llm: b
     return summary
 
 
-def run_job_fetch(site_identifier: str, max_jobs_to_fetch: int, llm_prompt_text: str, use_llm: bool, prune_html: bool = True) -> Dict[str, int]:
+def run_job_fetch(site_identifier: str, max_jobs_to_fetch: int, llm_prompt_text: str, use_llm: bool, prune_html: bool = True, pause_every_n: int = 0, pause_seconds: int = 0) -> Dict[str, int]:
     _log(f"[JOBFETCH] Dispatch run_job_fetch site={site_identifier}")
     if site_identifier == "freejobalert":
-        return scrape_freejobalert(max_jobs_to_fetch, llm_prompt_text, use_llm, prune_html)
+        return scrape_freejobalert(max_jobs_to_fetch, llm_prompt_text, use_llm, prune_html, pause_every_n, pause_seconds)
     raise ValueError(f"Unsupported site identifier: {site_identifier}")

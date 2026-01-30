@@ -1048,6 +1048,20 @@ class JobFetchAdmin(admin.ModelAdmin):
             initial=True,
             help_text='Keeps main content/tables/key sections and caps payload (~15k chars) to avoid token limits.'
         )
+        pause_every_n = forms.IntegerField(
+            label='Pause after this many inserts (0 = no pause)',
+            required=False,
+            initial=0,
+            min_value=0,
+            help_text='When >0, pauses after each batch of inserts of this size.'
+        )
+        pause_seconds = forms.IntegerField(
+            label='Pause duration in seconds',
+            required=False,
+            initial=0,
+            min_value=0,
+            help_text='Duration to sleep when a pause is triggered.'
+        )
 
     class JobFetchPDFForm(forms.Form):
         pdf_file = forms.FileField(label='PDF File', required=True)
@@ -1105,12 +1119,27 @@ class JobFetchAdmin(admin.ModelAdmin):
                 max_jobs = form.cleaned_data.get('max_jobs_to_fetch') or 0
                 use_llm = form.cleaned_data.get('use_llm', False)
                 prune_html = form.cleaned_data.get('prune_html', True)
+                pause_every_n = form.cleaned_data.get('pause_every_n') or 0
+                pause_seconds = form.cleaned_data.get('pause_seconds') or 0
                 prompt_obj = form.cleaned_data['prompt']
 
                 try:
-                    print(f"[JOBFETCH][ADMIN] Start id={obj.pk} site={site_identifier} max_jobs={max_jobs} use_llm={use_llm} prune_html={prune_html}", flush=True)
+                    print(
+                        f"[JOBFETCH][ADMIN] Start id={obj.pk} site={site_identifier} max_jobs={max_jobs} use_llm={use_llm} prune_html={prune_html} "
+                        f"pause_every_n={pause_every_n} pause_seconds={pause_seconds}",
+                        flush=True,
+                    )
                     print(f"[JOBFETCH][ADMIN] Using prompt id={prompt_obj.id} source_url={prompt_obj.source_url or 'Default'}", flush=True)
-                    logger.info("[JOB FETCH] Starting fetch for JobFetch id=%s site=%s max_jobs=%s use_llm=%s prune_html=%s", obj.pk, site_identifier, max_jobs, use_llm, prune_html)
+                    logger.info(
+                        "[JOB FETCH] Starting fetch for JobFetch id=%s site=%s max_jobs=%s use_llm=%s prune_html=%s pause_every_n=%s pause_seconds=%s",
+                        obj.pk,
+                        site_identifier,
+                        max_jobs,
+                        use_llm,
+                        prune_html,
+                        pause_every_n,
+                        pause_seconds,
+                    )
                     obj.status = JobFetch.STATUS_IN_PROGRESS
                     obj.save(update_fields=['status'])
 
@@ -1120,6 +1149,8 @@ class JobFetchAdmin(admin.ModelAdmin):
                         llm_prompt_text=prompt_obj.prompt_text,
                         use_llm=use_llm,
                         prune_html=prune_html,
+                        pause_every_n=pause_every_n,
+                        pause_seconds=pause_seconds,
                     )
 
                     obj.status = JobFetch.STATUS_COMPLETED
