@@ -1072,6 +1072,8 @@ class job(models.Model):
 
     heading = models.CharField(max_length=250)
     ca_img = models.FileField(upload_to='job/%Y/%m/%d',blank=True,null=True)
+    canonical_id = models.CharField(max_length=255, blank=True, null=True, db_index=True)
+    canonical_confidence = models.DecimalField(max_digits=5, decimal_places=4, blank=True, null=True, help_text='Confidence score for canonical match')
    
     
     day = models.DateField(default=datetime.date.today,db_index=True)

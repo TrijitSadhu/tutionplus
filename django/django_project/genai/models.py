@@ -435,6 +435,54 @@ class LLMPrompt(models.Model):
         super(LLMPrompt, self).save(*args, **kwargs)
 
 
+class JobFetch(models.Model):
+    """Track fetch jobs that pull content using a specific prompt."""
+
+    STATUS_PENDING = 'PENDING'
+    STATUS_IN_PROGRESS = 'IN_PROGRESS'
+    STATUS_COMPLETED = 'COMPLETED'
+    STATUS_FAILED = 'FAILED'
+    STATUS_CHOICES = [
+        (STATUS_PENDING, 'Pending'),
+        (STATUS_IN_PROGRESS, 'In Progress'),
+        (STATUS_COMPLETED, 'Completed'),
+        (STATUS_FAILED, 'Failed'),
+    ]
+
+    source_url = models.TextField(help_text="URL or identifier for the fetch job")
+    prompt = models.ForeignKey(
+        LLMPrompt,
+        on_delete=models.PROTECT,
+        limit_choices_to={'is_active': True},
+        related_name='job_fetches',
+    )
+    is_active = models.BooleanField(default=True, db_index=True)
+    created_date = models.DateField(default=datetime.date.today, db_index=True)
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default=STATUS_PENDING,
+        db_index=True,
+    )
+    fetch_log = models.TextField(
+        blank=True,
+        null=True,
+        help_text="Log of timestamps, decisions, and errors for this fetch job",
+    )
+
+    class Meta:
+        ordering = ['-created_date']
+        verbose_name = 'Job Fetch'
+        verbose_name_plural = 'Job Fetches'
+        indexes = [
+            models.Index(fields=['status', 'created_date'], name='jobfetch_status_created_idx'),
+            models.Index(fields=['is_active', 'status'], name='jobfetch_active_status_idx'),
+        ]
+
+    def __str__(self):
+        return f"JobFetch {self.id} - {self.status}"
+
+
 class JsonImport(models.Model):
     """Model to store JSON data for bulk import into bank models"""
     

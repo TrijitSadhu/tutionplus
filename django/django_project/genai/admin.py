@@ -1,7 +1,9 @@
+import json
+import logging
 from django.contrib import admin
 from django import forms
 from django.utils.html import format_html
-from django.urls import reverse
+from django.urls import reverse, path
 from django.db.models import Q
 from django.core.management import call_command
 from django.core.management.base import CommandError
@@ -10,8 +12,12 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from django.template.response import TemplateResponse
 from bank.admin import admin_site
-from .models import PDFUpload, CurrentAffairsGeneration, MathProblemGeneration, ProcessingTask, ProcessingLog, ContentSource, LLMPrompt, JsonImport
+from .models import PDFUpload, CurrentAffairsGeneration, MathProblemGeneration, ProcessingTask, ProcessingLog, ContentSource, LLMPrompt, JobFetch, JsonImport
 from .bulk_import import BulkImporter
+from genai.tasks.job_scraper import run_job_fetch
+
+
+logger = logging.getLogger(__name__)
 
 
 class ProcessPDFForm(forms.Form):
@@ -1006,6 +1012,176 @@ class LLMPromptAdmin(admin.ModelAdmin):
     source_url_preview.short_description = 'Source URL'
 
 
+class JobFetchAdmin(admin.ModelAdmin):
+    """Admin interface for job fetch tracking"""
+
+    class JobFetchURLForm(forms.Form):
+        source_url = forms.CharField(label='Source URL', required=True)
+        prompt = forms.ModelChoiceField(
+            label='Prompt',
+            required=True,
+            queryset=LLMPrompt.objects.filter(is_active=True),
+        )
+        site_identifier = forms.ChoiceField(
+            label='Site',
+            choices=[('freejobalert', 'freejobalert')],
+            initial='freejobalert',
+            required=True,
+            help_text='Site-specific scraper; currently only freejobalert is supported.'
+        )
+        max_jobs_to_fetch = forms.IntegerField(
+            label='Max jobs to fetch (0 = all)',
+            required=False,
+            initial=0,
+            min_value=0,
+            help_text='Process first N rows; leave 0 to fetch all rows from listing page.'
+        )
+        use_llm = forms.BooleanField(
+            label='Use LLM',
+            required=False,
+            initial=False,
+            help_text='Run LLM post-processing on detail pages (skipped when a canonical match exists).'
+        )
+        prune_html = forms.BooleanField(
+            label='Prune HTML before LLM',
+            required=False,
+            initial=True,
+            help_text='Keeps main content/tables/key sections and caps payload (~15k chars) to avoid token limits.'
+        )
+
+    class JobFetchPDFForm(forms.Form):
+        pdf_file = forms.FileField(label='PDF File', required=True)
+        prompt = forms.ModelChoiceField(
+            label='Prompt',
+            required=True,
+            queryset=LLMPrompt.objects.filter(is_active=True),
+        )
+        notes = forms.CharField(label='Notes', required=False, widget=forms.Textarea(attrs={'rows': 3}))
+
+    list_display = ('id', 'go_button', 'source_url_preview', 'prompt', 'status', 'is_active', 'created_date')
+    list_filter = ('status', 'is_active', 'created_date')
+    search_fields = ('source_url',)
+    fieldsets = (
+        ('Job Info', {
+            'fields': ('source_url', 'prompt', 'status', 'is_active')
+        }),
+        ('Timestamps & Logs', {
+            'fields': ('created_date', 'fetch_log'),
+        }),
+    )
+
+    def get_urls(self):
+        urls = super().get_urls()
+        custom_urls = [
+            path(
+                '<int:object_id>/fetch/<str:mode>/',
+                self.admin_site.admin_view(self.fetch_action_view),
+                name='genai_jobfetch_fetch',
+            ),
+        ]
+        return custom_urls + urls
+
+    def fetch_action_view(self, request, object_id, mode):
+        """Render dynamic form for URL/PDF fetch without processing."""
+        obj = self.get_object(request, object_id)
+        if not obj:
+            return HttpResponseRedirect(reverse('admin:genai_jobfetch_changelist'))
+
+        mode = mode.lower()
+        if mode == 'url':
+            form_class = self.JobFetchURLForm
+            title = 'Fetch from URL'
+        elif mode == 'pdf':
+            form_class = self.JobFetchPDFForm
+            title = 'Fetch from PDF'
+        else:
+            self.message_user(request, 'Invalid option', level='error')
+            return HttpResponseRedirect(reverse('admin:genai_jobfetch_changelist'))
+
+        if request.method == 'POST':
+            form = form_class(request.POST, request.FILES, initial={'source_url': obj.source_url, 'prompt': obj.prompt})
+            if form.is_valid():
+                site_identifier = form.cleaned_data.get('site_identifier', 'freejobalert')
+                max_jobs = form.cleaned_data.get('max_jobs_to_fetch') or 0
+                use_llm = form.cleaned_data.get('use_llm', False)
+                prune_html = form.cleaned_data.get('prune_html', True)
+                prompt_obj = form.cleaned_data['prompt']
+
+                try:
+                    print(f"[JOBFETCH][ADMIN] Start id={obj.pk} site={site_identifier} max_jobs={max_jobs} use_llm={use_llm} prune_html={prune_html}", flush=True)
+                    print(f"[JOBFETCH][ADMIN] Using prompt id={prompt_obj.id} source_url={prompt_obj.source_url or 'Default'}", flush=True)
+                    logger.info("[JOB FETCH] Starting fetch for JobFetch id=%s site=%s max_jobs=%s use_llm=%s prune_html=%s", obj.pk, site_identifier, max_jobs, use_llm, prune_html)
+                    obj.status = JobFetch.STATUS_IN_PROGRESS
+                    obj.save(update_fields=['status'])
+
+                    summary = run_job_fetch(
+                        site_identifier=site_identifier,
+                        max_jobs_to_fetch=max_jobs,
+                        llm_prompt_text=prompt_obj.prompt_text,
+                        use_llm=use_llm,
+                        prune_html=prune_html,
+                    )
+
+                    obj.status = JobFetch.STATUS_COMPLETED
+                    obj.fetch_log = json.dumps(summary)
+                    obj.save(update_fields=['status', 'fetch_log'])
+
+                    print(f"[JOBFETCH][ADMIN] Completed id={obj.pk} summary={summary}", flush=True)
+                    logger.info("[JOB FETCH] Completed id=%s summary=%s", obj.pk, summary)
+
+                    self.message_user(
+                        request,
+                        f"Scrape done: rows={summary.get('list_rows')} details={summary.get('details_fetched')} inserted={summary.get('inserted')} duplicates={summary.get('duplicates')} errors={summary.get('errors')}"
+                    )
+                except Exception as exc:
+                    obj.status = JobFetch.STATUS_FAILED
+                    obj.fetch_log = str(exc)
+                    obj.save(update_fields=['status', 'fetch_log'])
+                    print(f"[JOBFETCH][ADMIN] Failed id={obj.pk} err={exc}", flush=True)
+                    logger.exception("[JOB FETCH] Failed id=%s: %s", obj.pk, exc)
+                    self.message_user(request, f"Scrape failed: {exc}", level='error')
+
+                return HttpResponseRedirect(reverse('admin:genai_jobfetch_changelist'))
+        else:
+            form = form_class(initial={'source_url': obj.source_url, 'prompt': obj.prompt})
+
+        context = {
+            **self.admin_site.each_context(request),
+            'opts': self.model._meta,
+            'original': obj,
+            'title': title,
+            'form': form,
+            'mode': mode,
+        }
+        return TemplateResponse(request, 'admin/genai/jobfetch_fetch.html', context)
+
+    def go_button(self, obj):
+        url_link = reverse('admin:genai_jobfetch_fetch', args=[obj.pk, 'url'])
+        pdf_link = reverse('admin:genai_jobfetch_fetch', args=[obj.pk, 'pdf'])
+        return format_html(
+            '<div class="dropdown" style="position: relative; display: inline-block;">'
+            '<button type="button" class="button" style="background: #417690; color: white; padding: 5px 12px; border-radius: 3px; border: none; cursor: pointer;" '
+            'onclick="event.preventDefault(); event.stopPropagation(); const m=this.nextElementSibling; m.style.display = m.style.display === \'block\' ? \'none\' : \'block\';">GO ▼</button>'
+            '<div style="display: none; position: absolute; background: white; min-width: 160px; box-shadow: 0px 8px 16px rgba(0,0,0,0.2); z-index: 1000; border-radius: 3px; margin-top: 2px;">'
+            '<a href="{}" style="color: black; padding: 10px 12px; text-decoration: none; display: block; border-bottom: 1px solid #eee;" '
+            'onmouseover="this.style.backgroundColor=\'#f1f1f1\'" onmouseout="this.style.backgroundColor=\'white\'">🕸️ Fetch from URL</a>'
+            '<a href="{}" style="color: black; padding: 10px 12px; text-decoration: none; display: block;" '
+            'onmouseover="this.style.backgroundColor=\'#f1f1f1\'" onmouseout="this.style.backgroundColor=\'white\'">📄 Fetch from PDF</a>'
+            '</div>'
+            '</div>'
+            '<script>document.addEventListener("click",function(e){{document.querySelectorAll(".dropdown > div").forEach(function(d){{if(!d.contains(e.target) && !d.previousElementSibling.contains(e.target)){{d.style.display="none";}}}});}});</script>',
+            url_link,
+            pdf_link,
+        )
+    go_button.short_description = 'Action'
+
+    def source_url_preview(self, obj):
+        if not obj.source_url:
+            return '(no source)'
+        return obj.source_url[:50] + '...' if len(obj.source_url) > 50 else obj.source_url
+    source_url_preview.short_description = 'Source URL'
+
+
 # Processing Form View for Chapter and Difficulty Selection
 def process_pdf_with_options(request):
     """
@@ -1458,4 +1634,5 @@ admin_site.register(ProcessingTask, ProcessingTaskAdmin)
 admin_site.register(ProcessingLog, ProcessingLogAdmin)
 admin_site.register(ContentSource, ContentSourceAdmin)
 admin_site.register(LLMPrompt, LLMPromptAdmin)
+admin_site.register(JobFetch, JobFetchAdmin)
 admin_site.register(JsonImport, JsonImportAdmin)

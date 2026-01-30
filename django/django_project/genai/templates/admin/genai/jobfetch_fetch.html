@@ -1,0 +1,20 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block content %}
+<div class="card" style="max-width: 720px; padding: 20px; border: 1px solid #ddd; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.05);">
+  <h2 style="margin-top: 0;">{{ title }}</h2>
+  <p style="margin: 6px 0 14px 0; color: #555;">Job ID: {{ original.id }} &mdash; Current status: {{ original.status }}</p>
+
+  <form method="post" enctype="multipart/form-data" novalidate>
+    {% csrf_token %}
+    <table>
+      {{ form.as_table }}
+    </table>
+    <div style="margin-top: 12px;">
+      <button type="submit" class="default">Submit</button>
+      <a href="{% url 'admin:genai_jobfetch_changelist' %}" class="button" style="margin-left: 8px;">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}
