@@ -1,0 +1,357 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+{% block content %}
+<h1>Mock Test Summary: {{ mocktest.title }}</h1>
+<p>Exam: {{ mocktest.exam }} | Type: {{ mocktest.mock_type }} | Total Questions: {{ mocktest.total_questions }} | Total Marks: {{ mocktest.total_marks }}</p>
+<hr>
+{% for t in tabs %}
+  <h3>Tab: {{ t.tab.name }} ({{ t.selection_mode }})</h3>
+  <p>Required: {{ t.total_questions }} | Time Limit: {{ t.time_limit_minutes }} minutes</p>
+  <div style="margin-bottom:8px;">
+    <form class="add-form" data-tab-id="{{ t.id }}" style="display:flex; gap:6px; align-items:center;">
+      {% csrf_token %}
+      <label>MCQ ID <input type="number" name="mcq_id" required></label>
+      <label>Marks <input type="number" step="0.01" name="marks" value="1" required></label>
+      <label>Neg <input type="number" step="0.01" name="negative_marks" value="0" required></label>
+      <label>Manual <input type="checkbox" name="added_manually" checked></label>
+      <button type="submit" class="button">Add MCQ</button>
+    </form>
+  </div>
+
+  <div class="filter-box" data-tab-id="{{ t.id }}" style="margin-bottom:8px; padding:8px; border:1px solid #ddd;">
+    <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:flex-end;">
+      <label>Model
+        <select name="model" class="model">
+          <option value="">Select Model</option>
+        </select>
+      </label>
+      <label>Subject
+        <select name="subject" class="subject">
+          <option value="">Any</option>
+        </select>
+      </label>
+      <label>Chapter
+        <select name="chapter" class="chapter">
+          <option value="">Any</option>
+        </select>
+      </label>
+      <label>Sub Chapter
+        <select name="sub_chapter" class="sub_chapter">
+          <option value="">Any</option>
+        </select>
+      </label>
+      <label>Section
+        <select name="section" class="section">
+          <option value="">Any</option>
+        </select>
+      </label>
+      <label>Question Type
+        <input type="text" name="question_type" class="question_type" placeholder="Optional">
+      </label>
+      <label>Difficulty
+        <input type="text" name="difficulty" class="difficulty" placeholder="Optional">
+      </label>
+      <button type="button" class="button search">Search MCQs</button>
+    </div>
+    <div class="results" style="margin-top:8px;">
+      <table class="table compact" style="width:100%;">
+        <thead>
+          <tr>
+            <th>MCQ ID</th>
+            <th>Question</th>
+            <th>Subject</th>
+            <th>Chapter</th>
+            <th>Sub Chapter</th>
+            <th>Section</th>
+            <th>Difficulty</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td colspan="6">Use filters and click Search.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <table class="table" data-tab-id="{{ t.id }}">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>MCQ ID</th>
+        <th>Model</th>
+        <th>Question</th>
+        <th>Subject</th>
+        <th>Chapter</th>
+        <th>Sub Chapter</th>
+        <th>Section</th>
+        <th>Difficulty</th>
+        <th>Marks</th>
+        <th>Negative</th>
+        <th>Manual</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for q in t.questions.all %}
+      <tr data-question-id="{{ q.id }}">
+        <td class="order">{{ q.order }}</td>
+        <td class="mcq-id">{{ q.mcq_id }}</td>
+        <td>{{ q.display_model }}</td>
+        <td>{{ q.display_question }}</td>
+        <td>{{ q.display_subject }}</td>
+        <td>{{ q.display_chapter }}</td>
+        <td>{{ q.display_sub_chapter }}</td>
+        <td>{{ q.display_section }}</td>
+        <td>{{ q.display_difficulty }}</td>
+        <td><input type="number" step="0.01" class="marks" value="{{ q.marks }}"></td>
+        <td><input type="number" step="0.01" class="negative" value="{{ q.negative_marks }}"></td>
+        <td>{{ q.added_manually }}</td>
+        <td>
+          <button class="button update">Update</button>
+          <button class="button delete">Delete</button>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="6">No questions selected.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <hr>
+{% endfor %}
+
+<script>
+(function() {
+  function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+  }
+
+  const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]')?.value || getCookie('csrftoken');
+  const urls = {
+    add: '{% url "admin:mocktest_ajax_add_mcq" %}',
+    remove: '{% url "admin:mocktest_ajax_remove_mcq" %}',
+    update: '{% url "admin:mocktest_ajax_update_mcq" %}',
+    models: '{% url "admin:mocktest_ajax_models" %}',
+    subjects: '{% url "admin:mocktest_ajax_subjects" %}',
+    chapters: '{% url "admin:mocktest_ajax_chapters" %}',
+    subChapters: '{% url "admin:mocktest_ajax_sub_chapters" %}',
+    sections: '{% url "admin:mocktest_ajax_sections" %}',
+    search: '{% url "admin:mocktest_ajax_search_mcqs" %}',
+  };
+
+  function post(url, data) {
+    return fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'X-CSRFToken': csrftoken,
+      },
+      body: new URLSearchParams(data),
+    }).then(r => r.json());
+  }
+
+  function setOptions(select, values, emptyLabel = 'Any') {
+    select.innerHTML = `<option value="">${emptyLabel}</option>`;
+    (values || []).forEach(v => {
+      const opt = document.createElement('option');
+      if (typeof v === 'object') {
+        opt.value = v.value ?? v;
+        opt.textContent = v.label ?? v.value ?? v;
+      } else {
+        opt.value = v;
+        opt.textContent = v;
+      }
+      select.appendChild(opt);
+    });
+  }
+
+  function loadModels(box) {
+    fetch(urls.models)
+      .then(r => r.json())
+      .then(data => {
+        const models = (data.results || []).map(m => ({ label: m, value: m }));
+        const modelSelect = box.querySelector('.model');
+        setOptions(modelSelect, models, 'Select Model');
+        setOptions(box.querySelector('.chapter'), []);
+        setOptions(box.querySelector('.subject'), []);
+        setOptions(box.querySelector('.sub_chapter'), []);
+        setOptions(box.querySelector('.section'), []);
+        if (!models.length) {
+          // Fallback to legacy endpoint in case model list is empty
+          fetch(urls.subjects)
+            .then(r2 => r2.json())
+            .then(data2 => {
+              const alt = (data2.results || []).map(m => ({ label: m, value: m }));
+              setOptions(modelSelect, alt, 'Select Model');
+            });
+        }
+      });
+  }
+
+  function loadSubjects(box) {
+    const model = box.querySelector('.model').value;
+    const chapter = box.querySelector('.chapter').value;
+    if (!model) return;
+    fetch(urls.subjects + '?' + new URLSearchParams({ model, chapter }))
+      .then(r => r.json())
+      .then(data => {
+        setOptions(box.querySelector('.subject'), data.results || []);
+        setOptions(box.querySelector('.sub_chapter'), []);
+        setOptions(box.querySelector('.section'), []);
+      });
+  }
+
+  function loadChapters(box) {
+    const model = box.querySelector('.model').value;
+    if (!model) return;
+    fetch(urls.chapters + '?' + new URLSearchParams({ model }))
+      .then(r => r.json())
+      .then(data => {
+        setOptions(box.querySelector('.chapter'), data.results || []);
+        setOptions(box.querySelector('.sub_chapter'), []);
+        setOptions(box.querySelector('.section'), []);
+      });
+  }
+
+  function loadSubChapters(box) {
+    const model = box.querySelector('.model').value;
+    const subject = box.querySelector('.subject').value;
+    const chapter = box.querySelector('.chapter').value;
+    if (!model) return;
+    fetch(urls.subChapters + '?' + new URLSearchParams({ model, subject, chapter }))
+      .then(r => r.json())
+      .then(data => {
+        setOptions(box.querySelector('.sub_chapter'), data.results || []);
+        setOptions(box.querySelector('.section'), []);
+      });
+  }
+
+  function loadSections(box) {
+    const model = box.querySelector('.model').value;
+    const subject = box.querySelector('.subject').value;
+    const chapter = box.querySelector('.chapter').value;
+    const sub_chapter = box.querySelector('.sub_chapter').value;
+    if (!model) return;
+    fetch(urls.sections + '?' + new URLSearchParams({ model, subject, chapter, sub_chapter }))
+      .then(r => r.json())
+      .then(data => {
+        setOptions(box.querySelector('.section'), data.results || []);
+      });
+  }
+
+  function renderResults(box, results) {
+    const tbody = box.querySelector('.results tbody');
+    tbody.innerHTML = '';
+    if (!results.length) {
+      const row = document.createElement('tr');
+      row.innerHTML = '<td colspan="6">No results.</td>';
+      tbody.appendChild(row);
+      return;
+    }
+    results.forEach(item => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${item.id}</td>
+        <td>${item.question || ''}</td>
+        <td>${item.subject || ''}</td>
+        <td>${item.chapter || ''}</td>
+        <td>${item.sub_chapter || ''}</td>
+        <td>${item.section || ''}</td>
+        <td>${item.difficulty || ''}</td>
+        <td><button class="button add-candidate" data-mcq-id="${item.id}">Add</button></td>
+      `;
+      tbody.appendChild(row);
+    });
+  }
+
+  document.querySelectorAll('.add-form').forEach(form => {
+    form.addEventListener('submit', function(ev) {
+      ev.preventDefault();
+      const tabId = this.dataset.tabId;
+      const data = Object.fromEntries(new FormData(this).entries());
+      data.tab_id = tabId;
+      post(urls.add, data).then(resp => {
+        if (resp.error) { alert(resp.error); return; }
+        window.location.reload();
+      });
+    });
+  });
+
+  document.querySelectorAll('table[data-tab-id] tbody').forEach(tbody => {
+    tbody.addEventListener('click', function(ev) {
+      const row = ev.target.closest('tr[data-question-id]');
+      if (!row) return;
+      const qid = row.dataset.questionId;
+      if (ev.target.classList.contains('delete')) {
+        post(urls.remove, { question_id: qid }).then(resp => {
+          if (resp.error) { alert(resp.error); return; }
+          row.remove();
+        });
+      }
+      if (ev.target.classList.contains('update')) {
+        const marks = row.querySelector('.marks').value;
+        const neg = row.querySelector('.negative').value;
+        post(urls.update, { question_id: qid, marks: marks, negative_marks: neg }).then(resp => {
+          if (resp.error) alert(resp.error);
+        });
+      }
+    });
+  });
+
+  document.querySelectorAll('.filter-box').forEach(box => {
+    loadModels(box);
+    box.querySelector('.model').addEventListener('change', () => {
+      const model = box.querySelector('.model').value;
+      if (!model) {
+        setOptions(box.querySelector('.chapter'), []);
+        setOptions(box.querySelector('.subject'), []);
+        setOptions(box.querySelector('.sub_chapter'), []);
+        setOptions(box.querySelector('.section'), []);
+        return;
+      }
+      loadChapters(box);
+      loadSubjects(box);
+    });
+    box.querySelector('.chapter').addEventListener('change', () => {
+      loadSubjects(box);
+      loadSubChapters(box);
+    });
+    box.querySelector('.subject').addEventListener('change', () => loadSubChapters(box));
+    box.querySelector('.sub_chapter').addEventListener('change', () => loadSections(box));
+
+    box.querySelector('.search').addEventListener('click', () => {
+      const model = box.querySelector('.model').value;
+      if (!model) { alert('Select a model first'); return; }
+      const params = {
+        model,
+        subject: box.querySelector('.subject').value,
+        chapter: box.querySelector('.chapter').value,
+        sub_chapter: box.querySelector('.sub_chapter').value,
+        section: box.querySelector('.section').value,
+        question_type: box.querySelector('.question_type').value,
+        difficulty: box.querySelector('.difficulty').value,
+      };
+      fetch(urls.search + '?' + new URLSearchParams(params))
+        .then(r => r.json())
+        .then(data => {
+          if (data.error) { alert(data.error); return; }
+          renderResults(box, data.results || []);
+        });
+    });
+
+    box.querySelector('.results tbody').addEventListener('click', ev => {
+      if (!ev.target.classList.contains('add-candidate')) return;
+      const tabId = box.dataset.tabId;
+      const mcq = ev.target.dataset.mcqId;
+      const model = box.querySelector('.model').value;
+      post(urls.add, { tab_id: tabId, mcq_id: mcq, model: model, marks: 1, negative_marks: 0, added_manually: true }).then(resp => {
+        if (resp.error) { alert(resp.error); return; }
+        window.location.reload();
+      });
+    });
+  });
+})();
+</script>
+{% endblock %}

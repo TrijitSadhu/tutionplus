@@ -95,6 +95,11 @@ class CurrentAffairsDescriptiveInfoAdmin(admin.ModelAdmin):
     list_filter = ('id',)
     readonly_fields = ('id',)
 
+
+class SubjectMetaAdmin(admin.ModelAdmin):
+    list_display = ('id', 'subject_name', 'sub_chapter', 'section')
+    search_fields = ('subject_name', 'sub_chapter', 'section')
+
 # Lists of models for grouping on admin index
 mcq_info_tables = [
     currentaffairs_mcq_info_2018,
@@ -201,7 +206,7 @@ admin_site.register(the_economy_word_list1)
 admin_site.register(the_economy_word_Header2)
 admin_site.register(the_economy_word_list2)
 admin_site.register(total_english)
-admin_site.register(math)
+admin_site.register(math, SubjectMetaAdmin)
 admin_site.register(total_math)
 admin_site.register(job)
 admin_site.register(total_job)
@@ -225,23 +230,23 @@ admin_site.register(total_error)
 admin_site.register(error)
 
 admin_site.register(total_polity)
-admin_site.register(polity)
+admin_site.register(polity, SubjectMetaAdmin)
 
 admin_site.register(total_history)
-admin_site.register(history)
+admin_site.register(history, SubjectMetaAdmin)
 
 admin_site.register(total_geography)
-admin_site.register(geography)
+admin_site.register(geography, SubjectMetaAdmin)
 
 admin_site.register(total_economics)
-admin_site.register(economics)
+admin_site.register(economics, SubjectMetaAdmin)
 
 admin_site.register(total_physics)
-admin_site.register(physics)
+admin_site.register(physics, SubjectMetaAdmin)
 admin_site.register(total_chemistry)
-admin_site.register(chemistry)
+admin_site.register(chemistry, SubjectMetaAdmin)
 admin_site.register(total_biology)
-admin_site.register(biology)
+admin_site.register(biology, SubjectMetaAdmin)
 
 # Register GenAI app models with our custom admin site so GenAI appears in the custom admin
 try:

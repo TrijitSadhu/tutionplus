@@ -731,6 +731,9 @@ class math(models.Model):
     chapter = models.CharField(max_length=50,
                   choices=s,
                   default="any",blank=True,null=True,db_index=True)
+    subject_name = models.CharField(max_length=100, blank=True, null=True, db_index=True)
+    sub_chapter = models.CharField(max_length=100, blank=True, null=True, db_index=True)
+    section = models.CharField(max_length=100, blank=True, null=True, db_index=True)
     home = models.BooleanField(default=False,db_index=True)
 
     s= (
@@ -6318,6 +6321,9 @@ class polity(models.Model):
     chapter = models.CharField(max_length=10,
                           choices=chapter,
                           default="1",db_index=True)
+    subject_name = models.CharField(max_length=100, blank=True, null=True, db_index=True)
+    sub_chapter = models.CharField(max_length=100, blank=True, null=True, db_index=True)
+    section = models.CharField(max_length=100, blank=True, null=True, db_index=True)
     topic_ch= (
     ("question-answare", "question-answare"),
     
@@ -6470,6 +6476,9 @@ class history(models.Model):
     chapter = models.CharField(max_length=10,
                           choices=chapter,
                           default="1",db_index=True)
+    subject_name = models.CharField(max_length=100, blank=True, null=True, db_index=True)
+    sub_chapter = models.CharField(max_length=100, blank=True, null=True, db_index=True)
+    section = models.CharField(max_length=100, blank=True, null=True, db_index=True)
     topic_ch= (
     ("question-answare", "question-answare"),
     
@@ -6621,6 +6630,9 @@ class geography(models.Model):
     chapter = models.CharField(max_length=10,
                           choices=chapter,
                           default="1",db_index=True)
+    subject_name = models.CharField(max_length=100, blank=True, null=True, db_index=True)
+    sub_chapter = models.CharField(max_length=100, blank=True, null=True, db_index=True)
+    section = models.CharField(max_length=100, blank=True, null=True, db_index=True)
     topic_ch= (
     ("question-answare", "question-answare"),
     
@@ -6772,6 +6784,9 @@ class economics(models.Model):
     chapter = models.CharField(max_length=10,
                           choices=chapter,
                           default="1",db_index=True)
+    subject_name = models.CharField(max_length=100, blank=True, null=True, db_index=True)
+    sub_chapter = models.CharField(max_length=100, blank=True, null=True, db_index=True)
+    section = models.CharField(max_length=100, blank=True, null=True, db_index=True)
     topic_ch= (
     ("question-answare", "question-answare"),
     
@@ -6920,6 +6935,9 @@ class physics(models.Model):
     chapter = models.CharField(max_length=10,
                           choices=chapter,
                           default="1",db_index=True)
+    subject_name = models.CharField(max_length=100, blank=True, null=True, db_index=True)
+    sub_chapter = models.CharField(max_length=100, blank=True, null=True, db_index=True)
+    section = models.CharField(max_length=100, blank=True, null=True, db_index=True)
     topic_ch= (
     ("question-answare", "question-answare"),
     
@@ -7069,6 +7087,9 @@ class biology(models.Model):
     chapter = models.CharField(max_length=10,
                           choices=chapter,
                           default="1",db_index=True)
+    subject_name = models.CharField(max_length=100, blank=True, null=True, db_index=True)
+    sub_chapter = models.CharField(max_length=100, blank=True, null=True, db_index=True)
+    section = models.CharField(max_length=100, blank=True, null=True, db_index=True)
     topic_ch= (
     ("question-answare", "question-answare"),
     
@@ -7218,6 +7239,9 @@ class chemistry(models.Model):
     chapter = models.CharField(max_length=10,
                           choices=chapter,
                           default="1",db_index=True)
+    subject_name = models.CharField(max_length=100, blank=True, null=True, db_index=True)
+    sub_chapter = models.CharField(max_length=100, blank=True, null=True, db_index=True)
+    section = models.CharField(max_length=100, blank=True, null=True, db_index=True)
     topic_ch= (
     ("question-answare", "question-answare"),
     

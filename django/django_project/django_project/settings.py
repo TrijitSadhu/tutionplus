@@ -37,6 +37,7 @@ EMAIL_PORT = 587
 INSTALLED_APPS = (
 'bank',
 'genai',
+    'mocktest',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
