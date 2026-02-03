@@ -44,27 +44,46 @@ class MockTestGeneratorService:
             except LookupError:
                 return None
 
-    def _base_queryset(self):
-        if not self.mcq_model:
+    def _base_queryset(self, model_name: Optional[str] = None):
+        target_model = None
+        if model_name:
+            try:
+                target_model = apps.get_model("bank", model_name)
+            except LookupError:
+                target_model = None
+        if target_model is None:
+            target_model = self.mcq_model
+        if not target_model:
             raise RuntimeError("bank.mcq model not found; cannot generate mock questions.")
-        return self.mcq_model.objects.all()
+        return target_model.objects.all(), target_model
 
     def _field_exists(self, field: str) -> bool:
         return self.mcq_model and field in {f.name for f in self.mcq_model._meta.get_fields()}  # type: ignore
 
+    def _field_exists_model(self, model, field: str) -> bool:
+        return bool(model and field in {f.name for f in model._meta.get_fields()})  # type: ignore
+
     def _filtered_queryset(self, rule: MockDistributionRule):
-        qs = self._base_queryset()
-        if self._field_exists("subject"):
+        qs, model = self._base_queryset(rule.mcq_model)
+        def has(field):
+            return self._field_exists_model(model, field)
+
+        if has("subject"):
             qs = qs.filter(subject=rule.subject)
-        if rule.chapter and self._field_exists("chapter"):
+        if rule.chapter and has("chapter"):
             qs = qs.filter(chapter=rule.chapter)
-        if rule.sub_chapter and self._field_exists("sub_chapter"):
+        if rule.sub_chapter and has("sub_chapter"):
             qs = qs.filter(sub_chapter=rule.sub_chapter)
-        if rule.section and self._field_exists("section"):
+        if rule.section and has("section"):
             qs = qs.filter(section=rule.section)
-        if rule.question_type and self._field_exists("question_type"):
+        if rule.question_type and has("question_type"):
             qs = qs.filter(question_type=rule.question_type)
-        return qs
+        if rule.difficulty:
+            if has("difficulty"):
+                qs = qs.filter(difficulty=rule.difficulty)
+            elif has("difficult_level"):
+                qs = qs.filter(difficult_level=rule.difficulty)
+        return qs, model
 
     def _pick_mcq_ids(self, qs, needed: int, excluded_ids: Optional[List[int]] = None) -> List[int]:
         excluded_ids = excluded_ids or []
@@ -173,13 +192,14 @@ class MockTestGeneratorService:
             target = rule.question_count or 0
             if not target and rule.percentage:
                 target = int((rule.percentage / 100.0) * (tab.total_questions or 0))
-            qs = self._filtered_queryset(rule)
+            qs, model = self._filtered_queryset(rule)
             picked = self._pick_mcq_ids(qs, target, excluded_ids=selected_ids)
             for mcq_id in picked:
                 order_cursor += 1
                 MockTestQuestion.objects.create(
                     mock_test=tab.mock_test,
                     mock_test_tab=tab,
+                    mcq_model=model._meta.model_name if model else None,
                     mcq_id=mcq_id,
                     order=order_cursor,
                     marks=1.0,

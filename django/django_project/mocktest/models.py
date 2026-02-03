@@ -64,6 +64,7 @@ class MockTestTab(models.Model):
 
 class MockDistributionRule(models.Model):
 	mock_test_tab = models.ForeignKey(MockTestTab, related_name="distribution_rules", on_delete=models.CASCADE)
+	mcq_model = models.CharField(max_length=100, blank=True, null=True, db_index=True)
 	subject = models.CharField(max_length=150, db_index=True)
 	chapter = models.CharField(max_length=150, blank=True, null=True, db_index=True)
 	sub_chapter = models.CharField(max_length=150, blank=True, null=True, db_index=True)

@@ -5,6 +5,7 @@
   <ul class="object-tools">
     {% block object-tools-items %}
       <li><a href="{% url 'admin:mocktest_modify' original.id %}">Modify / Review Questions</a></li>
+      <li><a href="{% url 'admin:mocktest_distribute' original.id %}">Distribute Questions</a></li>
       {{ block.super }}
     {% endblock %}
   </ul>

@@ -69,6 +69,7 @@ class MockDistributionRuleInline(admin.TabularInline):
 	model = MockDistributionRule
 	extra = 0
 	fields = (
+		"mcq_model",
 		"subject",
 		"chapter",
 		"sub_chapter",
@@ -118,6 +119,11 @@ class MockTestAdmin(admin.ModelAdmin):
 				"<int:mocktest_id>/modify/",
 				self.admin_site.admin_view(self.modify_view),
 				name="mocktest_modify",
+			),
+			path(
+				"<int:mocktest_id>/distribute/",
+				self.admin_site.admin_view(self.distribute_view),
+				name="mocktest_distribute",
 			),
 			path(
 				"ajax/models/",
@@ -173,6 +179,11 @@ class MockTestAdmin(admin.ModelAdmin):
 				"ajax/replace_mcq/",
 				self.admin_site.admin_view(self.ajax_replace_mcq),
 				name="mocktest_ajax_replace_mcq",
+			),
+			path(
+				"ajax/add_rule/",
+				self.admin_site.admin_view(self.ajax_add_rule),
+				name="mocktest_ajax_add_rule",
 			),
 		]
 		return custom + urls
@@ -268,6 +279,17 @@ class MockTestAdmin(admin.ModelAdmin):
 			opts=self.model._meta,
 		)
 		return TemplateResponse(request, "mocktest/mocktest_summary.html", context)
+
+	def distribute_view(self, request, mocktest_id, *args, **kwargs):
+		obj = self.get_object(request, mocktest_id)
+		tabs = obj.tabs.select_related("tab").prefetch_related("distribution_rules").all()
+		context = dict(
+			self.admin_site.each_context(request),
+			mocktest=obj,
+			tabs=tabs,
+			opts=self.model._meta,
+		)
+		return TemplateResponse(request, "mocktest/mocktest_distribute.html", context)
 
 	# ---------- AJAX helpers ----------
 	def _json_error(self, message: str, status: int = 400):
@@ -420,6 +442,81 @@ class MockTestAdmin(admin.ModelAdmin):
 		service._recalc_mock_totals(q.mock_test)
 		return JsonResponse({"ok": True, "mcq_id": q.mcq_id, "mcq_model": q.mcq_model})
 
+	@transaction.atomic
+	def ajax_add_rule(self, request):
+		if request.method != "POST":
+			return self._json_error("POST required")
+		tab_id = request.POST.get("tab_id")
+		model_name = request.POST.get("model")
+		subject = request.POST.get("subject") or ""
+		chapter = request.POST.get("chapter") or None
+		sub_chapter = request.POST.get("sub_chapter") or None
+		section = request.POST.get("section") or None
+		difficulty = request.POST.get("difficulty") or None
+		question_type = request.POST.get("question_type") or None
+		question_count = request.POST.get("question_count") or None
+		auto = str(request.POST.get("auto", "false")).lower() == "true"
+		if not tab_id:
+			return self._json_error("tab_id required")
+		if not model_name:
+			return self._json_error("model required")
+		try:
+			tab = MockTestTab.objects.select_for_update().select_related("mock_test").get(id=tab_id)
+		except MockTestTab.DoesNotExist:
+			return self._json_error("Tab not found", 404)
+
+		clean_count = None
+		if question_count:
+			try:
+				clean_count = int(question_count)
+			except (TypeError, ValueError):
+				return self._json_error("question_count must be an integer")
+			if clean_count <= 0:
+				return self._json_error("question_count must be > 0")
+
+		rule = MockDistributionRule.objects.create(
+			mock_test_tab=tab,
+			mcq_model=model_name,
+			subject=subject,
+			chapter=chapter,
+			sub_chapter=sub_chapter,
+			section=section,
+			difficulty=difficulty,
+			question_type=question_type,
+			question_count=clean_count,
+		)
+
+		# If auto flag is enabled, immediately pick and attach matching MCQs
+		if auto:
+			service = MockTestGeneratorService()
+			qs, model = service._filtered_queryset(rule)
+			target = clean_count or 0
+			if not target and tab.total_questions:
+				target = tab.total_questions
+			existing_ids = list(MockTestQuestion.objects.filter(mock_test_tab=tab).values_list("mcq_id", flat=True))
+			picked = service._pick_mcq_ids(qs, target, excluded_ids=existing_ids)
+			if picked:
+				order_cursor = MockTestQuestion.objects.filter(mock_test_tab=tab).aggregate(max_order=models.Max("order"))[
+					"max_order"
+				] or 0
+				for mcq_id in picked:
+					order_cursor += 1
+					MockTestQuestion.objects.create(
+						mock_test=tab.mock_test,
+						mock_test_tab=tab,
+						mcq_model=model._meta.model_name if model else model_name,
+						mcq_id=mcq_id,
+						order=order_cursor,
+						marks=1.0,
+						negative_marks=0.0,
+						added_manually=False,
+					)
+				tab.total_questions = MockTestQuestion.objects.filter(mock_test_tab=tab).count()
+				tab.save(update_fields=["total_questions"])
+				service._recalc_mock_totals(tab.mock_test)
+
+		return JsonResponse({"ok": True, "rule_id": rule.id})
+
 	def _mcq_field_exists(self, model, field: str) -> bool:
 		return bool(model and field in {f.name for f in model._meta.get_fields()})  # type: ignore
 
@@ -542,6 +639,7 @@ class MockDistributionRuleAdmin(admin.ModelAdmin):
 	list_display = (
 		"id",
 		"mock_test_tab",
+		"mcq_model",
 		"subject",
 		"chapter",
 		"sub_chapter",
@@ -549,7 +647,7 @@ class MockDistributionRuleAdmin(admin.ModelAdmin):
 		"question_count",
 		"percentage",
 	)
-	list_filter = ("subject",)
+	list_filter = ("mcq_model", "subject")
 	search_fields = ("subject", "chapter", "sub_chapter", "section")
 
 

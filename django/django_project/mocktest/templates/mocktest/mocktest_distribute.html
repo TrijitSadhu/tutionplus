@@ -1,0 +1,221 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+{% block content %}
+<h1>Distribute Questions: {{ mocktest.title }}</h1>
+<p>Use filters to add distribution rules per tab. "Auto" will immediately pick random MCQs matching the filters and add them to the tab.</p>
+<form style="display:none;">{% csrf_token %}</form>
+<hr>
+{% for t in tabs %}
+  <h3>Tab: {{ t.tab.name }} ({{ t.selection_mode }})</h3>
+  <p>Current total questions: {{ t.total_questions }}</p>
+  <table class="table" style="margin-bottom:12px;">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Model</th>
+        <th>Subject</th>
+        <th>Chapter</th>
+        <th>Sub Chapter</th>
+        <th>Section</th>
+        <th>Difficulty</th>
+        <th>Question Type</th>
+        <th>Count</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in t.distribution_rules.all %}
+      <tr>
+        <td>{{ r.id }}</td>
+        <td>{{ r.mcq_model }}</td>
+        <td>{{ r.subject }}</td>
+        <td>{{ r.chapter }}</td>
+        <td>{{ r.sub_chapter }}</td>
+        <td>{{ r.section }}</td>
+        <td>{{ r.difficulty }}</td>
+        <td>{{ r.question_type }}</td>
+        <td>{{ r.question_count }}</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="9">No rules yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="rule-box" data-tab-id="{{ t.id }}" style="margin-bottom:16px; padding:10px; border:1px solid #ddd;">
+    <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:flex-end;">
+      <label>Model
+        <select class="model" style="min-width:150px;"></select>
+      </label>
+      <label>Subject
+        <select class="subject" style="min-width:130px;"></select>
+      </label>
+      <label>Chapter
+        <select class="chapter" style="min-width:130px;"></select>
+      </label>
+      <label>Sub Chapter
+        <select class="sub_chapter" style="min-width:130px;"></select>
+      </label>
+      <label>Section
+        <select class="section" style="min-width:130px;"></select>
+      </label>
+      <label>Difficulty
+        <select class="difficulty" style="min-width:120px;">
+          <option value="">Any</option>
+          <option value="easy">easy</option>
+          <option value="medium">medium</option>
+          <option value="hard">hard</option>
+        </select>
+      </label>
+      <label>Question Type
+        <input type="text" class="question_type" style="width:120px;" placeholder="Optional">
+      </label>
+      <label>Count
+        <input type="number" class="question_count" style="width:80px;" min="1" value="1">
+      </label>
+      <label>Auto
+        <input type="checkbox" class="auto" checked>
+      </label>
+      <button type="button" class="button add-rule">Add Rule</button>
+    </div>
+  </div>
+  <hr>
+{% endfor %}
+
+<script>
+(function() {
+  const urls = {
+    models: '{% url "admin:mocktest_ajax_models" %}',
+    subjects: '{% url "admin:mocktest_ajax_subjects" %}',
+    chapters: '{% url "admin:mocktest_ajax_chapters" %}',
+    subChapters: '{% url "admin:mocktest_ajax_sub_chapters" %}',
+    sections: '{% url "admin:mocktest_ajax_sections" %}',
+    addRule: '{% url "admin:mocktest_ajax_add_rule" %}',
+  };
+
+  function setOptions(select, values, emptyLabel='Any') {
+    select.innerHTML = `<option value="">${emptyLabel}</option>`;
+    (values || []).forEach(v => {
+      const opt = document.createElement('option');
+      if (typeof v === 'object') {
+        opt.value = v.value ?? v;
+        opt.textContent = v.label ?? v.value ?? v;
+      } else {
+        opt.value = v;
+        opt.textContent = v;
+      }
+      select.appendChild(opt);
+    });
+  }
+
+  function loadModels(box) {
+    fetch(urls.models).then(r => r.json()).then(data => {
+      setOptions(box.querySelector('.model'), (data.results || []).map(m => ({label: m, value: m})), 'Select Model');
+      setOptions(box.querySelector('.subject'), []);
+      setOptions(box.querySelector('.chapter'), []);
+      setOptions(box.querySelector('.sub_chapter'), []);
+      setOptions(box.querySelector('.section'), []);
+    });
+  }
+
+  function loadChapters(box) {
+    const model = box.querySelector('.model').value;
+    if (!model) return;
+    fetch(urls.chapters + '?' + new URLSearchParams({model}))
+      .then(r => r.json()).then(data => {
+        setOptions(box.querySelector('.chapter'), data.results || []);
+        setOptions(box.querySelector('.sub_chapter'), []);
+        setOptions(box.querySelector('.section'), []);
+      });
+  }
+
+  function loadSubjects(box) {
+    const model = box.querySelector('.model').value;
+    const chapter = box.querySelector('.chapter').value;
+    if (!model) return;
+    fetch(urls.subjects + '?' + new URLSearchParams({model, chapter}))
+      .then(r => r.json()).then(data => {
+        setOptions(box.querySelector('.subject'), data.results || []);
+        setOptions(box.querySelector('.sub_chapter'), []);
+        setOptions(box.querySelector('.section'), []);
+      });
+  }
+
+  function loadSubChapters(box) {
+    const model = box.querySelector('.model').value;
+    const subject = box.querySelector('.subject').value;
+    const chapter = box.querySelector('.chapter').value;
+    if (!model) return;
+    fetch(urls.subChapters + '?' + new URLSearchParams({model, subject, chapter}))
+      .then(r => r.json()).then(data => {
+        setOptions(box.querySelector('.sub_chapter'), data.results || []);
+        setOptions(box.querySelector('.section'), []);
+      });
+  }
+
+  function loadSections(box) {
+    const model = box.querySelector('.model').value;
+    const subject = box.querySelector('.subject').value;
+    const chapter = box.querySelector('.chapter').value;
+    const sub_chapter = box.querySelector('.sub_chapter').value;
+    if (!model) return;
+    fetch(urls.sections + '?' + new URLSearchParams({model, subject, chapter, sub_chapter}))
+      .then(r => r.json()).then(data => {
+        setOptions(box.querySelector('.section'), data.results || []);
+      });
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value || '';
+    document.querySelectorAll('.rule-box').forEach(box => {
+      loadModels(box);
+      box.querySelector('.model').addEventListener('change', () => {
+        if (!box.querySelector('.model').value) {
+          setOptions(box.querySelector('.subject'), []);
+          setOptions(box.querySelector('.chapter'), []);
+          setOptions(box.querySelector('.sub_chapter'), []);
+          setOptions(box.querySelector('.section'), []);
+          return;
+        }
+        loadChapters(box);
+        loadSubjects(box);
+      });
+      box.querySelector('.chapter').addEventListener('change', () => {
+        loadSubjects(box);
+        loadSubChapters(box);
+      });
+      box.querySelector('.subject').addEventListener('change', () => loadSubChapters(box));
+      box.querySelector('.sub_chapter').addEventListener('change', () => loadSections(box));
+
+      box.querySelector('.add-rule').addEventListener('click', () => {
+        const model = box.querySelector('.model').value;
+        const tabId = box.dataset.tabId;
+        if (!model) { alert('Select a model first'); return; }
+        const payload = {
+          tab_id: tabId,
+          model,
+          subject: box.querySelector('.subject').value,
+          chapter: box.querySelector('.chapter').value,
+          sub_chapter: box.querySelector('.sub_chapter').value,
+          section: box.querySelector('.section').value,
+          difficulty: box.querySelector('.difficulty').value,
+          question_type: box.querySelector('.question_type').value,
+          question_count: box.querySelector('.question_count').value || 1,
+          auto: box.querySelector('.auto').checked,
+        };
+        fetch(urls.addRule, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+			'X-CSRFToken': csrfToken
+          },
+          body: new URLSearchParams(payload)
+        }).then(r => r.json()).then(data => {
+          if (data.error) { alert(data.error); return; }
+          window.location.reload();
+        });
+      });
+    });
+  });
+})();
+</script>
+{% endblock %}
