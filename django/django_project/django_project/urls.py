@@ -34,6 +34,7 @@ admin.autodiscover()
 urlpatterns = [
     re_path(r'^admin/', admin_site.urls),
     re_path(r'^genai/', include('genai.urls')),
+    re_path(r'^mocktest/', include('mocktest.urls')),
     re_path(r'^', include('bank.urls')),
        
 ]
