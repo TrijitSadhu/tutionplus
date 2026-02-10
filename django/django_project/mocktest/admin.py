@@ -185,6 +185,21 @@ class MockTestAdmin(admin.ModelAdmin):
 				self.admin_site.admin_view(self.ajax_add_rule),
 				name="mocktest_ajax_add_rule",
 			),
+			path(
+				"ajax/delete_rule/",
+				self.admin_site.admin_view(self.ajax_delete_rule),
+				name="mocktest_ajax_delete_rule",
+			),
+			path(
+				"ajax/regenerate_mock/",
+				self.admin_site.admin_view(self.ajax_regenerate_mock),
+				name="mocktest_ajax_regenerate_mock",
+			),
+			path(
+				"ajax/regenerate_tab/",
+				self.admin_site.admin_view(self.ajax_regenerate_tab),
+				name="mocktest_ajax_regenerate_tab",
+			),
 		]
 		return custom + urls
 
@@ -282,7 +297,9 @@ class MockTestAdmin(admin.ModelAdmin):
 
 	def distribute_view(self, request, mocktest_id, *args, **kwargs):
 		obj = self.get_object(request, mocktest_id)
-		tabs = obj.tabs.select_related("tab").prefetch_related("distribution_rules").all()
+		tabs = obj.tabs.select_related("tab").prefetch_related("distribution_rules", "questions").all()
+		for t in tabs:
+			t.current_questions = len(t.questions.all()) if hasattr(t, "questions") else t.questions.count()
 		context = dict(
 			self.admin_site.each_context(request),
 			mocktest=obj,
@@ -330,6 +347,11 @@ class MockTestAdmin(admin.ModelAdmin):
 			return self._json_error(err)
 		if MockTestQuestion.objects.filter(mock_test=tab.mock_test, mcq_id=mcq_id).exists():
 			return self._json_error("MCQ already in mock")
+		current_in_tab = MockTestQuestion.objects.filter(mock_test_tab=tab).count()
+		if tab.total_questions and current_in_tab >= tab.total_questions:
+			return self._json_error(
+				f"Tab capacity ({tab.total_questions}) reached; cannot add more questions"
+			)
 		next_order = (
 			MockTestQuestion.objects.filter(mock_test_tab=tab).aggregate(max_o=models.Max("order"))["max_o"] or 0
 		) + 1
@@ -345,8 +367,6 @@ class MockTestAdmin(admin.ModelAdmin):
 		)
 		service = MockTestGeneratorService()
 		service._recalc_mock_totals(tab.mock_test)
-		tab.total_questions = MockTestQuestion.objects.filter(mock_test_tab=tab).count()
-		tab.save(update_fields=["total_questions"])
 		return JsonResponse({"id": q.id, "order": q.order, "mcq_id": q.mcq_id, "mcq_model": q.mcq_model, "marks": q.marks, "negative_marks": q.negative_marks})
 
 	@transaction.atomic
@@ -362,16 +382,24 @@ class MockTestAdmin(admin.ModelAdmin):
 			return self._json_error("Question not found", 404)
 		tab = q.mock_test_tab
 		mock = q.mock_test
+		removed_mcq_id = q.mcq_id
 		q.delete()
 		# Repack ordering
 		for idx, obj in enumerate(MockTestQuestion.objects.filter(mock_test_tab=tab).order_by("order", "id"), start=1):
 			if obj.order != idx:
 				obj.order = idx
 				obj.save(update_fields=["order"])
+		# Remove deleted MCQ from rule tracking so the distribute page stays in sync
+		for rule in tab.distribution_rules.all():
+			if not rule.selected_mcq_ids:
+				continue
+			if removed_mcq_id in rule.selected_mcq_ids:
+				updated_ids = [mid for mid in rule.selected_mcq_ids if mid != removed_mcq_id]
+				rule.selected_mcq_ids = updated_ids
+				rule.mcq_list = ",".join(str(mid) for mid in updated_ids)
+				rule.save(update_fields=["selected_mcq_ids", "mcq_list"])
 		service = MockTestGeneratorService()
 		service._recalc_mock_totals(mock)
-		tab.total_questions = MockTestQuestion.objects.filter(mock_test_tab=tab).count()
-		tab.save(update_fields=["total_questions"])
 		return JsonResponse({"ok": True})
 
 	@transaction.atomic
@@ -474,7 +502,8 @@ class MockTestAdmin(admin.ModelAdmin):
 			if clean_count <= 0:
 				return self._json_error("question_count must be > 0")
 
-		rule = MockDistributionRule.objects.create(
+		# Prepare rule for filtering without saving yet
+		temp_rule = MockDistributionRule(
 			mock_test_tab=tab,
 			mcq_model=model_name,
 			subject=subject,
@@ -486,36 +515,149 @@ class MockTestAdmin(admin.ModelAdmin):
 			question_count=clean_count,
 		)
 
-		# If auto flag is enabled, immediately pick and attach matching MCQs
+		target = clean_count or 0
+		if not target and tab.total_questions:
+			target = tab.total_questions
+
+		inserted = []
 		if auto:
 			service = MockTestGeneratorService()
-			qs, model = service._filtered_queryset(rule)
-			target = clean_count or 0
-			if not target and tab.total_questions:
-				target = tab.total_questions
-			existing_ids = list(MockTestQuestion.objects.filter(mock_test_tab=tab).values_list("mcq_id", flat=True))
-			picked = service._pick_mcq_ids(qs, target, excluded_ids=existing_ids)
-			if picked:
-				order_cursor = MockTestQuestion.objects.filter(mock_test_tab=tab).aggregate(max_order=models.Max("order"))[
-					"max_order"
-				] or 0
-				for mcq_id in picked:
-					order_cursor += 1
-					MockTestQuestion.objects.create(
-						mock_test=tab.mock_test,
-						mock_test_tab=tab,
-						mcq_model=model._meta.model_name if model else model_name,
-						mcq_id=mcq_id,
-						order=order_cursor,
-						marks=1.0,
-						negative_marks=0.0,
-						added_manually=False,
+			qs, model = service._filtered_queryset(temp_rule)
+			existing_pairs = set(
+				MockTestQuestion.objects.filter(mock_test=tab.mock_test).values_list("mcq_model", "mcq_id")
+			)
+			model_key = (model._meta.model_name if model else model_name) or ""
+			existing_ids = {mid for m, mid in existing_pairs if (m or "") == model_key}
+			current_in_tab = MockTestQuestion.objects.filter(mock_test_tab=tab).count()
+			if tab.total_questions:
+				remaining_capacity = tab.total_questions - current_in_tab
+				if remaining_capacity < target:
+					return self._json_error(
+						f"Tab capacity ({tab.total_questions}) allows only {remaining_capacity} more questions"
 					)
-				tab.total_questions = MockTestQuestion.objects.filter(mock_test_tab=tab).count()
-				tab.save(update_fields=["total_questions"])
-				service._recalc_mock_totals(tab.mock_test)
+			available_qs = qs.exclude(id__in=existing_ids)
+			available_count = available_qs.count()
+			if available_count < target:
+				return self._json_error(
+					f"Only found {available_count} available MCQs for this rule (requested {target})"
+				)
+			picked = list(available_qs.order_by("?").values_list("id", flat=True)[:target])
+			if len(picked) != target:
+				return self._json_error(
+					f"Only found {len(picked)} available MCQs for this rule (requested {target})"
+				)
+			order_cursor = MockTestQuestion.objects.filter(mock_test_tab=tab).aggregate(max_order=models.Max("order"))[
+				"max_order"
+			] or 0
+			for mcq_id in picked:
+				if (model_key, mcq_id) in existing_pairs:
+					continue
+				order_cursor += 1
+				MockTestQuestion.objects.create(
+					mock_test=tab.mock_test,
+					mock_test_tab=tab,
+					mcq_model=model_key or None,
+					mcq_id=mcq_id,
+					order=order_cursor,
+					marks=1.0,
+					negative_marks=0.0,
+					added_manually=False,
+				)
+				inserted.append(mcq_id)
+		service._recalc_mock_totals(tab.mock_test)
 
-		return JsonResponse({"ok": True, "rule_id": rule.id})
+		# Persist rule only after successful checks/inserts
+		rule = MockDistributionRule.objects.create(
+			mock_test_tab=tab,
+			mcq_model=model_name,
+			subject=subject,
+			chapter=chapter,
+			sub_chapter=sub_chapter,
+			section=section,
+			difficulty=difficulty,
+			question_type=question_type,
+			question_count=clean_count,
+		)
+		rule.selected_mcq_ids = inserted
+		rule.mcq_list = ",".join(str(mid) for mid in inserted)
+		rule.save(update_fields=["selected_mcq_ids", "mcq_list"])
+
+		return JsonResponse({
+			"ok": True,
+			"rule_id": rule.id,
+			"mcq_ids": inserted,
+			"requested": target,
+			"added": len(inserted),
+			"partial": False,
+		})
+
+	@transaction.atomic
+	def ajax_delete_rule(self, request):
+		if request.method != "POST":
+			return self._json_error("POST required")
+		rule_id = request.POST.get("rule_id")
+		if not rule_id:
+			return self._json_error("rule_id required")
+		try:
+			rule = MockDistributionRule.objects.select_related("mock_test_tab", "mock_test_tab__mock_test").get(id=rule_id)
+		except MockDistributionRule.DoesNotExist:
+			return self._json_error("Rule not found", 404)
+		tab = rule.mock_test_tab
+		mock = tab.mock_test
+		model_key = rule.mcq_model or ""
+		ids_to_remove = rule.selected_mcq_ids or []
+		if ids_to_remove:
+			MockTestQuestion.objects.filter(
+				mock_test_tab=tab,
+				mcq_id__in=ids_to_remove,
+				mcq_model=model_key or None,
+				added_manually=False,
+			).delete()
+		rule.delete()
+		service = MockTestGeneratorService()
+		service._recalc_mock_totals(mock)
+		return JsonResponse({"ok": True})
+
+	@transaction.atomic
+	def ajax_regenerate_mock(self, request):
+		if request.method != "POST":
+			return self._json_error("POST required")
+		mock_id = request.POST.get("mock_id")
+		if not mock_id:
+			return self._json_error("mock_id required")
+		try:
+			mock = MockTest.objects.get(id=mock_id)
+		except MockTest.DoesNotExist:
+			return self._json_error("Mock not found", 404)
+		service = MockTestGeneratorService()
+		service.generate_mock(mock.id)
+		mock.refresh_from_db()
+		return JsonResponse({"ok": True, "total_questions": mock.total_questions, "total_marks": mock.total_marks})
+
+	@transaction.atomic
+	def ajax_regenerate_tab(self, request):
+		if request.method != "POST":
+			return self._json_error("POST required")
+		tab_id = request.POST.get("tab_id")
+		if not tab_id:
+			return self._json_error("tab_id required")
+		try:
+			tab = MockTestTab.objects.select_related("mock_test").get(id=tab_id)
+		except MockTestTab.DoesNotExist:
+			return self._json_error("Tab not found", 404)
+		service = MockTestGeneratorService()
+		service.regenerate_tab(tab.id)
+		service._recalc_mock_totals(tab.mock_test)
+		tab.mock_test.refresh_from_db()
+		current_questions = MockTestQuestion.objects.filter(mock_test_tab=tab).count()
+		return JsonResponse({
+			"ok": True,
+			"tab_id": tab.id,
+			"current_questions": current_questions,
+			"tab_total": tab.total_questions,
+			"mock_total_questions": tab.mock_test.total_questions,
+			"mock_total_marks": tab.mock_test.total_marks,
+		})
 
 	def _mcq_field_exists(self, model, field: str) -> bool:
 		return bool(model and field in {f.name for f in model._meta.get_fields()})  # type: ignore

@@ -68,7 +68,7 @@ class MockTestGeneratorService:
         def has(field):
             return self._field_exists_model(model, field)
 
-        if has("subject"):
+        if rule.subject and has("subject"):
             qs = qs.filter(subject=rule.subject)
         if rule.chapter and has("chapter"):
             qs = qs.filter(chapter=rule.chapter)
@@ -206,11 +206,14 @@ class MockTestGeneratorService:
                     negative_marks=0.0,
                     added_manually=False,
                 )
+            # Update rule tracking to match freshly picked MCQs
+            if picked:
+                rule.selected_mcq_ids = list(picked)
+                rule.mcq_list = ",".join(str(mid) for mid in picked)
+                rule.save(update_fields=["selected_mcq_ids", "mcq_list"])
             selected_ids.extend(picked)
 
-        # Update tab totals
-        tab.total_questions = MockTestQuestion.objects.filter(mock_test_tab=tab).count()
-        tab.save(update_fields=["total_questions"])
+        # Do not overwrite configured tab total; leave total_questions as user-set cap.
 
     def validate_distribution(self, mock_test_id: int) -> List[str]:
         issues: List[str] = []

@@ -73,6 +73,8 @@ class MockDistributionRule(models.Model):
 	question_type = models.CharField(max_length=20, blank=True, null=True, db_index=True)
 	question_count = models.PositiveIntegerField(blank=True, null=True)
 	percentage = models.FloatField(blank=True, null=True)
+	selected_mcq_ids = JSONField(default=list, blank=True)
+	mcq_list = models.TextField(blank=True, default="")
 
 	class Meta:
 		ordering = ("id",)
@@ -106,7 +108,7 @@ class MockTestQuestion(models.Model):
 
 	class Meta:
 		ordering = ("order", "id")
-		unique_together = ("mock_test", "mcq_id")
+		unique_together = ("mock_test", "mcq_model", "mcq_id")
 
 	def __str__(self) -> str:  # pragma: no cover - trivial
 		return f"MCQ {self.mcq_id} ({self.marks}/{self.negative_marks})"

@@ -4,10 +4,16 @@
 <h1>Distribute Questions: {{ mocktest.title }}</h1>
 <p>Use filters to add distribution rules per tab. "Auto" will immediately pick random MCQs matching the filters and add them to the tab.</p>
 <form style="display:none;">{% csrf_token %}</form>
+<button type="button" class="button regen-mock" style="margin:8px 0;">Regenerate Mock</button>
 <hr>
 {% for t in tabs %}
-  <h3>Tab: {{ t.tab.name }} ({{ t.selection_mode }})</h3>
-  <p>Current total questions: {{ t.total_questions }}</p>
+  <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+    <h3 style="margin:0;">Tab: {{ t.tab.name }} ({{ t.selection_mode }})</h3>
+    {% if t.selection_mode == "auto" %}
+    <button type="button" class="button regen-tab" data-tab-id="{{ t.id }}">Regenerate Tab</button>
+    {% endif %}
+  </div>
+  <p>Current total questions: {{ t.current_questions }} / {{ t.total_questions }}</p>
   <table class="table" style="margin-bottom:12px;">
     <thead>
       <tr>
@@ -20,6 +26,9 @@
         <th>Difficulty</th>
         <th>Question Type</th>
         <th>Count</th>
+        <th>MCQ IDs</th>
+        <th>MCQ List</th>
+        <th>Actions</th>
       </tr>
     </thead>
     <tbody>
@@ -33,10 +42,13 @@
         <td>{{ r.section }}</td>
         <td>{{ r.difficulty }}</td>
         <td>{{ r.question_type }}</td>
-        <td>{{ r.question_count }}</td>
+        <td>{% if r.selected_mcq_ids %}{{ r.selected_mcq_ids|length }}{% else %}{{ r.question_count }}{% endif %}</td>
+        <td>{{ r.selected_mcq_ids|join:", " }}</td>
+        <td>{{ r.mcq_list }}</td>
+        <td><button type="button" class="button restore-rule" data-rule-id="{{ r.id }}">Restore</button></td>
       </tr>
       {% empty %}
-      <tr><td colspan="9">No rules yet.</td></tr>
+      <tr><td colspan="12">No rules yet.</td></tr>
       {% endfor %}
     </tbody>
   </table>
@@ -90,6 +102,9 @@
     subChapters: '{% url "admin:mocktest_ajax_sub_chapters" %}',
     sections: '{% url "admin:mocktest_ajax_sections" %}',
     addRule: '{% url "admin:mocktest_ajax_add_rule" %}',
+    deleteRule: '{% url "admin:mocktest_ajax_delete_rule" %}',
+    regenerateMock: '{% url "admin:mocktest_ajax_regenerate_mock" %}',
+    regenerateTab: '{% url "admin:mocktest_ajax_regenerate_tab" %}',
   };
 
   function setOptions(select, values, emptyLabel='Any') {
@@ -211,10 +226,69 @@
           body: new URLSearchParams(payload)
         }).then(r => r.json()).then(data => {
           if (data.error) { alert(data.error); return; }
+          if (data.requested !== undefined && data.added !== undefined) {
+            alert(`Added ${data.added} of ${data.requested}`);
+          }
           window.location.reload();
         });
       });
     });
+
+    document.querySelectorAll('.restore-rule').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const ruleId = btn.dataset.ruleId;
+        if (!ruleId) return;
+        if (!confirm('Restore: remove this rule and its auto-added questions?')) return;
+        fetch(urls.deleteRule, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': csrfToken
+          },
+          body: new URLSearchParams({rule_id: ruleId})
+        }).then(r => r.json()).then(data => {
+          if (data.error) { alert(data.error); return; }
+          window.location.reload();
+        });
+      });
+    });
+
+    document.querySelectorAll('.regen-tab').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tabId = btn.dataset.tabId;
+        if (!tabId) return;
+        if (!confirm('Regenerate this tab? This will re-pick auto questions for this tab based on its rules.')) return;
+        fetch(urls.regenerateTab, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': csrfToken
+          },
+          body: new URLSearchParams({tab_id: tabId})
+        }).then(r => r.json()).then(data => {
+          if (data.error) { alert(data.error); return; }
+          window.location.reload();
+        });
+      });
+    });
+
+    const regenMockBtn = document.querySelector('.regen-mock');
+    if (regenMockBtn) {
+      regenMockBtn.addEventListener('click', () => {
+        if (!confirm('Regenerate this mock? This will re-pick auto questions for all tabs based on current rules.')) return;
+        fetch(urls.regenerateMock, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': csrfToken
+          },
+          body: new URLSearchParams({mock_id: '{{ mocktest.id }}'})
+        }).then(r => r.json()).then(data => {
+          if (data.error) { alert(data.error); return; }
+          window.location.reload();
+        });
+      });
+    }
   });
 })();
 </script>
