@@ -109,7 +109,7 @@ class MockTestAdmin(admin.ModelAdmin):
 	search_fields = ("title", "exam")
 	readonly_fields = ("total_questions", "total_marks")
 	inlines = (MockTestTabInline, MockTestQuestionInline)
-	actions = ("action_generate_mock", "action_regenerate_mock", "action_validate_distribution")
+	actions = ("action_generate_mock", "action_regenerate_mock", "action_validate_distribution", "action_update_config_from_existing")
 	change_form_template = "admin/mocktest/mocktest/change_form.html"
 
 	def get_urls(self):
@@ -397,7 +397,8 @@ class MockTestAdmin(admin.ModelAdmin):
 				updated_ids = [mid for mid in rule.selected_mcq_ids if mid != removed_mcq_id]
 				rule.selected_mcq_ids = updated_ids
 				rule.mcq_list = ",".join(str(mid) for mid in updated_ids)
-				rule.save(update_fields=["selected_mcq_ids", "mcq_list"])
+				rule.question_count = len(updated_ids) if updated_ids else 0
+				rule.save(update_fields=["selected_mcq_ids", "mcq_list", "question_count"])
 		service = MockTestGeneratorService()
 		service._recalc_mock_totals(mock)
 		return JsonResponse({"ok": True})
@@ -767,6 +768,14 @@ class MockTestAdmin(admin.ModelAdmin):
 				self.message_user(request, f"Mock {mock.id} distribution valid")
 
 	action_validate_distribution.short_description = "Validate Distribution"
+
+	def action_update_config_from_existing(self, request, queryset):
+		service = MockTestGeneratorService()
+		for mock in queryset:
+			service.update_config_from_existing(mock.id)
+			self.message_user(request, f"Updated config_json for mock {mock.id} from existing questions")
+
+	action_update_config_from_existing.short_description = "Update JSON config from existing questions"
 
 
 @admin.register(MockTestTab, site=admin_site)

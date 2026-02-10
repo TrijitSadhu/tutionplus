@@ -63,6 +63,20 @@ class MockTestGeneratorService:
     def _field_exists_model(self, model, field: str) -> bool:
         return bool(model and field in {f.name for f in model._meta.get_fields()})  # type: ignore
 
+    def _logical_field(self, model, logical: str):
+        mapping = {
+            "subject": ["subject", "subject_name"],
+            "chapter": ["chapter"],
+            "sub_chapter": ["sub_chapter"],
+            "section": ["section"],
+            "difficulty": ["difficulty", "difficult_level"],
+            "question": ["question", "question_text", "text"],
+        }
+        for cand in mapping.get(logical, []):
+            if hasattr(model, cand):
+                return cand
+        return None
+
     def _filtered_queryset(self, rule: MockDistributionRule):
         qs, model = self._base_queryset(rule.mcq_model)
         def has(field):
@@ -101,8 +115,84 @@ class MockTestGeneratorService:
         mock.save(update_fields=["total_questions", "total_marks"])
 
     def _snapshot_config(self, mock: MockTest) -> Dict:
+        """Build config snapshot with enriched MCQ info and structured mcq strings."""
+        # Collect MCQ ids by model for efficient lookups
+        model_to_ids = {}
+        fallback_ids = set()
+        for tab in mock.tabs.prefetch_related("questions").all():
+            for q in tab.questions.all():
+                if q.mcq_model:
+                    model_to_ids.setdefault(q.mcq_model, set()).add(q.mcq_id)
+                else:
+                    fallback_ids.add(q.mcq_id)
+
+        mcq_lookup = {}
+        # Resolve known models first
+        for model_name, ids in model_to_ids.items():
+            model = _resolve_model(model_name)
+            if not model:
+                continue
+            question_field = self._logical_field(model, "question")
+            subject_field = self._logical_field(model, "subject")
+            chapter_field = self._logical_field(model, "chapter")
+            sub_chapter_field = self._logical_field(model, "sub_chapter")
+            section_field = self._logical_field(model, "section")
+            difficulty_field = self._logical_field(model, "difficulty")
+            fields = ["id"]
+            if self._field_exists_model(model, "new_id"):
+                fields.append("new_id")
+            for f in [question_field, subject_field, chapter_field, sub_chapter_field, section_field, difficulty_field]:
+                if f:
+                    fields.append(f)
+            for row in model.objects.filter(id__in=ids).values(*fields):
+                mcq_lookup[(model_name, row["id"])] = {
+                    "model": model._meta.model_name,
+                    "id": row["id"],
+                    "new_id": row.get("new_id"),
+                    "question": row.get(question_field) if question_field else "",
+                    "subject": row.get(subject_field) if subject_field else "",
+                    "chapter": row.get(chapter_field) if chapter_field else "",
+                    "sub_chapter": row.get(sub_chapter_field) if sub_chapter_field else "",
+                    "section": row.get(section_field) if section_field else "",
+                    "difficulty": row.get(difficulty_field) if difficulty_field else "",
+                }
+
+        # Fallback: try all models for ids without stored model
+        if fallback_ids:
+            for model_name in _bank_model_choices():
+                model = _resolve_model(model_name)
+                if not model:
+                    continue
+                question_field = self._logical_field(model, "question")
+                subject_field = self._logical_field(model, "subject")
+                chapter_field = self._logical_field(model, "chapter")
+                sub_chapter_field = self._logical_field(model, "sub_chapter")
+                section_field = self._logical_field(model, "section")
+                difficulty_field = self._logical_field(model, "difficulty")
+                fields = ["id"]
+                if self._field_exists_model(model, "new_id"):
+                    fields.append("new_id")
+                for f in [question_field, subject_field, chapter_field, sub_chapter_field, section_field, difficulty_field]:
+                    if f:
+                        fields.append(f)
+                for row in model.objects.filter(id__in=fallback_ids).values(*fields):
+                    key = (model_name, row["id"])
+                    if key in mcq_lookup:
+                        continue
+                    mcq_lookup[key] = {
+                        "model": model._meta.model_name,
+                        "id": row["id"],
+                        "new_id": row.get("new_id"),
+                        "question": row.get(question_field) if question_field else "",
+                        "subject": row.get(subject_field) if subject_field else "",
+                        "chapter": row.get(chapter_field) if chapter_field else "",
+                        "sub_chapter": row.get(sub_chapter_field) if sub_chapter_field else "",
+                        "section": row.get(section_field) if section_field else "",
+                        "difficulty": row.get(difficulty_field) if difficulty_field else "",
+                    }
+
         tabs_payload = []
-        for tab in mock.tabs.prefetch_related("distribution_rules").all():
+        for tab in mock.tabs.prefetch_related("distribution_rules", "questions").all():
             tab_info = {
                 "tab_id": tab.id,
                 "tab_name": tab.tab.name,
@@ -110,47 +200,58 @@ class MockTestGeneratorService:
                 "total_questions": tab.total_questions,
                 "time_limit_minutes": tab.time_limit_minutes,
                 "order": tab.order,
-                "distributions": [],
                 "mcqs": [],
             }
-            for rule in tab.distribution_rules.all():
-                tab_info["distributions"].append(
-                    {
-                        "subject": rule.subject,
-                        "chapter": rule.chapter,
-                        "sub_chapter": rule.sub_chapter,
-                        "section": rule.section,
-                        "difficulty": rule.difficulty,
-                        "question_type": rule.question_type,
-                        "question_count": rule.question_count,
-                        "percentage": rule.percentage,
-                    }
-                )
-            # Capture current MCQs (model-mcqid) for transparency after generate/regenerate
+            tab_info["mcq_details"] = []
             questions = list(tab.questions.all().order_by("order", "id"))
-            missing_ids = {q.mcq_id for q in questions if not q.mcq_model}
+            for q in questions:
+                resolved_model = q.mcq_model
+                resolved_key = None
+                if resolved_model:
+                    resolved_key = (resolved_model, q.mcq_id)
+                    resolved_model = resolved_model.strip()
+                else:
+                    # Try to find a unique match across lookups
+                    matches = [(m, mid) for (m, mid) in mcq_lookup.keys() if mid == q.mcq_id]
+                    if len(matches) == 1:
+                        resolved_key = matches[0]
+                        resolved_model = matches[0][0]
+                    else:
+                        resolved_model = resolved_model or ""
 
-            # Best-effort resolve model for MCQs without stored model
-            resolved_missing = {}
-            if missing_ids:
-                for model_name in _bank_model_choices():
-                    model = _resolve_model(model_name)
-                    if not model:
-                        continue
-                    for mid in model.objects.filter(id__in=missing_ids).values_list("id", flat=True):
-                        if mid in resolved_missing:
-                            resolved_missing[mid] = None  # ambiguous across models
-                        else:
-                            resolved_missing[mid] = model._meta.model_name
+                mcq_info = mcq_lookup.get(resolved_key) if resolved_key else None
+                new_id = mcq_info.get("new_id") if mcq_info else None
+                if new_id:
+                    mcq_string = f"{resolved_model}$$${q.mcq_id}$$${new_id}"
+                else:
+                    mcq_string = f"{resolved_model}$$${q.mcq_id}"
+                tab_info["mcqs"].append(mcq_string)
 
-            tab_info["mcqs"] = [
-                f"{(q.mcq_model or resolved_missing.get(q.mcq_id) or '').strip()}-{q.mcq_id}".lstrip('-')
-                if (q.mcq_model or resolved_missing.get(q.mcq_id))
-                else str(q.mcq_id)
-                for q in questions
-            ]
+                # Use stored question metadata (no /mocktest/mocktestquestion dependency)
+                details_entry = {
+                    "mcq_model": q.mcq_model or (resolved_model or ""),
+                    "mcq_id": q.mcq_id,
+                    "marks": q.marks,
+                    "negative_marks": q.negative_marks,
+                    "order": q.order,
+                }
+                tab_info["mcq_details"].append(details_entry)
             tabs_payload.append(tab_info)
-        return {"tabs": tabs_payload}
+
+        return {
+            "mocktest": {
+                "id": mock.id,
+                "title": getattr(mock, "title", None),
+                "exam": getattr(mock, "exam", None),
+                "mock_type": getattr(mock, "mock_type", None),
+            },
+            "tabs": tabs_payload,
+        }
+
+    def _update_config_snapshot(self, mock: MockTest):
+        """Persist a fresh config_json snapshot for the given mock."""
+        mock.config_json = self._snapshot_config(mock)
+        mock.save(update_fields=["config_json"])
 
     @transaction.atomic
     def generate_mock(self, mock_test_id: int):
@@ -159,16 +260,19 @@ class MockTestGeneratorService:
         MockTestQuestion.objects.filter(mock_test=mock, added_manually=False).delete()
         for tab in mock.tabs.all():
             self._generate_tab(tab)
-        mock.config_json = self._snapshot_config(mock)
-        mock.save(update_fields=["config_json"])
+        self._update_config_snapshot(mock)
 
     @transaction.atomic
     def regenerate_tab(self, mock_test_tab_id: int):
         tab = MockTestTab.objects.select_for_update().get(id=mock_test_tab_id)
         self._generate_tab(tab)
         mock = tab.mock_test
-        mock.config_json = self._snapshot_config(mock)
-        mock.save(update_fields=["config_json"])
+        self._update_config_snapshot(mock)
+
+    def update_config_from_existing(self, mock_test_id: int):
+        """Refresh config_json using current questions/rules without repicking."""
+        mock = MockTest.objects.get(id=mock_test_id)
+        self._update_config_snapshot(mock)
 
     def _generate_tab(self, tab: MockTestTab):
         if tab.selection_mode != "auto":
