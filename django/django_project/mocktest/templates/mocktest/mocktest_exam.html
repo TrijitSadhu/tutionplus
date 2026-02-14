@@ -1,0 +1,264 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mock Test</title>
+  <style>
+    :root {
+      --bg: #f7f8fa;
+      --panel: #ffffff;
+      --border: #d9dce3;
+      --text: #1c1f26;
+      --muted: #6b7280;
+      --accent: #2563eb;
+      --danger: #dc2626;
+      --success: #16a34a;
+      --warning: #ca8a04;
+    }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); }
+    header { display:flex; align-items:center; justify-content:space-between; padding:12px 16px; background: var(--panel); border-bottom:1px solid var(--border); position:sticky; top:0; z-index:10; }
+    .timer { font-weight:700; color: var(--accent); }
+    .layout { display:flex; min-height: calc(100vh - 56px); }
+    .left { width:320px; border-right:1px solid var(--border); background: var(--panel); overflow:auto; }
+    .right { flex:1; padding:16px; overflow:auto; }
+    .tab-list { display:flex; gap:6px; flex-wrap:wrap; padding:12px; border-bottom:1px solid var(--border); }
+    .tab-chip { padding:6px 10px; border:1px solid var(--border); border-radius:6px; cursor:pointer; background:#f2f4f8; }
+    .tab-chip.active { background: var(--accent); color:#fff; border-color: var(--accent); }
+    .question-list { list-style:none; margin:0; padding:12px; display:grid; grid-template-columns: repeat(auto-fill, minmax(42px, 1fr)); gap:6px; }
+    .q-pill { padding:8px 0; border:1px solid var(--border); border-radius:6px; text-align:center; cursor:pointer; font-weight:600; background:#f9fafb; }
+    .q-pill.answered { background: #e0f2fe; border-color:#bfdbfe; }
+    .q-pill.review { background: #fef3c7; border-color:#fcd34d; }
+    .q-pill.current { border:2px solid var(--accent); }
+    .card { background: var(--panel); border:1px solid var(--border); border-radius:8px; padding:16px; box-shadow:0 2px 6px rgba(0,0,0,0.04); }
+    .question-stem { font-size:16px; margin-bottom:12px; }
+    .options { display:flex; flex-direction:column; gap:8px; margin:12px 0; }
+    .option { border:1px solid var(--border); border-radius:6px; padding:10px; display:flex; gap:8px; align-items:flex-start; cursor:pointer; background:#f9fafb; }
+    .option.selected { border-color: var(--accent); background:#e0f2fe; }
+    .controls { display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; }
+    button { border:1px solid var(--border); background:#fff; padding:8px 12px; border-radius:6px; cursor:pointer; font-weight:600; }
+    button.primary { background: var(--accent); color:#fff; border-color: var(--accent); }
+    button.danger { background: var(--danger); color:#fff; border-color: var(--danger); }
+    .tools { display:flex; gap:8px; margin-top:12px; flex-wrap:wrap; }
+    .panel { border:1px solid var(--border); border-radius:8px; padding:12px; background:#fff; }
+    .notepad { width:100%; height:140px; }
+    .scratch { width:100%; height:220px; border:1px dashed var(--border); background:#f9fafb; }
+    .status-legend { display:flex; gap:8px; flex-wrap:wrap; padding:12px; border-top:1px solid var(--border); }
+    .legend { display:flex; align-items:center; gap:6px; }
+    .dot { width:12px; height:12px; border-radius:50%; display:inline-block; border:1px solid var(--border); }
+    .dot.ans { background:#e0f2fe; border-color:#bfdbfe; }
+    .dot.rev { background:#fef3c7; border-color:#fcd34d; }
+    .dot.cur { border-color: var(--accent); }
+    .meta { color: var(--muted); font-size:13px; }
+  </style>
+</head>
+<body data-mocktest="{{ mocktest_id }}">
+  <header>
+    <div>
+      <div id="exam-title">Mock Test</div>
+      <div class="meta" id="exam-meta"></div>
+    </div>
+    <div class="timer" id="timer">--:--:--</div>
+  </header>
+  <div class="layout">
+    <aside class="left">
+      <div class="tab-list" id="tab-list"></div>
+      <ul class="question-list" id="question-list"></ul>
+      <div class="status-legend">
+        <div class="legend"><span class="dot ans"></span>Answered</div>
+        <div class="legend"><span class="dot rev"></span>Review</div>
+        <div class="legend"><span class="dot cur"></span>Current</div>
+      </div>
+    </aside>
+    <main class="right">
+      <div class="card">
+        <div class="meta" id="q-path"></div>
+        <div class="question-stem" id="question-stem"></div>
+        <div class="options" id="options"></div>
+        <div class="controls">
+          <button id="mark-review">Mark for Review</button>
+          <button id="clear-answer">Clear</button>
+          <button id="prev">Previous</button>
+          <button class="primary" id="next">Save & Next</button>
+          <button class="danger" id="submit">Submit</button>
+        </div>
+      </div>
+      <div class="tools" style="margin-top:12px;">
+        <div class="panel" style="flex:1 1 280px;">
+          <div class="meta">Notepad</div>
+          <textarea id="notepad" class="notepad" placeholder="Notes..." aria-label="Notepad"></textarea>
+        </div>
+        <div class="panel" style="flex:1 1 280px;">
+          <div class="meta">Scratchpad (placeholder)</div>
+          <div id="scratch" class="scratch"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script>
+    const mocktestId = Number(document.body.dataset.mocktest);
+    const apiUrl = `/mocktest/api/mocktests/${mocktestId}/config/resolved/`;
+
+    const state = {
+      tabs: [],
+      currentTabIdx: 0,
+      currentQIdx: 0,
+      answers: {}, // key: tab_idx|q_idx -> {value, review}
+      timeLimitSeconds: null,
+      remaining: null,
+      timerHandle: null,
+    };
+
+    function fmtTimer(sec) {
+      if (sec == null) return '--:--:--';
+      const h = String(Math.floor(sec / 3600)).padStart(2,'0');
+      const m = String(Math.floor((sec % 3600)/60)).padStart(2,'0');
+      const s = String(sec % 60).padStart(2,'0');
+      return `${h}:${m}:${s}`;
+    }
+
+    function startTimer(totalSeconds) {
+      state.remaining = totalSeconds;
+      const el = document.getElementById('timer');
+      if (state.timerHandle) clearInterval(state.timerHandle);
+      state.timerHandle = setInterval(() => {
+        if (state.remaining <= 0) {
+          clearInterval(state.timerHandle);
+          el.textContent = '00:00:00';
+          alert('Time is up. Submitting...');
+          submitTest();
+          return;
+        }
+        state.remaining -= 1;
+        el.textContent = fmtTimer(state.remaining);
+      }, 1000);
+      el.textContent = fmtTimer(state.remaining);
+    }
+
+    function renderTabs() {
+      const wrap = document.getElementById('tab-list');
+      wrap.innerHTML = '';
+      state.tabs.forEach((t, idx) => {
+        const chip = document.createElement('div');
+        chip.className = 'tab-chip' + (idx === state.currentTabIdx ? ' active' : '');
+        chip.textContent = t.tab_name || `Tab ${idx+1}`;
+        chip.addEventListener('click', () => { state.currentTabIdx = idx; state.currentQIdx = 0; renderAll(); });
+        wrap.appendChild(chip);
+      });
+    }
+
+    function renderQuestionList() {
+      const list = document.getElementById('question-list');
+      list.innerHTML = '';
+      const tab = state.tabs[state.currentTabIdx];
+      tab.mcq_records.forEach((q, idx) => {
+        const pill = document.createElement('li');
+        pill.className = 'q-pill';
+        pill.textContent = idx + 1;
+        const key = `${state.currentTabIdx}|${idx}`;
+        const ans = state.answers[key];
+        if (ans?.value != null) pill.classList.add('answered');
+        if (ans?.review) pill.classList.add('review');
+        if (idx === state.currentQIdx) pill.classList.add('current');
+        pill.addEventListener('click', () => { state.currentQIdx = idx; renderAll(); });
+        list.appendChild(pill);
+      });
+    }
+
+    function renderQuestion() {
+      const tab = state.tabs[state.currentTabIdx];
+      const q = tab.mcq_records[state.currentQIdx];
+      document.getElementById('q-path').textContent = `${tab.tab_name} • Q${state.currentQIdx + 1}`;
+      document.getElementById('question-stem').innerHTML = q.question || '(no question)';
+
+      const opts = document.getElementById('options');
+      opts.innerHTML = '';
+      const key = `${state.currentTabIdx}|${state.currentQIdx}`;
+      const saved = state.answers[key]?.value;
+      const optionList = q.options && q.options.length ? q.options : [];
+      optionList.forEach((opt, idx) => {
+        const row = document.createElement('div');
+        row.className = 'option' + (saved === idx ? ' selected' : '');
+        row.innerHTML = `<strong>${String.fromCharCode(65+idx)}.</strong> <span>${opt}</span>`;
+        row.addEventListener('click', () => {
+          state.answers[key] = { value: idx, review: state.answers[key]?.review || false };
+          renderQuestionList();
+          renderQuestion();
+        });
+        opts.appendChild(row);
+      });
+    }
+
+    function bindControls() {
+      document.getElementById('next').onclick = () => {
+        const tab = state.tabs[state.currentTabIdx];
+        if (state.currentQIdx < tab.mcq_records.length - 1) {
+          state.currentQIdx += 1;
+        } else if (state.currentTabIdx < state.tabs.length -1) {
+          state.currentTabIdx += 1; state.currentQIdx = 0;
+        }
+        renderAll();
+      };
+      document.getElementById('prev').onclick = () => {
+        if (state.currentQIdx > 0) {
+          state.currentQIdx -= 1;
+        } else if (state.currentTabIdx > 0) {
+          state.currentTabIdx -= 1;
+          const tab = state.tabs[state.currentTabIdx];
+          state.currentQIdx = Math.max(0, tab.mcq_records.length -1);
+        }
+        renderAll();
+      };
+      document.getElementById('clear-answer').onclick = () => {
+        const key = `${state.currentTabIdx}|${state.currentQIdx}`;
+        if (state.answers[key]) state.answers[key].value = null;
+        renderQuestionList();
+        renderQuestion();
+      };
+      document.getElementById('mark-review').onclick = () => {
+        const key = `${state.currentTabIdx}|${state.currentQIdx}`;
+        const existing = state.answers[key] || {};
+        state.answers[key] = { ...existing, review: !existing.review };
+        renderQuestionList();
+      };
+      document.getElementById('submit').onclick = () => {
+        const ok = confirm('Submit test?');
+        if (ok) submitTest();
+      };
+    }
+
+    function submitTest() {
+      const answered = Object.values(state.answers).filter(a => a?.value != null).length;
+      alert(`Submitting... answered ${answered}`);
+    }
+
+    function renderAll() {
+      renderTabs();
+      renderQuestionList();
+      renderQuestion();
+    }
+
+    async function bootstrap() {
+      const res = await fetch(apiUrl);
+      const data = await res.json();
+      const tabs = data.tabs || [];
+      // normalize mcq_records fallback
+      tabs.forEach(t => { t.mcq_records = t.mcq_records || []; });
+      state.tabs = tabs;
+      document.getElementById('exam-title').textContent = data.mocktest?.title || 'Mock Test';
+      document.getElementById('exam-meta').textContent = `${data.mocktest?.exam || ''} • ${data.mocktest?.mock_type || ''}`;
+      const maxTime = Math.max(...tabs.map(t => t.time_limit_minutes || 0));
+      if (maxTime > 0) startTimer(maxTime * 60);
+      bindControls();
+      renderAll();
+    }
+
+    bootstrap().catch(err => {
+      console.error(err);
+      alert('Failed to load mock test');
+    });
+  </script>
+</body>
+</html>

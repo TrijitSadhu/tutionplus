@@ -1,5 +1,5 @@
 import random
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Tuple
 
 from django.apps import apps
 from django.db import models, transaction
@@ -341,3 +341,274 @@ class MockTestGeneratorService:
             if total_explicit > tab.total_questions and tab.total_questions:
                 issues.append(f"Tab {tab.id}: explicit counts exceed tab total")
         return issues
+
+
+def _parse_mcq_string(raw: str) -> Tuple[str, Optional[int], Optional[str]]:
+    """Split an mcq token of form `model$$$id$$$new_id`.
+
+    Returns (model, id|None, new_id|None) with model stripped. Safe for
+    2-part entries that omit new_id.
+    """
+
+    parts = (raw or "").split("$$$")
+    if not parts:
+        return "", None, None
+
+    model = (parts[0] or "").strip()
+    mcq_id: Optional[int] = None
+    new_id: Optional[str] = None
+
+    if len(parts) > 1 and parts[1]:
+        try:
+            mcq_id = int(parts[1])
+        except (TypeError, ValueError):
+            mcq_id = None
+
+    if len(parts) > 2 and parts[2]:
+        new_id = parts[2]
+
+    return model, mcq_id, new_id
+
+
+# Known field hints across MCQ models
+OPTION_TEXT_FIELDS = [
+    "a",
+    "b",
+    "c",
+    "d",
+    "e",
+    "f",
+    "g",
+    "h",
+    "i",
+    "j",
+    "option_1",
+    "option_2",
+    "option_3",
+    "option_4",
+    "option_5",
+]
+
+OPTION_IMAGE_FIELDS = [
+    "a_img",
+    "b_img",
+    "c_img",
+    "d_img",
+    "e_img",
+    "f_img",
+    "g_img",
+    "h_img",
+    "i_img",
+    "j_img",
+]
+
+QUESTION_IMAGE_FIELDS = [
+    "question_image",
+    "one",
+    "two",
+    "three",
+    "four",
+    "five",
+]
+
+SOLUTION_IMAGE_FIELDS = [
+    "solution_image",
+    "solution_one",
+    "solution_two",
+    "solution_three",
+    "solution_four",
+    "solution_five",
+]
+
+
+def _available(model, names: List[str]) -> List[str]:
+    return [n for n in names if hasattr(model, n)]
+
+
+def _collect_fieldset(model) -> Dict[str, List[str]]:
+    """Return field names grouped by purpose for a given model."""
+
+    return {
+        "question": [n for n in ["question"] if hasattr(model, n)],
+        "question_part": [n for n in ["question_part"] if hasattr(model, n)],
+        "question_images": _available(model, QUESTION_IMAGE_FIELDS),
+        "options": _available(model, OPTION_TEXT_FIELDS),
+        "option_images": _available(model, OPTION_IMAGE_FIELDS),
+        "solution": [n for n in ["solution"] if hasattr(model, n)],
+        "solution_images": _available(model, SOLUTION_IMAGE_FIELDS),
+        "shortcut": [n for n in ["shortcut"] if hasattr(model, n)],
+        "shortcut_image": [n for n in ["shortcut_image"] if hasattr(model, n)],
+        "answer": [n for n in ["ans", "answer"] if hasattr(model, n)],
+        "time": [n for n in ["time"] if hasattr(model, n)],
+        "question_type": [n for n in ["question_type"] if hasattr(model, n)],
+        "difficulty": [n for n in ["difficult_level", "difficulty", "level"] if hasattr(model, n)],
+        "subject": [n for n in ["subject", "subject_name"] if hasattr(model, n)],
+        "chapter": [n for n in ["chapter"] if hasattr(model, n)],
+        "sub_chapter": [n for n in ["sub_chapter"] if hasattr(model, n)],
+        "section": [n for n in ["section"] if hasattr(model, n)],
+        "extra": [n for n in ["extra"] if hasattr(model, n)],
+        "new_id": [n for n in ["new_id"] if hasattr(model, n)],
+    }
+
+
+def resolve_config_mcqs(config: Dict) -> Dict:
+    """Resolve MCQ details for a config JSON using bulk queries (new_id preferred).
+
+    This consumes the cached/live mocktest config and returns a new payload with
+    each tab extended by `mcq_records`, where every record contains the fetched
+    MCQ fields. Lookup order per MCQ: new_id (when present) first, else id. One
+    query per distinct model; no per-row queries.
+    """
+
+    tabs = config.get("tabs", []) or []
+    if not tabs:
+        return {**config, "tabs": []}
+
+    # Build aggregated lookup sets per model
+    requested: Dict[str, Dict[str, set]] = {}
+    for tab in tabs:
+        for raw in tab.get("mcqs", []) or []:
+            model, mcq_id, new_id = _parse_mcq_string(raw)
+            if not model:
+                continue
+            bucket = requested.setdefault(model, {"ids": set(), "new_ids": set()})
+            if mcq_id is not None:
+                bucket["ids"].add(mcq_id)
+            if new_id:
+                bucket["new_ids"].add(new_id)
+
+    # Bulk fetch per model
+    generator = MockTestGeneratorService()
+    by_id: Dict[Tuple[str, int], Dict] = {}
+    by_new_id: Dict[Tuple[str, str], Dict] = {}
+
+    for model_name, filters in requested.items():
+        model = _resolve_model(model_name)
+        if not model:
+            continue
+
+        fieldset = _collect_fieldset(model)
+        has_new_id = bool(fieldset.get("new_id"))
+
+        if not filters.get("ids") and not (has_new_id and filters.get("new_ids")):
+            continue
+
+        # Build fields to fetch
+        fields: List[str] = ["id"]
+        for group in fieldset.values():
+            fields.extend(group)
+
+        q_filter = Q()
+        if filters.get("ids"):
+            q_filter |= Q(id__in=filters["ids"])
+        if has_new_id and filters.get("new_ids"):
+            q_filter |= Q(new_id__in=filters["new_ids"])
+
+        if not q_filter.children:
+            continue
+
+        for row in model.objects.filter(q_filter).values(*fields):
+            # Extract question/difficulty/subject fields via logical mapping fallback
+            question = row.get(fieldset["question"][0]) if fieldset["question"] else ""
+            question_part = row.get(fieldset["question_part"][0]) if fieldset["question_part"] else None
+            difficulty_val = None
+            for f in fieldset["difficulty"]:
+                if row.get(f) is not None:
+                    difficulty_val = row.get(f)
+                    break
+
+            def collect_list(names: List[str]) -> List:
+                return [row.get(n) for n in names if row.get(n) not in (None, "")]
+
+            option_texts = collect_list(fieldset["options"])
+            option_images = collect_list(fieldset["option_images"])
+            question_images = collect_list(fieldset["question_images"])
+            solution_images = collect_list(fieldset["solution_images"])
+
+            answer_val = None
+            for f in fieldset["answer"]:
+                if row.get(f) is not None:
+                    answer_val = row.get(f)
+                    break
+
+            payload = {
+                "mcq_model": model._meta.model_name,
+                "mcq_id": row["id"],
+                "new_id": row.get("new_id"),
+                "question": question,
+                "question_part": question_part,
+                "question_images": question_images,
+                "options": option_texts,
+                "option_images": option_images,
+                "answer": answer_val,
+                "solution": row.get(fieldset["solution"][0]) if fieldset["solution"] else None,
+                "solution_images": solution_images,
+                "shortcut": row.get(fieldset["shortcut"][0]) if fieldset["shortcut"] else None,
+                "shortcut_image": row.get(fieldset["shortcut_image"][0]) if fieldset["shortcut_image"] else None,
+                "subject": row.get(fieldset["subject"][0]) if fieldset["subject"] else None,
+                "chapter": row.get(fieldset["chapter"][0]) if fieldset["chapter"] else None,
+                "sub_chapter": row.get(fieldset["sub_chapter"][0]) if fieldset["sub_chapter"] else None,
+                "section": row.get(fieldset["section"][0]) if fieldset["section"] else None,
+                "difficulty": difficulty_val,
+                "question_type": row.get(fieldset["question_type"][0]) if fieldset["question_type"] else None,
+                "time": row.get(fieldset["time"][0]) if fieldset["time"] else None,
+                "extra": row.get(fieldset["extra"][0]) if fieldset["extra"] else None,
+            }
+
+            by_id[(model_name, row["id"])] = payload
+            if has_new_id and row.get("new_id"):
+                by_new_id[(model_name, row["new_id"])] = payload
+
+    # Enrich tabs with resolved records (preserving order from config.mcqs)
+    resolved_tabs: List[Dict] = []
+    for tab in tabs:
+        details_lookup = {
+            (d.get("mcq_model"), d.get("mcq_id")): d
+            for d in (tab.get("mcq_details") or [])
+        }
+        records = []
+        for raw in tab.get("mcqs", []) or []:
+            model, mcq_id, new_id = _parse_mcq_string(raw)
+            chosen = None
+            if model and new_id and (model, new_id) in by_new_id:
+                chosen = by_new_id[(model, new_id)]
+            elif model and mcq_id is not None and (model, mcq_id) in by_id:
+                chosen = by_id[(model, mcq_id)]
+
+            # Merge with marks/order metadata when available
+            detail = details_lookup.get((model, mcq_id), {})
+
+            record = {
+                "mcq_model": model,
+                "mcq_id": mcq_id,
+                "new_id": new_id,
+                "found": bool(chosen),
+                "question": chosen.get("question") if chosen else None,
+                "question_part": chosen.get("question_part") if chosen else None,
+                "question_images": chosen.get("question_images") if chosen else [],
+                "options": chosen.get("options") if chosen else [],
+                "option_images": chosen.get("option_images") if chosen else [],
+                "answer": chosen.get("answer") if chosen else None,
+                "solution": chosen.get("solution") if chosen else None,
+                "solution_images": chosen.get("solution_images") if chosen else [],
+                "shortcut": chosen.get("shortcut") if chosen else None,
+                "shortcut_image": chosen.get("shortcut_image") if chosen else None,
+                "subject": chosen.get("subject") if chosen else None,
+                "chapter": chosen.get("chapter") if chosen else None,
+                "sub_chapter": chosen.get("sub_chapter") if chosen else None,
+                "section": chosen.get("section") if chosen else None,
+                "difficulty": chosen.get("difficulty") if chosen else None,
+                "question_type": chosen.get("question_type") if chosen else None,
+                "time": chosen.get("time") if chosen else None,
+                "extra": chosen.get("extra") if chosen else None,
+                "marks": detail.get("marks"),
+                "negative_marks": detail.get("negative_marks"),
+                "order": detail.get("order"),
+            }
+            records.append(record)
+
+        resolved_tab = {**tab}
+        resolved_tab["mcq_records"] = records
+        resolved_tabs.append(resolved_tab)
+
+    return {**config, "tabs": resolved_tabs}
