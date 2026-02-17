@@ -1,0 +1,30 @@
+{% extends "admin/change_form.html" %}
+{% load i18n %}
+
+{% block object-tools %}
+  {% if change %}{% if not is_popup %}
+  <ul class="object-tools">
+    {% block object-tools-items %}
+      <li><a href="{% url 'admin:mocktest_exam_select' original.id %}" class="viewlink">{% trans "Select Mock Tests" %}</a></li>
+      {{ block.super }}
+    {% endblock %}
+  </ul>
+  {% endif %}{% endif %}
+{% endblock %}
+
+{% block after_field_sets %}
+  {{ block.super }}
+  <style>
+    .form-row.field-mock_tests { display: none; }
+    .mocktest-filters { display: flex; flex-wrap: wrap; gap: 12px; margin: 8px 0; }
+    .mocktest-filters .filter-field { display: flex; flex-direction: column; gap: 4px; min-width: 180px; }
+    .mocktest-columns { display: flex; flex-wrap: wrap; gap: 16px; }
+    .mocktest-column { flex: 1 1 320px; border: 1px solid #e5e5e5; padding: 10px; border-radius: 4px; background: #fafafa; }
+    .mocktest-list { max-height: 360px; overflow: auto; padding-right: 6px; }
+    .mocktest-item { display: block; padding: 4px 0; border-bottom: 1px dotted #e0e0e0; }
+    .mocktest-item:last-child { border-bottom: none; }
+    .mocktest-meta { color: #666; font-size: 12px; margin-left: 4px; }
+
+    .mocktest-actions { margin: 6px 0 12px; display: flex; gap: 8px; }
+  </style>
+{% endblock %}

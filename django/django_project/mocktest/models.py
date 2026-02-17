@@ -112,3 +112,103 @@ class MockTestQuestion(models.Model):
 
 	def __str__(self) -> str:  # pragma: no cover - trivial
 		return f"MCQ {self.mcq_id} ({self.marks}/{self.negative_marks})"
+
+
+# ===============================
+# EXAM MANAGEMENT SYSTEM START
+# ===============================
+
+
+STATE_CHOICES = (
+	("ALL INDIA", "ALL INDIA"),
+	("ANDHRA PRADESH", "ANDHRA PRADESH"),
+	("ARUNACHAL PRADESH", "ARUNACHAL PRADESH"),
+	("ASSAM", "ASSAM"),
+	("BIHAR", "BIHAR"),
+	("CHHATTISGARH", "CHHATTISGARH"),
+	("GOA", "GOA"),
+	("GUJARAT", "GUJARAT"),
+	("HARYANA", "HARYANA"),
+	("HIMACHAL PRADESH", "HIMACHAL PRADESH"),
+	("JHARKHAND", "JHARKHAND"),
+	("KARNATAKA", "KARNATAKA"),
+	("KERALA", "KERALA"),
+	("MADHYA PRADESH", "MADHYA PRADESH"),
+	("MAHARASHTRA", "MAHARASHTRA"),
+	("MANIPUR", "MANIPUR"),
+	("MEGHALAYA", "MEGHALAYA"),
+	("MIZORAM", "MIZORAM"),
+	("NAGALAND", "NAGALAND"),
+	("ODISHA", "ODISHA"),
+	("PUNJAB", "PUNJAB"),
+	("RAJASTHAN", "RAJASTHAN"),
+	("SIKKIM", "SIKKIM"),
+	("TAMIL NADU", "TAMIL NADU"),
+	("TELANGANA", "TELANGANA"),
+	("TRIPURA", "TRIPURA"),
+	("UTTAR PRADESH", "UTTAR PRADESH"),
+	("UTTARAKHAND", "UTTARAKHAND"),
+	("WEST BENGAL", "WEST BENGAL"),
+	("ANDAMAN AND NICOBAR ISLANDS", "ANDAMAN AND NICOBAR ISLANDS"),
+	("CHANDIGARH", "CHANDIGARH"),
+	("DADRA AND NAGAR HAVELI AND DAMAN AND DIU", "DADRA AND NAGAR HAVELI AND DAMAN AND DIU"),
+	("DELHI", "DELHI"),
+	("JAMMU AND KASHMIR", "JAMMU AND KASHMIR"),
+	("LADAKH", "LADAKH"),
+	("LAKSHADWEEP", "LAKSHADWEEP"),
+	("PUDUCHERRY", "PUDUCHERRY"),
+)
+
+
+class Segment(models.Model):
+	name = models.CharField(max_length=255, unique=True, db_index=True)
+	created_at = models.DateTimeField(default=timezone.now, db_index=True)
+
+	class Meta:
+		ordering = ("name", "id")
+
+	def __str__(self) -> str:  # pragma: no cover - trivial
+		return self.name
+
+
+class Exam(models.Model):
+	segment = models.ForeignKey(Segment, related_name="exams", on_delete=models.CASCADE)
+	name = models.CharField(max_length=255, db_index=True)
+	year = models.PositiveIntegerField(db_index=True)
+	exam_date = models.DateField(blank=True, null=True)
+	state = models.CharField(max_length=100, choices=STATE_CHOICES, db_index=True)
+	mock_tests = models.ManyToManyField("mocktest.MockTest", related_name="exam_relations", blank=True)
+	created_at = models.DateTimeField(default=timezone.now, db_index=True)
+
+	class Meta:
+		ordering = ("-year", "name", "id")
+		unique_together = ("segment", "name", "year", "state")
+
+	def __str__(self) -> str:  # pragma: no cover - trivial
+		return f"{self.name} {self.year} ({self.state})"
+
+
+class ExamSummary(models.Model):
+	exam = models.OneToOneField(Exam, related_name="summary", on_delete=models.CASCADE)
+	total_mock_tests = models.PositiveIntegerField(default=0)
+	total_questions = models.PositiveIntegerField(default=0)
+	total_marks = models.FloatField(default=0)
+	total_tabs = models.PositiveIntegerField(default=0)
+	total_distribution_rules = models.PositiveIntegerField(default=0)
+	total_question_objects = models.PositiveIntegerField(default=0)
+	full_mocks_count = models.PositiveIntegerField(default=0)
+	sectional_mocks_count = models.PositiveIntegerField(default=0)
+	mini_mocks_count = models.PositiveIntegerField(default=0)
+	practice_mocks_count = models.PositiveIntegerField(default=0)
+	learning_mocks_count = models.PositiveIntegerField(default=0)
+	active_mocks_count = models.PositiveIntegerField(default=0)
+	inactive_mocks_count = models.PositiveIntegerField(default=0)
+	earliest_mock_created = models.DateTimeField(blank=True, null=True)
+	latest_mock_created = models.DateTimeField(blank=True, null=True)
+	updated_at = models.DateTimeField(auto_now=True)
+
+	class Meta:
+		ordering = ("-updated_at", "exam")
+
+	def __str__(self) -> str:  # pragma: no cover - trivial
+		return f"Summary for {self.exam}"

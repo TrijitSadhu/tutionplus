@@ -1,0 +1,185 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block title %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block content_title %}<h1>{{ title }}</h1>{% endblock %}
+
+{% block content %}
+  <div id="content-main" class="module aligned">
+    <form method="post" novalidate>
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+      <fieldset class="module aligned">
+        <div class="form-row">{{ form.segment.label_tag }} {{ form.segment }}</div>
+        <div class="form-row">{{ form.name.label_tag }} {{ form.name }}</div>
+        <div class="form-row">{{ form.year.label_tag }} {{ form.year }}</div>
+        <div class="form-row">{{ form.exam_date.label_tag }} {{ form.exam_date }}</div>
+        <div class="form-row">{{ form.state.label_tag }} {{ form.state }}</div>
+      </fieldset>
+
+      <style>
+        .form-row.field-mock_tests { display: none; }
+        .mocktest-filters { display: flex; flex-wrap: wrap; gap: 12px; margin: 8px 0; }
+        .mocktest-filters .filter-field { display: flex; flex-direction: column; gap: 4px; min-width: 180px; }
+        .mocktest-columns { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 12px; }
+        .mocktest-column { flex: 1 1 320px; border: 1px solid #e5e5e5; padding: 10px; border-radius: 4px; background: #fafafa; }
+        .mocktest-list { max-height: 360px; overflow: auto; padding-right: 6px; }
+        .mocktest-item { display: block; padding: 4px 0; border-bottom: 1px dotted #e0e0e0; }
+        .mocktest-item:last-child { border-bottom: none; }
+        .mocktest-meta { color: #666; font-size: 12px; margin-left: 4px; }
+        .mocktest-actions { margin: 6px 0 12px; display: flex; gap: 8px; }
+      </style>
+
+      <h2>{% trans "Mock Tests Selection" %}</h2>
+      <div class="mocktest-filters">
+        <div class="filter-field">
+          <label for="filter-exam">Exam</label>
+          <input type="text" id="filter-exam" value="{{ request.GET.exam|default_if_none:'' }}">
+        </div>
+        <div class="filter-field">
+          <label for="filter-title">Title</label>
+          <input type="text" id="filter-title" value="{{ request.GET.title|default_if_none:'' }}">
+        </div>
+        <div class="filter-field">
+          <label for="filter-mock_type">Mock Type</label>
+          <select id="filter-mock_type">
+            <option value="">All</option>
+            {% for key, label in form.fields.mock_type.choices %}
+              <option value="{{ key }}" {% if request.GET.mock_type == key %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="filter-field">
+          <label for="filter-is_active">Status</label>
+          <select id="filter-is_active">
+            <option value="">Any</option>
+            <option value="true" {% if request.GET.is_active == "true" %}selected{% endif %}>Active</option>
+            <option value="false" {% if request.GET.is_active == "false" %}selected{% endif %}>Inactive</option>
+          </select>
+        </div>
+        <div class="filter-field">
+          <label for="filter-date_from">Created From</label>
+          <input type="date" id="filter-date_from" value="{{ request.GET.date_from|default_if_none:'' }}">
+        </div>
+        <div class="filter-field">
+          <label for="filter-date_to">Created To</label>
+          <input type="date" id="filter-date_to" value="{{ request.GET.date_to|default_if_none:'' }}">
+        </div>
+        <div class="filter-field">
+          <label for="filter-min_questions">Min Questions</label>
+          <input type="number" id="filter-min_questions" value="{{ request.GET.min_questions|default_if_none:'' }}">
+        </div>
+        <div class="filter-field">
+          <label for="filter-max_questions">Max Questions</label>
+          <input type="number" id="filter-max_questions" value="{{ request.GET.max_questions|default_if_none:'' }}">
+        </div>
+        <div class="filter-field">
+          <label for="filter-min_marks">Min Marks</label>
+          <input type="number" step="0.01" id="filter-min_marks" value="{{ request.GET.min_marks|default_if_none:'' }}">
+        </div>
+        <div class="filter-field">
+          <label for="filter-max_marks">Max Marks</label>
+          <input type="number" step="0.01" id="filter-max_marks" value="{{ request.GET.max_marks|default_if_none:'' }}">
+        </div>
+      </div>
+
+      <div class="mocktest-actions">
+        <button type="button" class="button" onclick="applyMockFilters()">Apply Filters</button>
+        <button type="button" class="button" onclick="clearMockFilters()">Clear</button>
+        <a class="button" href="{% url 'admin:mocktest_exam_change' exam.id %}">{% trans "Back to Exam" %}</a>
+        <span class="help">Selected mocks stay visible even when filters hide them.</span>
+      </div>
+
+      <div class="mocktest-columns">
+        <div class="mocktest-column">
+          <h3>{% trans "Selected Mock Tests" %}</h3>
+          <p class="help">These are already linked to the exam. They always show, even if filters are applied.</p>
+          <div class="mocktest-list">
+            {% if selected_qs %}
+              {% for mt in selected_qs %}
+                <label class="mocktest-item">
+                  <input type="checkbox" name="mock_tests" value="{{ mt.id }}" checked>
+                  {{ mt.title }}
+                  <span class="mocktest-meta">{{ mt.mock_type }} · {{ mt.total_questions }} q · {{ mt.total_marks }} marks · {{ mt.created_at|date:"Y-m-d" }}</span>
+                </label>
+              {% empty %}
+                <p class="help">No mock tests selected yet.</p>
+              {% endfor %}
+            {% else %}
+              <p class="help">No mock tests selected yet.</p>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="mocktest-column">
+          <h3>{% trans "Available Mock Tests" %}</h3>
+          <p class="help">Use the filters above to narrow down, then check to add.</p>
+          <div class="mocktest-list">
+            {% for mt in form.fields.mock_tests.queryset %}
+              {% if not selected_ids or mt.id not in selected_ids %}
+                <label class="mocktest-item">
+                  <input type="checkbox" name="mock_tests" value="{{ mt.id }}">
+                  {{ mt.title }}
+                  <span class="mocktest-meta">{{ mt.mock_type }} · {{ mt.total_questions }} q · {{ mt.total_marks }} marks · {{ mt.created_at|date:"Y-m-d" }}</span>
+                </label>
+              {% endif %}
+            {% empty %}
+              <p class="help">No mock tests available.</p>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <div class="submit-row">
+        <input type="submit" value="{% trans 'Save' %}" class="default">
+        <a class="button cancel-link" href="{% url 'admin:mocktest_exam_change' exam.id %}">{% trans 'Cancel' %}</a>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    (function() {
+      const filterMap = {
+        exam: "filter-exam",
+        title: "filter-title",
+        mock_type: "filter-mock_type",
+        is_active: "filter-is_active",
+        date_from: "filter-date_from",
+        date_to: "filter-date_to",
+        min_questions: "filter-min_questions",
+        max_questions: "filter-max_questions",
+        min_marks: "filter-min_marks",
+        max_marks: "filter-max_marks"
+      };
+
+      window.applyMockFilters = function() {
+        const params = new URLSearchParams(window.location.search);
+        Object.entries(filterMap).forEach(([param, fieldId]) => {
+          const el = document.getElementById(fieldId);
+          if (!el) { return; }
+          const value = el.value;
+          if (value) {
+            params.set(param, value);
+          } else {
+            params.delete(param);
+          }
+        });
+        window.location.search = params.toString();
+      };
+
+      window.clearMockFilters = function() {
+        const params = new URLSearchParams();
+        const preserved = ["_changelist_filters", "_to_field", "_popup"];
+        preserved.forEach((key) => {
+          const existing = new URLSearchParams(window.location.search).get(key);
+          if (existing) {
+            params.set(key, existing);
+          }
+        });
+        const qs = params.toString();
+        window.location.search = qs ? `?${qs}` : window.location.pathname;
+      };
+    })();
+  </script>
+{% endblock %}

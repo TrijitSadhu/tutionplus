@@ -3,6 +3,9 @@ from django.shortcuts import get_object_or_404, render
 
 from mocktest.models import MockTest
 from mocktest.services.mock_generator import MockTestGeneratorService, resolve_config_mcqs
+from django.shortcuts import redirect
+from mocktest.forms import ExamForm
+from mocktest.models import Exam
 
 
 def mocktest_config_cached(request, mocktest_id: int):
@@ -36,3 +39,24 @@ def mocktest_config_resolved(request, mocktest_id: int):
 def mocktest_runner(request, mocktest_id: int):
 	"""Serve the exam UI shell; data is fetched client-side from resolved API."""
 	return render(request, "mocktest/mocktest_exam.html", {"mocktest_id": mocktest_id})
+
+
+# ===============================
+# EXAM MANAGEMENT SYSTEM START
+# ===============================
+
+
+def exam_update_view(request, exam_id: int):
+	exam = get_object_or_404(
+		Exam.objects.select_related("segment").prefetch_related("mock_tests"), id=exam_id
+	)
+
+	if request.method == "POST":
+		form = ExamForm(request.POST, instance=exam, request=request)
+		if form.is_valid():
+			form.save()
+			return redirect(request.path)
+	else:
+		form = ExamForm(instance=exam, request=request)
+
+	return render(request, "mocktest/exam_update.html", {"form": form, "exam": exam})

@@ -1,7 +1,8 @@
 from django.contrib import admin, messages
 from django.http import JsonResponse, HttpResponseBadRequest
+from django.shortcuts import redirect
 from django.template.response import TemplateResponse
-from django.urls import path
+from django.urls import path, reverse
 from django.apps import apps
 from django.db import models, transaction
 
@@ -808,3 +809,117 @@ class MockTestQuestionAdmin(admin.ModelAdmin):
 	list_filter = ("added_manually",)
 	search_fields = ("mcq_id",)
 	change_form_template = "admin/mocktest/mocktestquestion/change_form.html"
+
+
+# ===============================
+# EXAM MANAGEMENT SYSTEM START
+# ===============================
+
+from mocktest.forms import ExamForm
+from mocktest.models import Exam, ExamSummary, Segment
+from mocktest.signals import recalc_exam_summary
+
+
+@admin.register(Segment, site=admin_site)
+class SegmentAdmin(admin.ModelAdmin):
+	list_display = ("id", "name", "created_at")
+	search_fields = ("name",)
+
+
+@admin.register(Exam, site=admin_site)
+class ExamAdmin(admin.ModelAdmin):
+	form = ExamForm
+	change_form_template = "admin/mocktest/exam/change_form.html"
+	filter_horizontal = ("mock_tests",)
+	list_display = ("name", "year", "state", "display_total_mock_tests")
+	search_fields = ("name",)
+	list_filter = ("year", "state")
+
+	def get_urls(self):
+		urls = super().get_urls()
+		custom = [
+			path(
+				"<int:exam_id>/select/mocktests/",
+				self.admin_site.admin_view(self.select_mocktests_view),
+				name="mocktest_exam_select",
+			),
+		]
+		return custom + urls
+
+	def get_form(self, request, obj=None, **kwargs):
+		base_form = super().get_form(request, obj, **kwargs)
+
+		class RequestBoundExamForm(base_form):
+			def __init__(self, *args, **form_kwargs):
+				form_kwargs["request"] = request
+				super().__init__(*args, **form_kwargs)
+
+		return RequestBoundExamForm
+
+	def get_queryset(self, request):
+		qs = super().get_queryset(request)
+		return qs.select_related("segment").prefetch_related("summary")
+
+	def display_total_mock_tests(self, obj):
+		summary = getattr(obj, "summary", None)
+		return summary.total_mock_tests if summary else 0
+
+	display_total_mock_tests.short_description = "Mock Tests"
+
+	def select_mocktests_view(self, request, exam_id, *args, **kwargs):
+		exam = self.get_object(request, exam_id)
+		if not exam:
+			return self._get_obj_does_not_exist_redirect(request, self.model._meta, None)
+		if not self.has_change_permission(request, exam):
+			return self._get_obj_does_not_exist_redirect(request, self.model._meta, None)
+
+		selected_qs = exam.mock_tests.all()
+		selected_ids = list(selected_qs.values_list("id", flat=True))
+
+		if request.method == "POST":
+			form = ExamForm(request.POST, instance=exam, request=request)
+			if form.is_valid():
+				form.save()
+				self.message_user(request, "Exam updated with selected mock tests")
+				return redirect(reverse("admin:mocktest_exam_change", args=[exam_id]))
+		else:
+			form = ExamForm(instance=exam, request=request)
+
+		context = dict(
+			self.admin_site.each_context(request),
+			form=form,
+			exam=exam,
+			selected_qs=selected_qs,
+			selected_ids=selected_ids,
+			opts=self.model._meta,
+			title=f"Select Mock Tests for {exam}",
+		)
+		return TemplateResponse(request, "admin/mocktest/exam/select_mocktests.html", context)
+
+
+@admin.register(ExamSummary, site=admin_site)
+class ExamSummaryAdmin(admin.ModelAdmin):
+	list_display = (
+		"exam",
+		"total_mock_tests",
+		"total_questions",
+		"total_marks",
+		"total_tabs",
+		"total_distribution_rules",
+		"total_question_objects",
+		"updated_at",
+	)
+	search_fields = ("exam__name",)
+	list_filter = ("exam__state",)
+
+	def save_model(self, request, obj, form, change):
+		super().save_model(request, obj, form, change)
+		if obj.exam_id:
+			recalc_exam_summary(obj.exam)
+
+
+@admin.register(Exam.mock_tests.through, site=admin_site)
+class ExamMockTestThroughAdmin(admin.ModelAdmin):
+	list_display = ("id", "exam", "mocktest")
+	list_filter = ("exam", "mocktest")
+	search_fields = ("exam__name", "mocktest__title")
