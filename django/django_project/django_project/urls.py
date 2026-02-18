@@ -35,6 +35,7 @@ urlpatterns = [
     re_path(r'^admin/', admin_site.urls),
     re_path(r'^genai/', include('genai.urls')),
     re_path(r'^mocktest/', include('mocktest.urls')),
+    path('api/', include('students.urls')),
     re_path(r'^', include('bank.urls')),
        
 ]

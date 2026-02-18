@@ -38,6 +38,7 @@ INSTALLED_APPS = (
 'bank',
 'genai',
     'mocktest',
+    'students',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
