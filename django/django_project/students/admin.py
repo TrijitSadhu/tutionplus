@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.contrib.auth.models import User
 
 from bank.admin import admin_site
 from students.models import (
@@ -88,3 +89,11 @@ class SubjectPerformanceAdmin(admin.ModelAdmin):
     )
     list_filter = ("exam", "subject")
     raw_id_fields = ("student", "exam")
+
+
+@admin.register(User, site=admin_site)
+class UserAdmin(admin.ModelAdmin):
+    list_display = ("id", "username", "email", "first_name", "last_name", "is_active", "date_joined")
+    list_filter = ("is_active", "is_staff", "is_superuser", "date_joined")
+    search_fields = ("username", "email", "first_name", "last_name")
+    ordering = ("-date_joined",)

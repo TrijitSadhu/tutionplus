@@ -1,10 +1,16 @@
 from django.contrib.auth.decorators import login_required
+from django.core.cache import cache
+import logging
 from django.db import transaction
 from django.http import JsonResponse, HttpResponseBadRequest
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 
 from students.models import QuestionAttempt, StudentProfile, SubjectPerformance
+from students.services import rank_mocktest_attempts
+from students.models import MockTestAttempt
+
+logger = logging.getLogger(__name__)
 
 
 @login_required
@@ -123,3 +129,97 @@ def question_update(request):
         )
 
     return JsonResponse({"ok": True})
+
+
+@login_required
+def leaderboard(request, mock_test_id: int):
+    profile = get_object_or_404(StudentProfile, user=request.user)
+    cache_key = f"leaderboard:{mock_test_id}:student:{profile.id}"
+
+    def _compute_payload():
+        attempts_qs = MockTestAttempt.objects.filter(mock_test_id=mock_test_id, is_active=False, submitted_at__isnull=False)
+        attempts_count = attempts_qs.count()
+        if attempts_count > 200_000:
+            logger.warning("High attempt volume for leaderboard mock_test_id=%s count=%s", mock_test_id, attempts_count)
+
+        qs = (
+            rank_mocktest_attempts(mock_test_id)
+            .select_related("student__user")
+            .only("id", "student__user__first_name", "student__user__last_name", "total_score", "student_id")
+        )
+
+        top_entries = []
+        for entry in qs[:5]:
+            user = entry.student.user
+            name_parts = [user.first_name or "", user.last_name or ""]
+            student_name = " ".join(p for p in name_parts if p).strip() or user.username
+            top_entries.append(
+                {
+                    "rank": entry.rank,
+                    "student_name": student_name,
+                    "total_score": entry.total_score,
+                }
+            )
+
+        topper_score = top_entries[0]["total_score"] if top_entries else None
+
+        student_entry = qs.filter(student_id=profile.id).first()
+        student_rank = student_entry.rank if student_entry else None
+        student_score = student_entry.total_score if student_entry else None
+
+        return {
+            "mock_test_id": mock_test_id,
+            "total_participants": attempts_count,
+            "student_rank": student_rank,
+            "student_score": student_score,
+            "topper_score": topper_score,
+            "leaderboard_top": top_entries,
+        }
+
+    payload = cache.get_or_set(cache_key, _compute_payload, timeout=60)
+    return JsonResponse(payload)
+
+
+@login_required
+def cinematic_race(request, mock_test_id: int):
+    profile = StudentProfile.objects.select_related("user").filter(user=request.user).first()
+    if not profile:
+        return JsonResponse({"error": "student profile not found"}, status=404)
+
+    attempts_qs = MockTestAttempt.objects.filter(
+        mock_test_id=mock_test_id, is_active=False, submitted_at__isnull=False
+    )
+
+    if not attempts_qs.filter(student_id=profile.id).exists():
+        return JsonResponse({"error": "mock test not attemptednot attempts_qs"}, status=404)
+
+    cache_key = f"cinematic_race:{mock_test_id}:{profile.id}"
+
+    def _compute_payload():
+        attempts_count = attempts_qs.count()
+        ranking_qs = rank_mocktest_attempts(mock_test_id).select_related("student")
+
+        student_entry = (
+            ranking_qs.filter(student_id=profile.id).values("rank", "total_score").first()
+        )
+        if not student_entry:
+            return {"error": "mock test not attempted"}
+
+        top_three_entries = list(ranking_qs.values("rank", "total_score")[:3])
+        topper_score = top_three_entries[0]["total_score"] if top_three_entries else None
+
+        return {
+            "mock_test_id": mock_test_id,
+            "total_participants": attempts_count,
+            "student_rank": student_entry["rank"],
+            "student_score": student_entry["total_score"],
+            "topper_score": topper_score,
+            "top_three": top_three_entries,
+        }
+
+    payload = cache.get_or_set(cache_key, _compute_payload, timeout=60)
+
+    if payload.get("error"):
+        return JsonResponse(payload, status=404)
+
+    return JsonResponse(payload)
