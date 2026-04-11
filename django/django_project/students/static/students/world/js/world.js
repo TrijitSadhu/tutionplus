@@ -125,6 +125,7 @@ function createTextSprite(text) {
 
 document.addEventListener("DOMContentLoaded", async function () {
 	var canvas = document.getElementById("worldCanvas");
+	var cityEnv = null;
 
 	console.log("World JS Loaded");
 
@@ -180,8 +181,8 @@ document.addEventListener("DOMContentLoaded", async function () {
 	bloomPass.strength = 1.2;
 	bloomPass.radius = 0.5;
 
-	camera.position.set(0, 4, 8);
-	camera.lookAt(0, 1.5, 0);
+	camera.position.set(0, 12, 18);
+	camera.lookAt(0, 0, -4);
 
 	var light = new THREE.AmbientLight(0xffffff, 0.3);
 	scene.add(light);
@@ -405,7 +406,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 		destination.material.emissiveIntensity = pulse;
 		destination.scale.set(pulse, pulse, pulse);
 		studentVehicle.position.z += (targetZ - studentVehicle.position.z) * 0.08;
-		camera.position.z += (studentVehicle.position.z + 8 - camera.position.z) * 0.05;
+		camera.position.z += (studentVehicle.position.z + 18 - camera.position.z) * 0.05;
 
 		if (weakestObj) {
 			camera.position.x += (weakestObj.road.position.x - camera.position.x) * 0.02;
@@ -450,6 +451,10 @@ document.addEventListener("DOMContentLoaded", async function () {
 			p.position.z += p.userData.velocity.z;
 			p.userData.velocity.y -= 0.005;
 		});
+
+		if (cityEnv) {
+			cityEnv.updateLights();
+		}
         
 		composer.render();
 	}
@@ -508,6 +513,9 @@ document.addEventListener("DOMContentLoaded", async function () {
 	destination.position.y = 1.5;
 
 	createSubjects(worldState);
+
+	// Create cinematic city environment
+	cityEnv = createCity(scene, subjectObjects, destination);
 
 	let minScore = 1;
 	subjectObjects.forEach(function (obj) {
