@@ -6,6 +6,44 @@ let ghostVehicles = [];
 let success = false;
 let particles = [];
 let explosionTriggered = false;
+let weakestObj = null;
+let topicBlocks = [];
+let topicLabels = [];
+let bestTopicObj = null;
+let insightsVisible = false;
+
+function toggleInsights(show) {
+	topicBlocks.forEach(function (block) {
+		block.mesh.visible = show;
+	});
+	topicLabels.forEach(function (label) {
+		label.visible = show;
+	});
+	var panel = document.getElementById("stats-panel");
+	if (panel) {
+		panel.style.display = show ? "block" : "none";
+	}
+}
+
+function updateUI(data) {
+	var insights = data.insights || [];
+	var recommendation = data.recommendation || "";
+	var level = data.level || "";
+
+	var statsPanel = document.getElementById("stats-content");
+	var html = "";
+	html += '<h3 style="color:#00ffff;">Level: ' + level + "</h3>";
+	if (insights.length > 0) {
+		html += "<h4>Insights</h4>";
+		insights.forEach(function (i) {
+			html += '<p style="margin:5px 0;">\u2022 ' + i + "</p>";
+		});
+	}
+	if (recommendation) {
+		html += '<hr><p style="color:yellow;"><b>Next Step:</b><br>' + recommendation + "</p>";
+	}
+	statsPanel.innerHTML = html;
+}
 
 async function loadWorldState() {
 	try {
@@ -18,6 +56,8 @@ async function loadWorldState() {
 		var data = await response.json();
 
 		console.log("World State:", data);
+
+		updateUI(data);
 
 		return data;
 	} catch (error) {
@@ -36,6 +76,19 @@ async function loadRaceData() {
 
 		console.log("Race Data:", data);
 
+		return data;
+	} catch (err) {
+		console.error(err);
+		return null;
+	}
+}
+
+async function loadTopicInsights() {
+	try {
+		var response = await fetch("/api/topic-insights/");
+		if (!response.ok) throw new Error("Topic insights API failed");
+		var data = await response.json();
+		console.log("Topic Insights:", data);
 		return data;
 	} catch (err) {
 		console.error(err);
@@ -74,6 +127,18 @@ document.addEventListener("DOMContentLoaded", async function () {
 	var canvas = document.getElementById("worldCanvas");
 
 	console.log("World JS Loaded");
+
+	var toggleBtn = document.getElementById("toggleInsightsBtn");
+	if (toggleBtn) {
+		toggleBtn.addEventListener("click", function () {
+			insightsVisible = !insightsVisible;
+			toggleBtn.innerText = insightsVisible ? "Hide Insights" : "Show Insights";
+			toggleInsights(insightsVisible);
+		});
+	}
+
+	// Hide insights initially
+	toggleInsights(false);
 
 	if (!canvas) {
 		console.error("Canvas not found");
@@ -170,6 +235,14 @@ document.addEventListener("DOMContentLoaded", async function () {
 				color: 0x222222,
 			});
 			var road = new THREE.Mesh(geometry, material);
+
+			if (strength < 0.4) {
+				road.material.color.set(0xff0000);
+			}
+			if (strength > 0.8) {
+				road.material.color.set(0x00ff00);
+			}
+
 			var vehicleGeometry = new THREE.BoxGeometry(0.5, 0.5, 0.5);
 			var vehicleMaterial = new THREE.MeshBasicMaterial({
 				color: 0x0044ff,
@@ -205,10 +278,105 @@ document.addEventListener("DOMContentLoaded", async function () {
 				road: road,
 				vehicle: vehicle,
 				targetZ: endZ,
+				data: subject,
 			});
 		});
 
 		console.log("Subjects created:", subjectObjects.length);
+	}
+
+	function createTopicBlocks(topicData, scene) {
+		var allTopics = Array.isArray(topicData) ? topicData : [];
+
+		// Step 1 — Group by subject (backend provides subject explicitly)
+		var topicsBySubject = {};
+		allTopics.forEach(function (topic) {
+			var subject = topic.subject || "General";
+
+			if (!topicsBySubject[subject]) {
+				topicsBySubject[subject] = [];
+			}
+			topicsBySubject[subject].push(topic);
+		});
+
+		// Step 2 — Sort by strength (weak near start, strong near destination)
+		Object.keys(topicsBySubject).forEach(function (subject) {
+			topicsBySubject[subject].sort(function (a, b) {
+				return (a.strength || 0) - (b.strength || 0);
+			});
+		});
+
+		// Step 3 — Map subject to lane X position
+		var subjectLaneMap = {
+			"Math": -5,
+			"Reasoning": 0,
+			"English": 5,
+			"General": 0,
+		};
+
+		var bestStrength = -1;
+
+		// Step 4 — Place topics along path
+		Object.keys(topicsBySubject).forEach(function (subject) {
+			var laneX = subjectLaneMap[subject] || 0;
+			var topics = topicsBySubject[subject];
+
+			var laneLabel = createTextSprite(subject);
+			laneLabel.position.set(laneX, 2.5, 0);
+			scene.add(laneLabel);
+			topicLabels.push(laneLabel);
+
+			topics.forEach(function (topic, index) {
+				var strength = topic.strength || 0;
+
+				var color;
+				if (strength < 0.4) {
+					color = 0xff4d4d;
+				} else if (strength < 0.7) {
+					color = 0xffd633;
+				} else {
+					color = 0x00ff99;
+				}
+
+				var geometry = new THREE.BoxGeometry(1, 1, 1);
+				var material = new THREE.MeshStandardMaterial({
+					color: color,
+					emissive: color,
+					emissiveIntensity: strength < 0.4 ? 0.8 : 0.3,
+				});
+
+				var cube = new THREE.Mesh(geometry, material);
+
+				// Z = progression path (weak near start, strong further)
+				var zPos = -2 - index * 3;
+				cube.position.set(laneX, 1, zPos);
+
+				scene.add(cube);
+
+				var chapterLabel = createTextSprite(topic.chapter || "");
+				chapterLabel.position.set(laneX, 2.2, zPos);
+				scene.add(chapterLabel);
+				topicLabels.push(chapterLabel);
+
+				var speed = strength < 0.4 ? 0.02 : strength < 0.7 ? 0.04 : 0.08;
+
+				var blockObj = {
+					mesh: cube,
+					speed: speed,
+					targetZ: zPos - 1,
+					data: topic,
+				};
+
+				topicBlocks.push(blockObj);
+
+				if (strength > bestStrength) {
+					bestStrength = strength;
+					bestTopicObj = blockObj;
+				}
+			});
+		});
+
+		console.log("Topic blocks created:", topicBlocks.length);
 	}
 
     console.log("Three.js initialized");
@@ -239,6 +407,10 @@ document.addEventListener("DOMContentLoaded", async function () {
 		studentVehicle.position.z += (targetZ - studentVehicle.position.z) * 0.08;
 		camera.position.z += (studentVehicle.position.z + 8 - camera.position.z) * 0.05;
 
+		if (weakestObj) {
+			camera.position.x += (weakestObj.road.position.x - camera.position.x) * 0.02;
+		}
+
 		if (Math.abs(targetZ - studentVehicle.position.z) > 0.1) {
 			studentVehicle.material.color.set(0x00ffcc);
 		} else {
@@ -249,6 +421,17 @@ document.addEventListener("DOMContentLoaded", async function () {
 			obj.vehicle.position.y = 0.4 + Math.sin(Date.now() * 0.002) * 0.05;
             obj.vehicle.position.z +=(obj.targetZ - obj.vehicle.position.z) * 0.05;
 		});
+
+		topicBlocks.forEach(function (tb) {
+			tb.mesh.position.z += (tb.targetZ - tb.mesh.position.z) * tb.speed;
+			tb.mesh.position.y = 0.2 + Math.sin(Date.now() * 0.002) * 0.02;
+		});
+
+		if (bestTopicObj) {
+			var glow = 1 + Math.sin(Date.now() * 0.004) * 0.15;
+			bestTopicObj.mesh.scale.set(glow, glow, glow);
+		}
+
 		ghostVehicles.forEach(function (ghost) {
 			ghost.position.y = 0.5 + Math.sin(Date.now() * 0.002) * 0.03;
 		});
@@ -325,6 +508,22 @@ document.addEventListener("DOMContentLoaded", async function () {
 	destination.position.y = 1.5;
 
 	createSubjects(worldState);
+
+	let minScore = 1;
+	subjectObjects.forEach(function (obj) {
+		if (obj.data.strength_score < minScore) {
+			minScore = obj.data.strength_score;
+			weakestObj = obj;
+		}
+	});
+
+	setInterval(loadWorldState, 10000);
+
+	var topicData = await loadTopicInsights();
+	if (topicData) {
+		var allTopics = [].concat(topicData.weak_topics || [], topicData.strong_topics || []);
+		createTopicBlocks(allTopics, scene);
+	}
 
 	const raceData = await loadRaceData();
 	if (raceData) {

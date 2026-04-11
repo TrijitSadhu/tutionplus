@@ -12,4 +12,5 @@ urlpatterns = [
         views.cinematic_race,
         name="cinematic_race",
     ),
+    path("topic-insights/", views.topic_insights, name="topic_insights"),
 ]

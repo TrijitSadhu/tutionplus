@@ -9,7 +9,11 @@ from django.utils import timezone
 
 from students.models import QuestionAttempt, StudentProfile, SubjectPerformance
 from students.services import rank_mocktest_attempts
-from students.models import MockTestAttempt
+from students.services.insights import generate_student_insights
+from students.services.adaptive import recommend_next_action
+from students.services.gamification import calculate_level
+from students.services.topic_insights import generate_topic_insights
+from students.models import MockTestAttempt, TopicPerformance
 
 logger = logging.getLogger(__name__)
 
@@ -56,6 +60,15 @@ def world_state(request):
         "subjects": subjects,
         "mastery_streak": mastery_streak,
     }
+
+    insights = generate_student_insights(profile, active_exam)
+    payload["insights"] = insights
+
+    recommendation = recommend_next_action(profile, active_exam)
+    payload["recommendation"] = recommendation
+
+    level = calculate_level(profile, active_exam)
+    payload["level"] = level
 
     return JsonResponse(payload)
 
@@ -224,6 +237,87 @@ def cinematic_race(request, mock_test_id: int):
         return JsonResponse(payload, status=404)
 
     return JsonResponse(payload)
+
+
+@login_required
+def topic_insights(request):
+    profile = StudentProfile.objects.filter(user=request.user).first()
+    if not profile:
+        return JsonResponse({"error": "student profile not found"}, status=404)
+
+    active_exam = profile.active_exam
+    if not active_exam:
+        return JsonResponse({"error": "active_exam not set"}, status=400)
+
+    performances = TopicPerformance.objects.filter(
+        student=profile, exam=active_exam,
+    )
+
+    # Try on-the-fly insights from QuestionAttempts if no TopicPerformance records
+    live_topics = []
+    if not performances.exists():
+        live_topics = generate_topic_insights(profile, active_exam)
+
+    weak_topics = []
+    strong_topics = []
+    confusion_scores = []
+
+    for perf in performances:
+        confusion_scores.append(perf.avg_confusion_score)
+        strength = perf.strength_score / 100 if perf.strength_score > 1 else perf.strength_score
+
+        entry = {
+            "chapter": perf.chapter,
+            "subject": perf.subject,
+            "accuracy": round(perf.accuracy / 100, 2) if perf.accuracy > 1 else round(perf.accuracy, 2),
+            "confusion": round(perf.avg_confusion_score, 2),
+            "strength": round(strength, 2),
+        }
+
+        if perf.weak_flag:
+            weak_topics.append(entry)
+        elif perf.accuracy > 80:
+            strong_topics.append(entry)
+
+    weak_topics.sort(key=lambda t: (t["strength"], -t["confusion"]))
+
+    avg_confusion = (
+        sum(confusion_scores) / len(confusion_scores)
+        if confusion_scores else 0
+    )
+
+    recommendation = "Continue current practice"
+    if weak_topics:
+        recommendation = "Focus on " + weak_topics[0]["chapter"]
+
+    if not weak_topics and not strong_topics:
+        # Use live topics if available, else demo data
+        if live_topics:
+            all_topics = live_topics
+        else:
+            all_topics = [
+                {"subject": "Math", "chapter": "Time & Work", "accuracy": 0.3, "confusion": 0.6, "strength": 0.3},
+                {"subject": "Math", "chapter": "Probability", "accuracy": 0.45, "confusion": 0.4, "strength": 0.4},
+                {"subject": "English", "chapter": "Grammar", "accuracy": 0.85, "confusion": 0.1, "strength": 0.8},
+            ]
+
+        demo_weak = [t for t in all_topics if t["strength"] < 0.5]
+        demo_strong = [t for t in all_topics if t["strength"] >= 0.7]
+        demo_rec = "Practice weak topics" if demo_weak else "Continue current practice"
+
+        return JsonResponse({
+            "weak_topics": demo_weak,
+            "strong_topics": demo_strong,
+            "avg_confusion": 0.4,
+            "recommendation": demo_rec,
+        })
+
+    return JsonResponse({
+        "weak_topics": weak_topics,
+        "strong_topics": strong_topics,
+        "avg_confusion": round(avg_confusion, 3),
+        "recommendation": recommendation,
+    })
 
 
 @login_required

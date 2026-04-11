@@ -6,18 +6,33 @@
 	<title>Performance World</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="{% static 'students/world/css/world.css' %}">
+	<style>
+	.insight-btn {
+		background: #111;
+		color: #fff;
+		border: 1px solid #444;
+		padding: 6px 12px;
+		margin-left: 20px;
+		cursor: pointer;
+		border-radius: 4px;
+	}
+	.insight-btn:hover {
+		background: #222;
+	}
+	</style>
 </head>
 <body>
 
 <nav class="world-navbar">
 	<div class="world-brand">Performance World</div>
+	<button id="toggleInsightsBtn" class="insight-btn">Show Insights</button>
 </nav>
 
 <div id="world-container">
 	<canvas id="worldCanvas"></canvas>
 </div>
 
-<div id="stats-panel" class="collapsed">
+<div id="stats-panel">
 	<h3>Details</h3>
 	<div id="stats-content">No data yet</div>
 </div>

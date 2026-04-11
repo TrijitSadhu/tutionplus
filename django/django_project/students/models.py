@@ -182,3 +182,31 @@ class QuestionAttempt(models.Model):
 
     def __str__(self) -> str:  # pragma: no cover - trivial
         return f"QA {self.mock_test_question_id} in {self.section_attempt_id}"
+
+
+class TopicPerformance(models.Model):
+    student = models.ForeignKey(StudentProfile, related_name="topic_performances", on_delete=models.CASCADE)
+    exam = models.ForeignKey("mocktest.Exam", related_name="topic_performances", on_delete=models.CASCADE)
+    subject = models.CharField(max_length=150, db_index=True)
+    chapter = models.CharField(max_length=150, db_index=True)
+    sub_chapter = models.CharField(max_length=150, blank=True, default="", db_index=True)
+    section = models.CharField(max_length=150, blank=True, default="", db_index=True)
+
+    total_questions = models.IntegerField(default=0)
+    correct_questions = models.IntegerField(default=0)
+    accuracy = models.FloatField(default=0)
+    avg_time_spent = models.FloatField(default=0)
+    avg_confusion_score = models.FloatField(default=0)
+    strength_score = models.FloatField(default=0)
+    weak_flag = models.BooleanField(default=False)
+    last_updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ("student", "exam", "subject", "chapter", "sub_chapter", "section")
+        indexes = [
+            models.Index(fields=["student", "exam"]),
+            models.Index(fields=["student", "exam", "subject"]),
+        ]
+
+    def __str__(self) -> str:  # pragma: no cover - trivial
+        return f"TopicPerformance {self.subject}/{self.chapter} for {self.student}"

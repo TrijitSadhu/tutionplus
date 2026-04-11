@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from django.db.models import Avg, Count, Q
 
 from students.services.confusion import calculate_confusion, set_review_outcome
