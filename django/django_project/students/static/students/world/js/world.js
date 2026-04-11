@@ -181,18 +181,29 @@ document.addEventListener("DOMContentLoaded", async function () {
 	bloomPass.strength = 1.2;
 	bloomPass.radius = 0.5;
 
-	camera.position.set(0, 12, 18);
-	camera.lookAt(0, 0, -4);
+	camera.position.set(0, 25, 30);
+	camera.lookAt(0, 0, -6);
+
+	// OrbitControls for zoom/rotate/pan
+	var controls = new THREE.OrbitControls(camera, renderer.domElement);
+	controls.enableDamping = true;
+	controls.dampingFactor = 0.08;
+	controls.minDistance = 10;
+	controls.maxDistance = 80;
+	controls.maxPolarAngle = Math.PI / 2.2;
+	controls.target.set(0, 0, -4);
 
 	var light = new THREE.AmbientLight(0xffffff, 0.3);
 	scene.add(light);
 
-	const raceGeometry = new THREE.BoxGeometry(2, 0.1, 12);
+	const raceGeometry = new THREE.BoxGeometry(2, 0.02, 12);
 	const raceMaterial = new THREE.MeshBasicMaterial({
-		color: 0x222222,
+		color: 0x1a1a2e,
+		transparent: true,
+		opacity: 0.3,
 	});
 	const raceTrack = new THREE.Mesh(raceGeometry, raceMaterial);
-	raceTrack.position.set(0, -1, -7);
+	raceTrack.position.set(0, -0.5, -7);
 	scene.add(raceTrack);
 
 	studentVehicle = new THREE.Mesh(
@@ -228,20 +239,24 @@ document.addEventListener("DOMContentLoaded", async function () {
 			var startZ;
 			var endZ;
 
-			var geometry = new THREE.BoxGeometry(1.5, 0.2, length);
+			var geometry = new THREE.BoxGeometry(1.5, 0.05, length);
 			var color = new THREE.Color();
 			color.setRGB(confusion, 1 - confusion, 0);
 
 			var material = new THREE.MeshBasicMaterial({
-				color: 0x222222,
+				color: 0x1a1a2e,
+				transparent: true,
+				opacity: 0.4,
 			});
 			var road = new THREE.Mesh(geometry, material);
 
 			if (strength < 0.4) {
-				road.material.color.set(0xff0000);
+				road.material.color.set(0x661111);
+				road.material.opacity = 0.5;
 			}
 			if (strength > 0.8) {
-				road.material.color.set(0x00ff00);
+				road.material.color.set(0x116611);
+				road.material.opacity = 0.5;
 			}
 
 			var vehicleGeometry = new THREE.BoxGeometry(0.5, 0.5, 0.5);
@@ -401,6 +416,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
 	function animate() {
 		requestAnimationFrame(animate);
+		controls.update();
 		destination.rotation.y += 0.01;
 		const pulse = 1 + Math.sin(Date.now() * 0.003) * 0.15;
 		destination.material.emissiveIntensity = pulse;
