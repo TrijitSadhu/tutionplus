@@ -4,6 +4,7 @@ import logging
 from django.db import transaction
 from django.http import JsonResponse, HttpResponseBadRequest
 from django.shortcuts import get_object_or_404
+from django.shortcuts import render
 from django.utils import timezone
 
 from students.models import QuestionAttempt, StudentProfile, SubjectPerformance
@@ -223,3 +224,8 @@ def cinematic_race(request, mock_test_id: int):
         return JsonResponse(payload, status=404)
 
     return JsonResponse(payload)
+
+
+@login_required
+def world_home(request):
+    return render(request, "students/world/world_home.html")

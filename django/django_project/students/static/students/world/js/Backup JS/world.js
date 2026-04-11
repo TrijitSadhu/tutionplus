@@ -4,8 +4,6 @@ let targetZ = 0;
 let currentZ = 0;
 let ghostVehicles = [];
 let success = false;
-let particles = [];
-let explosionTriggered = false;
 
 async function loadWorldState() {
 	try {
@@ -98,27 +96,10 @@ document.addEventListener("DOMContentLoaded", async function () {
 
 	renderer.setSize(window.innerWidth, window.innerHeight);
 
-	const composer = new THREE.EffectComposer(renderer);
-	const renderPass = new THREE.RenderPass(scene, camera);
-	composer.addPass(renderPass);
-
-	const bloomPass = new THREE.UnrealBloomPass(
-		new THREE.Vector2(window.innerWidth, window.innerHeight),
-		1.5,
-		0.4,
-		0.85
-	);
-
-	composer.addPass(bloomPass);
-
-	bloomPass.threshold = 0.4;
-	bloomPass.strength = 1.2;
-	bloomPass.radius = 0.5;
-
 	camera.position.set(0, 4, 8);
 	camera.lookAt(0, 1.5, 0);
 
-	var light = new THREE.AmbientLight(0xffffff, 0.3);
+	var light = new THREE.AmbientLight(0xffffff, 1);
 	scene.add(light);
 
 	const raceGeometry = new THREE.BoxGeometry(2, 0.1, 12);
@@ -136,18 +117,12 @@ document.addEventListener("DOMContentLoaded", async function () {
 	scene.add(studentVehicle);
 
 	var geometry = new THREE.SphereGeometry(1, 32, 32);
-	var material = new THREE.MeshStandardMaterial({
+	var material = new THREE.MeshBasicMaterial({
 		color: 0xffff00,
-		emissive: 0xffff00,
-		emissiveIntensity: 2,
 	});
 	var destination = new THREE.Mesh(geometry, material);
 	destination.position.set(0, 1, -12);
 	scene.add(destination);
-
-	const destLight = new THREE.PointLight(0xffff00, 2, 20);
-	destLight.position.copy(destination.position);
-	scene.add(destLight);
 
 	function createSubjects(worldState) {
 		subjectObjects = [];
@@ -167,12 +142,12 @@ document.addEventListener("DOMContentLoaded", async function () {
 			color.setRGB(confusion, 1 - confusion, 0);
 
 			var material = new THREE.MeshBasicMaterial({
-				color: 0x222222,
+				color: color,
 			});
 			var road = new THREE.Mesh(geometry, material);
 			var vehicleGeometry = new THREE.BoxGeometry(0.5, 0.5, 0.5);
 			var vehicleMaterial = new THREE.MeshBasicMaterial({
-				color: 0x0044ff,
+				color: 0x0000ff,
 			});
 			var vehicle = new THREE.Mesh(vehicleGeometry, vehicleMaterial);
 
@@ -212,30 +187,11 @@ document.addEventListener("DOMContentLoaded", async function () {
 	}
 
     console.log("Three.js initialized");
-	function createExplosion() {
-		for (let i = 0; i < 50; i++) {
-			const geometry = new THREE.SphereGeometry(0.1, 8, 8);
-			const material = new THREE.MeshBasicMaterial({
-				color: 0xffff00,
-			});
-			const particle = new THREE.Mesh(geometry, material);
-			particle.position.copy(destination.position);
-			particle.userData.velocity = {
-				x: (Math.random() - 0.5) * 0.2,
-				y: Math.random() * 0.2,
-				z: (Math.random() - 0.5) * 0.2,
-			};
-			scene.add(particle);
-			particles.push(particle);
-		}
-	}
-
 	function animate() {
 		requestAnimationFrame(animate);
 		destination.rotation.y += 0.01;
-		const pulse = 1 + Math.sin(Date.now() * 0.003) * 0.15;
-		destination.material.emissiveIntensity = pulse;
-		destination.scale.set(pulse, pulse, pulse);
+		const scale = 1 + Math.sin(Date.now() * 0.003) * 0.1;
+		destination.scale.set(scale, scale, scale);
 		studentVehicle.position.z += (targetZ - studentVehicle.position.z) * 0.08;
 		camera.position.z += (studentVehicle.position.z + 8 - camera.position.z) * 0.05;
 
@@ -255,20 +211,9 @@ document.addEventListener("DOMContentLoaded", async function () {
 
 		if (success) {
 			destination.material.color.set(0x00ff00);
-			if (!explosionTriggered) {
-				createExplosion();
-				explosionTriggered = true;
-			}
 		}
-
-		particles.forEach(function (p) {
-			p.position.x += p.userData.velocity.x;
-			p.position.y += p.userData.velocity.y;
-			p.position.z += p.userData.velocity.z;
-			p.userData.velocity.y -= 0.005;
-		});
         
-		composer.render();
+		renderer.render(scene, camera);
 	}
 
 	animate();
@@ -277,7 +222,6 @@ document.addEventListener("DOMContentLoaded", async function () {
 		camera.aspect = window.innerWidth / window.innerHeight;
 		camera.updateProjectionMatrix();
 		renderer.setSize(window.innerWidth, window.innerHeight);
-		composer.setSize(window.innerWidth, window.innerHeight);
 	});
 
 	var worldState = await loadWorldState();
@@ -351,7 +295,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 		leaderboard.forEach(function (entry, i) {
 			const ghost = new THREE.Mesh(
 				new THREE.BoxGeometry(0.5, 0.5, 0.5),
-				new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.3 })
+				new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.4 })
 			);
 
 			const ghostProgress = 1 - entry.rank / raceData.total_participants;
