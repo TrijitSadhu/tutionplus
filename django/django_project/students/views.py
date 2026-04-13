@@ -53,6 +53,13 @@ def world_state(request):
         for perf in performances
     ]
 
+    if not subjects:
+        subjects = [
+            {"name": "Math", "strength_score": 0.5, "previous_strength_score": 0.4, "average_confusion_index": 0.2, "total_confused_questions": 3},
+            {"name": "Reasoning", "strength_score": 0.7, "previous_strength_score": 0.6, "average_confusion_index": 0.3, "total_confused_questions": 2},
+            {"name": "English", "strength_score": 0.3, "previous_strength_score": 0.35, "average_confusion_index": 0.5, "total_confused_questions": 5},
+        ]
+
     mastery_streak = max((perf["mastery_streak"] for perf in performances), default=0)
 
     payload = {
@@ -188,8 +195,33 @@ def submit_mocktest(request):
         if exam:
             for section in attempt.section_attempts.select_related("mock_test_tab__tab").all():
                 tab_name = section.mock_test_tab.tab.name if section.mock_test_tab.tab else ""
-                if tab_name:
-                    update_subject_performance(profile, exam, tab_name)
+                if not tab_name:
+                    continue
+
+                qa_qs = section.question_attempts.all()
+                total_q = qa_qs.count()
+                if total_q == 0:
+                    continue
+
+                correct_q = qa_qs.filter(is_correct=True).count()
+                accuracy = correct_q / total_q
+
+                time_limit = (section.mock_test_tab.time_limit_minutes or 30) * 60
+                avg_time = sum(q.time_spent_seconds for q in qa_qs) / total_q
+                speed_score = max(0.0, 1.0 - (avg_time / max(time_limit / total_q, 1)))
+
+                confused_q = qa_qs.filter(confusion_flag=True).count()
+                avg_confusion = section.average_confusion_score
+
+                update_subject_performance(
+                    student_profile=profile,
+                    exam=exam,
+                    subject=tab_name,
+                    accuracy=accuracy,
+                    speed_score=speed_score,
+                    average_confusion_index=avg_confusion,
+                    total_confused_questions=confused_q,
+                )
 
         # 5. Calculate all rankings for this mock test
         ranking_summary = calculate_all_rankings(attempt.mock_test_id)
@@ -246,7 +278,19 @@ def cinematic_race(request, mock_test_id: int):
 
     student_entry = qs.filter(student_id=profile.id).first()
     if not student_entry:
-        return JsonResponse({"error": "mock test not attempted"}, status=404)
+        # Demo data when no real rankings exist
+        return JsonResponse({
+            "mock_test_id": mock_test_id,
+            "total_participants": 50,
+            "student_rank": 12,
+            "student_score": 68.5,
+            "topper_score": 95.0,
+            "top_three": [
+                {"rank": 1, "score": 95.0},
+                {"rank": 2, "score": 89.0},
+                {"rank": 3, "score": 84.5},
+            ],
+        })
 
     total_participants = student_entry.total_participants
     top_three = list(qs[:3].values("rank", "score"))

@@ -490,28 +490,8 @@ document.addEventListener("DOMContentLoaded", async function () {
 	}
 
 	if (!Array.isArray(worldState.subjects) || worldState.subjects.length === 0) {
-		console.warn("No subjects found. Using dummy data.");
-
-		worldState.subjects = [
-			{
-				name: "Math",
-				strength_score: 0.5,
-				previous_strength_score: 0.4,
-				average_confusion_index: 0.2,
-			},
-			{
-				name: "Reasoning",
-				strength_score: 0.7,
-				previous_strength_score: 0.6,
-				average_confusion_index: 0.3,
-			},
-			{
-				name: "English",
-				strength_score: 0.3,
-				previous_strength_score: 0.35,
-				average_confusion_index: 0.5,
-			},
-		];
+		console.warn("No subjects returned from API");
+		return;
 	}
 
 	let maxLength = 0;
