@@ -105,6 +105,8 @@ class MockTestQuestion(models.Model):
 	marks = models.FloatField(default=1.0)
 	negative_marks = models.FloatField(default=0.0)
 	added_manually = models.BooleanField(default=False, db_index=True)
+	total_attempts = models.PositiveIntegerField(default=0)
+	correct_attempts = models.PositiveIntegerField(default=0)
 
 	class Meta:
 		ordering = ("order", "id")

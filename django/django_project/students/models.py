@@ -56,6 +56,8 @@ class MockTestAttempt(models.Model):
     started_at = models.DateTimeField(default=timezone.now)
     submitted_at = models.DateTimeField(null=True, blank=True)
 
+    mocktest_attempt_count = models.PositiveIntegerField(default=1)
+
     total_score = models.FloatField(default=0, db_index=True)
     total_confused_questions = models.IntegerField(default=0)
     confusion_index = models.FloatField(default=0)
@@ -85,6 +87,11 @@ class MockTestAttempt(models.Model):
             exam_rel = self.mock_test.exam_relations.first()
             if exam_rel:
                 self.exam = exam_rel
+        if not self.pk:
+            count = MockTestAttempt.objects.filter(
+                student=self.student, mock_test=self.mock_test
+            ).count()
+            self.mocktest_attempt_count = count + 1
         super().save(*args, **kwargs)
 
 
@@ -210,3 +217,51 @@ class TopicPerformance(models.Model):
 
     def __str__(self) -> str:  # pragma: no cover - trivial
         return f"TopicPerformance {self.subject}/{self.chapter} for {self.student}"
+
+
+class StudentRanking(models.Model):
+    RANK_TYPE_CHOICES = (
+        ("mocktest", "Mock Test"),
+        ("tab", "Tab / Section"),
+        ("chapter", "Chapter"),
+        ("sub_chapter", "Sub Chapter"),
+        ("section", "Section"),
+    )
+
+    mock_test_attempt = models.ForeignKey(
+        MockTestAttempt, related_name="rankings", on_delete=models.CASCADE
+    )
+    student = models.ForeignKey(
+        StudentProfile, related_name="rankings", on_delete=models.CASCADE
+    )
+    mock_test = models.ForeignKey(
+        "mocktest.MockTest", related_name="rankings", on_delete=models.CASCADE
+    )
+    rank_type = models.CharField(max_length=20, choices=RANK_TYPE_CHOICES, db_index=True)
+    rank_scope = models.CharField(
+        max_length=255, db_index=True,
+        help_text="Identifies the scope, e.g. tab name, chapter name, etc."
+    )
+
+    score = models.FloatField(default=0)
+    total_questions = models.IntegerField(default=0)
+    correct_questions = models.IntegerField(default=0)
+    accuracy = models.FloatField(default=0)
+
+    rank = models.PositiveIntegerField(default=0)
+    total_participants = models.PositiveIntegerField(default=0)
+    percentile = models.FloatField(default=0)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ("rank_type", "rank", "id")
+        indexes = [
+            models.Index(fields=["mock_test", "rank_type", "rank_scope"]),
+            models.Index(fields=["student", "rank_type"]),
+            models.Index(fields=["mock_test_attempt"]),
+        ]
+        unique_together = ("mock_test_attempt", "rank_type", "rank_scope")
+
+    def __str__(self) -> str:  # pragma: no cover - trivial
+        return f"Rank #{self.rank} ({self.rank_type}: {self.rank_scope}) for {self.student}"

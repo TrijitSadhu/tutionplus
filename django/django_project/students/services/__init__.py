@@ -7,7 +7,10 @@ from students.services.scoring import (
     compute_mocktest_score,
     finalize_section_attempt,
 )
-from students.services.ranking import rank_mocktest_attempts
+from students.services.ranking import (
+    calculate_all_rankings,
+    get_mocktest_leaderboard,
+)
 
 __all__ = [
     "calculate_confusion",
@@ -18,5 +21,6 @@ __all__ = [
     "compute_section_score",
     "compute_mocktest_score",
     "finalize_section_attempt",
-    "rank_mocktest_attempts",
+    "calculate_all_rankings",
+    "get_mocktest_leaderboard",
 ]

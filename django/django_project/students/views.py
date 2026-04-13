@@ -1,5 +1,4 @@
 from django.contrib.auth.decorators import login_required
-from django.core.cache import cache
 import logging
 from django.db import transaction
 from django.http import JsonResponse, HttpResponseBadRequest
@@ -8,12 +7,14 @@ from django.shortcuts import render
 from django.utils import timezone
 
 from students.models import QuestionAttempt, StudentProfile, SubjectPerformance
-from students.services import rank_mocktest_attempts
+from students.services.ranking import calculate_all_rankings, get_mocktest_leaderboard
+from students.services.scoring import finalize_section_attempt, compute_mocktest_score
+from students.services.performance import update_subject_performance
 from students.services.insights import generate_student_insights
 from students.services.adaptive import recommend_next_action
 from students.services.gamification import calculate_level
 from students.services.topic_insights import generate_topic_insights
-from students.models import MockTestAttempt, TopicPerformance
+from students.models import MockTestAttempt, TopicPerformance, StudentRanking
 
 logger = logging.getLogger(__name__)
 
@@ -146,52 +147,93 @@ def question_update(request):
 
 
 @login_required
-def leaderboard(request, mock_test_id: int):
+def submit_mocktest(request):
+    if request.method != "POST":
+        return HttpResponseBadRequest("POST required")
+
+    try:
+        mock_test_attempt_id = int(request.POST.get("mock_test_attempt_id"))
+    except (TypeError, ValueError):
+        return HttpResponseBadRequest("mock_test_attempt_id required")
+
     profile = get_object_or_404(StudentProfile, user=request.user)
-    cache_key = f"leaderboard:{mock_test_id}:student:{profile.id}"
 
-    def _compute_payload():
-        attempts_qs = MockTestAttempt.objects.filter(mock_test_id=mock_test_id, is_active=False, submitted_at__isnull=False)
-        attempts_count = attempts_qs.count()
-        if attempts_count > 200_000:
-            logger.warning("High attempt volume for leaderboard mock_test_id=%s count=%s", mock_test_id, attempts_count)
-
-        qs = (
-            rank_mocktest_attempts(mock_test_id)
-            .select_related("student__user")
-            .only("id", "student__user__first_name", "student__user__last_name", "total_score", "student_id")
+    with transaction.atomic():
+        attempt = (
+            MockTestAttempt.objects.select_for_update()
+            .select_related("mock_test")
+            .get(id=mock_test_attempt_id)
         )
 
-        top_entries = []
-        for entry in qs[:5]:
-            user = entry.student.user
-            name_parts = [user.first_name or "", user.last_name or ""]
-            student_name = " ".join(p for p in name_parts if p).strip() or user.username
-            top_entries.append(
-                {
-                    "rank": entry.rank,
-                    "student_name": student_name,
-                    "total_score": entry.total_score,
-                }
-            )
+        if attempt.student_id != profile.id:
+            return HttpResponseBadRequest("not permitted")
 
-        topper_score = top_entries[0]["total_score"] if top_entries else None
+        if not attempt.is_active:
+            return JsonResponse({"error": "already submitted"}, status=400)
 
-        student_entry = qs.filter(student_id=profile.id).first()
-        student_rank = student_entry.rank if student_entry else None
-        student_score = student_entry.total_score if student_entry else None
+        # 1. Mark as submitted
+        attempt.is_active = False
+        attempt.submitted_at = timezone.now()
+        attempt.save(update_fields=["is_active", "submitted_at"])
 
-        return {
-            "mock_test_id": mock_test_id,
-            "total_participants": attempts_count,
-            "student_rank": student_rank,
-            "student_score": student_score,
-            "topper_score": topper_score,
-            "leaderboard_top": top_entries,
-        }
+        # 2. Finalize each section: confusion + scores
+        for section in attempt.section_attempts.select_related("mock_test_tab").all():
+            finalize_section_attempt(section)
 
-    payload = cache.get_or_set(cache_key, _compute_payload, timeout=60)
-    return JsonResponse(payload)
+        # 3. Compute overall mocktest score
+        compute_mocktest_score(attempt)
+
+        # 4. Update subject performance
+        exam = attempt.exam
+        if exam:
+            for section in attempt.section_attempts.select_related("mock_test_tab__tab").all():
+                tab_name = section.mock_test_tab.tab.name if section.mock_test_tab.tab else ""
+                if tab_name:
+                    update_subject_performance(profile, exam, tab_name)
+
+        # 5. Calculate all rankings for this mock test
+        ranking_summary = calculate_all_rankings(attempt.mock_test_id)
+
+    return JsonResponse({
+        "ok": True,
+        "mock_test_attempt_id": attempt.id,
+        "total_score": attempt.total_score,
+        "ranking_summary": ranking_summary,
+    })
+
+
+@login_required
+def leaderboard(request, mock_test_id: int):
+    profile = get_object_or_404(StudentProfile, user=request.user)
+
+    qs = get_mocktest_leaderboard(mock_test_id)
+    total_participants = qs.first().total_participants if qs.exists() else 0
+
+    top_entries = []
+    for entry in qs[:5]:
+        user = entry.student.user
+        name_parts = [user.first_name or "", user.last_name or ""]
+        student_name = " ".join(p for p in name_parts if p).strip() or user.username
+        top_entries.append({
+            "rank": entry.rank,
+            "student_name": student_name,
+            "total_score": entry.score,
+        })
+
+    topper_score = top_entries[0]["total_score"] if top_entries else None
+
+    student_entry = qs.filter(student_id=profile.id).first()
+    student_rank = student_entry.rank if student_entry else None
+    student_score = student_entry.score if student_entry else None
+
+    return JsonResponse({
+        "mock_test_id": mock_test_id,
+        "total_participants": total_participants,
+        "student_rank": student_rank,
+        "student_score": student_score,
+        "topper_score": topper_score,
+        "leaderboard_top": top_entries,
+    })
 
 
 @login_required
@@ -200,43 +242,24 @@ def cinematic_race(request, mock_test_id: int):
     if not profile:
         return JsonResponse({"error": "student profile not found"}, status=404)
 
-    attempts_qs = MockTestAttempt.objects.filter(
-        mock_test_id=mock_test_id, is_active=False, submitted_at__isnull=False
-    )
+    qs = get_mocktest_leaderboard(mock_test_id)
 
-    if not attempts_qs.filter(student_id=profile.id).exists():
-        return JsonResponse({"error": "mock test not attemptednot attempts_qs"}, status=404)
+    student_entry = qs.filter(student_id=profile.id).first()
+    if not student_entry:
+        return JsonResponse({"error": "mock test not attempted"}, status=404)
 
-    cache_key = f"cinematic_race:{mock_test_id}:{profile.id}"
+    total_participants = student_entry.total_participants
+    top_three = list(qs[:3].values("rank", "score"))
+    topper_score = top_three[0]["score"] if top_three else None
 
-    def _compute_payload():
-        attempts_count = attempts_qs.count()
-        ranking_qs = rank_mocktest_attempts(mock_test_id).select_related("student")
-
-        student_entry = (
-            ranking_qs.filter(student_id=profile.id).values("rank", "total_score").first()
-        )
-        if not student_entry:
-            return {"error": "mock test not attempted"}
-
-        top_three_entries = list(ranking_qs.values("rank", "total_score")[:3])
-        topper_score = top_three_entries[0]["total_score"] if top_three_entries else None
-
-        return {
-            "mock_test_id": mock_test_id,
-            "total_participants": attempts_count,
-            "student_rank": student_entry["rank"],
-            "student_score": student_entry["total_score"],
-            "topper_score": topper_score,
-            "top_three": top_three_entries,
-        }
-
-    payload = cache.get_or_set(cache_key, _compute_payload, timeout=60)
-
-    if payload.get("error"):
-        return JsonResponse(payload, status=404)
-
-    return JsonResponse(payload)
+    return JsonResponse({
+        "mock_test_id": mock_test_id,
+        "total_participants": total_participants,
+        "student_rank": student_entry.rank,
+        "student_score": student_entry.score,
+        "topper_score": topper_score,
+        "top_three": top_three,
+    })
 
 
 @login_required

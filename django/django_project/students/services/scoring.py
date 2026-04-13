@@ -3,7 +3,6 @@ from __future__ import annotations
 from django.db.models import Avg, Count, Q
 
 from students.services.confusion import calculate_confusion, set_review_outcome
-from students.services.ranking import invalidate_leaderboard_cache
 from students.models import MockTestAttempt, QuestionAttempt, SectionAttempt
 
 
@@ -53,7 +52,6 @@ def compute_mocktest_score(mocktest_attempt: MockTestAttempt) -> float:
     total = sum(section.total_score for section in mocktest_attempt.section_attempts.all())
     mocktest_attempt.total_score = total
     mocktest_attempt.save(update_fields=["total_score"])
-    invalidate_leaderboard_cache(mocktest_attempt.mock_test_id)
     return total
 
 

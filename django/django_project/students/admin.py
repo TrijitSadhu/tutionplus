@@ -8,6 +8,7 @@ from students.models import (
     QuestionAttempt,
     SectionAttempt,
     StudentProfile,
+    StudentRanking,
     SubjectPerformance,
 )
 
@@ -90,6 +91,24 @@ class SubjectPerformanceAdmin(admin.ModelAdmin):
     list_filter = ("exam", "subject")
     raw_id_fields = ("student", "exam")
 
+@admin.register(StudentRanking, site=admin_site)
+class StudentRankingAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
+        "student",
+        "mock_test",
+        "rank_type",
+        "rank_scope",
+        "score",
+        "accuracy",
+        "rank",
+        "total_participants",
+        "percentile",
+        "created_at",
+    )
+    list_filter = ("rank_type", "mock_test")
+    search_fields = ("student__user__username", "rank_scope")
+    raw_id_fields = ("student", "mock_test", "mock_test_attempt")
 
 @admin.register(User, site=admin_site)
 class UserAdmin(admin.ModelAdmin):
