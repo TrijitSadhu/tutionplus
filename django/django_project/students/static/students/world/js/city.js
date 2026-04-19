@@ -11,6 +11,113 @@
 function createCity(scene, subjectObjects, destination) {
 	var cityGroup = new THREE.Group();
 
+	// ─── CITY NIGHT SKYLINE BACKGROUND ──────────────────────────────
+	(function () {
+		var skyCanvas = document.createElement("canvas");
+		skyCanvas.width = 2048;
+		skyCanvas.height = 1024;
+		var ctx = skyCanvas.getContext("2d");
+
+		var skyGrad = ctx.createLinearGradient(0, 0, 0, 1024);
+		skyGrad.addColorStop(0, "#020010");
+		skyGrad.addColorStop(0.3, "#050520");
+		skyGrad.addColorStop(0.55, "#0a0a30");
+		skyGrad.addColorStop(0.7, "#101845");
+		skyGrad.addColorStop(0.85, "#1a2050");
+		skyGrad.addColorStop(1, "#0d1225");
+		ctx.fillStyle = skyGrad;
+		ctx.fillRect(0, 0, 2048, 1024);
+
+		for (var s = 0; s < 400; s++) {
+			var sx = Math.random() * 2048;
+			var sy = Math.random() * 600;
+			var sr = 0.3 + Math.random() * 1.2;
+			var brightness = 150 + Math.floor(Math.random() * 105);
+			ctx.fillStyle = "rgba(" + brightness + "," + brightness + "," + (brightness + 30) + "," + (0.4 + Math.random() * 0.6) + ")";
+			ctx.beginPath();
+			ctx.arc(sx, sy, sr, 0, Math.PI * 2);
+			ctx.fill();
+		}
+
+		var hazeGrad = ctx.createLinearGradient(0, 550, 0, 720);
+		hazeGrad.addColorStop(0, "rgba(20,25,60,0)");
+		hazeGrad.addColorStop(0.5, "rgba(30,40,80,0.3)");
+		hazeGrad.addColorStop(1, "rgba(15,20,40,0)");
+		ctx.fillStyle = hazeGrad;
+		ctx.fillRect(0, 550, 2048, 170);
+
+		var layers = [
+			{ y: 680, minH: 40, maxH: 200, color: "#06060f", windowChance: 0.15, count: 60 },
+			{ y: 700, minH: 30, maxH: 160, color: "#08081a", windowChance: 0.25, count: 50 },
+			{ y: 720, minH: 20, maxH: 120, color: "#0c0c24", windowChance: 0.35, count: 45 },
+		];
+
+		layers.forEach(function (layer) {
+			for (var b = 0; b < layer.count; b++) {
+				var bx = Math.random() * 2048;
+				var bw = 10 + Math.random() * 35;
+				var bh = layer.minH + Math.random() * (layer.maxH - layer.minH);
+				var by = layer.y - bh;
+				ctx.fillStyle = layer.color;
+				ctx.fillRect(bx, by, bw, bh);
+				if (Math.random() > 0.6) {
+					ctx.fillStyle = "rgba(255,100,50,0.4)";
+					ctx.fillRect(bx + bw * 0.3, by - 2, bw * 0.4, 2);
+				}
+				if (bh > 120 && Math.random() > 0.5) {
+					ctx.strokeStyle = "rgba(255,80,80,0.5)";
+					ctx.lineWidth = 1;
+					ctx.beginPath();
+					ctx.moveTo(bx + bw / 2, by);
+					ctx.lineTo(bx + bw / 2, by - 8 - Math.random() * 12);
+					ctx.stroke();
+					ctx.fillStyle = "rgba(255,50,50,0.8)";
+					ctx.beginPath();
+					ctx.arc(bx + bw / 2, by - 8 - Math.random() * 12, 1.5, 0, Math.PI * 2);
+					ctx.fill();
+				}
+				for (var wx = bx + 2; wx < bx + bw - 3; wx += 5) {
+					for (var wy = by + 4; wy < by + bh - 3; wy += 6) {
+						if (Math.random() < layer.windowChance) {
+							var warmth = Math.random();
+							if (warmth > 0.7) {
+								ctx.fillStyle = "rgba(255,220,100," + (0.5 + Math.random() * 0.5) + ")";
+							} else if (warmth > 0.4) {
+								ctx.fillStyle = "rgba(180,200,255," + (0.3 + Math.random() * 0.4) + ")";
+							} else {
+								ctx.fillStyle = "rgba(100,180,255," + (0.2 + Math.random() * 0.3) + ")";
+							}
+							ctx.fillRect(wx, wy, 3, 3);
+						}
+					}
+				}
+			}
+		});
+
+		var glowGrad = ctx.createLinearGradient(0, 650, 0, 1024);
+		glowGrad.addColorStop(0, "rgba(30,25,60,0)");
+		glowGrad.addColorStop(0.4, "rgba(40,35,70,0.2)");
+		glowGrad.addColorStop(1, "rgba(10,10,20,0.9)");
+		ctx.fillStyle = glowGrad;
+		ctx.fillRect(0, 650, 2048, 374);
+
+		var accents = [
+			{ x: 300, color: "rgba(0,150,255,0.08)" },
+			{ x: 900, color: "rgba(255,50,100,0.06)" },
+			{ x: 1500, color: "rgba(0,255,150,0.06)" },
+		];
+		accents.forEach(function (a) {
+			var aGrad = ctx.createRadialGradient(a.x, 720, 10, a.x, 720, 200);
+			aGrad.addColorStop(0, a.color);
+			aGrad.addColorStop(1, "rgba(0,0,0,0)");
+			ctx.fillStyle = aGrad;
+			ctx.fillRect(a.x - 200, 520, 400, 400);
+		});
+
+		var skyTexture = new THREE.CanvasTexture(skyCanvas);
+		scene.background = skyTexture;
+	})();
+
 	// ─── 1. BASE LAYER — Procedural aerial city ground plane ────────
 	var groundSize = 200;
 	var groundGeo = new THREE.PlaneGeometry(groundSize, groundSize);
@@ -25,58 +132,6 @@ function createCity(scene, subjectObjects, destination) {
 	ctx.fillStyle = "#0a0a14";
 	ctx.fillRect(0, 0, 2048, 2048);
 
-	// Grid roads
-	ctx.strokeStyle = "#1a1a2e";
-	ctx.lineWidth = 3;
-	for (var gx = 0; gx < 2048; gx += 64) {
-		ctx.beginPath();
-		ctx.moveTo(gx, 0);
-		ctx.lineTo(gx, 2048);
-		ctx.stroke();
-	}
-	for (var gy = 0; gy < 2048; gy += 64) {
-		ctx.beginPath();
-		ctx.moveTo(0, gy);
-		ctx.lineTo(2048, gy);
-		ctx.stroke();
-	}
-
-	// Main avenues (brighter)
-	ctx.strokeStyle = "#2a2a3e";
-	ctx.lineWidth = 6;
-	for (var mx = 0; mx < 2048; mx += 256) {
-		ctx.beginPath();
-		ctx.moveTo(mx, 0);
-		ctx.lineTo(mx, 2048);
-		ctx.stroke();
-		ctx.beginPath();
-		ctx.moveTo(0, mx);
-		ctx.lineTo(2048, mx);
-		ctx.stroke();
-	}
-
-	// Building blocks (dark rectangles between roads)
-	for (var bx = 0; bx < 2048; bx += 64) {
-		for (var by = 0; by < 2048; by += 64) {
-			if (Math.random() > 0.3) {
-				var pad = 6;
-				var bw = 64 - pad * 2;
-				ctx.fillStyle = "rgba(10, 10, 25, " + (0.5 + Math.random() * 0.5) + ")";
-				ctx.fillRect(bx + pad, by + pad, bw, bw);
-			}
-		}
-	}
-
-	// Intersection lights
-	ctx.fillStyle = "#ffcc00";
-	for (var ix = 0; ix < 2048; ix += 256) {
-		for (var iy = 0; iy < 2048; iy += 256) {
-			ctx.beginPath();
-			ctx.arc(ix, iy, 4, 0, Math.PI * 2);
-			ctx.fill();
-		}
-	}
-
 	var groundTex = new THREE.CanvasTexture(groundCanvas);
 	groundTex.wrapS = THREE.RepeatWrapping;
 	groundTex.wrapT = THREE.RepeatWrapping;
@@ -84,6 +139,8 @@ function createCity(scene, subjectObjects, destination) {
 	var groundMat = new THREE.MeshBasicMaterial({
 		map: groundTex,
 		side: THREE.DoubleSide,
+		transparent: true,
+		opacity: 0.9,
 	});
 
 	var ground = new THREE.Mesh(groundGeo, groundMat);
@@ -91,144 +148,7 @@ function createCity(scene, subjectObjects, destination) {
 	ground.position.y = -0.05;
 	cityGroup.add(ground);
 
-	// ─── 2. SUBJECT ROAD GLOW STRIPS ────────────────────────────────
-	var subjectColors = {
-		"Math": 0x3399ff,
-		"Reasoning": 0x33ff66,
-		"English": 0xff4444,
-	};
-
-	if (subjectObjects && subjectObjects.length > 0) {
-		subjectObjects.forEach(function (obj) {
-			var name = obj.data.name || "";
-			var roadX = obj.road.position.x;
-			var roadZ = obj.road.position.z;
-			var roadLen = obj.road.geometry.parameters.depth || 10;
-			var color = subjectColors[name] || 0x4488ff;
-
-			// Glowing road strip along Z-axis
-			var stripGeo = new THREE.PlaneGeometry(0.4, roadLen);
-			var stripMat = new THREE.MeshBasicMaterial({
-				color: color,
-				transparent: true,
-				opacity: 0.35,
-				side: THREE.DoubleSide,
-			});
-			var strip = new THREE.Mesh(stripGeo, stripMat);
-			strip.rotation.x = -Math.PI / 2;
-			strip.position.set(roadX, 0.01, roadZ);
-			cityGroup.add(strip);
-
-			// Edge glow lines
-			for (var side = -1; side <= 1; side += 2) {
-				var edgeGeo = new THREE.PlaneGeometry(0.08, roadLen);
-				var edgeMat = new THREE.MeshBasicMaterial({
-					color: color,
-					transparent: true,
-					opacity: 0.6,
-					side: THREE.DoubleSide,
-				});
-				var edge = new THREE.Mesh(edgeGeo, edgeMat);
-				edge.rotation.x = -Math.PI / 2;
-				edge.position.set(roadX + side * 0.9, 0.02, roadZ);
-				cityGroup.add(edge);
-			}
-		});
-	}
-
-	// ─── 3. DESTINATION MONUMENT ─────────────────────────────────────
-	var destPos = destination ? destination.position.clone() : new THREE.Vector3(0, 1.5, -12);
-
-	// Tower base (cylinder)
-	var towerBaseGeo = new THREE.CylinderGeometry(0.6, 0.8, 3, 8);
-	var towerBaseMat = new THREE.MeshStandardMaterial({
-		color: 0xffcc00,
-		emissive: 0xffaa00,
-		emissiveIntensity: 0.8,
-	});
-	var towerBase = new THREE.Mesh(towerBaseGeo, towerBaseMat);
-	towerBase.position.set(destPos.x, 1.5, destPos.z);
-	cityGroup.add(towerBase);
-
-	// Tower top (box spire)
-	var spireGeo = new THREE.BoxGeometry(0.3, 1.5, 0.3);
-	var spireMat = new THREE.MeshStandardMaterial({
-		color: 0xffff00,
-		emissive: 0xffff00,
-		emissiveIntensity: 1.5,
-	});
-	var spire = new THREE.Mesh(spireGeo, spireMat);
-	spire.position.set(destPos.x, 3.5, destPos.z);
-	cityGroup.add(spire);
-
-	// Floating exam billboard
-	var billboardCanvas = document.createElement("canvas");
-	billboardCanvas.width = 512;
-	billboardCanvas.height = 128;
-	var bCtx = billboardCanvas.getContext("2d");
-
-	bCtx.fillStyle = "rgba(0, 0, 0, 0.7)";
-	bCtx.fillRect(0, 0, 512, 128);
-	bCtx.strokeStyle = "#ffcc00";
-	bCtx.lineWidth = 3;
-	bCtx.strokeRect(4, 4, 504, 120);
-	bCtx.fillStyle = "#ffffff";
-	bCtx.font = "bold 36px Arial";
-	bCtx.textAlign = "center";
-	bCtx.fillText("DESTINATION", 256, 50);
-	bCtx.font = "24px Arial";
-	bCtx.fillStyle = "#ffcc00";
-	bCtx.fillText("Your Goal Awaits", 256, 90);
-
-	var billboardTex = new THREE.CanvasTexture(billboardCanvas);
-	var billboardMat = new THREE.SpriteMaterial({
-		map: billboardTex,
-		transparent: true,
-	});
-	var billboard = new THREE.Sprite(billboardMat);
-	billboard.scale.set(5, 1.25, 1);
-	billboard.position.set(destPos.x, 5.5, destPos.z);
-	cityGroup.add(billboard);
-
-	// ─── 4. CITY LIGHTS (lightweight points) ─────────────────────────
-	var lightCount = 120;
-	var lightGeo = new THREE.BufferGeometry();
-	var positions = new Float32Array(lightCount * 3);
-	var colors = new Float32Array(lightCount * 3);
-
-	var lightColors = [
-		[1.0, 0.9, 0.4],   // warm yellow
-		[0.4, 0.8, 1.0],   // cool blue
-		[1.0, 0.5, 0.2],   // orange
-		[0.3, 1.0, 0.5],   // green
-	];
-
-	for (var li = 0; li < lightCount; li++) {
-		positions[li * 3] = (Math.random() - 0.5) * 80;
-		positions[li * 3 + 1] = 0.1 + Math.random() * 0.3;
-		positions[li * 3 + 2] = (Math.random() - 0.5) * 80;
-
-		var lc = lightColors[Math.floor(Math.random() * lightColors.length)];
-		colors[li * 3] = lc[0];
-		colors[li * 3 + 1] = lc[1];
-		colors[li * 3 + 2] = lc[2];
-	}
-
-	lightGeo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
-	lightGeo.setAttribute("color", new THREE.BufferAttribute(colors, 3));
-
-	var lightMat = new THREE.PointsMaterial({
-		size: 0.4,
-		vertexColors: true,
-		transparent: true,
-		opacity: 0.8,
-		sizeAttenuation: true,
-	});
-
-	var cityLights = new THREE.Points(lightGeo, lightMat);
-	cityGroup.add(cityLights);
-
-	// ─── 5. BOUNDARY GLOW RING ───────────────────────────────────────
+	// ─── 2. BOUNDARY GLOW RING ───────────────────────────────────────
 	var ringGeo = new THREE.RingGeometry(38, 40, 32);
 	var ringMat = new THREE.MeshBasicMaterial({
 		color: 0x1a1a3e,
@@ -241,21 +161,14 @@ function createCity(scene, subjectObjects, destination) {
 	ring.position.y = 0.01;
 	cityGroup.add(ring);
 
-	// ─── 6. ROTATE GROUP — Z movement appears LEFT → RIGHT ──────────
+	// ─── 5. ROTATE GROUP — Z movement appears LEFT → RIGHT ──────────
 	cityGroup.rotation.y = -Math.PI / 2;
 
 	scene.add(cityGroup);
 
-	// ─── 7. LIGHT FLICKER UPDATE (call in animate loop) ──────────────
+	// ─── 6. UPDATE (call in animate loop) ────────────────────────────
 	function updateCityLights() {
-		var time = Date.now() * 0.001;
-		var posArr = cityLights.geometry.attributes.position.array;
-
-		for (var ui = 0; ui < lightCount; ui++) {
-			posArr[ui * 3 + 1] = 0.1 + Math.sin(time * 2 + ui * 0.7) * 0.08;
-		}
-		cityLights.geometry.attributes.position.needsUpdate = true;
-		cityLights.material.opacity = 0.6 + Math.sin(time * 1.5) * 0.2;
+		// no-op: roads and lights removed
 	}
 
 	console.log("City environment created");
@@ -263,5 +176,6 @@ function createCity(scene, subjectObjects, destination) {
 	return {
 		group: cityGroup,
 		updateLights: updateCityLights,
+		cameraConfig: { maxPolarAngle: Math.PI / 2.2, minDistance: 10, maxDistance: 80 },
 	};
 }

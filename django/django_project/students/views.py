@@ -390,3 +390,13 @@ def topic_insights(request):
 @login_required
 def world_home(request):
     return render(request, "students/world/world_home.html")
+
+
+@login_required
+def world_space(request):
+    return render(request, "students/world/world_space.html")
+
+
+@login_required
+def world_experiment(request):
+    return render(request, "students/world/world_experiment.html")
