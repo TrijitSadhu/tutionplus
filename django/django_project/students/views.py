@@ -242,7 +242,7 @@ def leaderboard(request, mock_test_id: int):
     total_participants = qs.first().total_participants if qs.exists() else 0
 
     top_entries = []
-    for entry in qs[:5]:
+    for entry in qs[:10]:
         user = entry.student.user
         name_parts = [user.first_name or "", user.last_name or ""]
         student_name = " ".join(p for p in name_parts if p).strip() or user.username
@@ -400,3 +400,76 @@ def world_space(request):
 @login_required
 def world_experiment(request):
     return render(request, "students/world/world_experiment.html")
+
+
+@login_required
+def stellar(request):
+    return render(request, "students/world/stellar.html")
+
+
+@login_required
+def neural(request):
+    return render(request, "students/world/neural.html")
+
+
+@login_required
+def cave(request):
+    return render(request, "students/world/cave.html")
+
+
+@login_required
+def forest(request):
+    return render(request, "students/world/forest.html")
+
+
+@login_required
+def wormhole(request):
+    return render(request, "students/world/wormhole.html")
+
+
+@login_required
+def performance_dashboard(request):
+    return render(request, "students/dashboard/performance_dashboard.html")
+
+
+@login_required
+def api_mocktest_history(request):
+    profile = StudentProfile.objects.filter(user=request.user).first()
+    if not profile:
+        return JsonResponse({"error": "student profile not found"}, status=404)
+
+    attempts_qs = (
+        MockTestAttempt.objects
+        .filter(student=profile, is_active=False)
+        .select_related("mock_test")
+        .prefetch_related("section_attempts__mock_test_tab__tab")
+        .order_by("-submitted_at")
+    )
+
+    attempts = []
+    for attempt in attempts_qs:
+        sections = []
+        for section in attempt.section_attempts.all():
+            tab_name = ""
+            try:
+                tab_name = section.mock_test_tab.tab.name
+            except Exception:
+                pass
+            sections.append({
+                "name": tab_name,
+                "score": round(section.total_score, 2),
+                "confusion": round(section.average_confusion_score, 3),
+            })
+
+        attempts.append({
+            "id": attempt.id,
+            "mock_test_id": attempt.mock_test_id,
+            "mock_test_name": attempt.mock_test.name if attempt.mock_test else "",
+            "submitted_at": attempt.submitted_at.isoformat() if attempt.submitted_at else None,
+            "total_score": round(attempt.total_score, 2),
+            "confusion_index": round(attempt.confusion_index, 3),
+            "attempt_count": attempt.mocktest_attempt_count,
+            "sections": sections,
+        })
+
+    return JsonResponse({"attempts": attempts})

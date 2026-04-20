@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Performance Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+<style>
+  /* ── Reset & Variables ─────────────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:         #0d0f1a;
+    --surface:    #141726;
+    --surface2:   #1c2035;
+    --border:     rgba(255,255,255,0.07);
+    --accent:     #6c63ff;
+    --accent2:    #00d4aa;
+    --danger:     #ff4d6d;
+    --warn:       #ffb344;
+    --text:       #e8eaf6;
+    --muted:      #7b82a8;
+    --radius:     14px;
+    --shadow:     0 8px 32px rgba(0,0,0,0.45);
+    --glow:       0 0 20px rgba(108,99,255,0.35);
+  }
+
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── Scrollbar ─────────────────────────────────────────────────────── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
+
+  /* ── Typography ────────────────────────────────────────────────────── */
+  h1 { font-size: clamp(1.4rem, 4vw, 2rem); font-weight: 700; letter-spacing: -0.02em; }
+  h2 { font-size: clamp(1rem, 2.5vw, 1.25rem); font-weight: 600; }
+  h3 { font-size: 0.9rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+
+  /* ── Layout ────────────────────────────────────────────────────────── */
+  .page-wrap {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px 16px 60px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  /* ── Card ──────────────────────────────────────────────────────────── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 22px;
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    opacity: 0.7;
+  }
+  .card-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 18px;
+  }
+  .card-title .icon {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+    background: rgba(108,99,255,0.18);
+  }
+
+  /* ── Grid Layouts ──────────────────────────────────────────────────── */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  /* ── Animations ────────────────────────────────────────────────────── */
+  @keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(28px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes shimmer {
+    0%   { background-position: -400px 0; }
+    100% { background-position: 400px 0; }
+  }
+  @keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(108,99,255,0.5); }
+    50%       { box-shadow: 0 0 0 8px rgba(108,99,255,0); }
+  }
+  @keyframes bar-fill {
+    from { width: 0; }
+  }
+  @keyframes counter-flip {
+    from { transform: rotateX(90deg); opacity: 0; }
+    to   { transform: rotateX(0deg);  opacity: 1; }
+  }
+  @keyframes rank-drop {
+    0%   { transform: translateY(-30px) scale(0.7); opacity: 0; }
+    60%  { transform: translateY(4px) scale(1.05); opacity: 1; }
+    100% { transform: translateY(0) scale(1); opacity: 1; }
+  }
+  @keyframes spin-in {
+    from { transform: rotate(-180deg) scale(0); opacity: 0; }
+    to   { transform: rotate(0deg) scale(1); opacity: 1; }
+  }
+  @keyframes streak-bounce {
+    0%, 100% { transform: scale(1); }
+    50%       { transform: scale(1.15); }
+  }
+
+  .anim-fade { animation: fadeSlideUp 0.6s ease both; }
+  .anim-fade:nth-child(1) { animation-delay: 0.05s; }
+  .anim-fade:nth-child(2) { animation-delay: 0.12s; }
+  .anim-fade:nth-child(3) { animation-delay: 0.19s; }
+  .anim-fade:nth-child(4) { animation-delay: 0.26s; }
+  .anim-fade:nth-child(5) { animation-delay: 0.33s; }
+
+  /* ── Skeleton Loader ───────────────────────────────────────────────── */
+  .skeleton {
+    background: linear-gradient(90deg, var(--surface2) 25%, var(--surface) 50%, var(--surface2) 75%);
+    background-size: 400px 100%;
+    animation: shimmer 1.4s infinite;
+    border-radius: 6px;
+  }
+  .sk-line { height: 14px; margin: 8px 0; }
+  .sk-line.w-60 { width: 60%; }
+  .sk-line.w-40 { width: 40%; }
+  .sk-line.w-80 { width: 80%; }
+
+  /* ── Hero Section ──────────────────────────────────────────────────── */
+  #hero {
+    background: linear-gradient(135deg, #1a1c3a 0%, #141726 60%, #0d1520 100%);
+    border-radius: var(--radius);
+    padding: 28px 28px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    animation: fadeSlideUp 0.5s ease both;
+    position: relative;
+    overflow: hidden;
+  }
+  #hero::after {
+    content: '';
+    position: absolute;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(108,99,255,0.12), transparent 70%);
+    top: -80px; right: -60px;
+    pointer-events: none;
+  }
+  .hero-left { display: flex; flex-direction: column; gap: 12px; }
+  .hero-exam-name {
+    font-size: clamp(0.75rem, 2vw, 0.85rem);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--accent2);
+    font-weight: 600;
+  }
+  .hero-title { line-height: 1.2; }
+  .hero-title span { color: var(--accent); }
+  .hero-rec {
+    font-size: 0.85rem;
+    color: var(--muted);
+    max-width: 420px;
+    line-height: 1.5;
+    padding: 8px 14px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 8px;
+    border-left: 3px solid var(--accent2);
+  }
+  .hero-right {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .stat-bubble {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 90px; height: 90px;
+    border-radius: 50%;
+    background: var(--surface2);
+    border: 2px solid var(--border);
+    gap: 2px;
+    animation: spin-in 0.6s 0.3s ease both;
+  }
+  .stat-bubble.accent-border { border-color: var(--accent); box-shadow: var(--glow); }
+  .stat-bubble.green-border  { border-color: var(--accent2); }
+  .stat-bubble .val {
+    font-size: 1.4rem;
+    font-weight: 800;
+    line-height: 1;
+    perspective: 300px;
+  }
+  .stat-bubble .val.counter { animation: counter-flip 0.5s 0.5s ease both; }
+  .stat-bubble .lbl { font-size: 0.65rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+
+  /* Level Badge */
+  .level-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    background: linear-gradient(90deg, var(--accent), #8b5cf6);
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(108,99,255,0.4);
+    animation: fadeSlideUp 0.5s 0.4s ease both;
+    width: fit-content;
+  }
+
+  /* ── Subject Performance ───────────────────────────────────────────── */
+  .subject-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 14px;
+    margin-top: 4px;
+  }
+  .subject-card {
+    background: var(--surface2);
+    border-radius: 10px;
+    padding: 14px;
+    border: 1px solid var(--border);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .subject-card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.4); }
+  .subject-card .subj-name {
+    font-size: 0.82rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: var(--text);
+  }
+  .strength-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin-bottom: 5px;
+  }
+  .bar-track {
+    width: 100%;
+    height: 6px;
+    background: rgba(255,255,255,0.07);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    animation: bar-fill 1s ease both;
+  }
+  .bar-fill.prev-bar {
+    background: rgba(255,255,255,0.2);
+  }
+  .confusion-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 4px;
+  }
+  .subj-meta { font-size: 0.7rem; color: var(--muted); display: flex; align-items: center; }
+
+  /* ── Charts Row ────────────────────────────────────────────────────── */
+  .chart-container {
+    position: relative;
+    width: 100%;
+  }
+  .chart-container canvas { display: block; }
+
+  /* ── Score Trend ───────────────────────────────────────────────────── */
+  .trend-empty {
+    text-align: center;
+    color: var(--muted);
+    padding: 40px 20px;
+    font-size: 0.9rem;
+  }
+
+  /* ── Test History Cards ─────────────────────────────────────────────── */
+  .history-scroll {
+    display: flex;
+    gap: 14px;
+    overflow-x: auto;
+    padding: 6px 2px 12px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent) transparent;
+  }
+  .test-card {
+    flex: 0 0 220px;
+    background: var(--surface2);
+    border-radius: 10px;
+    padding: 16px;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+    animation: fadeSlideUp 0.5s ease both;
+  }
+  .test-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--accent);
+    box-shadow: 0 6px 20px rgba(108,99,255,0.25);
+  }
+  .test-card .tc-name {
+    font-size: 0.82rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .test-card .tc-date { font-size: 0.7rem; color: var(--muted); margin-bottom: 12px; }
+  .test-card .tc-score {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--accent2);
+    line-height: 1;
+  }
+  .test-card .tc-score-lbl { font-size: 0.7rem; color: var(--muted); margin-bottom: 10px; }
+  .test-card .tc-confusion {
+    font-size: 0.72rem;
+    color: var(--warn);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .section-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 10px;
+  }
+  .section-pill {
+    font-size: 0.65rem;
+    background: rgba(108,99,255,0.15);
+    border: 1px solid rgba(108,99,255,0.3);
+    border-radius: 4px;
+    padding: 2px 7px;
+    color: var(--accent);
+  }
+
+  /* ── Topic Heatmap ─────────────────────────────────────────────────── */
+  .topics-wrap { display: flex; flex-direction: column; gap: 10px; }
+  .topic-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    transition: transform 0.2s;
+    animation: fadeSlideUp 0.5s ease both;
+  }
+  .topic-row:hover { transform: translateX(4px); }
+  .topic-row.weak  { border-left: 3px solid var(--danger); }
+  .topic-row.strong { border-left: 3px solid var(--accent2); }
+  .topic-row .tr-subject {
+    width: 70px;
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    flex-shrink: 0;
+  }
+  .topic-row .tr-chapter {
+    flex: 1;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+  .topic-row .tr-bar-wrap { width: 80px; }
+  .topic-row .tr-num {
+    font-size: 0.78rem;
+    font-weight: 700;
+    width: 36px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+  .topic-row.weak .tr-num { color: var(--danger); }
+  .topic-row.strong .tr-num { color: var(--accent2); }
+  .tag {
+    font-size: 0.62rem;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    flex-shrink: 0;
+  }
+  .tag.weak  { background: rgba(255,77,109,0.15); color: var(--danger); }
+  .tag.strong { background: rgba(0,212,170,0.12); color: var(--accent2); }
+
+  /* ── Leaderboard ───────────────────────────────────────────────────── */
+  .lb-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+  }
+  .lb-meta { font-size: 0.78rem; color: var(--muted); }
+  .lb-list { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+  .lb-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    transition: transform 0.2s;
+    animation: fadeSlideUp 0.4s ease both;
+  }
+  .lb-row:hover { transform: translateX(3px); }
+  .lb-row.is-me {
+    background: rgba(108,99,255,0.12);
+    border-color: var(--accent);
+    animation: pulse-glow 2s 1s ease infinite, fadeSlideUp 0.4s ease both;
+  }
+  .lb-rank {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.82rem;
+    font-weight: 800;
+    flex-shrink: 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+  }
+  .lb-rank.gold   { background: linear-gradient(135deg, #f6d365, #fda085); border-color: #f6d365; color: #000; }
+  .lb-rank.silver { background: linear-gradient(135deg, #c0c0c0, #a0a0b0); border-color: #c0c0c0; color: #000; }
+  .lb-rank.bronze { background: linear-gradient(135deg, #cd7f32, #a05a2c); border-color: #cd7f32; color: #fff; }
+  .lb-rank.me-rank { animation: rank-drop 0.7s 0.8s ease both; color: var(--accent); font-size: 1rem; background: rgba(108,99,255,0.2); border-color: var(--accent); }
+  .lb-name { flex: 1; font-size: 0.88rem; font-weight: 600; }
+  .lb-name .me-label { font-size: 0.65rem; color: var(--accent); margin-left: 6px; font-weight: 400; }
+  .lb-score { font-size: 0.9rem; font-weight: 700; color: var(--accent2); }
+  .lb-bar-wrap { width: 70px; }
+
+  /* My Rank Hero inside LB card */
+  .my-rank-hero {
+    text-align: center;
+    padding: 16px 0 10px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .my-rank-hero .rank-num {
+    font-size: clamp(2.5rem, 8vw, 4rem);
+    font-weight: 900;
+    color: var(--accent);
+    animation: rank-drop 0.8s 0.4s ease both;
+    display: inline-block;
+    text-shadow: 0 0 30px rgba(108,99,255,0.6);
+  }
+  .my-rank-hero .rank-suffix { font-size: 1rem; font-weight: 600; color: var(--muted); }
+  .my-rank-hero .rank-ctx { font-size: 0.78rem; color: var(--muted); margin-top: 4px; }
+  .my-rank-hero .my-score-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(0,212,170,0.1);
+    border: 1px solid rgba(0,212,170,0.3);
+    color: var(--accent2);
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-top: 8px;
+  }
+
+  /* ── Confusion Breakdown ───────────────────────────────────────────── */
+  .confusion-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 8px;
+  }
+  .c-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .c-label { width: 80px; font-size: 0.78rem; color: var(--muted); flex-shrink: 0; }
+  .c-bar-wrap { flex: 1; }
+  .c-num { font-size: 0.78rem; font-weight: 700; width: 36px; text-align: right; flex-shrink: 0; }
+
+  /* ── Mobile ────────────────────────────────────────────────────────── */
+  @media (max-width: 768px) {
+    .grid-2      { grid-template-columns: 1fr; }
+    .grid-3      { grid-template-columns: repeat(2, 1fr); }
+    #hero        { flex-direction: column; align-items: flex-start; }
+    .hero-right  { width: 100%; justify-content: flex-start; }
+  }
+  @media (max-width: 480px) {
+    .grid-3 { grid-template-columns: 1fr; }
+    .page-wrap { padding: 16px 12px 48px; gap: 16px; }
+    .card { padding: 16px; }
+  }
+
+  /* ── Nav Bar ───────────────────────────────────────────────────────── */
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(13,15,26,0.9);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .topbar .logo {
+    font-size: 1rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--accent);
+  }
+  .topbar .page-tag {
+    font-size: 0.75rem;
+    color: var(--muted);
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+  .topbar-right { margin-left: auto; display: flex; gap: 10px; align-items: center; }
+  .topbar a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.82rem;
+    transition: color 0.2s;
+  }
+  .topbar a:hover { color: var(--text); }
+
+  /* ── Section headers ───────────────────────────────────────────────── */
+  .section-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .section-label h2 { font-size: 1rem; font-weight: 700; }
+  .section-label .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+</style>
+</head>
+<body>
+
+<!-- ── Top Bar ──────────────────────────────────────────────────────── -->
+<nav class="topbar">
+  <span class="logo">TutionPlus</span>
+  <span class="page-tag">Performance Dashboard</span>
+  <div class="topbar-right">
+    <a href="/api/world/">🌍 World</a>
+    <a href="/api/space/">🚀 Space</a>
+  </div>
+</nav>
+
+<div class="page-wrap" id="pageWrap">
+
+  <!-- ── Hero ─────────────────────────────────────────────────────── -->
+  <section id="hero">
+    <div class="hero-left">
+      <span class="hero-exam-name" id="heroExam">Loading…</span>
+      <h1 class="hero-title">Your <span>Performance</span> Report</h1>
+      <div class="level-badge" id="heroBadge">⏳ Loading</div>
+      <div class="hero-rec" id="heroRec">Fetching recommendation…</div>
+    </div>
+    <div class="hero-right">
+      <div class="stat-bubble accent-border">
+        <div class="val counter" id="heroLevel">—</div>
+        <div class="lbl">Level</div>
+      </div>
+      <div class="stat-bubble green-border">
+        <div class="val counter" id="heroStreak">0</div>
+        <div class="lbl">Streak 🔥</div>
+      </div>
+      <div class="stat-bubble">
+        <div class="val counter" id="heroTests">0</div>
+        <div class="lbl">Tests</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Subject + Confusion row ──────────────────────────────────── -->
+  <div class="grid-2 anim-fade">
+
+    <!-- Subject Performance -->
+    <div class="card">
+      <div class="section-label">
+        <div class="dot"></div>
+        <h2>Subject Strength</h2>
+      </div>
+      <div class="chart-container" style="height:220px;">
+        <canvas id="radarChart"></canvas>
+      </div>
+      <div class="subject-grid" id="subjectGrid">
+        <div class="sk-line skeleton w-80"></div>
+        <div class="sk-line skeleton w-60"></div>
+        <div class="sk-line skeleton w-40"></div>
+      </div>
+    </div>
+
+    <!-- Confusion Breakdown -->
+    <div class="card">
+      <div class="section-label">
+        <div class="dot" style="background:var(--warn)"></div>
+        <h2>Confusion Breakdown</h2>
+      </div>
+      <div class="chart-container" style="height:180px; max-width:180px; margin:0 auto;">
+        <canvas id="confusionDoughnut"></canvas>
+      </div>
+      <div class="confusion-stats" id="confusionStats">
+        <div class="sk-line skeleton w-80"></div>
+        <div class="sk-line skeleton w-60"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── Score Trend ────────────────────────────────────────────── -->
+  <div class="card anim-fade">
+    <div class="section-label">
+      <div class="dot" style="background:var(--accent2)"></div>
+      <h2>Score Trend</h2>
+    </div>
+    <div class="chart-container" style="height:200px;">
+      <canvas id="trendChart"></canvas>
+    </div>
+  </div>
+
+  <!-- ── Test History ────────────────────────────────────────────── -->
+  <div class="card anim-fade">
+    <div class="section-label">
+      <div class="dot" style="background:#8b5cf6"></div>
+      <h2>Test History</h2>
+    </div>
+    <div class="history-scroll" id="historyScroll">
+      <div class="sk-line skeleton" style="height:160px;width:200px;flex-shrink:0;border-radius:10px;"></div>
+      <div class="sk-line skeleton" style="height:160px;width:200px;flex-shrink:0;border-radius:10px;"></div>
+      <div class="sk-line skeleton" style="height:160px;width:200px;flex-shrink:0;border-radius:10px;"></div>
+    </div>
+  </div>
+
+  <!-- ── Topics + Leaderboard row ──────────────────────────────── -->
+  <div class="grid-2 anim-fade">
+
+    <!-- Topic Intel -->
+    <div class="card">
+      <div class="section-label">
+        <div class="dot" style="background:var(--danger)"></div>
+        <h2>Topic Intelligence</h2>
+      </div>
+      <div class="topics-wrap" id="topicsWrap">
+        <div class="sk-line skeleton w-80"></div>
+        <div class="sk-line skeleton w-60"></div>
+        <div class="sk-line skeleton w-40"></div>
+      </div>
+    </div>
+
+    <!-- Leaderboard -->
+    <div class="card">
+      <div class="lb-header">
+        <div class="section-label" style="margin-bottom:0">
+          <div class="dot" style="background:var(--warn)"></div>
+          <h2>Leaderboard</h2>
+        </div>
+        <span class="lb-meta" id="lbMeta">—</span>
+      </div>
+
+      <!-- My Rank Hero -->
+      <div class="my-rank-hero" id="myRankHero">
+        <div class="rank-num" id="myRankNum">—</div><span class="rank-suffix" id="myRankSuffix"></span>
+        <div class="rank-ctx" id="myRankCtx">Your rank</div>
+        <div class="my-score-chip" id="myScoreChip">Score: —</div>
+      </div>
+
+      <div class="lb-list" id="lbList">
+        <div class="sk-line skeleton w-80"></div>
+        <div class="sk-line skeleton w-60"></div>
+        <div class="sk-line skeleton w-40"></div>
+      </div>
+    </div>
+
+  </div>
+
+</div><!-- /page-wrap -->
+
+<script>
+/* ══════════════════════════════════════════════════════════════════════
+   DASHBOARD JS
+══════════════════════════════════════════════════════════════════════ */
+
+// ── Helpers ─────────────────────────────────────────────────────────
+
+function ordinalSuffix(n) {
+  const s = ['th','st','nd','rd'], v = n % 100;
+  return (s[(v-20)%10] || s[v] || s[0]);
+}
+
+function fmtDate(iso) {
+  if (!iso) return '—';
+  const d = new Date(iso);
+  return d.toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'2-digit' });
+}
+
+function pct(v) { return Math.round((v || 0) * 100); }
+
+function animateCounter(el, target, duration, suffix) {
+  if (!el) return;
+  const isFloat = (target % 1 !== 0);
+  const start = performance.now();
+  function step(now) {
+    const p = Math.min((now - start) / duration, 1);
+    const ease = 1 - Math.pow(1 - p, 3);
+    const val = isFloat ? (target * ease).toFixed(1) : Math.round(target * ease);
+    el.textContent = val + (suffix || '');
+    if (p < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+function barHtml(widthPct, color) {
+  return `<div class="bar-track"><div class="bar-fill" style="width:${widthPct}%;background:${color};animation-duration:1.2s;"></div></div>`;
+}
+
+// confusion color heatmap
+function confusionColor(v) {
+  if (v <= 0.25) return '#00d4aa';
+  if (v <= 0.5)  return '#ffb344';
+  return '#ff4d6d';
+}
+
+// ── Fetch Wrappers ───────────────────────────────────────────────────
+
+async function safeGet(url) {
+  try {
+    const r = await fetch(url, { credentials: 'same-origin' });
+    if (!r.ok) return null;
+    return await r.json();
+  } catch { return null; }
+}
+
+// ── Chart instances (need refs to destroy on re-render) ──────────────
+let radarInst = null, doughnutInst = null, trendInst = null;
+
+// ── Render: World State (hero + subject + confusion) ─────────────────
+
+function renderWorldState(data) {
+  if (!data) return;
+
+  // Hero
+  document.getElementById('heroExam').textContent = data.exam || '';
+  document.getElementById('heroBadge').textContent = '🎯 ' + (data.level || 'Beginner');
+  document.getElementById('heroRec').textContent = data.recommendation || '';
+  document.getElementById('heroLevel').textContent = data.level || '—';
+  animateCounter(document.getElementById('heroStreak'), data.mastery_streak || 0, 800);
+
+  // Radar Chart
+  const subjects = data.subjects || [];
+  if (subjects.length) {
+    const labels = subjects.map(s => s.name);
+    const current = subjects.map(s => Math.round((s.strength_score || 0) * 100));
+    const previous = subjects.map(s => Math.round((s.previous_strength_score || 0) * 100));
+
+    if (radarInst) radarInst.destroy();
+    radarInst = new Chart(document.getElementById('radarChart'), {
+      type: 'radar',
+      data: {
+        labels,
+        datasets: [
+          {
+            label: 'Current',
+            data: current,
+            borderColor: '#6c63ff',
+            backgroundColor: 'rgba(108,99,255,0.18)',
+            pointBackgroundColor: '#6c63ff',
+            borderWidth: 2,
+            pointRadius: 4,
+          },
+          {
+            label: 'Previous',
+            data: previous,
+            borderColor: 'rgba(255,255,255,0.25)',
+            backgroundColor: 'rgba(255,255,255,0.04)',
+            pointBackgroundColor: 'rgba(255,255,255,0.3)',
+            borderWidth: 1,
+            pointRadius: 3,
+            borderDash: [4,3],
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: { duration: 1200, easing: 'easeOutQuart' },
+        scales: {
+          r: {
+            min: 0, max: 100,
+            grid: { color: 'rgba(255,255,255,0.07)' },
+            ticks: { display: false, stepSize: 25 },
+            pointLabels: { color: '#e8eaf6', font: { size: 11, weight: '600' } },
+            angleLines: { color: 'rgba(255,255,255,0.06)' },
+          }
+        },
+        plugins: {
+          legend: { labels: { color: '#7b82a8', font: { size: 11 } } }
+        }
+      }
+    });
+  }
+
+  // Subject cards
+  const grid = document.getElementById('subjectGrid');
+  if (!subjects.length) { grid.innerHTML = '<p style="color:var(--muted);font-size:.82rem">No subject data yet.</p>'; return; }
+
+  grid.innerHTML = subjects.map(s => {
+    const curr = pct(s.strength_score), prev = pct(s.previous_strength_score);
+    const cIdx = s.average_confusion_index || 0;
+    const change = curr - prev;
+    const changeHtml = change >= 0
+      ? `<span style="color:var(--accent2);font-size:.7rem">▲ ${change}%</span>`
+      : `<span style="color:var(--danger);font-size:.7rem">▼ ${Math.abs(change)}%</span>`;
+    return `
+      <div class="subject-card">
+        <div class="subj-name">${s.name}</div>
+        <div class="strength-label">
+          <span>Strength</span>
+          <span style="display:flex;gap:6px;align-items:center"><b>${curr}%</b>${changeHtml}</span>
+        </div>
+        ${barHtml(curr, 'linear-gradient(90deg,#6c63ff,#00d4aa)')}
+        <div class="strength-label" style="margin-top:6px">
+          <span>Confusion</span><span style="color:${confusionColor(cIdx)}">${pct(cIdx)}%</span>
+        </div>
+        ${barHtml(pct(cIdx), confusionColor(cIdx))}
+        <div class="subj-meta" style="margin-top:4px">
+          <span class="confusion-dot" style="background:${confusionColor(cIdx)}"></span>
+          ${s.total_confused_questions || 0} confused Q
+        </div>
+      </div>`;
+  }).join('');
+
+  // Confusion doughnut
+  const confLabels = subjects.map(s => s.name);
+  const confData   = subjects.map(s => Math.round((s.average_confusion_index || 0) * 100));
+  const confColors = subjects.map(s => confusionColor(s.average_confusion_index || 0));
+
+  if (doughnutInst) doughnutInst.destroy();
+  doughnutInst = new Chart(document.getElementById('confusionDoughnut'), {
+    type: 'doughnut',
+    data: {
+      labels: confLabels,
+      datasets: [{ data: confData.map(v => v || 1), backgroundColor: confColors, borderWidth: 2, borderColor: '#141726' }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: '68%',
+      animation: { animateRotate: true, duration: 1400, easing: 'easeOutQuart' },
+      plugins: {
+        legend: { position: 'bottom', labels: { color: '#7b82a8', font: { size: 10 }, boxWidth: 10, padding: 10 } },
+        tooltip: { callbacks: { label: ctx => `${ctx.label}: ${ctx.parsed}% confusion` } }
+      }
+    }
+  });
+
+  // Confusion bars
+  const cStats = document.getElementById('confusionStats');
+  cStats.innerHTML = subjects.map(s => {
+    const v = pct(s.average_confusion_index || 0);
+    return `<div class="c-row">
+      <span class="c-label">${s.name}</span>
+      <div class="c-bar-wrap">${barHtml(v, confusionColor(s.average_confusion_index || 0))}</div>
+      <span class="c-num" style="color:${confusionColor(s.average_confusion_index || 0)}">${v}%</span>
+    </div>`;
+  }).join('');
+}
+
+// ── Render: Mocktest History ─────────────────────────────────────────
+
+function renderHistory(data) {
+  const attempts = (data && data.attempts) ? data.attempts : [];
+
+  // Update hero test count
+  animateCounter(document.getElementById('heroTests'), attempts.length, 700);
+
+  // Score Trend chart
+  const submitted = attempts.filter(a => a.submitted_at).reverse();
+  const trendEl = document.getElementById('trendChart');
+
+  if (submitted.length < 2) {
+    trendEl.parentElement.innerHTML = '<div class="trend-empty">📊 Complete more tests to see your score trend.</div>';
+  } else {
+    const tLabels = submitted.map(a => fmtDate(a.submitted_at));
+    const tScores = submitted.map(a => a.total_score || 0);
+    const tConf   = submitted.map(a => Math.round((a.confusion_index || 0) * 100));
+
+    if (trendInst) trendInst.destroy();
+    trendInst = new Chart(trendEl, {
+      type: 'line',
+      data: {
+        labels: tLabels,
+        datasets: [
+          {
+            label: 'Score',
+            data: tScores,
+            borderColor: '#6c63ff',
+            backgroundColor: 'rgba(108,99,255,0.08)',
+            fill: true,
+            tension: 0.4,
+            pointRadius: 5,
+            pointBackgroundColor: '#6c63ff',
+            borderWidth: 2,
+            yAxisID: 'yScore',
+          },
+          {
+            label: 'Confusion %',
+            data: tConf,
+            borderColor: '#ffb344',
+            backgroundColor: 'transparent',
+            fill: false,
+            tension: 0.4,
+            pointRadius: 4,
+            pointBackgroundColor: '#ffb344',
+            borderWidth: 1.5,
+            borderDash: [5,4],
+            yAxisID: 'yConf',
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: { duration: 1200, easing: 'easeOutQuart' },
+        interaction: { mode: 'index', intersect: false },
+        scales: {
+          x: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#7b82a8', font: { size: 10 } } },
+          yScore: { position: 'left',  grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#7b82a8', font: { size: 10 } } },
+          yConf:  { position: 'right', grid: { display: false }, ticks: { color: '#ffb344', font: { size: 10 } }, max: 100 },
+        },
+        plugins: {
+          legend: { labels: { color: '#7b82a8', font: { size: 11 } } }
+        }
+      }
+    });
+  }
+
+  // History scroll cards
+  const scroll = document.getElementById('historyScroll');
+  if (!attempts.length) {
+    scroll.innerHTML = '<p style="color:var(--muted);font-size:.85rem;padding:20px 0">No tests completed yet.</p>';
+    return;
+  }
+
+  scroll.innerHTML = attempts.map((a, i) => {
+    const pillsHtml = (a.sections || []).map(s =>
+      `<span class="section-pill">${s.name}: ${s.score}</span>`
+    ).join('');
+    const confColor = confusionColor(a.confusion_index || 0);
+    return `<div class="test-card" style="animation-delay:${i * 0.06}s">
+      <div class="tc-name" title="${a.mock_test_name}">${a.mock_test_name || 'Unnamed Test'}</div>
+      <div class="tc-date">${fmtDate(a.submitted_at)} &middot; #${a.attempt_count}</div>
+      <div class="tc-score">${a.total_score}</div>
+      <div class="tc-score-lbl">Total Score</div>
+      <div class="tc-confusion" style="color:${confColor}">
+        ⚡ Confusion: ${Math.round((a.confusion_index || 0) * 100)}%
+      </div>
+      <div class="section-pills">${pillsHtml}</div>
+    </div>`;
+  }).join('');
+}
+
+// ── Render: Topic Insights ───────────────────────────────────────────
+
+function renderTopics(data) {
+  const wrap = document.getElementById('topicsWrap');
+  if (!data) { wrap.innerHTML = '<p style="color:var(--muted);font-size:.82rem">Could not load topic data.</p>'; return; }
+
+  const weak   = (data.weak_topics   || []).slice(0, 5);
+  const strong = (data.strong_topics || []).slice(0, 3);
+
+  if (!weak.length && !strong.length) {
+    wrap.innerHTML = '<p style="color:var(--muted);font-size:.82rem">No topic data yet. Complete a test first.</p>';
+    return;
+  }
+
+  const rows = [
+    ...weak.map(t => ({ ...t, type: 'weak' })),
+    ...strong.map(t => ({ ...t, type: 'strong' })),
+  ];
+
+  wrap.innerHTML = rows.map((t, i) => {
+    const acc = pct(t.accuracy);
+    const barColor = t.type === 'weak' ? 'var(--danger)' : 'var(--accent2)';
+    return `<div class="topic-row ${t.type}" style="animation-delay:${i * 0.07}s">
+      <span class="tr-subject">${t.subject || ''}</span>
+      <span class="tr-chapter">${t.chapter || ''}</span>
+      <div class="tr-bar-wrap">${barHtml(acc, barColor)}</div>
+      <span class="tr-num">${acc}%</span>
+      <span class="tag ${t.type}">${t.type === 'weak' ? '⚠ Weak' : '✓ Strong'}</span>
+    </div>`;
+  }).join('');
+}
+
+// ── Render: Leaderboard ──────────────────────────────────────────────
+
+function renderLeaderboard(data) {
+  if (!data) {
+    document.getElementById('lbList').innerHTML = '<p style="color:var(--muted);font-size:.82rem">No leaderboard data.</p>';
+    return;
+  }
+
+  // Meta
+  document.getElementById('lbMeta').textContent =
+    `${data.total_participants || 0} participants`;
+
+  // My rank hero
+  const myRank = data.student_rank;
+  const myScore = data.student_score;
+  const rNumEl = document.getElementById('myRankNum');
+  const rSufEl = document.getElementById('myRankSuffix');
+  const rCtxEl = document.getElementById('myRankCtx');
+  const rScoreEl = document.getElementById('myScoreChip');
+
+  if (myRank) {
+    animateCounter(rNumEl, myRank, 900);
+    rSufEl.textContent = ordinalSuffix(myRank);
+    rCtxEl.textContent = `out of ${data.total_participants || '?'} students`;
+    rScoreEl.textContent = `Score: ${myScore !== null ? myScore : '—'}`;
+  } else {
+    rNumEl.textContent = '—';
+    rCtxEl.textContent = 'Complete a test to get ranked';
+    rScoreEl.textContent = 'Score: —';
+  }
+
+  // Leaderboard rows
+  const top = data.leaderboard_top || [];
+  const lbList = document.getElementById('lbList');
+  const topperScore = data.topper_score || 1;
+
+  if (!top.length) {
+    lbList.innerHTML = '<p style="color:var(--muted);font-size:.82rem">Rankings not calculated yet.</p>';
+    return;
+  }
+
+  const rankClasses = { 1: 'gold', 2: 'silver', 3: 'bronze' };
+
+  lbList.innerHTML = top.map((entry, i) => {
+    const isMe = myRank && entry.rank === myRank;
+    const barW = Math.round((entry.total_score / topperScore) * 100);
+    const rankCls = rankClasses[entry.rank] || (isMe ? 'me-rank' : '');
+    return `<div class="lb-row${isMe ? ' is-me' : ''}" style="animation-delay:${i * 0.06}s">
+      <div class="lb-rank ${rankCls}">${entry.rank <= 3 ? ['🥇','🥈','🥉'][entry.rank-1] : entry.rank}</div>
+      <span class="lb-name">${entry.student_name}${isMe ? '<span class="me-label">YOU</span>' : ''}</span>
+      <div class="lb-bar-wrap">${barHtml(barW, isMe ? 'var(--accent)' : 'var(--accent2)')}</div>
+      <span class="lb-score">${entry.total_score}</span>
+    </div>`;
+  }).join('');
+}
+
+// ── Bootstrap Data ───────────────────────────────────────────────────
+
+async function bootstrap() {
+  // Parallel fetch of world-state, history, topics
+  const [worldData, histData, topicData] = await Promise.all([
+    safeGet('/api/world-state/'),
+    safeGet('/api/mocktest-history/'),
+    safeGet('/api/topic-insights/'),
+  ]);
+
+  renderWorldState(worldData);
+  renderHistory(histData);
+  renderTopics(topicData);
+
+  // Leaderboard: use latest mock_test_id from history, fallback to 1
+  let lbId = 1;
+  if (histData && histData.attempts && histData.attempts.length > 0) {
+    lbId = histData.attempts[0].mock_test_id || 1;
+  }
+  const lbData = await safeGet(`/api/leaderboard/${lbId}/`);
+  renderLeaderboard(lbData);
+}
+
+document.addEventListener('DOMContentLoaded', bootstrap);
+</script>
+</body>
+</html>

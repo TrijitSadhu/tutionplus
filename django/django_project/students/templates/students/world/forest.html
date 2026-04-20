@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Forest — Living Knowledge</title>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{background:#000;overflow:hidden;font-family:'Segoe UI',system-ui,sans-serif;color:#fff}
+  #c{display:block;width:100vw;height:100vh}
+  #loading{
+    position:fixed;inset:0;background:#010d04;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    z-index:1000;transition:opacity .9s ease;
+  }
+  #loading.hidden{opacity:0;pointer-events:none}
+  .ld-icon{font-size:3rem;animation:treeSway 2.2s ease-in-out infinite;margin-bottom:20px}
+  @keyframes treeSway{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
+  .ld-title{
+    font-size:1.7rem;font-weight:900;letter-spacing:.3em;
+    background:linear-gradient(90deg,#4ade80,#22d3ee);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:18px;
+  }
+  .ld-bar{width:200px;height:2px;background:rgba(255,255,255,.07);border-radius:1px;overflow:hidden}
+  .ld-fill{height:100%;background:linear-gradient(90deg,#4ade80,#22d3ee);animation:ldFill 2s ease forwards}
+  @keyframes ldFill{from{width:0}to{width:100%}}
+  .ld-sub{font-size:.65rem;color:rgba(255,255,255,.2);margin-top:12px;letter-spacing:.15em}
+  #topbar{
+    position:fixed;top:0;left:0;right:0;height:46px;
+    background:rgba(1,13,4,.8);backdrop-filter:blur(16px);
+    border-bottom:1px solid rgba(255,255,255,.05);
+    display:flex;align-items:center;padding:0 20px;gap:14px;z-index:100;
+  }
+  .tb-brand{font-size:.88rem;font-weight:800;color:#4ade80;letter-spacing:.04em}
+  .tb-sep{color:rgba(255,255,255,.15)}
+  .tb-page{font-size:.72rem;color:rgba(255,255,255,.35);letter-spacing:.08em;text-transform:uppercase}
+  .tb-links{margin-left:auto;display:flex;gap:8px}
+  .tb-links a{color:rgba(255,255,255,.4);font-size:.72rem;text-decoration:none;padding:3px 12px;border:1px solid rgba(255,255,255,.08);border-radius:20px;transition:all .2s}
+  .tb-links a:hover{color:#fff;border-color:rgba(255,255,255,.25)}
+  #hud{
+    position:fixed;bottom:22px;left:50%;transform:translateX(-50%);
+    display:flex;gap:0;align-items:stretch;
+    background:rgba(1,13,4,.82);backdrop-filter:blur(20px);
+    border:1px solid rgba(255,255,255,.07);border-radius:50px;overflow:hidden;
+    z-index:100;animation:hudIn .7s 1.2s ease both;white-space:nowrap;
+  }
+  @keyframes hudIn{from{opacity:0;transform:translateX(-50%) translateY(18px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+  .hud-chip{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 20px;gap:2px;border-right:1px solid rgba(255,255,255,.05)}
+  .hud-chip:last-child{border-right:none}
+  .hud-val{font-size:.82rem;font-weight:700;line-height:1}
+  .hud-lbl{font-size:.55rem;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.3)}
+  #hoverLabel{
+    position:fixed;pointer-events:none;z-index:200;
+    background:rgba(1,13,4,.94);backdrop-filter:blur(12px);
+    border:1px solid rgba(255,255,255,.1);border-radius:10px;
+    padding:8px 16px;opacity:0;transition:opacity .15s;
+    display:flex;flex-direction:column;gap:3px;
+  }
+  #hoverLabel.show{opacity:1}
+  .hl-name{font-weight:700;font-size:.86rem}
+  .hl-stat{color:rgba(255,255,255,.5);font-size:.72rem}
+  #infoPanel{
+    position:fixed;top:56px;right:0;width:270px;
+    background:rgba(1,13,4,.94);backdrop-filter:blur(20px);
+    border:1px solid rgba(255,255,255,.07);border-right:none;border-radius:12px 0 0 12px;
+    padding:22px 20px;z-index:100;
+    transform:translateX(102%);transition:transform .45s cubic-bezier(.34,1.56,.64,1);
+  }
+  #infoPanel.open{transform:translateX(0)}
+  .ip-close{position:absolute;top:14px;right:16px;background:none;border:none;color:rgba(255,255,255,.3);font-size:1rem;cursor:pointer;padding:4px}
+  .ip-close:hover{color:#fff}
+  .ip-name{font-size:1.05rem;font-weight:800;margin-bottom:16px}
+  .ip-metric{margin-bottom:12px}
+  .ip-row{display:flex;justify-content:space-between;font-size:.74rem;margin-bottom:4px}
+  .ip-muted{color:rgba(255,255,255,.4)}
+  .ip-bar-track{height:5px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden}
+  .ip-bar-fill{height:100%;border-radius:3px;transition:width .7s ease}
+  .ip-divider{height:1px;background:rgba(255,255,255,.05);margin:14px 0}
+  .ip-legend{font-size:.68rem;color:rgba(255,255,255,.3);line-height:1.9}
+  .ip-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;vertical-align:middle}
+  #clickHint{
+    position:fixed;bottom:78px;left:50%;transform:translateX(-50%);
+    font-size:.65rem;color:rgba(255,255,255,.2);letter-spacing:.1em;text-transform:uppercase;
+    pointer-events:none;animation:hintFade 3.5s 3s ease both;
+  }
+  @keyframes hintFade{0%,70%{opacity:1}100%{opacity:0}}
+  @media(max-width:600px){
+    #hud{flex-wrap:wrap;border-radius:16px;width:calc(100% - 32px);justify-content:center;bottom:16px}
+    .hud-chip{border-right:none;border-bottom:1px solid rgba(255,255,255,.05);width:45%}
+    #infoPanel{width:100%;top:auto;bottom:0;border-radius:16px 16px 0 0;border-right:1px solid rgba(255,255,255,.07);transform:translateY(102%)}
+    #infoPanel.open{transform:translateY(0)}
+  }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+
+<div id="loading">
+  <div class="ld-icon">🌳</div>
+  <div class="ld-title">FOREST</div>
+  <div class="ld-bar"><div class="ld-fill"></div></div>
+  <div class="ld-sub">GROWING YOUR KNOWLEDGE FOREST</div>
+</div>
+
+<nav id="topbar">
+  <span class="tb-brand">TutionPlus</span>
+  <span class="tb-sep">|</span>
+  <span class="tb-page">Living Forest</span>
+  <div class="tb-links">
+    <a href="/api/performance-dashboard/">← Dashboard</a>
+    <a href="/api/cave/">Cave</a>
+    <a href="/api/neural/">Neural</a>
+    <a href="/api/stellar/">Stellar</a>
+  </div>
+</nav>
+
+<div id="hud">
+  <div class="hud-chip"><span class="hud-val" id="hudExam">—</span><span class="hud-lbl">Exam</span></div>
+  <div class="hud-chip"><span class="hud-val" id="hudLevel" style="color:#4ade80">—</span><span class="hud-lbl">Level</span></div>
+  <div class="hud-chip"><span class="hud-val" id="hudStreak" style="color:#fb923c">0 🔥</span><span class="hud-lbl">Streak</span></div>
+  <div class="hud-chip"><span class="hud-val" id="hudRec" style="font-size:.68rem;color:rgba(255,255,255,.55);max-width:140px;white-space:normal;text-align:center;line-height:1.35">—</span><span class="hud-lbl">Tip</span></div>
+</div>
+
+<div id="clickHint">Click a tree for details</div>
+
+<div id="hoverLabel">
+  <span class="hl-name" id="hlName"></span>
+  <span class="hl-stat" id="hlStat"></span>
+</div>
+
+<div id="infoPanel">
+  <button class="ip-close" onclick="closePanel()">✕</button>
+  <div id="ipContent"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.146.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.146/examples/js/postprocessing/EffectComposer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.146/examples/js/postprocessing/RenderPass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.146/examples/js/postprocessing/UnrealBloomPass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.146/examples/js/postprocessing/ShaderPass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.146/examples/js/shaders/CopyShader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.146/examples/js/shaders/LuminosityHighPassShader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.146/examples/js/controls/OrbitControls.js"></script>
+
+<script>
+/* ═══════════════════════════════════════════════════════
+   FOREST — Bioluminescent Knowledge Tree Visualization
+   Each subject = a glowing tree.
+   Trunk height   = strength_score
+   Leaf color     = confusion (green→amber→red leaf color)
+   Canopy density = number of strong topics
+   Fallen leaves  = weak topics scattered at base
+   Fireflies      = mastery_streak (dancing light orbs)
+   Mushrooms      = mocktest history (small, history-scored)
+   Time of night  = level (higher level → later night, more stars)
+═══════════════════════════════════════════════════════ */
+
+// ── Scene ────────────────────────────────────────────
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x010d04);
+scene.fog = new THREE.FogExp2(0x010d04, 0.018);
+
+const camera = new THREE.PerspectiveCamera(58, innerWidth/innerHeight, 0.1, 200);
+camera.position.set(0, 10, 26);
+
+const renderer = new THREE.WebGLRenderer({canvas:document.getElementById('c'), antialias:true});
+renderer.setSize(innerWidth, innerHeight);
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.1;
+renderer.shadowMap.enabled = true;
+
+const controls = new THREE.OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = 0.04;
+controls.minDistance = 4;
+controls.maxDistance = 55;
+controls.maxPolarAngle = Math.PI*0.72;
+controls.target.set(0, 4, 0);
+controls.autoRotate = true;
+controls.autoRotateSpeed = 0.28;
+controls.addEventListener('start', ()=>{ controls.autoRotate=false; });
+
+// ── Post-processing ──────────────────────────────────
+const composer = new THREE.EffectComposer(renderer);
+composer.addPass(new THREE.RenderPass(scene, camera));
+composer.addPass(new THREE.UnrealBloomPass(
+  new THREE.Vector2(innerWidth, innerHeight),
+  1.6, 0.7, 0.18
+));
+
+// ── Lights ────────────────────────────────────────────
+scene.add(new THREE.AmbientLight(0x021208, 1.2));
+const moonLight = new THREE.DirectionalLight(0x8899bb, 0.35);
+moonLight.position.set(-15, 30, -10);
+scene.add(moonLight);
+
+// ── State ────────────────────────────────────────────
+const clickables = [];
+const fireflies  = [];
+const swayingTrunks = [];
+const raycaster  = new THREE.Raycaster();
+const mouse      = new THREE.Vector2(-9999,-9999);
+let   hoveredMesh = null;
+let   masteryStreak = 0;
+
+// ── Helpers ────────────────────────────────────────────
+function pct(v){ return Math.round((v||0)*100); }
+function hexCss(n){ return '#'+n.toString(16).padStart(6,'0'); }
+
+function leafColor(conf){
+  if(conf<=0.25) return 0x4ade80;
+  if(conf<=0.5)  return 0xfbbf24;
+  return 0xef4444;
+}
+
+// ── Ground ────────────────────────────────────────────
+(function buildGround(){
+  const geo = new THREE.PlaneGeometry(60, 60, 50, 50);
+  const pos = geo.attributes.position;
+  for(let i=0; i<pos.count; i++) pos.setZ(i, (Math.random()-0.5)*0.35);
+  geo.computeVertexNormals();
+  const m = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({
+    color:0x061209, roughness:0.97, metalness:0.0,
+  }));
+  m.rotation.x = -Math.PI/2;
+  scene.add(m);
+})();
+
+// Decorative undergrowth
+for(let i=0; i<60; i++){
+  const h = 0.1+Math.random()*0.6;
+  const g = new THREE.ConeGeometry(0.04+Math.random()*0.05, h, 4);
+  const m = new THREE.Mesh(g, new THREE.MeshStandardMaterial({
+    color:0x0a2210, roughness:1.0, emissive:0x0a2210, emissiveIntensity:0.2,
+  }));
+  m.position.set((Math.random()-0.5)*50, h/2, (Math.random()-0.5)*50);
+  scene.add(m);
+}
+
+// Stars
+(function addStars(){
+  const count = 400;
+  const pos   = new Float32Array(count*3);
+  for(let i=0; i<count; i++){
+    const theta = Math.random()*Math.PI*2;
+    const phi   = Math.acos(2*Math.random()-1)*0.5; // upper hemisphere
+    const r     = 80+Math.random()*20;
+    pos[i*3]   = r*Math.sin(phi)*Math.cos(theta);
+    pos[i*3+1] = r*Math.cos(phi);
+    pos[i*3+2] = r*Math.sin(phi)*Math.sin(theta);
+  }
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.BufferAttribute(pos,3));
+  scene.add(new THREE.Points(geo, new THREE.PointsMaterial({
+    color:0xaaddff, size:0.35, transparent:true, opacity:0.7,
+  })));
+})();
+
+// ── Tree builder ─────────────────────────────────────
+function makeTree(subj, idx, total, weakTopics, strongTopics){
+  const strength = subj.strength_score||0.5;
+  const conf     = subj.average_confusion_index||0;
+  const lc       = leafColor(conf);
+  const lcCss    = hexCss(lc);
+
+  const trunkH = 1.5 + strength * 8.5;
+  const trunkR = 0.13 + strength*0.18;
+  const canopyR = 0.8 + strength*2.4;
+
+  // Position trees in a gentle arc
+  let px, pz;
+  if(total===1){ px=0; pz=0; }
+  else {
+    const angle = (idx/(total-1))*Math.PI - Math.PI/2;
+    const radius = total>3 ? 3+(total-3)*1.8 : 6;
+    px = Math.cos(angle)*radius;
+    pz = -Math.abs(Math.sin(angle))*3;
+  }
+
+  // Trunk
+  const trunkGeo = new THREE.CylinderGeometry(trunkR*0.7, trunkR, trunkH, 8, 3);
+  // Slight bend
+  const tp = trunkGeo.attributes.position;
+  for(let i=0;i<tp.count;i++){
+    const fy = (tp.getY(i)+trunkH*0.5)/trunkH;
+    tp.setX(i, tp.getX(i)+fy*fy*0.3*(Math.random()-0.5));
+  }
+  trunkGeo.computeVertexNormals();
+  const trunk = new THREE.Mesh(trunkGeo, new THREE.MeshStandardMaterial({
+    color:0x1a0f08, roughness:0.95, metalness:0.0,
+    emissive:0x0d0804, emissiveIntensity:0.4,
+  }));
+  trunk.position.set(px, trunkH/2, pz);
+  trunk.userData = { subj, color:lc, label:subj.name, stat:`Strength ${pct(strength)}% · Confusion ${pct(conf)}%` };
+  scene.add(trunk);
+  clickables.push(trunk);
+  swayingTrunks.push({mesh:trunk, origX:px, origZ:pz, phase:idx*1.1, speed:0.7+conf*0.5});
+
+  // Bioluminescent glow on trunk
+  const tlL = new THREE.PointLight(lc, 0.5+strength*0.8, 5+strength*4, 2);
+  tlL.position.set(px, trunkH*0.6, pz);
+  scene.add(tlL);
+
+  // Canopy layers
+  const layers = conf<=0.25 ? 3 : conf<=0.5 ? 2 : 1;
+  for(let l=0; l<layers; l++){
+    const ly   = trunkH + l*canopyR*0.55;
+    const lr   = canopyR*(1-l*0.3);
+    const canGeo= new THREE.SphereGeometry(lr, 8, 6, 0, Math.PI*2, 0, Math.PI*0.65);
+    // Distort for organic look
+    const cp = canGeo.attributes.position;
+    for(let i=0;i<cp.count;i++){
+      const n = (Math.random()-0.5)*0.2*lr;
+      cp.setXYZ(i, cp.getX(i)+n, cp.getY(i)+n*0.5, cp.getZ(i)+n);
+    }
+    canGeo.computeVertexNormals();
+    const can = new THREE.Mesh(canGeo, new THREE.MeshStandardMaterial({
+      color:lc, emissive:lc, emissiveIntensity:0.35+strength*0.7,
+      roughness:0.7, metalness:0.1, transparent:true, opacity:0.85,
+    }));
+    can.position.set(px, ly, pz);
+    scene.add(can);
+  }
+
+  // Canopy point light
+  const cl = new THREE.PointLight(lc, 0.6+strength*0.9, 6+strength*5, 2);
+  cl.position.set(px, trunkH+canopyR*0.5, pz);
+  scene.add(cl);
+
+  // ── Strong topic glowing orbs in canopy ──────────────
+  const myStrong = strongTopics.filter(t =>
+    t.subject && t.subject.toLowerCase()===(subj.name||'').toLowerCase()
+  ).slice(0,5);
+  myStrong.forEach((t, gi) => {
+    const a2  = (gi/5)*Math.PI*2+idx;
+    const or  = canopyR*0.55*Math.random();
+    const oh  = trunkH+0.3+Math.random()*canopyR*0.8;
+    const orb = new THREE.Mesh(
+      new THREE.SphereGeometry(0.12+Math.random()*0.09, 7, 5),
+      new THREE.MeshStandardMaterial({color:0x86efac, emissive:0x86efac, emissiveIntensity:3.5, roughness:0.1})
+    );
+    orb.position.set(px+Math.cos(a2)*or, oh, pz+Math.sin(a2)*or);
+    scene.add(orb);
+  });
+
+  // ── Weak topic fallen leaves ──────────────────────────
+  const myWeak = weakTopics.filter(t =>
+    t.subject && t.subject.toLowerCase()===(subj.name||'').toLowerCase()
+  ).slice(0,6);
+  myWeak.forEach((t,wi) => {
+    const a2 = (wi/6)*Math.PI*2+idx;
+    const lr2 = trunkR*2+Math.random()*1.5;
+    const lx  = px+Math.cos(a2)*lr2;
+    const lz  = pz+Math.sin(a2)*lr2;
+    const leaf = new THREE.Mesh(
+      new THREE.PlaneGeometry(0.22+Math.random()*0.14, 0.12+Math.random()*0.08),
+      new THREE.MeshStandardMaterial({
+        color:0xef4444, emissive:0xef4444, emissiveIntensity:0.5,
+        roughness:0.9, side:THREE.DoubleSide, transparent:true, opacity:0.7,
+      })
+    );
+    leaf.rotation.set(-0.1-Math.random()*0.4, Math.random()*Math.PI, (Math.random()-0.5)*0.6);
+    leaf.position.set(lx, 0.02, lz);
+    scene.add(leaf);
+  });
+
+  // ── Subject label ─────────────────────────────────────
+  const spCanvas = document.createElement('canvas');
+  spCanvas.width=380; spCanvas.height=90;
+  const ctx=spCanvas.getContext('2d');
+  ctx.fillStyle='rgba(0,0,0,.7)';
+  ctx.beginPath(); ctx.roundRect(0,0,380,90,10); ctx.fill();
+  ctx.strokeStyle=lcCss; ctx.lineWidth=1.5; ctx.stroke();
+  ctx.fillStyle='#fff'; ctx.font='bold 26px Segoe UI,sans-serif';
+  ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillText(subj.name, 190, 45);
+  const sp = new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(spCanvas), transparent:true, depthWrite:false}));
+  sp.scale.set(3.8, 1.0, 1);
+  sp.position.set(px, trunkH+canopyR*2+0.6, pz);
+  scene.add(sp);
+
+  return {px, pz, trunkH, canopyR, lc};
+}
+
+// ── Mushroom cluster (mocktest history) ───────────────
+function buildMushrooms(attempts){
+  attempts.slice(0, 10).forEach((a, i) => {
+    const score = Math.min(1, (a.total_score||50)/100);
+    const capR  = 0.15+score*0.35;
+    const stemH = 0.25+score*0.4;
+    const cConf = leafColor(a.confusion_index||0);
+
+    const angle = (i/10)*Math.PI*2;
+    const dist  = 10+Math.random()*10;
+    const mx    = Math.cos(angle)*dist;
+    const mz    = Math.sin(angle)*dist;
+
+    // Stem
+    const stem = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.04, 0.06, stemH, 6),
+      new THREE.MeshStandardMaterial({color:0x2a1808, roughness:0.9})
+    );
+    stem.position.set(mx, stemH/2, mz);
+    scene.add(stem);
+
+    // Cap
+    const cap = new THREE.Mesh(
+      new THREE.SphereGeometry(capR, 8, 5, 0, Math.PI*2, 0, Math.PI*0.6),
+      new THREE.MeshStandardMaterial({
+        color:cConf, emissive:cConf, emissiveIntensity:1.2+score*1.4,
+        roughness:0.4, transparent:true, opacity:0.85,
+      })
+    );
+    cap.position.set(mx, stemH+capR*0.25, mz);
+    scene.add(cap);
+
+    // Glow
+    const ml = new THREE.PointLight(cConf, 0.3+score*0.5, 2+score*2, 2);
+    ml.position.set(mx, stemH+capR, mz);
+    scene.add(ml);
+  });
+}
+
+// ── Firefly system ────────────────────────────────────
+function buildFireflies(streak, treePositions){
+  const count = Math.min(60, 6 + streak*4);
+  for(let i=0; i<count; i++){
+    const src = treePositions.length ? treePositions[i%treePositions.length] : {px:0, pz:0};
+    const gx  = src.px+(Math.random()-0.5)*8;
+    const gy  = 0.5+Math.random()*5;
+    const gz  = src.pz+(Math.random()-0.5)*8;
+    const orb = new THREE.Mesh(
+      new THREE.SphereGeometry(0.05+Math.random()*0.04, 5, 4),
+      new THREE.MeshStandardMaterial({color:0xe4ff86, emissive:0xe4ff86, emissiveIntensity:4.0})
+    );
+    orb.position.set(gx, gy, gz);
+    scene.add(orb);
+
+    const fl = {
+      mesh:orb,
+      origin:new THREE.Vector3(gx, gy, gz),
+      phase:Math.random()*Math.PI*2,
+      speed:0.4+Math.random()*0.7,
+      radius:0.8+Math.random()*2.5,
+      vertFreq:0.3+Math.random()*0.6,
+      light:null,
+    };
+    // Add a tiny point light to some fireflies
+    if(i<18){
+      const ll = new THREE.PointLight(0xe4ff86, 0.15, 2.5, 2.5);
+      scene.add(ll);
+      fl.light = ll;
+    }
+    fireflies.push(fl);
+  }
+}
+
+function tickFireflies(t){
+  fireflies.forEach(fl=>{
+    const x = fl.origin.x + Math.cos(t*fl.speed+fl.phase)*fl.radius;
+    const y = fl.origin.y + Math.sin(t*fl.vertFreq+fl.phase)*0.8;
+    const z = fl.origin.z + Math.sin(t*fl.speed+fl.phase+1)*fl.radius;
+    fl.mesh.position.set(x,y,z);
+    const glow = 3.5+2.0*Math.sin(t*5+fl.phase);
+    fl.mesh.material.emissiveIntensity = Math.max(0.5, glow);
+    if(fl.light) fl.light.position.set(x,y,z);
+  });
+}
+
+// ── Info panel ────────────────────────────────────────
+const hoverLabel = document.getElementById('hoverLabel');
+const hlName     = document.getElementById('hlName');
+const hlStat     = document.getElementById('hlStat');
+const infoPanel  = document.getElementById('infoPanel');
+const ipContent  = document.getElementById('ipContent');
+window.closePanel = ()=> infoPanel.classList.remove('open');
+
+function openPanel(ud){
+  const s   = ud.subj;
+  const css = hexCss(ud.color);
+  const str = pct(s.strength_score);
+  const prev= pct(s.previous_strength_score);
+  const conf= pct(s.average_confusion_index);
+  const confCss = conf>50?'#ef4444':conf>25?'#fbbf24':'#4ade80';
+  const delta   = str-prev;
+  const dHtml   = delta>=0
+    ?`<span style="color:#4ade80">▲${delta}%</span>`
+    :`<span style="color:#ef4444">▼${Math.abs(delta)}%</span>`;
+  ipContent.innerHTML=`
+    <div class="ip-name" style="color:${css}">${s.name}</div>
+    <div class="ip-metric">
+      <div class="ip-row"><span class="ip-muted">Strength</span><span style="font-weight:700">${str}% ${dHtml}</span></div>
+      <div class="ip-bar-track"><div class="ip-bar-fill" style="width:${str}%;background:${css}"></div></div>
+    </div>
+    <div class="ip-metric">
+      <div class="ip-row"><span class="ip-muted">Previous</span><span style="color:rgba(255,255,255,.5)">${prev}%</span></div>
+      <div class="ip-bar-track"><div class="ip-bar-fill" style="width:${prev}%;background:rgba(255,255,255,.22)"></div></div>
+    </div>
+    <div class="ip-metric">
+      <div class="ip-row"><span class="ip-muted">Confusion</span><span style="font-weight:700;color:${confCss}">${conf}%</span></div>
+      <div class="ip-bar-track"><div class="ip-bar-fill" style="width:${conf}%;background:${confCss}"></div></div>
+    </div>
+    <div class="ip-row" style="margin-top:4px"><span class="ip-muted">Confused Q</span><span style="font-weight:700">${s.total_confused_questions||0}</span></div>
+    <div class="ip-divider"></div>
+    <div class="ip-legend">
+      <span class="ip-dot" style="background:#86efac"></span>Light orbs = strong topics<br>
+      <span class="ip-dot" style="background:#ef4444"></span>Fallen leaves = weak topics<br>
+      <span class="ip-dot" style="background:#e4ff86"></span>Fireflies = mastery streak<br>
+      Mushrooms = test history
+    </div>`;
+  infoPanel.classList.add('open');
+}
+
+window.addEventListener('mousemove', e=>{
+  mouse.x=(e.clientX/innerWidth)*2-1;
+  mouse.y=-(e.clientY/innerHeight)*2+1;
+  hoverLabel.style.left=(e.clientX+16)+'px';
+  hoverLabel.style.top=(e.clientY-12)+'px';
+});
+window.addEventListener('click',()=>{ if(hoveredMesh) openPanel(hoveredMesh.userData); });
+window.addEventListener('touchend', e=>{
+  const t=e.changedTouches[0];
+  mouse.x=(t.clientX/innerWidth)*2-1;
+  mouse.y=-(t.clientY/innerHeight)*2+1;
+  raycaster.setFromCamera(mouse,camera);
+  const hits=raycaster.intersectObjects(clickables);
+  if(hits.length) openPanel(hits[0].object.userData);
+},{passive:true});
+
+// ── Render loop ───────────────────────────────────────
+const clock = new THREE.Clock();
+let time = 0;
+
+function animate(){
+  requestAnimationFrame(animate);
+  const dt = Math.min(clock.getDelta(), 0.05);
+  time += dt;
+
+  // Gentle tree sway
+  swayingTrunks.forEach(st=>{
+    st.mesh.rotation.z = Math.sin(time*st.speed+st.phase)*0.018;
+  });
+
+  tickFireflies(time);
+
+  // Raycasting
+  raycaster.setFromCamera(mouse, camera);
+  const hits = raycaster.intersectObjects(clickables);
+  if(hits.length){
+    const obj=hits[0].object;
+    if(obj!==hoveredMesh){
+      hoveredMesh=obj;
+      hlName.textContent=obj.userData.label||'';
+      hlStat.textContent=obj.userData.stat||'';
+      hoverLabel.classList.add('show');
+      document.body.style.cursor='pointer';
+    }
+  } else {
+    if(hoveredMesh){ hoveredMesh=null; hoverLabel.classList.remove('show'); document.body.style.cursor='default'; }
+  }
+
+  controls.update();
+  composer.render();
+}
+
+// ── Fetch & init ──────────────────────────────────────
+async function safeGet(url){
+  try{ const r=await fetch(url,{credentials:'same-origin'}); return r.ok?r.json():null; }
+  catch{ return null; }
+}
+
+async function init(){
+  const [worldData, topicData, histData] = await Promise.all([
+    safeGet('/api/world-state/'),
+    safeGet('/api/topic-insights/'),
+    safeGet('/api/mocktest-history/'),
+  ]);
+  const w  = worldData||{};
+  const td = topicData||{};
+
+  document.getElementById('hudExam').textContent  = w.exam  ||'Your Exam';
+  document.getElementById('hudLevel').textContent = w.level ||'Beginner';
+  document.getElementById('hudStreak').textContent= (w.mastery_streak||0)+' 🔥';
+  document.getElementById('hudRec').textContent   = w.recommendation||'—';
+  masteryStreak = w.mastery_streak||0;
+
+  const subjects = (w.subjects&&w.subjects.length)?w.subjects:[
+    {name:'Math',      strength_score:0.5, previous_strength_score:0.40, average_confusion_index:0.2, total_confused_questions:3},
+    {name:'Reasoning', strength_score:0.7, previous_strength_score:0.60, average_confusion_index:0.3, total_confused_questions:2},
+    {name:'English',   strength_score:0.3, previous_strength_score:0.35, average_confusion_index:0.55, total_confused_questions:5},
+  ];
+  const weak   = td.weak_topics  ||[];
+  const strong = td.strong_topics||[];
+  const attempts=(histData&&histData.attempts)?histData.attempts:[];
+
+  const treePositions = subjects.map((s,i)=>
+    makeTree(s, i, subjects.length, weak, strong)
+  );
+
+  if(attempts.length) buildMushrooms(attempts);
+  buildFireflies(masteryStreak, treePositions);
+
+  const loader=document.getElementById('loading');
+  loader.classList.add('hidden');
+  setTimeout(()=>loader.remove(), 950);
+  animate();
+}
+
+window.addEventListener('resize',()=>{
+  camera.aspect=innerWidth/innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth,innerHeight);
+  composer.setSize(innerWidth,innerHeight);
+});
+
+init();
+</script>
+</body>
+</html>

@@ -16,4 +16,11 @@ urlpatterns = [
         name="cinematic_race",
     ),
     path("topic-insights/", views.topic_insights, name="topic_insights"),
+    path("performance-dashboard/", views.performance_dashboard, name="performance_dashboard"),
+    path("mocktest-history/", views.api_mocktest_history, name="api_mocktest_history"),
+    path("stellar/", views.stellar, name="stellar"),
+    path("neural/", views.neural, name="neural"),
+    path("cave/", views.cave, name="cave"),
+    path("forest/", views.forest, name="forest"),
+    path("wormhole/", views.wormhole, name="wormhole"),
 ]

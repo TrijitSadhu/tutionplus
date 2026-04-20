@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Cave — Crystal Performance</title>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{background:#000;overflow:hidden;font-family:'Segoe UI',system-ui,sans-serif;color:#fff}
+  #c{display:block;width:100vw;height:100vh}
+  #loading{
+    position:fixed;inset:0;background:#010208;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    z-index:1000;transition:opacity .9s ease;
+  }
+  #loading.hidden{opacity:0;pointer-events:none}
+  .ld-gem{font-size:3rem;animation:gemSpin 2s ease-in-out infinite;margin-bottom:20px}
+  @keyframes gemSpin{0%,100%{transform:rotateY(0)}50%{transform:rotateY(180deg)}}
+  .ld-title{
+    font-size:1.7rem;font-weight:900;letter-spacing:.3em;
+    background:linear-gradient(90deg,#22d3ee,#a855f7);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:18px;
+  }
+  .ld-bar{width:200px;height:2px;background:rgba(255,255,255,.07);border-radius:1px;overflow:hidden}
+  .ld-fill{height:100%;background:linear-gradient(90deg,#22d3ee,#a855f7);animation:ldFill 2s ease forwards}
+  @keyframes ldFill{from{width:0}to{width:100%}}
+  .ld-sub{font-size:.65rem;color:rgba(255,255,255,.2);margin-top:12px;letter-spacing:.15em}
+  #topbar{
+    position:fixed;top:0;left:0;right:0;height:46px;
+    background:rgba(1,2,8,.8);backdrop-filter:blur(16px);
+    border-bottom:1px solid rgba(255,255,255,.05);
+    display:flex;align-items:center;padding:0 20px;gap:14px;z-index:100;
+  }
+  .tb-brand{font-size:.88rem;font-weight:800;color:#22d3ee;letter-spacing:.04em}
+  .tb-sep{color:rgba(255,255,255,.15)}
+  .tb-page{font-size:.72rem;color:rgba(255,255,255,.35);letter-spacing:.08em;text-transform:uppercase}
+  .tb-links{margin-left:auto;display:flex;gap:8px}
+  .tb-links a{color:rgba(255,255,255,.4);font-size:.72rem;text-decoration:none;padding:3px 12px;border:1px solid rgba(255,255,255,.08);border-radius:20px;transition:all .2s}
+  .tb-links a:hover{color:#fff;border-color:rgba(255,255,255,.25)}
+  #hud{
+    position:fixed;bottom:22px;left:50%;transform:translateX(-50%);
+    display:flex;gap:0;align-items:stretch;
+    background:rgba(1,2,8,.82);backdrop-filter:blur(20px);
+    border:1px solid rgba(255,255,255,.07);border-radius:50px;overflow:hidden;
+    z-index:100;animation:hudIn .7s 1.2s ease both;white-space:nowrap;
+  }
+  @keyframes hudIn{from{opacity:0;transform:translateX(-50%) translateY(18px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+  .hud-chip{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 20px;gap:2px;border-right:1px solid rgba(255,255,255,.05)}
+  .hud-chip:last-child{border-right:none}
+  .hud-val{font-size:.82rem;font-weight:700;line-height:1}
+  .hud-lbl{font-size:.55rem;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.3)}
+  #hoverLabel{
+    position:fixed;pointer-events:none;z-index:200;
+    background:rgba(1,2,8,.92);backdrop-filter:blur(12px);
+    border:1px solid rgba(255,255,255,.1);border-radius:10px;
+    padding:8px 16px;opacity:0;transition:opacity .15s;
+    display:flex;flex-direction:column;gap:3px;
+  }
+  #hoverLabel.show{opacity:1}
+  .hl-name{font-weight:700;font-size:.86rem}
+  .hl-stat{color:rgba(255,255,255,.5);font-size:.72rem}
+  #infoPanel{
+    position:fixed;top:56px;right:0;width:270px;
+    background:rgba(1,2,8,.94);backdrop-filter:blur(20px);
+    border:1px solid rgba(255,255,255,.07);border-right:none;border-radius:12px 0 0 12px;
+    padding:22px 20px;z-index:100;
+    transform:translateX(102%);transition:transform .45s cubic-bezier(.34,1.56,.64,1);
+  }
+  #infoPanel.open{transform:translateX(0)}
+  .ip-close{position:absolute;top:14px;right:16px;background:none;border:none;color:rgba(255,255,255,.3);font-size:1rem;cursor:pointer;padding:4px}
+  .ip-close:hover{color:#fff}
+  .ip-name{font-size:1.05rem;font-weight:800;margin-bottom:16px}
+  .ip-metric{margin-bottom:12px}
+  .ip-row{display:flex;justify-content:space-between;font-size:.74rem;margin-bottom:4px}
+  .ip-muted{color:rgba(255,255,255,.4)}
+  .ip-bar-track{height:5px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden}
+  .ip-bar-fill{height:100%;border-radius:3px;transition:width .7s ease}
+  .ip-divider{height:1px;background:rgba(255,255,255,.05);margin:14px 0}
+  .ip-legend{font-size:.68rem;color:rgba(255,255,255,.3);line-height:1.9}
+  .ip-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;vertical-align:middle}
+  #clickHint{
+    position:fixed;bottom:78px;left:50%;transform:translateX(-50%);
+    font-size:.65rem;color:rgba(255,255,255,.2);letter-spacing:.1em;text-transform:uppercase;
+    pointer-events:none;animation:hintFade 3.5s 3s ease both;
+  }
+  @keyframes hintFade{0%,70%{opacity:1}100%{opacity:0}}
+  @media(max-width:600px){
+    #hud{flex-wrap:wrap;border-radius:16px;width:calc(100% - 32px);justify-content:center;bottom:16px}
+    .hud-chip{border-right:none;border-bottom:1px solid rgba(255,255,255,.05);width:45%}
+    #infoPanel{width:100%;top:auto;bottom:0;border-radius:16px 16px 0 0;border-right:1px solid rgba(255,255,255,.07);transform:translateY(102%)}
+    #infoPanel.open{transform:translateY(0)}
+  }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+
+<div id="loading">
+  <div class="ld-gem">💎</div>
+  <div class="ld-title">CAVE</div>
+  <div class="ld-bar"><div class="ld-fill"></div></div>
+  <div class="ld-sub">GROWING YOUR CRYSTALS</div>
+</div>
+
+<nav id="topbar">
+  <span class="tb-brand">TutionPlus</span>
+  <span class="tb-sep">|</span>
+  <span class="tb-page">Crystal Cave</span>
+  <div class="tb-links">
+    <a href="/api/performance-dashboard/">← Dashboard</a>
+    <a href="/api/neural/">Neural</a>
+    <a href="/api/stellar/">Stellar</a>
+  </div>
+</nav>
+
+<div id="hud">
+  <div class="hud-chip"><span class="hud-val" id="hudExam">—</span><span class="hud-lbl">Exam</span></div>
+  <div class="hud-chip"><span class="hud-val" id="hudLevel" style="color:#a855f7">—</span><span class="hud-lbl">Level</span></div>
+  <div class="hud-chip"><span class="hud-val" id="hudStreak" style="color:#22d3ee">0 🔥</span><span class="hud-lbl">Streak</span></div>
+  <div class="hud-chip"><span class="hud-val" id="hudRec" style="font-size:.68rem;color:rgba(255,255,255,.55);max-width:140px;white-space:normal;text-align:center;line-height:1.35">—</span><span class="hud-lbl">Tip</span></div>
+</div>
+
+<div id="clickHint">Click a crystal for details</div>
+
+<div id="hoverLabel">
+  <span class="hl-name" id="hlName"></span>
+  <span class="hl-stat" id="hlStat"></span>
+</div>
+
+<div id="infoPanel">
+  <button class="ip-close" onclick="closePanel()">✕</button>
+  <div id="ipContent"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.146.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.146/examples/js/postprocessing/EffectComposer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.146/examples/js/postprocessing/RenderPass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.146/examples/js/postprocessing/UnrealBloomPass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.146/examples/js/postprocessing/ShaderPass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.146/examples/js/shaders/CopyShader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.146/examples/js/shaders/LuminosityHighPassShader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.146/examples/js/controls/OrbitControls.js"></script>
+
+<script>
+/* ═══════════════════════════════════════════════════════
+   CAVE — Crystal Pillar Performance Visualization
+   Each subject = a glowing crystal pillar.
+   Pillar height  = strength_score.
+   Pillar color   = confusion level (teal→amber→red).
+   Ghost pillar   = previous_strength_score.
+   Gem clusters   = strong topics on the pillar sides.
+   Broken shards  = weak topics at the base.
+   Embers rising  = mastery_streak effect.
+   Stalactites    = mocktest history scores (hanging from ceiling).
+═══════════════════════════════════════════════════════ */
+
+// ── Scene ────────────────────────────────────────────
+const scene    = new THREE.Scene();
+scene.background = new THREE.Color(0x010208);
+scene.fog        = new THREE.FogExp2(0x010208, 0.022);
+
+const camera   = new THREE.PerspectiveCamera(58, innerWidth/innerHeight, 0.1, 200);
+camera.position.set(0, 12, 28);
+
+const renderer = new THREE.WebGLRenderer({canvas:document.getElementById('c'), antialias:true});
+renderer.setSize(innerWidth, innerHeight);
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.toneMapping        = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.1;
+renderer.shadowMap.enabled  = true;
+
+const controls = new THREE.OrbitControls(camera, renderer.domElement);
+controls.enableDamping    = true;
+controls.dampingFactor    = 0.04;
+controls.minDistance      = 5;
+controls.maxDistance      = 55;
+controls.maxPolarAngle    = Math.PI*0.78;
+controls.target.set(0, 3, 0);
+controls.autoRotate       = true;
+controls.autoRotateSpeed  = 0.35;
+controls.addEventListener('start', ()=>{ controls.autoRotate=false; });
+
+// ── Post-processing ──────────────────────────────────
+const composer = new THREE.EffectComposer(renderer);
+composer.addPass(new THREE.RenderPass(scene, camera));
+composer.addPass(new THREE.UnrealBloomPass(
+  new THREE.Vector2(innerWidth, innerHeight),
+  1.8, 0.65, 0.15
+));
+
+// ── Lights ────────────────────────────────────────────
+scene.add(new THREE.AmbientLight(0x080820, 1.5));
+const caveLight = new THREE.PointLight(0x4488ff, 0.8, 60, 1.6);
+caveLight.position.set(0, 18, 0);
+scene.add(caveLight);
+
+// ── State ────────────────────────────────────────────
+const clickables  = [];
+const embers      = [];
+const pillarGlow  = []; // {light, color, phase}
+let   masteryStreak = 0;
+const raycaster   = new THREE.Raycaster();
+const mouse       = new THREE.Vector2(-9999,-9999);
+let   hoveredMesh = null;
+
+// ── Helpers ────────────────────────────────────────────
+function pct(v){ return Math.round((v||0)*100); }
+function hexCss(n){ return '#'+n.toString(16).padStart(6,'0'); }
+
+function confColor(v){
+  if(v<=0.25) return 0x22d3ee;
+  if(v<=0.5)  return 0xf59e0b;
+  return 0xef4444;
+}
+
+// ── Cave floor ─────────────────────────────────────────
+(function buildFloor(){
+  // Dark stone plane
+  const geo = new THREE.PlaneGeometry(60, 60, 40, 40);
+  const pos = geo.attributes.position;
+  for(let i=0; i<pos.count; i++){
+    pos.setZ(i, (Math.random()-0.5)*0.4);
+  }
+  geo.computeVertexNormals();
+  scene.add(new THREE.Mesh(geo, new THREE.MeshStandardMaterial({
+    color:0x050a18, roughness:0.95, metalness:0.1,
+  })).then ? null : (() => {
+    const m = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({color:0x050a18, roughness:0.95, metalness:0.1}));
+    m.rotation.x = -Math.PI/2;
+    m.position.y = -0.05;
+    scene.add(m);
+    return m;
+  })());
+})();
+
+// Proper floor
+const floorGeo = new THREE.PlaneGeometry(60, 60, 40, 40);
+const floorPos = floorGeo.attributes.position;
+for(let i=0; i<floorPos.count; i++) floorPos.setZ(i, (Math.random()-0.5)*0.3);
+floorGeo.computeVertexNormals();
+const floor = new THREE.Mesh(floorGeo, new THREE.MeshStandardMaterial({color:0x050a18, roughness:0.95, metalness:0.1}));
+floor.rotation.x = -Math.PI/2;
+floor.position.y = -0.1;
+scene.add(floor);
+
+// Cave ceiling
+const ceilGeo = new THREE.PlaneGeometry(60, 60, 30, 30);
+const ceilPos = ceilGeo.attributes.position;
+for(let i=0; i<ceilPos.count; i++) ceilPos.setZ(i, (Math.random()-0.5)*1.2);
+ceilGeo.computeVertexNormals();
+const ceil = new THREE.Mesh(ceilGeo, new THREE.MeshStandardMaterial({color:0x030510, roughness:1.0}));
+ceil.rotation.x = Math.PI/2;
+ceil.position.y = 22;
+scene.add(ceil);
+
+// Background rock stalactites (decorative)
+for(let i=0; i<28; i++){
+  const h = 1.0+Math.random()*2.8;
+  const r = 0.08+Math.random()*0.18;
+  const sg = new THREE.ConeGeometry(r, h, 5);
+  const sm = new THREE.Mesh(sg, new THREE.MeshStandardMaterial({color:0x0a0e1a, roughness:1, metalness:0}));
+  sm.position.set((Math.random()-0.5)*46, 22-h/2, (Math.random()-0.5)*46);
+  sm.rotation.z = Math.PI;
+  scene.add(sm);
+}
+
+// ── Crystal pillar builder ─────────────────────────────
+function makeCrystalPillar(subj, idx, total, weakTopics, strongTopics){
+  const strength = subj.strength_score   || 0.5;
+  const prev     = subj.previous_strength_score || 0.4;
+  const conf     = subj.average_confusion_index || 0;
+  const color    = confColor(conf);
+  const colorCss = hexCss(color);
+
+  const maxH  = 14;
+  const pilH  = 1.2 + strength * (maxH - 1.2);
+  const prevH = 1.2 + prev     * (maxH - 1.2);
+  const pilR  = 0.35 + strength * 0.35;
+
+  // X position — spread pillars evenly
+  const spread = total > 1 ? (total-1)*2.8 : 0;
+  const px = -spread/2 + idx*(spread/(total-1)||0);
+  const pz = 0;
+
+  // ── Ghost pillar (previous score) ────────────────────
+  const ghostMat = new THREE.MeshStandardMaterial({
+    color:0x334466, transparent:true, opacity:0.18, roughness:0.6, metalness:0.2,
+  });
+  const ghost = new THREE.Mesh(
+    new THREE.CylinderGeometry(pilR*0.9, pilR*1.1, prevH, 6),
+    ghostMat
+  );
+  ghost.position.set(px, prevH/2, pz+0.4);
+  scene.add(ghost);
+
+  // ── Main crystal pillar ───────────────────────────────
+  // Use CylinderGeometry with 6 sides — looks like a hexagonal crystal
+  const pilGeo = new THREE.CylinderGeometry(pilR*0.7, pilR*1.1, pilH, 6, 1, false);
+  const pilMat = new THREE.MeshStandardMaterial({
+    color, emissive:color, emissiveIntensity:0.7+strength*1.4,
+    roughness:0.15, metalness:0.6, transparent:true, opacity:0.88,
+  });
+  const pillar = new THREE.Mesh(pilGeo, pilMat);
+  pillar.position.set(px, pilH/2, pz);
+  pillar.userData = {
+    subj, color, label:subj.name,
+    stat:`Strength ${pct(strength)}%  ·  Confusion ${pct(conf)}%`,
+  };
+  scene.add(pillar);
+  clickables.push(pillar);
+
+  // Pillar point light
+  const ll = new THREE.PointLight(color, 0.9+strength*0.8, 7+strength*5, 2);
+  ll.position.set(px, pilH+0.5, pz);
+  scene.add(ll);
+  pillarGlow.push({light:ll, baseInt:0.9+strength*0.8, phase:idx*0.7, speed:1.1+conf*0.8});
+
+  // ── Crystal tip ───────────────────────────────────────
+  const tipGeo = new THREE.ConeGeometry(pilR*0.7, 1.2+strength*0.8, 6);
+  const tip    = new THREE.Mesh(tipGeo, new THREE.MeshStandardMaterial({
+    color, emissive:color, emissiveIntensity:2.5+strength*2,
+    roughness:0.05, metalness:0.8,
+  }));
+  tip.position.set(px, pilH + (1.2+strength*0.8)/2, pz);
+  scene.add(tip);
+
+  // ── Subject label ─────────────────────────────────────
+  const spCanvas = document.createElement('canvas');
+  spCanvas.width=380; spCanvas.height=90;
+  const ctx=spCanvas.getContext('2d');
+  ctx.fillStyle='rgba(0,0,0,.65)';
+  ctx.beginPath(); ctx.roundRect(0,0,380,90,10); ctx.fill();
+  ctx.strokeStyle=colorCss; ctx.lineWidth=1.5; ctx.stroke();
+  ctx.fillStyle='#fff'; ctx.font='bold 26px Segoe UI,sans-serif';
+  ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillText(subj.name, 190, 45);
+  const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(spCanvas),transparent:true,depthWrite:false}));
+  sp.scale.set(3.8, 1.0, 1);
+  sp.position.set(px, pilH + 2.5 + strength*0.8, pz);
+  scene.add(sp);
+
+  // Strength % label on pillar
+  const numCanvas=document.createElement('canvas');
+  numCanvas.width=200; numCanvas.height=80;
+  const nctx=numCanvas.getContext('2d');
+  nctx.fillStyle=colorCss; nctx.font='bold 38px Segoe UI,sans-serif';
+  nctx.textAlign='center'; nctx.textBaseline='middle';
+  nctx.fillText(pct(strength)+'%', 100, 40);
+  const nsp=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(numCanvas),transparent:true,depthWrite:false}));
+  nsp.scale.set(2.2, 0.88, 1);
+  nsp.position.set(px, pilH*0.5, pz+pilR+0.2);
+  scene.add(nsp);
+
+  // ── Strong topic gem clusters ─────────────────────────
+  const myStrong = strongTopics.filter(t =>
+    t.subject && t.subject.toLowerCase()===(subj.name||'').toLowerCase()
+  ).slice(0,3);
+  myStrong.forEach((t, gi) => {
+    const angle = (gi/3)*Math.PI*2 + idx*0.4;
+    const gy    = 1.5 + Math.random()*pilH*0.6;
+    const gx    = px + Math.cos(angle)*(pilR+0.25);
+    const gz    = pz + Math.sin(angle)*(pilR+0.25);
+    const gem   = new THREE.Mesh(
+      new THREE.OctahedronGeometry(0.18+Math.random()*0.14, 0),
+      new THREE.MeshStandardMaterial({color:0x34d399, emissive:0x34d399, emissiveIntensity:2.5, roughness:0.1, metalness:0.8})
+    );
+    gem.position.set(gx, gy, gz);
+    gem.rotation.set(Math.random(), Math.random(), Math.random());
+    scene.add(gem);
+  });
+
+  // ── Weak topic shards at base ──────────────────────────
+  const myWeak = weakTopics.filter(t =>
+    t.subject && t.subject.toLowerCase()===(subj.name||'').toLowerCase()
+  ).slice(0,5);
+  myWeak.forEach((t, wi) => {
+    const angle = (wi/5)*Math.PI*2 + idx;
+    const sr    = pilR*1.3 + Math.random()*0.7;
+    const sx    = px + Math.cos(angle)*sr;
+    const sz    = pz + Math.sin(angle)*sr;
+    const sh    = 0.25+Math.random()*0.45;
+    const shard = new THREE.Mesh(
+      new THREE.ConeGeometry(0.06+Math.random()*0.08, sh, 4),
+      new THREE.MeshStandardMaterial({color:0xef4444, emissive:0xef4444, emissiveIntensity:1.2, roughness:0.3, metalness:0.4})
+    );
+    shard.position.set(sx, sh/2, sz);
+    shard.rotation.set((Math.random()-0.5)*0.6, Math.random()*Math.PI, (Math.random()-0.5)*0.6);
+    scene.add(shard);
+  });
+
+  return {px, pilH};
+}
+
+// ── Stalactites from ceiling (mocktest history) ────────
+function buildStalactites(attempts){
+  attempts.slice(0, 12).forEach((a, i) => {
+    const score = (a.total_score||50)/100;
+    const h     = 0.8 + score*4.5;
+    const r     = 0.08 + score*0.14;
+    const angle = (i/12)*Math.PI*2;
+    const dist  = 8+Math.random()*10;
+    const sx    = Math.cos(angle)*dist;
+    const sz    = Math.sin(angle)*dist;
+    const cConf = confColor(a.confusion_index||0);
+    const geo   = new THREE.ConeGeometry(r, h, 5);
+    const mesh  = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({
+      color:cConf, emissive:cConf, emissiveIntensity:0.7+score*0.8,
+      roughness:0.2, metalness:0.5, transparent:true, opacity:0.75,
+    }));
+    mesh.position.set(sx, 22-h/2, sz);
+    mesh.rotation.z = Math.PI;
+    scene.add(mesh);
+
+    // Small drip light
+    const dl = new THREE.PointLight(cConf, 0.3, 4, 2);
+    dl.position.set(sx, 22-h-0.4, sz);
+    scene.add(dl);
+  });
+}
+
+// ── Ember particle system (streak-driven) ──────────────
+function spawnEmber(px, py, pz, color){
+  const count = 1;
+  const pos   = new Float32Array([px, py, pz]);
+  const geo   = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  const mesh  = new THREE.Points(geo, new THREE.PointsMaterial({
+    color, size:0.09+Math.random()*0.07, transparent:true, opacity:1,
+  }));
+  scene.add(mesh);
+  const vel = new THREE.Vector3(
+    (Math.random()-0.5)*0.8,
+    0.8+Math.random()*1.6,
+    (Math.random()-0.5)*0.8
+  );
+  embers.push({mesh, vel, life:1.0, decay:0.7+Math.random()*0.5});
+}
+
+function tickEmbers(dt){
+  for(let i=embers.length-1; i>=0; i--){
+    const e = embers[i];
+    e.life -= e.decay*dt;
+    const p = e.mesh.geometry.attributes.position;
+    p.setXYZ(0, p.getX(0)+e.vel.x*dt, p.getY(0)+e.vel.y*dt, p.getZ(0)+e.vel.z*dt);
+    p.needsUpdate = true;
+    e.mesh.material.opacity = Math.max(0, e.life);
+    if(e.life<=0){
+      scene.remove(e.mesh);
+      e.mesh.geometry.dispose(); e.mesh.material.dispose();
+      embers.splice(i,1);
+    }
+  }
+}
+
+// ── Info panel ─────────────────────────────────────────
+const hoverLabel = document.getElementById('hoverLabel');
+const hlName     = document.getElementById('hlName');
+const hlStat     = document.getElementById('hlStat');
+const infoPanel  = document.getElementById('infoPanel');
+const ipContent  = document.getElementById('ipContent');
+window.closePanel = ()=> infoPanel.classList.remove('open');
+
+function openPanel(ud){
+  const s   = ud.subj;
+  const css = hexCss(ud.color);
+  const str = pct(s.strength_score);
+  const prev= pct(s.previous_strength_score);
+  const conf= pct(s.average_confusion_index);
+  const confCss = conf>50?'#ef4444':conf>25?'#f59e0b':'#22d3ee';
+  const delta   = str-prev;
+  const dHtml   = delta>=0
+    ?`<span style="color:#34d399">▲${delta}%</span>`
+    :`<span style="color:#ef4444">▼${Math.abs(delta)}%</span>`;
+  ipContent.innerHTML=`
+    <div class="ip-name" style="color:${css}">${s.name}</div>
+    <div class="ip-metric">
+      <div class="ip-row"><span class="ip-muted">Strength</span><span style="font-weight:700">${str}% ${dHtml}</span></div>
+      <div class="ip-bar-track"><div class="ip-bar-fill" style="width:${str}%;background:${css}"></div></div>
+    </div>
+    <div class="ip-metric">
+      <div class="ip-row"><span class="ip-muted">Previous</span><span style="color:rgba(255,255,255,.5)">${prev}%</span></div>
+      <div class="ip-bar-track"><div class="ip-bar-fill" style="width:${prev}%;background:rgba(255,255,255,.22)"></div></div>
+    </div>
+    <div class="ip-metric">
+      <div class="ip-row"><span class="ip-muted">Confusion</span><span style="font-weight:700;color:${confCss}">${conf}%</span></div>
+      <div class="ip-bar-track"><div class="ip-bar-fill" style="width:${conf}%;background:${confCss}"></div></div>
+    </div>
+    <div class="ip-row" style="margin-top:4px"><span class="ip-muted">Confused Q</span><span style="font-weight:700">${s.total_confused_questions||0}</span></div>
+    <div class="ip-divider"></div>
+    <div class="ip-legend">
+      <span class="ip-dot" style="background:#34d399"></span>Octahedra = strong topics<br>
+      <span class="ip-dot" style="background:#ef4444"></span>Shards at base = weak topics<br>
+      Transparent pillar = previous score<br>
+      Ceiling spikes = test history
+    </div>`;
+  infoPanel.classList.add('open');
+}
+
+window.addEventListener('mousemove', e=>{
+  mouse.x=(e.clientX/innerWidth)*2-1;
+  mouse.y=-(e.clientY/innerHeight)*2+1;
+  hoverLabel.style.left=(e.clientX+16)+'px';
+  hoverLabel.style.top=(e.clientY-12)+'px';
+});
+window.addEventListener('click',()=>{ if(hoveredMesh) openPanel(hoveredMesh.userData); });
+window.addEventListener('touchend', e=>{
+  const t=e.changedTouches[0];
+  mouse.x=(t.clientX/innerWidth)*2-1;
+  mouse.y=-(t.clientY/innerHeight)*2+1;
+  raycaster.setFromCamera(mouse,camera);
+  const hits=raycaster.intersectObjects(clickables);
+  if(hits.length) openPanel(hits[0].object.userData);
+},{passive:true});
+
+// ── Animation ──────────────────────────────────────────
+const clock = new THREE.Clock();
+let   time  = 0;
+let   lastEmber = 0;
+const emberSources = []; // {px, py, pz, color}
+
+function animate(){
+  requestAnimationFrame(animate);
+  const dt = Math.min(clock.getDelta(), 0.05);
+  time += dt;
+
+  // Pillar glow pulse
+  pillarGlow.forEach(pg=>{
+    pg.light.intensity = pg.baseInt*(0.8+0.3*Math.sin(time*pg.speed+pg.phase));
+  });
+
+  // Ambient cave light slow drift
+  caveLight.intensity = 0.7+0.2*Math.sin(time*0.4);
+
+  // Embers
+  const interval = masteryStreak>5?0.04 : masteryStreak>0?0.12 : 0.35;
+  if(time-lastEmber>interval && emberSources.length){
+    const src = emberSources[Math.floor(Math.random()*emberSources.length)];
+    spawnEmber(
+      src.px+(Math.random()-0.5)*0.5,
+      src.py,
+      src.pz+(Math.random()-0.5)*0.5,
+      src.color
+    );
+    lastEmber=time;
+  }
+  tickEmbers(dt);
+
+  // Raycasting
+  raycaster.setFromCamera(mouse, camera);
+  const hits = raycaster.intersectObjects(clickables);
+  if(hits.length){
+    const obj=hits[0].object;
+    if(obj!==hoveredMesh){
+      hoveredMesh=obj;
+      hlName.textContent=obj.userData.label||'';
+      hlStat.textContent=obj.userData.stat||'';
+      hoverLabel.classList.add('show');
+      document.body.style.cursor='pointer';
+    }
+  } else {
+    if(hoveredMesh){ hoveredMesh=null; hoverLabel.classList.remove('show'); document.body.style.cursor='default'; }
+  }
+
+  controls.update();
+  composer.render();
+}
+
+// ── Fetch & init ───────────────────────────────────────
+async function safeGet(url){
+  try{ const r=await fetch(url,{credentials:'same-origin'}); return r.ok?r.json():null; }
+  catch{ return null; }
+}
+
+async function init(){
+  const [worldData, topicData, histData] = await Promise.all([
+    safeGet('/api/world-state/'),
+    safeGet('/api/topic-insights/'),
+    safeGet('/api/mocktest-history/'),
+  ]);
+  const w  = worldData||{};
+  const td = topicData||{};
+
+  document.getElementById('hudExam').textContent  = w.exam  ||'Your Exam';
+  document.getElementById('hudLevel').textContent = w.level ||'Beginner';
+  document.getElementById('hudStreak').textContent= (w.mastery_streak||0)+' 🔥';
+  document.getElementById('hudRec').textContent   = w.recommendation||'—';
+  masteryStreak = w.mastery_streak||0;
+
+  const subjects = (w.subjects&&w.subjects.length)?w.subjects:[
+    {name:'Math',      strength_score:0.5, previous_strength_score:0.40, average_confusion_index:0.2, total_confused_questions:3},
+    {name:'Reasoning', strength_score:0.7, previous_strength_score:0.60, average_confusion_index:0.3, total_confused_questions:2},
+    {name:'English',   strength_score:0.3, previous_strength_score:0.35, average_confusion_index:0.5, total_confused_questions:5},
+  ];
+  const weak   = td.weak_topics  ||[];
+  const strong = td.strong_topics||[];
+  const attempts=(histData&&histData.attempts)?histData.attempts:[];
+
+  subjects.forEach((s,i)=>{
+    const {px, pilH} = makeCrystalPillar(s, i, subjects.length, weak, strong);
+    // Register as ember source for streak effect
+    emberSources.push({px, py:pilH+0.5, pz:0, color:confColor(s.average_confusion_index||0)});
+  });
+
+  if(attempts.length) buildStalactites(attempts);
+
+  const loader=document.getElementById('loading');
+  loader.classList.add('hidden');
+  setTimeout(()=>loader.remove(), 950);
+  animate();
+}
+
+window.addEventListener('resize',()=>{
+  camera.aspect=innerWidth/innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth,innerHeight);
+  composer.setSize(innerWidth,innerHeight);
+});
+
+init();
+</script>
+</body>
+</html>
