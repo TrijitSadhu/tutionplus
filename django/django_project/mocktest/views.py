@@ -41,6 +41,11 @@ def mocktest_runner(request, mocktest_id: int):
 	return render(request, "mocktest/mocktest_exam.html", {"mocktest_id": mocktest_id})
 
 
+def mocktest_instructions(request, mocktest_id: int):
+	"""Serve the pre-exam instructions page."""
+	return render(request, "mocktest/mocktest_instructions.html", {"mocktest_id": mocktest_id})
+
+
 # ===============================
 # EXAM MANAGEMENT SYSTEM START
 # ===============================

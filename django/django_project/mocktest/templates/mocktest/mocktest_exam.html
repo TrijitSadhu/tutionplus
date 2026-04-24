@@ -13,8 +13,10 @@
 
     /* ─── Variables ──────────────────────────────────────────── */
     :root {
-      --header-h: 60px;
-      --tabs-h: 88px;
+      --header-top-h: 49px;
+      --header-sub-h: 36px;
+      --header-h: 85px;
+      --tabs-h: 118px;
       --sidebar-w: 268px;
       --navy: #1a2e50;
       --border: #c8cdd6;
@@ -26,45 +28,52 @@
     .header {
       position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
       height: var(--header-h);
-      background: var(--navy);
-      display: flex; align-items: center;
-      border-bottom: 2px solid #0d1f3c;
+      display: flex; flex-direction: column;
     }
-    .hdr-logo {
-      padding: 0 16px; height: 100%;
-      display: flex; align-items: center; gap: 8px;
-      border-right: 1px solid rgba(255,255,255,.15);
+    .header-top {
+      height: var(--header-top-h);
+      background: #fff;
+      border-bottom: 1px solid #ddd;
+      display: flex; align-items: center; padding: 0 12px;
       flex-shrink: 0;
     }
-    .hdr-logo-text { color: #fff; font-size: 15px; font-weight: 700; white-space: nowrap; }
+    .header-sub {
+      height: var(--header-sub-h);
+      background: #1c1c1c;
+      display: flex; align-items: center; padding: 0 14px;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .hdr-sub-exam {
+      color: #fff; font-size: 13px; font-weight: 600;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .hdr-instructions {
+      color: #fff; font-size: 13px; font-weight: 600;
+      background: none; border: none; cursor: pointer; padding: 0;
+      white-space: nowrap; flex-shrink: 0;
+    }
+    .hdr-instructions:hover { text-decoration: underline; }
+    .hdr-logo {
+      height: 100%;
+      display: flex; align-items: center; gap: 8px;
+      flex-shrink: 0;
+    }
+    .hdr-logo-text { color: var(--navy); font-size: 15px; font-weight: 700; white-space: nowrap; }
     .hdr-center {
-      flex: 1; padding: 0 18px;
-      display: flex; flex-direction: column; justify-content: center; overflow: hidden;
+      flex: 1; padding: 0 18px; text-align: center;
+      display: flex; flex-direction: column; justify-content: center; align-items: center; overflow: hidden;
     }
-    .hdr-exam { color: #fff; font-size: 14px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .hdr-sub  { color: #a8c0d8; font-size: 11px; margin-top: 1px; }
-    .hdr-right { display: flex; align-items: center; gap: 10px; padding: 0 14px; flex-shrink: 0; }
-    .hdr-candidate { text-align: right; }
-    .hdr-candidate-name { color: #fff; font-size: 13px; font-weight: 600; }
-    .hdr-candidate-id   { color: #a8c0d8; font-size: 11px; }
-    .hdr-avatar {
-      width: 38px; height: 38px; border-radius: 4px;
-      background: #2e4a72; border: 2px solid rgba(255,255,255,.2);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 20px; flex-shrink: 0;
-    }
-    .timer-box {
-      background: #e8c840; color: #1a1a1a;
-      padding: 5px 12px; border-radius: 4px;
-      font-size: 17px; font-weight: 700; letter-spacing: 1px;
-      min-width: 86px; text-align: center; flex-shrink: 0;
-    }
-    .timer-box.warning { background: #f97316; color: #fff; }
-    .timer-box.danger  { background: #dc2626; color: #fff; }
+    .hdr-exam { color: var(--navy); font-size: 16px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .hdr-sub  { display: none; }
+    .hdr-right { display: flex; align-items: center; gap: 10px; padding: 0 2px; flex-shrink: 0; }
+    .hdr-candidate { display: none; }
+    .hdr-avatar    { display: none; }
+    .timer-box { display: none; }
 
     /* ─── Section Nav ────────────────────────────────────────── */
     .section-nav {
-      position: fixed; top: var(--header-h); left: 0; right: 0; z-index: 999;
+      position: fixed; top: var(--header-h); left: 0; right: var(--sidebar-w); z-index: 999;
       height: var(--tabs-h);
       display: flex; flex-direction: column;
       box-shadow: 0 1px 3px rgba(0,0,0,.1);
@@ -88,17 +97,23 @@
     .snav-tab:hover { background: rgba(0,0,0,.08); }
     .snav-tab.active { background: #1a70c8; color: #fff; }
     .snav-tab .snav-info { font-size: 12px; opacity: .8; }
+    .snav-row-info {
+      height: 30px; background: #ebeef5;
+      border-bottom: 1px solid #bbc3d4;
+      display: flex; align-items: center; padding: 0 12px;
+      justify-content: space-between; flex-shrink: 0;
+    }
+    .snav-sections-lbl {
+      font-size: 12px; font-weight: 600; color: #444; white-space: nowrap;
+    }
+    .snav-timeleft {
+      font-size: 12px; font-weight: 600; color: #333; white-space: nowrap;
+    }
     .snav-row2 {
       height: 44px; background: #f5f7fa;
       border-bottom: 2px solid var(--border);
-      display: flex; align-items: center; padding: 0 10px; gap: 6px;
+      display: flex; align-items: center; padding: 0 6px; gap: 4px;
       flex-shrink: 0;
-    }
-    .snav-sections-lbl {
-      font-size: 12px; font-weight: 600; color: #555; white-space: nowrap; margin-right: 2px;
-    }
-    .snav-timeleft {
-      margin-left: auto; font-size: 12px; font-weight: 600; color: #333; white-space: nowrap;
     }
     .snav-arrow {
       width: 22px; height: 22px;
@@ -126,7 +141,7 @@
     .body-layout {
       position: fixed;
       top: calc(var(--header-h) + var(--tabs-h));
-      left: 0; right: 0; bottom: 0;
+      left: 0; right: var(--sidebar-w); bottom: 0;
       display: flex;
     }
 
@@ -159,11 +174,11 @@
     }
     .q-type-bar {
       display: block;
-      /*background: #3b6fad; */
-      /*color: #fff;*/
+      background: #dde3ee;
+      color: #333;
       font-size: 13px; font-weight: 600;
       padding: 8px 20px; flex-shrink: 0;
-      border-bottom: 1px solid #2a5a9a;
+      border-bottom: 1px solid #bbc3d4;
     }
     .q-type-badge { display: none; }
     /* ─── Language Bar ───────────────────────────────────────── */
@@ -264,8 +279,14 @@
 
     /* ─── Sidebar ────────────────────────────────────────────── */
     .sidebar {
-      width: var(--sidebar-w); flex-shrink: 0;
+      position: fixed;
+      top: var(--header-h);
+      right: 0;
+      width: var(--sidebar-w);
+      bottom: 0;
+      z-index: 998;
       background: #fff;
+      border-left: 1px solid var(--border);
       display: flex; flex-direction: column;
       overflow: hidden;
     }
@@ -304,7 +325,11 @@
       background: #f8f9fa; border: 1px solid var(--border);
       border-radius: 4px; padding: 5px 8px;
     }
-    .count-val { font-size: 16px; font-weight: 700; }
+    .count-badge {
+      width: 28px; height: 28px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700; color: #fff; flex-shrink: 0;
+    }
     .count-lbl { font-size: 10px; color: var(--muted); line-height: 1.3; }
 
     /* 5-state legend */
@@ -350,7 +375,13 @@
     .q-cell.s-answered      { background: #16a34a; }
     .q-cell.s-review        { background: #7c3aed; }
     .q-cell.s-answered-review { background: #7c3aed; outline: 2px solid #16a34a; outline-offset: 1px; }
-    .q-cell.current { outline: 3px solid #f59e0b !important; outline-offset: 1px; }
+    .q-cell.current {
+      background: #e05020 !important;
+      clip-path: polygon(0 0, 100% 0, 100% 72%, 50% 100%, 0 72%) !important;
+      outline: none !important;
+      border-radius: 0 !important;
+      color: #fff !important;
+    }
 
     .btn-submit {
       width: calc(100% - 24px); margin: 8px 12px 12px;
@@ -364,9 +395,9 @@
     /* ─── Responsive ─────────────────────────────────────────── */
     @media (max-width: 768px) {
       :root { --sidebar-w: 0px; }
-      .sidebar      { display: none; }
-      .hdr-candidate { display: none; }
-      .hdr-avatar   { display: none; }
+      .sidebar { display: none; }
+      .section-nav { right: 0; }
+      .body-layout { right: 0; }
     }
   </style>
 </head>
@@ -374,30 +405,69 @@
 
 <!-- ── Header ──────────────────────────────────────────────────────── -->
 <header class="header">
-  <div class="hdr-logo">
-    <span class="hdr-logo-text">TutionPlus</span>
-  </div>
-  <div class="hdr-center">
-    <div class="hdr-exam" id="hdr-exam-title">Loading…</div>
-    <div class="hdr-sub"  id="hdr-exam-sub"></div>
-  </div>
-  <div class="hdr-right">
-    <div class="hdr-candidate">
-      <div class="hdr-candidate-name" id="hdr-candidate-name">Candidate</div>
-      <div class="hdr-candidate-id"   id="hdr-candidate-id"></div>
+  <div class="header-top">
+    <div class="hdr-logo">
+      <span class="hdr-logo-text">TutionPlus</span>
     </div>
-    <div class="hdr-avatar">👤</div>
-    <div class="timer-box" id="timer">--:--:--</div>
+    <div class="hdr-center">
+      <div class="hdr-exam" id="hdr-exam-title">Loading…</div>
+    </div>
+    <div class="hdr-right">
+      <div class="timer-box" id="timer">--:--:--</div>
+    </div>
+  </div>
+  <div class="header-sub">
+    <span class="hdr-sub-exam" id="hdr-sub-exam-name">Loading…</span>
+    <button class="hdr-instructions" onclick="window.location.href='/mocktest/mocktests/{{ mocktest_id }}/instructions/'">Instructions</button>
   </div>
 </header>
 
 <!-- ── Section Nav ──────────────────────────────────────────────────── -->
 <div class="section-nav" id="section-tabs"></div>
 
-<!-- ── Body ─────────────────────────────────────────────────────────── -->
+<!-- ── Sidebar ──────────────────────────────────────────────────────────── -->
+<aside class="sidebar">
+  <div class="sidebar-inner">
+    <!-- Candidate box -->
+    <div class="sidebar-candidate">
+      <div class="sb-avatar">👤</div>
+      <div>
+        <div class="sb-name" id="sb-name">Candidate</div>
+        <div class="sb-sub"  id="sb-sub">—</div>
+      </div>
+    </div>
+
+    <!-- Summary counts -->
+    <div class="summary-counts">
+      <div class="count-cell"><span class="count-badge s-answered" id="cnt-answered">0</span><span class="count-lbl">Answered</span></div>
+      <div class="count-cell"><span class="count-badge s-not-answered" id="cnt-not-answered">0</span><span class="count-lbl">Not Answered</span></div>
+      <div class="count-cell"><span class="count-badge s-not-visited" id="cnt-not-visited">0</span><span class="count-lbl">Not Visited</span></div>
+      <div class="count-cell"><span class="count-badge s-review" id="cnt-review">0</span><span class="count-lbl">Marked Review</span></div>
+    </div>
+
+    <!-- Legend -->
+    <div class="legend">
+      <div class="legend-row"><span class="q-state-icon s-not-visited"></span><span>Not Visited</span></div>
+      <div class="legend-row"><span class="q-state-icon s-not-answered"></span><span>Not Answered</span></div>
+      <div class="legend-row"><span class="q-state-icon s-answered"></span><span>Answered</span></div>
+      <div class="legend-row"><span class="q-state-icon s-review"></span><span>Marked for Review</span></div>
+      <div class="legend-row"><span class="q-state-icon s-answered-review"></span><span>Answered &amp; Marked for Review<br><small style="color:#5f6b7a">(will also be evaluated)</small></span></div>
+    </div>
+
+    <!-- Question grid -->
+    <div class="q-grid-section-wrap">
+      <div class="q-grid-header" id="q-grid-section-label">Questions</div>
+      <div class="q-grid-choose-lbl">Choose a Question</div>
+    </div>
+    <div class="q-grid" id="question-list"></div>
+  </div>
+  <button class="btn-submit" id="submit">Submit</button>
+</aside>
+
+<!-- ── Body ─────────────────────────────────────────────────────────────── -->
 <div class="body-layout">
 
-  <!-- Left: Question Area -->
+  <!-- Question Area -->
   <div class="question-area">
     <div class="q-type-bar" id="q-type-badge">Question Type : Multiple Choice Question</div>
     <div class="lang-bar">
@@ -432,46 +502,6 @@
     </div>
   </div>
 
-  <!-- Right: Sidebar -->
-  <aside class="sidebar">
-    <div class="sidebar-inner">
-      <!-- Candidate box -->
-      <div class="sidebar-candidate">
-        <div class="sb-avatar">👤</div>
-        <div>
-          <div class="sb-name" id="sb-name">Candidate</div>
-          <div class="sb-sub"  id="sb-sub">—</div>
-        </div>
-      </div>
-
-      <!-- Summary counts -->
-      <div class="sidebar-section-label">Summary</div>
-      <div class="summary-counts">
-        <div class="count-cell"><span class="count-val" style="color:#16a34a" id="cnt-answered">0</span> <span class="count-lbl">Answered</span></div>
-        <div class="count-cell"><span class="count-val" style="color:#dc2626" id="cnt-not-answered">0</span> <span class="count-lbl">Not Answered</span></div>
-        <div class="count-cell"><span class="count-val" style="color:#9ca3af" id="cnt-not-visited">0</span> <span class="count-lbl">Not Visited</span></div>
-        <div class="count-cell"><span class="count-val" style="color:#7c3aed" id="cnt-review">0</span> <span class="count-lbl">Marked Review</span></div>
-      </div>
-
-      <!-- Legend -->
-      <div class="legend">
-        <div class="legend-row"><span class="q-state-icon s-not-visited"></span><span>Not Visited</span></div>
-        <div class="legend-row"><span class="q-state-icon s-not-answered"></span><span>Not Answered</span></div>
-        <div class="legend-row"><span class="q-state-icon s-answered"></span><span>Answered</span></div>
-        <div class="legend-row"><span class="q-state-icon s-review"></span><span>Marked for Review</span></div>
-        <div class="legend-row"><span class="q-state-icon s-answered-review"></span><span>Answered &amp; Marked for Review<br><small style="color:#5f6b7a">(will also be evaluated)</small></span></div>
-      </div>
-
-      <!-- Question grid -->
-      <div class="q-grid-section-wrap">
-        <div class="q-grid-header" id="q-grid-section-label">Questions</div>
-        <div class="q-grid-choose-lbl">Choose a Question</div>
-      </div>
-      <div class="q-grid" id="question-list"></div>
-    </div>
-    <button class="btn-submit" id="submit">Submit</button>
-  </aside>
-</div>
 
 <script>
   const mocktestId = Number(document.body.dataset.mocktest);
@@ -556,13 +586,16 @@
     const nav = document.getElementById('section-tabs');
     nav.innerHTML = `
       <div class="snav-row1" id="snav-row1"></div>
-      <div class="snav-row2">
+      <div class="snav-row-info">
         <span class="snav-sections-lbl">Sections</span>
+        <span class="snav-timeleft" id="snav-timeleft">Time Left : --:--:--</span>
+      </div>
+      <div class="snav-row2">
         <button class="snav-arrow" id="snav-prev">&#8249;</button>
         <div class="snav-pills" id="snav-pills"></div>
         <button class="snav-arrow" id="snav-next">&#8250;</button>
-        <span class="snav-timeleft" id="snav-timeleft"></span>
       </div>`;
+
 
     const row1  = document.getElementById('snav-row1');
     const pills = document.getElementById('snav-pills');
@@ -732,7 +765,8 @@
 
     const mt = data.mocktest || {};
     document.getElementById('hdr-exam-title').textContent = mt.title || 'Mock Test';
-    document.getElementById('hdr-exam-sub').textContent   = [mt.exam, mt.mock_type].filter(Boolean).join(' • ');
+    const subNameEl = document.getElementById('hdr-sub-exam-name');
+    if (subNameEl) subNameEl.textContent = mt.title || 'Mock Test';
     document.title = mt.title || 'Mock Test';
 
     const maxTime = Math.max(0, ...tabs.map(t => t.time_limit_minutes || 0));

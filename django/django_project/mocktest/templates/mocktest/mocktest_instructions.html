@@ -1,0 +1,415 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Instructions</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; font-family: Arial, sans-serif; font-size: 14px; color: #1a1a1a; background: #f0f2f5; }
+    button { cursor: pointer; font-family: inherit; }
+
+    :root {
+      --header-h: 60px;
+      --navy: #1a2e50;
+      --border: #c8cdd6;
+    }
+
+    /* ── Header ── */
+    .header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      height: var(--header-h);
+      background: var(--navy);
+      display: flex; align-items: center;
+      border-bottom: 2px solid #0d1f3c;
+    }
+    .hdr-logo {
+      padding: 0 20px; height: 100%;
+      display: flex; align-items: center;
+      border-right: 1px solid rgba(255,255,255,.15);
+      flex-shrink: 0;
+    }
+    .hdr-logo-text { color: #fff; font-size: 15px; font-weight: 700; }
+    .hdr-center {
+      flex: 1; padding: 0 20px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .hdr-exam-title { color: #fff; font-size: 16px; font-weight: 700; }
+    .hdr-right {
+      display: flex; align-items: center; gap: 12px; padding: 0 16px; flex-shrink: 0;
+    }
+    .hdr-instr-btn {
+      background: transparent; border: 1px solid rgba(255,255,255,.4);
+      color: #fff; padding: 5px 12px; border-radius: 3px; font-size: 12px;
+      display: flex; align-items: center; gap: 5px;
+    }
+    .hdr-instr-btn:hover { background: rgba(255,255,255,.1); }
+
+    /* ── Exam title bar (green) ── */
+    .exam-title-bar {
+      position: fixed; top: var(--header-h); left: 0; right: 0; z-index: 999;
+      background: #4caf50; color: #fff;
+      height: 32px; display: flex; align-items: center; padding: 0 14px;
+      font-size: 13px; font-weight: 700;
+    }
+
+    /* ── Main layout ── */
+    .main {
+      margin-top: calc(var(--header-h) + 32px);
+      height: calc(100vh - var(--header-h) - 32px);
+      display: flex; flex-direction: column;
+    }
+
+    /* ── Content area ── */
+    .content-row {
+      display: flex; flex: 1; overflow: hidden;
+      padding: 12px; gap: 12px;
+    }
+
+    /* ── Instructions panel (left) ── */
+    .instr-panel {
+      flex: 1; background: #fff;
+      border: 1px solid var(--border); border-radius: 4px;
+      display: flex; flex-direction: column;
+      overflow: hidden;
+    }
+    .instr-panel-header {
+      background: #e8edf5;
+      border-bottom: 1px solid var(--border);
+      padding: 8px 16px;
+      font-size: 13px; font-weight: 700; color: var(--navy);
+      border-radius: 4px 4px 0 0;
+      flex-shrink: 0;
+    }
+    .instr-body {
+      flex: 1; overflow-y: auto; padding: 16px 20px;
+      font-size: 13px; line-height: 1.8; color: #333;
+    }
+    .instr-body h3 { font-size: 14px; margin: 12px 0 6px; color: var(--navy); }
+    .instr-body ol, .instr-body ul { padding-left: 20px; margin-bottom: 10px; }
+    .instr-body li { margin-bottom: 4px; }
+    .instr-body .highlight { color: #c0392b; font-weight: 600; }
+
+    /* ── Scoring table ── */
+    .score-table { border-collapse: collapse; width: 100%; margin: 10px 0; font-size: 12px; }
+    .score-table th, .score-table td {
+      border: 1px solid #bbb; padding: 5px 10px; text-align: center;
+    }
+    .score-table th { background: #dde3ee; font-weight: 700; }
+
+    /* ── Candidate panel (right) ── */
+    .candidate-panel {
+      width: 240px; flex-shrink: 0;
+      display: flex; flex-direction: column; gap: 10px;
+      overflow-y: auto;
+    }
+    .cand-card {
+      background: #fff; border: 1px solid var(--border); border-radius: 4px;
+      padding: 14px; display: flex; flex-direction: column; align-items: center; gap: 8px;
+      flex-shrink: 0;
+    }
+    .cand-photo {
+      width: 80px; height: 80px; border-radius: 4px;
+      background: #c8d8ea;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 40px; border: 2px solid #aabbd0;
+    }
+    .cand-name { font-size: 15px; font-weight: 700; color: var(--navy); text-align: center; }
+    .cand-sub  { font-size: 11px; color: #666; text-align: center; }
+
+    /* ── Legend card ── */
+    .legend-card {
+      background: #fff; border: 1px solid var(--border); border-radius: 4px; padding: 12px;
+      flex-shrink: 0;
+    }
+    .legend-card-title { font-size: 12px; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+    .legend-row { display: flex; align-items: center; gap: 8px; font-size: 11px; margin-bottom: 6px; color: #333; }
+    .leg-icon {
+      width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 700; color: #fff;
+    }
+    .leg-icon.answered      { background: #16a34a; }
+    .leg-icon.not-answered  { background: #dc2626; }
+    .leg-icon.not-visited   { background: #9ca3af; }
+    .leg-icon.review        { background: #7c3aed; }
+    .leg-icon.ans-review    { background: #7c3aed; outline: 2px solid #16a34a; outline-offset: 1px; }
+    .leg-text { line-height: 1.3; }
+
+    /* ── Bottom bar ── */
+    .bottom-bar {
+      background: #fff; border-top: 2px solid var(--border);
+      padding: 10px 20px;
+      display: flex; align-items: center;
+      flex-shrink: 0;
+    }
+    /* Page 1 footer: Next button right-aligned */
+    .footer-p1 { justify-content: flex-end; }
+    /* Page 2 footer: disclaimer left, buttons right */
+    .footer-p2 { flex-direction: column; gap: 10px; }
+    .disclaimer-area {
+      display: flex; align-items: flex-start; gap: 8px;
+      font-size: 12px; color: #333; line-height: 1.5;
+    }
+    .disclaimer-area input[type="checkbox"] { margin-top: 2px; flex-shrink: 0; width: 14px; height: 14px; cursor: pointer; }
+    .disclaimer-label { cursor: pointer; }
+    .footer-p2-actions { display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%; }
+    .lang-row {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 12px; color: var(--navy); font-weight: 700;
+    }
+    .lang-row select {
+      padding: 4px 8px; font-size: 12px;
+      border: 1px solid var(--border); border-radius: 3px;
+    }
+    .lang-note-inline { font-size: 11px; color: #555; }
+
+    .btn-next {
+      background: #1565c0; color: #fff;
+      border: none; padding: 8px 28px; border-radius: 4px;
+      font-size: 13px; font-weight: 700;
+    }
+    .btn-next:hover { background: #0d47a1; }
+    .btn-prev-footer {
+      background: #fff; color: #374151;
+      border: 1px solid #d1d5db; padding: 8px 20px; border-radius: 4px;
+      font-size: 13px;
+    }
+    .btn-prev-footer:hover { background: #f3f4f6; }
+    .btn-begin {
+      background: #1565c0; color: #fff;
+      border: none; padding: 8px 24px; border-radius: 4px;
+      font-size: 13px; font-weight: 700;
+      opacity: .45; pointer-events: none;
+      transition: opacity .2s;
+    }
+    .btn-begin.enabled { opacity: 1; pointer-events: auto; }
+    .btn-begin.enabled:hover { background: #0d47a1; }
+  </style>
+</head>
+<body data-mocktest="{{ mocktest_id }}">
+
+<!-- ── Header ── -->
+<header class="header">
+  <div class="hdr-logo">
+    <span class="hdr-logo-text">TutionPlus</span>
+  </div>
+  <div class="hdr-center">
+    <span class="hdr-exam-title" id="hdr-exam-title">Loading…</span>
+  </div>
+  <div class="hdr-right">
+    <button class="hdr-instr-btn">ⓘ Instructions</button>
+  </div>
+</header>
+
+<!-- ── Green exam title bar ── -->
+<div class="exam-title-bar" id="exam-title-bar">Loading…</div>
+
+<!-- ── Main ── -->
+<div class="main">
+  <div class="content-row">
+
+    <!-- Left: Instructions -->
+    <div class="instr-panel">
+      <div class="instr-panel-header" id="instr-panel-title">Instructions</div>
+      <div class="instr-body">
+
+        <!-- ═══ PAGE 1 CONTENT ═══ -->
+        <div id="page1-content">
+          <h3>General Instructions:</h3>
+          <ol>
+            <li>The clock has been set at the server and the countdown timer at the top right corner of your screen will display the time remaining for you to complete the exam. When the clock runs out the exam ends by default — you are not required to end or submit your exam.</li>
+            <li>The question palette on the right side of the screen shows one of the following statuses of each of the questions numbered:</li>
+          </ol>
+
+          <div style="margin: 10px 0 14px 10px;">
+            <div class="legend-row"><span class="leg-icon not-visited"></span><span class="leg-text">You have not visited the question yet.</span></div>
+            <div class="legend-row"><span class="leg-icon not-answered"></span><span class="leg-text">You have not answered the question.</span></div>
+            <div class="legend-row"><span class="leg-icon answered"></span><span class="leg-text">You have answered the question.</span></div>
+            <div class="legend-row"><span class="leg-icon review"></span><span class="leg-text">You have NOT answered the question, but have marked the question for review.</span></div>
+            <div class="legend-row"><span class="leg-icon ans-review"></span><span class="leg-text">The question(s) "Answered and Marked for Review" will be considered for evaluation.</span></div>
+          </div>
+
+          <h3>Navigating to a question:</h3>
+          <ol>
+            <li>To answer a question, do the following:
+              <ol type="a">
+                <li>Click on the question number in the question palette at the right to go to that question directly. Note that using this option does NOT save your answer to the current question.</li>
+                <li>Click on <strong>Save &amp; Next</strong> to save your answer for the current question and then go to the next question.</li>
+                <li>Click on <strong>Mark for Review &amp; Next</strong> to save your answer for the current question, mark it for review, and then go to the next question.</li>
+              </ol>
+            </li>
+          </ol>
+
+          <h3>Answering a question:</h3>
+          <ol>
+            <li>Procedure for answering a multiple choice type question:
+              <ol type="a">
+                <li>To select your answer, click on the button of one of the options.</li>
+                <li>To deselect your chosen answer, click on the button of the chosen option again or click on the <strong>Clear Response</strong> button.</li>
+                <li>To change your chosen answer, click on the button of another option.</li>
+                <li>To save your answer, you MUST click on the <strong>Save &amp; Next</strong> button.</li>
+                <li>To mark the question for review, click on the <strong>Mark for Review &amp; Next</strong> button.</li>
+              </ol>
+            </li>
+          </ol>
+
+          <h3>Navigating through sections:</h3>
+          <ol>
+            <li>Sections in this question paper are displayed on the top bar of the screen. Questions in a section can be viewed by clicking on the section name. The section you are currently viewing is highlighted.</li>
+            <li>After clicking the <strong>Save &amp; Next</strong> button for the last question in a section, you will automatically be taken to the first question of the next section.</li>
+            <li>You can move the mouse cursor over the section names to view the summary of the answers for that particular section.</li>
+            <li>You can shuffle between sections and questions at any point of time during the examination.</li>
+            <li>The candidate can view the corresponding section summary as part of the legend that appears in every section above the question palette.</li>
+          </ol>
+
+          <h3>Marking scheme:</h3>
+          <table class="score-table">
+            <thead>
+              <tr><th>Question Type</th><th>Correct Answer</th><th>Wrong Answer</th><th>Not Attempted</th></tr>
+            </thead>
+            <tbody id="scoring-table-body">
+              <tr><td>Multiple Choice</td><td class="highlight">+4</td><td class="highlight">−1</td><td>0</td></tr>
+            </tbody>
+          </table>
+
+          <p style="margin-top:12px; font-size:12px; color:#555;">
+            <span class="highlight">Note:</span> Please note all questions will appear in your default language. This language can be changed for a particular question during the exam.
+          </p>
+        </div><!-- end page1-content -->
+
+        <!-- ═══ PAGE 2 CONTENT ═══ -->
+        <div id="page2-content" style="display:none;">
+          <h3>Other Important Instructions:</h3>
+          <ol>
+            <li>Please ensure your computer hardware is in proper working condition before starting the exam.</li>
+            <li>Do not refresh the browser or press the Back button during the exam, as this may cause loss of your responses.</li>
+            <li>Do not carry or use any prohibited gadget (mobile phone, Bluetooth device, etc.) or material during the examination.</li>
+            <li>In case of any technical issue during the exam, immediately inform the invigilator.</li>
+            <li>Your default language selection below will determine the language in which the questions appear. You may change the language for individual questions during the exam.</li>
+            <li>By clicking "I am ready to begin", you confirm that you have read and understood all the instructions and agree to abide by the examination rules.</li>
+          </ol>
+          <p style="margin-top:12px; font-size:12px; color:#555;">
+            <span class="highlight">Note:</span> Violation of examination rules may result in cancellation of your candidature and/or ban from future examinations.
+          </p>
+        </div><!-- end page2-content -->
+
+      </div><!-- end instr-body -->
+    </div><!-- end instr-panel -->
+
+    <!-- Right: Candidate + Legend -->
+    <div class="candidate-panel">
+      <div class="cand-card">
+        <div class="cand-photo">👤</div>
+        <div class="cand-name" id="cand-name">Candidate</div>
+        <div class="cand-sub"  id="cand-sub">—</div>
+      </div>
+
+      <div class="legend-card">
+        <div class="legend-card-title">Question Status Legend</div>
+        <div class="legend-row"><span class="leg-icon not-visited"></span><span class="leg-text">Not Visited</span></div>
+        <div class="legend-row"><span class="leg-icon not-answered"></span><span class="leg-text">Not Answered</span></div>
+        <div class="legend-row"><span class="leg-icon answered"></span><span class="leg-text">Answered</span></div>
+        <div class="legend-row"><span class="leg-icon review"></span><span class="leg-text">Marked for Review</span></div>
+        <div class="legend-row"><span class="leg-icon ans-review"></span><span class="leg-text">Answered &amp; Marked for Review</span></div>
+      </div>
+    </div>
+
+  </div><!-- end content-row -->
+
+  <!-- ── Footer Page 1: Next button ── -->
+  <div class="bottom-bar footer-p1" id="footer-page1">
+    <button class="btn-next" onclick="showPage2()">Next »</button>
+  </div>
+
+  <!-- ── Footer Page 2: Language + Disclaimer + Buttons ── -->
+  <div class="bottom-bar footer-p2" id="footer-page2" style="display:none;">
+    <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
+      <div class="lang-row">
+        <label for="lang-select">Choose your default language :</label>
+        <select id="lang-select">
+          <option value="">-- Select --</option>
+          <option value="en">English</option>
+          <option value="hi">Hindi</option>
+        </select>
+      </div>
+      <span class="lang-note-inline">Please note all questions will appear in your default language.</span>
+    </div>
+    <div class="disclaimer-area">
+      <input type="checkbox" id="disclaimer-cb" onchange="onDisclaimerChange(this)" />
+      <label class="disclaimer-label" for="disclaimer-cb">
+        I have read and understood the instructions. All computer hardware allotted to me are in proper working condition.
+        I declare that I am not in possession of / not wearing / not carrying any prohibited gadget like mobile phone,
+        bluetooth devices etc. / any prohibited material with me into the Examination Hall.
+        I agree that in case of not adhering to the instructions, I shall be liable to be debarred from this Test and/or
+        to disciplinary action, which may include ban from future Tests / Examinations.
+      </label>
+    </div>
+    <div class="footer-p2-actions">
+      <button class="btn-prev-footer" onclick="showPage1()">« Previous</button>
+      <button class="btn-begin" id="btn-begin" onclick="startExam()">I am ready to begin</button>
+    </div>
+  </div>
+
+</div><!-- end main -->
+
+<script>
+  const mocktestId = Number(document.body.dataset.mocktest);
+  const apiUrl = `/mocktest/api/mocktests/${mocktestId}/config/resolved/`;
+  const examUrl = `/mocktest/mocktests/${mocktestId}/exam/`;
+
+  // ── Two-page navigation ──
+  function showPage1() {
+    document.getElementById('page1-content').style.display = '';
+    document.getElementById('page2-content').style.display = 'none';
+    document.getElementById('footer-page1').style.display = '';
+    document.getElementById('footer-page2').style.display = 'none';
+    document.getElementById('instr-panel-title').textContent = 'Instructions';
+    // reset checkbox on going back
+    document.getElementById('disclaimer-cb').checked = false;
+    document.getElementById('btn-begin').classList.remove('enabled');
+  }
+
+  function showPage2() {
+    document.getElementById('page1-content').style.display = 'none';
+    document.getElementById('page2-content').style.display = '';
+    document.getElementById('footer-page1').style.display = 'none';
+    document.getElementById('footer-page2').style.display = '';
+    document.getElementById('instr-panel-title').textContent = 'Other Important Instructions';
+  }
+
+  function onDisclaimerChange(cb) {
+    const btn = document.getElementById('btn-begin');
+    if (cb.checked) {
+      btn.classList.add('enabled');
+    } else {
+      btn.classList.remove('enabled');
+    }
+  }
+
+  function startExam() {
+    const lang = document.getElementById('lang-select').value || 'en';
+    sessionStorage.setItem('examLang', lang);
+    window.location.href = examUrl;
+  }
+
+  // ── Load exam info ──
+  async function init() {
+    try {
+      const res  = await fetch(apiUrl);
+      const data = await res.json();
+      const mt   = data.mocktest || {};
+      const title = mt.title || 'Mock Test';
+      document.getElementById('hdr-exam-title').textContent = title;
+      document.getElementById('exam-title-bar').textContent = title;
+      document.title = `Instructions – ${title}`;
+    } catch(e) {
+      document.getElementById('hdr-exam-title').textContent = 'Mock Test';
+    }
+  }
+
+  init();
+</script>
+</body>
+</html>
