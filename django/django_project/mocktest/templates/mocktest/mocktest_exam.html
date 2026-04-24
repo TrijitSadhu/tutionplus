@@ -5,276 +5,747 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Mock Test</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   <style>
+    /* ─── Reset ───────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; font-family: Arial, sans-serif; font-size: 14px; color: #1a1a1a; background: #f0f2f5; overflow: hidden; }
+    button { cursor: pointer; font-family: inherit; }
+
+    /* ─── Variables ──────────────────────────────────────────── */
     :root {
-      --bg: #f7f8fa;
-      --panel: #ffffff;
-      --border: #d9dce3;
-      --text: #1c1f26;
-      --muted: #6b7280;
-      --accent: #2563eb;
-      --danger: #dc2626;
-      --pill-answered: #e0f2fe;
-      --pill-answered-border: #bfdbfe;
-      --pill-review: #fef3c7;
-      --pill-review-border: #fcd34d;
-      --option-bg: #ffffff;
-      --option-bg-hover: #e0f2fe;
+      --header-h: 60px;
+      --tabs-h: 88px;
+      --sidebar-w: 268px;
+      --navy: #1a2e50;
+      --border: #c8cdd6;
+      --text: #1a1a1a;
+      --muted: #5f6b7a;
     }
-    body { background: linear-gradient(135deg, #eef2f7 0%, #f7f8fa 40%, #ffffff 100%); color: var(--text); min-height:100vh; }
-    .shadow-soft { box-shadow:0 4px 18px rgba(0,0,0,0.06); }
-    .topbar { background:#0f172a; color:#fff; }
-    .topbar .brand { font-weight:700; letter-spacing:0.2px; }
-    .topbar .timer { font-size:1.25rem; font-weight:700; }
-    .side-panel { background:#0b1220; color:#e2e8f0; border-radius:14px; }
-    .side-panel .card-body { max-height:calc(100vh - 140px); overflow:auto; }
-    .tab-chip { padding:8px 10px; border-radius:10px; background:#111828; color:#e2e8f0; border:1px solid #1f2937; cursor:pointer; font-weight:600; }
-    .tab-chip.active { background:#2563eb; border-color:#2563eb; color:#fff; }
-    .question-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(44px, 1fr)); gap:8px; padding:8px 4px; }
-    .q-pill { padding:10px 0; border:1px solid #1f2937; border-radius:10px; text-align:center; font-weight:700; background:#0f172a; color:#e2e8f0; cursor:pointer; }
-    .q-pill.answered { background:var(--pill-answered); border-color:var(--pill-answered-border); color:#0f172a; }
-    .q-pill.review { background:var(--pill-review); border-color:var(--pill-review-border); color:#0f172a; }
-    .q-pill.current { border:2px solid var(--accent); box-shadow:0 0 0 2px rgba(37,99,235,0.15); }
-    .legend-dot { width:12px; height:12px; border-radius:50%; display:inline-block; }
-    .option { border:1px solid var(--border); border-radius:10px; padding:12px 14px; background:var(--option-bg); cursor:pointer; transition: background-color 0.15s ease, border-color 0.15s ease; }
-    .option:hover { background:var(--option-bg-hover); }
-    .option.selected { border-color: var(--accent); background:var(--pill-answered); box-shadow:0 0 0 2px rgba(37,99,235,0.15); }
-    .sticky-top-lite { position:sticky; top:0; z-index:1020; }
-    .bottom-bar { position:sticky; bottom:0; z-index:1010; background:#fff; border-top:1px solid var(--border); }
-    @media (max-width: 992px) {
-      #sidebar { display:none; }
-      .topbar { padding:10px 14px; }
+
+    /* ─── Header ─────────────────────────────────────────────── */
+    .header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      height: var(--header-h);
+      background: var(--navy);
+      display: flex; align-items: center;
+      border-bottom: 2px solid #0d1f3c;
+    }
+    .hdr-logo {
+      padding: 0 16px; height: 100%;
+      display: flex; align-items: center; gap: 8px;
+      border-right: 1px solid rgba(255,255,255,.15);
+      flex-shrink: 0;
+    }
+    .hdr-logo-text { color: #fff; font-size: 15px; font-weight: 700; white-space: nowrap; }
+    .hdr-center {
+      flex: 1; padding: 0 18px;
+      display: flex; flex-direction: column; justify-content: center; overflow: hidden;
+    }
+    .hdr-exam { color: #fff; font-size: 14px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .hdr-sub  { color: #a8c0d8; font-size: 11px; margin-top: 1px; }
+    .hdr-right { display: flex; align-items: center; gap: 10px; padding: 0 14px; flex-shrink: 0; }
+    .hdr-candidate { text-align: right; }
+    .hdr-candidate-name { color: #fff; font-size: 13px; font-weight: 600; }
+    .hdr-candidate-id   { color: #a8c0d8; font-size: 11px; }
+    .hdr-avatar {
+      width: 38px; height: 38px; border-radius: 4px;
+      background: #2e4a72; border: 2px solid rgba(255,255,255,.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; flex-shrink: 0;
+    }
+    .timer-box {
+      background: #e8c840; color: #1a1a1a;
+      padding: 5px 12px; border-radius: 4px;
+      font-size: 17px; font-weight: 700; letter-spacing: 1px;
+      min-width: 86px; text-align: center; flex-shrink: 0;
+    }
+    .timer-box.warning { background: #f97316; color: #fff; }
+    .timer-box.danger  { background: #dc2626; color: #fff; }
+
+    /* ─── Section Nav ────────────────────────────────────────── */
+    .section-nav {
+      position: fixed; top: var(--header-h); left: 0; right: 0; z-index: 999;
+      height: var(--tabs-h);
+      display: flex; flex-direction: column;
+      box-shadow: 0 1px 3px rgba(0,0,0,.1);
+    }
+    .snav-row1 {
+      height: 44px; background: #dde3ee;
+      border-bottom: 1px solid #bbc3d4;
+      display: flex; align-items: center; overflow-x: auto; overflow-y: hidden;
+      flex-shrink: 0; padding: 0 6px;
+    }
+    .snav-row1::-webkit-scrollbar { height: 2px; }
+    .snav-tab {
+      padding: 0 14px; height: 30px; margin: 0 3px;
+      display: flex; align-items: center; gap: 6px;
+      border: none; cursor: pointer;
+      font-size: 13px; font-weight: 600; white-space: nowrap;
+      border-radius: 3px; flex-shrink: 0;
+      transition: background .12s, color .12s;
+      background: transparent; color: #3a3a3a;
+    }
+    .snav-tab:hover { background: rgba(0,0,0,.08); }
+    .snav-tab.active { background: #1a70c8; color: #fff; }
+    .snav-tab .snav-info { font-size: 12px; opacity: .8; }
+    .snav-row2 {
+      height: 44px; background: #f5f7fa;
+      border-bottom: 2px solid var(--border);
+      display: flex; align-items: center; padding: 0 10px; gap: 6px;
+      flex-shrink: 0;
+    }
+    .snav-sections-lbl {
+      font-size: 12px; font-weight: 600; color: #555; white-space: nowrap; margin-right: 2px;
+    }
+    .snav-timeleft {
+      margin-left: auto; font-size: 12px; font-weight: 600; color: #333; white-space: nowrap;
+    }
+    .snav-arrow {
+      width: 22px; height: 22px;
+      background: #d0d6e3; border: 1px solid #a8b2c4;
+      border-radius: 3px; color: #333; font-size: 18px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; flex-shrink: 0; padding: 0; line-height: 1;
+      transition: background .12s;
+    }
+    .snav-arrow:hover { background: #b8c0d4; }
+    .snav-pills { display: flex; align-items: center; gap: 4px; flex: 1; overflow-x: auto; }
+    .snav-pills::-webkit-scrollbar { display: none; }
+    .snav-pill {
+      padding: 3px 14px; border-radius: 3px; border: none;
+      font-size: 12px; font-weight: 600; white-space: nowrap;
+      cursor: pointer; flex-shrink: 0;
+      display: flex; align-items: center; gap: 5px;
+      transition: background .12s;
+    }
+    .snav-pill.active { background: #1a70c8; color: #fff; }
+    .snav-pill:not(.active) { background: #8ba0be; color: #fff; }
+    .snav-pill .snav-info { font-size: 11px; }
+
+    /* ─── Body Layout ────────────────────────────────────────── */
+    .body-layout {
+      position: fixed;
+      top: calc(var(--header-h) + var(--tabs-h));
+      left: 0; right: 0; bottom: 0;
+      display: flex;
+    }
+
+    /* ─── Question Area ──────────────────────────────────────── */
+    .question-area {
+      flex: 1; display: flex; flex-direction: column;
+      overflow: hidden; background: #f4f6f9;
+      border-right: 1px solid var(--border);
+    }
+    .q-area-scroll { flex: 1; overflow-y: auto; }
+
+    .q-header-bar {
+      background: #e5eaf3;
+      border-bottom: 1px solid var(--border);
+      padding: 8px 20px;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .q-num { font-size: 13px; font-weight: 700; color: var(--navy); }
+    .q-marks { font-size: 12px; color: var(--muted); display: flex; gap: 10px; align-items: center; }
+    .mark-pos { color: #16a34a; font-weight: 700; }
+    .mark-neg { color: #dc2626; font-weight: 700; }
+
+    .q-content {
+      padding: 18px 24px 20px;
+      background: #fff;
+      margin: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+    }
+    .q-type-bar {
+      display: block;
+      /*background: #3b6fad; */
+      /*color: #fff;*/
+      font-size: 13px; font-weight: 600;
+      padding: 8px 20px; flex-shrink: 0;
+      border-bottom: 1px solid #2a5a9a;
+    }
+    .q-type-badge { display: none; }
+    /* ─── Language Bar ───────────────────────────────────────── */
+    .lang-bar {
+      display: flex; align-items: center; justify-content: flex-end; gap: 8px;
+      background: #4a7cb5;
+      border-bottom: 1px solid #3a68a0;
+      padding: 5px 14px;
+      flex-shrink: 0;
+    }
+    .lang-bar-label { 
+      color: #000000; 
+    }
+    .lang-select { border-color: #2a5a9a; }
+    .lang-bar-label {
+      font-size: 12px; color: #ffffff; font-weight: 600; white-space: nowrap;
+    }
+    .lang-select {
+      font-size: 12px; color: #1a1a1a;
+      background: #fff;
+      border: 1px solid #b8a456;
+      border-radius: 3px;
+      padding: 3px 22px 3px 7px;
+      appearance: none; -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23888'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 6px center;
+      cursor: pointer;
+    }
+    .lang-select:focus { outline: none; border-color: #8a6d00; }
+    .q-text {
+      font-size: 15px; line-height: 1.75; color: var(--text);
+      margin-bottom: 22px;
+    }
+    .q-text img { max-width: 100%; height: auto; margin: 8px 0; }
+
+    /* ─── Options ────────────────────────────────────────────── */
+    .options-list { display: flex; flex-direction: column; gap: 6px; }
+    .option-row {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 5px 4px; cursor: pointer; user-select: none;
+      background: transparent; border: none; border-radius: 0;
+    }
+    .option-row:hover { background: transparent; }
+    .option-row.selected { background: transparent; border: none; }
+    .opt-radio {
+      width: 16px; height: 16px; border-radius: 50%;
+      border: 2px solid #666;
+      flex-shrink: 0; margin-top: 3px;
+      display: flex; align-items: center; justify-content: center;
+      transition: border-color .12s;
+    }
+    .option-row.selected .opt-radio { border-color: #333; }
+    .opt-radio-inner {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: #333; display: none;
+    }
+    .option-row.selected .opt-radio-inner { display: block; }
+    .opt-label { display: none; }
+    .opt-text  { font-size: 14px; line-height: 1.55; color: var(--text); }
+    .opt-text img { max-width: 100%; height: auto; }
+
+    /* ─── Action Bar ─────────────────────────────────────────── */
+    .action-bar {
+      border-top: 2px solid var(--border);
+      background: #fff;
+      padding: 9px 18px;
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+      flex-shrink: 0;
+    }
+    .action-left  { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .action-right { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+
+    .btn-mark-review {
+      background: #d97706; color: #fff;
+      border: none; padding: 8px 14px; border-radius: 4px; font-size: 13px; font-weight: 600;
+      transition: background .15s;
+    }
+    .btn-mark-review:hover { background: #b45309; }
+    .btn-clear {
+      background: #fff; color: #374151;
+      border: 1px solid #d1d5db; padding: 8px 14px; border-radius: 4px; font-size: 13px;
+      transition: background .15s;
+    }
+    .btn-clear:hover { background: #f3f4f6; }
+    .btn-back {
+      background: #fff; color: #374151;
+      border: 1px solid #d1d5db; padding: 8px 16px; border-radius: 4px; font-size: 13px;
+      transition: background .15s;
+    }
+    .btn-back:hover { background: #f3f4f6; }
+    .btn-save-next {
+      background: var(--navy); color: #fff;
+      border: none; padding: 8px 20px; border-radius: 4px; font-size: 13px; font-weight: 600;
+      transition: background .15s;
+    }
+    .btn-save-next:hover { background: #142440; }
+
+    /* ─── Sidebar ────────────────────────────────────────────── */
+    .sidebar {
+      width: var(--sidebar-w); flex-shrink: 0;
+      background: #fff;
+      display: flex; flex-direction: column;
+      overflow: hidden;
+    }
+    .sidebar-inner { flex: 1; overflow-y: auto; padding: 10px 12px; }
+
+    .sidebar-candidate {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 10px;
+      background: #f0f4fa; border: 1px solid var(--border); border-radius: 4px;
+      margin-bottom: 10px;
+    }
+    .sb-avatar {
+      width: 40px; height: 40px; border-radius: 4px;
+      background: var(--navy);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; flex-shrink: 0;
+    }
+    .sb-name { font-size: 13px; font-weight: 700; }
+    .sb-sub  { font-size: 11px; color: var(--muted); margin-top: 1px; }
+
+    .sidebar-section-label {
+      font-size: 11px; font-weight: 700; color: var(--navy);
+      text-transform: uppercase; letter-spacing: .6px;
+      padding: 4px 0 7px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 9px;
+    }
+
+    /* Summary counts */
+    .summary-counts {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 6px;
+      margin-bottom: 10px;
+    }
+    .count-cell {
+      display: flex; align-items: center; gap: 6px;
+      background: #f8f9fa; border: 1px solid var(--border);
+      border-radius: 4px; padding: 5px 8px;
+    }
+    .count-val { font-size: 16px; font-weight: 700; }
+    .count-lbl { font-size: 10px; color: var(--muted); line-height: 1.3; }
+
+    /* 5-state legend */
+    .legend { display: flex; flex-direction: column; gap: 5px; margin-bottom: 10px; }
+    .legend-row { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #374151; }
+    .q-state-icon {
+      width: 26px; height: 26px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700; color: #fff; flex-shrink: 0;
+    }
+    .s-not-visited   { background: #9ca3af; }
+    .s-not-answered  { background: #dc2626; }
+    .s-answered      { background: #16a34a; }
+    .s-review        { background: #7c3aed; }
+    .s-answered-review { background: #7c3aed; outline: 2px solid #16a34a; outline-offset: 1px; }
+
+    /* Question grid */
+    .q-grid-section-wrap {
+      background: #1a70c8; border-radius: 3px;
+      padding: 5px 8px; margin-bottom: 6px;
+    }
+    .q-grid-header {
+      font-size: 12px; font-weight: 700; color: #fff;
+      text-transform: none; letter-spacing: 0;
+      padding: 0 0 2px;
+      border-bottom: none;
+      margin-bottom: 0;
+    }
+    .q-grid-choose-lbl {
+      font-size: 10px; color: #c8dcf5;
+    }
+    .q-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; }
+    .q-cell {
+      width: 100%; aspect-ratio: 1;
+      font-size: 12px; font-weight: 700;
+      border: none; border-radius: 3px;
+      cursor: pointer; color: #fff;
+      transition: transform .1s, opacity .1s;
+    }
+    .q-cell:hover { opacity: .82; transform: scale(1.08); }
+    .q-cell.s-not-visited   { background: #9ca3af; }
+    .q-cell.s-not-answered  { background: #dc2626; }
+    .q-cell.s-answered      { background: #16a34a; }
+    .q-cell.s-review        { background: #7c3aed; }
+    .q-cell.s-answered-review { background: #7c3aed; outline: 2px solid #16a34a; outline-offset: 1px; }
+    .q-cell.current { outline: 3px solid #f59e0b !important; outline-offset: 1px; }
+
+    .btn-submit {
+      width: calc(100% - 24px); margin: 8px 12px 12px;
+      background: #1565c0; color: #fff;
+      border: none; padding: 11px; border-radius: 4px;
+      font-size: 14px; font-weight: 700;
+      transition: background .15s; flex-shrink: 0;
+    }
+    .btn-submit:hover { background: #0d47a1; }
+
+    /* ─── Responsive ─────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      :root { --sidebar-w: 0px; }
+      .sidebar      { display: none; }
+      .hdr-candidate { display: none; }
+      .hdr-avatar   { display: none; }
     }
   </style>
 </head>
-<body data-mocktest="{{ mocktest_id }}" class="bg-light">
-  <header class="topbar sticky-top-lite py-2 px-3 d-flex align-items-center justify-content-between shadow-soft">
-    <div>
-      <div id="exam-title" class="brand">Mock Test</div>
-      <div class="text-light small opacity-75" id="exam-meta"></div>
+<body data-mocktest="{{ mocktest_id }}">
+
+<!-- ── Header ──────────────────────────────────────────────────────── -->
+<header class="header">
+  <div class="hdr-logo">
+    <span class="hdr-logo-text">TutionPlus</span>
+  </div>
+  <div class="hdr-center">
+    <div class="hdr-exam" id="hdr-exam-title">Loading…</div>
+    <div class="hdr-sub"  id="hdr-exam-sub"></div>
+  </div>
+  <div class="hdr-right">
+    <div class="hdr-candidate">
+      <div class="hdr-candidate-name" id="hdr-candidate-name">Candidate</div>
+      <div class="hdr-candidate-id"   id="hdr-candidate-id"></div>
     </div>
-    <div class="timer" id="timer">--:--:--</div>
-  </header>
+    <div class="hdr-avatar">👤</div>
+    <div class="timer-box" id="timer">--:--:--</div>
+  </div>
+</header>
 
-  <div class="container-fluid py-3">
-    <div class="row g-3 flex-lg-row flex-column-reverse">
-      <div class="col-lg-9 col-12">
-        <div class="card shadow-soft mb-3">
-          <div class="card-body">
-            <div class="text-muted small mb-2" id="q-path"></div>
-            <div class="fs-6 mb-3" id="question-stem"></div>
-            <div class="d-grid gap-2" id="options"></div>
-          </div>
-        </div>
+<!-- ── Section Nav ──────────────────────────────────────────────────── -->
+<div class="section-nav" id="section-tabs"></div>
 
-        <div class="card shadow-soft mb-3">
-          <div class="card-body d-flex flex-wrap gap-2">
-            <button class="btn btn-outline-secondary btn-sm" id="mark-review">Mark for Review</button>
-            <button class="btn btn-outline-secondary btn-sm" id="clear-answer">Clear</button>
-            <button class="btn btn-outline-secondary btn-sm" id="prev">Previous</button>
-            <button class="btn btn-primary btn-sm" id="next">Save & Next</button>
-            <button class="btn btn-danger btn-sm ms-auto" id="submit">Submit</button>
-          </div>
-        </div>
+<!-- ── Body ─────────────────────────────────────────────────────────── -->
+<div class="body-layout">
 
-        <div class="row g-3">
-          <div class="col-md-6">
-            <div class="card shadow-soft h-100">
-              <div class="card-body">
-                <div class="text-muted small mb-2">Notepad</div>
-                <textarea id="notepad" class="form-control" rows="6" placeholder="Notes..." aria-label="Notepad"></textarea>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="card shadow-soft h-100">
-              <div class="card-body">
-                <div class="text-muted small mb-2">Scratchpad (placeholder)</div>
-                <div id="scratch" class="border rounded" style="height:220px; background:#f8f9fa;"></div>
-              </div>
-            </div>
-          </div>
+  <!-- Left: Question Area -->
+  <div class="question-area">
+    <div class="q-type-bar" id="q-type-badge">Question Type : Multiple Choice Question</div>
+    <div class="lang-bar">
+      <span class="lang-bar-label">View in</span>
+      <select class="lang-select" id="lang-select" onchange="onLangChange(this.value)">
+        <option value="en" selected>English</option>
+        <option value="hi">Hindi</option>
+      </select>
+    </div>
+    <div class="q-area-scroll" id="q-area-scroll">
+      <div class="q-header-bar">
+        <span class="q-num" id="q-num-label">Question No. 1</span>
+        <div class="q-marks">
+          Marks:&nbsp;<span class="mark-pos" id="marks-pos">+4</span>
+          <span class="mark-neg" id="marks-neg">−1</span>
         </div>
       </div>
-
-      <div class="col-lg-3 col-12">
-        <div class="card side-panel shadow-soft" id="sidebar">
-          <div class="card-body">
-            <div class="d-flex flex-wrap gap-2 mb-3" id="tab-list"></div>
-            <div class="question-grid" id="question-list"></div>
-            <div class="d-flex flex-wrap gap-3 mt-3">
-              <div class="d-flex align-items-center gap-2 text-light small"><span class="legend-dot" style="background:var(--pill-answered); border:1px solid var(--pill-answered-border);"></span>Answered</div>
-              <div class="d-flex align-items-center gap-2 text-light small"><span class="legend-dot" style="background:var(--pill-review); border:1px solid var(--pill-review-border);"></span>Review</div>
-              <div class="d-flex align-items-center gap-2 text-light small"><span class="legend-dot" style="border:2px solid var(--accent);"></span>Current</div>
-            </div>
-          </div>
-        </div>
+      <div class="q-content">
+        <div class="q-text" id="question-stem">&nbsp;</div>
+        <div class="options-list" id="options"></div>
+      </div>
+    </div>
+    <!-- Action Bar -->
+    <div class="action-bar">
+      <div class="action-left">
+        <button class="btn-mark-review" id="mark-review">Mark for Review &amp; Next</button>
+        <button class="btn-clear"       id="clear-answer">Clear Response</button>
+      </div>
+      <div class="action-right">
+        <button class="btn-save-next" id="next">Save &amp; Next &#8594;</button>
       </div>
     </div>
   </div>
-  <script>
-    const mocktestId = Number(document.body.dataset.mocktest);
-    const apiUrl = `/mocktest/api/mocktests/${mocktestId}/config/resolved/`;
 
-    const state = {
-      tabs: [],
-      currentTabIdx: 0,
-      currentQIdx: 0,
-      answers: {}, // key: tab_idx|q_idx -> {value, review}
-      timeLimitSeconds: null,
-      remaining: null,
-      timerHandle: null,
-    };
+  <!-- Right: Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+      <!-- Candidate box -->
+      <div class="sidebar-candidate">
+        <div class="sb-avatar">👤</div>
+        <div>
+          <div class="sb-name" id="sb-name">Candidate</div>
+          <div class="sb-sub"  id="sb-sub">—</div>
+        </div>
+      </div>
 
-    function fmtTimer(sec) {
-      if (sec == null) return '--:--:--';
-      const h = String(Math.floor(sec / 3600)).padStart(2,'0');
-      const m = String(Math.floor((sec % 3600)/60)).padStart(2,'0');
-      const s = String(sec % 60).padStart(2,'0');
-      return `${h}:${m}:${s}`;
-    }
+      <!-- Summary counts -->
+      <div class="sidebar-section-label">Summary</div>
+      <div class="summary-counts">
+        <div class="count-cell"><span class="count-val" style="color:#16a34a" id="cnt-answered">0</span> <span class="count-lbl">Answered</span></div>
+        <div class="count-cell"><span class="count-val" style="color:#dc2626" id="cnt-not-answered">0</span> <span class="count-lbl">Not Answered</span></div>
+        <div class="count-cell"><span class="count-val" style="color:#9ca3af" id="cnt-not-visited">0</span> <span class="count-lbl">Not Visited</span></div>
+        <div class="count-cell"><span class="count-val" style="color:#7c3aed" id="cnt-review">0</span> <span class="count-lbl">Marked Review</span></div>
+      </div>
 
-    function startTimer(totalSeconds) {
-      state.remaining = totalSeconds;
-      const el = document.getElementById('timer');
-      if (state.timerHandle) clearInterval(state.timerHandle);
-      state.timerHandle = setInterval(() => {
-        if (state.remaining <= 0) {
-          clearInterval(state.timerHandle);
-          el.textContent = '00:00:00';
-          alert('Time is up. Submitting...');
-          submitTest();
-          return;
-        }
-        state.remaining -= 1;
-        el.textContent = fmtTimer(state.remaining);
-      }, 1000);
+      <!-- Legend -->
+      <div class="legend">
+        <div class="legend-row"><span class="q-state-icon s-not-visited"></span><span>Not Visited</span></div>
+        <div class="legend-row"><span class="q-state-icon s-not-answered"></span><span>Not Answered</span></div>
+        <div class="legend-row"><span class="q-state-icon s-answered"></span><span>Answered</span></div>
+        <div class="legend-row"><span class="q-state-icon s-review"></span><span>Marked for Review</span></div>
+        <div class="legend-row"><span class="q-state-icon s-answered-review"></span><span>Answered &amp; Marked for Review<br><small style="color:#5f6b7a">(will also be evaluated)</small></span></div>
+      </div>
+
+      <!-- Question grid -->
+      <div class="q-grid-section-wrap">
+        <div class="q-grid-header" id="q-grid-section-label">Questions</div>
+        <div class="q-grid-choose-lbl">Choose a Question</div>
+      </div>
+      <div class="q-grid" id="question-list"></div>
+    </div>
+    <button class="btn-submit" id="submit">Submit</button>
+  </aside>
+</div>
+
+<script>
+  const mocktestId = Number(document.body.dataset.mocktest);
+  const apiUrl = `/mocktest/api/mocktests/${mocktestId}/config/resolved/`;
+
+  // ── State ──────────────────────────────────────────────────────────
+  let currentLang = 'en';
+
+  function onLangChange(val) {
+    currentLang = val;
+    renderQuestion();
+  }
+
+  const state = {
+    tabs: [],
+    currentTabIdx: 0,
+    currentQIdx: 0,
+    // answers[key] = { value: <optionIdx|null>, review: bool, visited: bool }
+    answers: {},
+    remaining: null,
+    timerHandle: null,
+  };
+
+  const ansKey  = (ti, qi) => `${ti}|${qi}`;
+  const getAns  = (ti, qi) => state.answers[ansKey(ti,qi)] || { value:null, review:false, visited:false };
+  const setAns  = (ti, qi, patch) => {
+    const k = ansKey(ti,qi);
+    state.answers[k] = { ...getAns(ti,qi), ...patch };
+  };
+
+  // 5-state classification
+  function qStateClass(ti, qi) {
+    const a = getAns(ti, qi);
+    if (!a.visited) return 's-not-visited';
+    const has = a.value != null;
+    if (has && a.review) return 's-answered-review';
+    if (has)   return 's-answered';
+    if (a.review) return 's-review';
+    return 's-not-answered';
+  }
+
+  // ── Timer ──────────────────────────────────────────────────────────
+  function fmtTimer(sec) {
+    if (sec == null) return '--:--:--';
+    const h = String(Math.floor(sec / 3600)).padStart(2,'0');
+    const m = String(Math.floor((sec % 3600)/60)).padStart(2,'0');
+    const s = String(sec % 60).padStart(2,'0');
+    return `${h}:${m}:${s}`;
+  }
+
+  function startTimer(totalSeconds) {
+    state.remaining = totalSeconds;
+    const el = document.getElementById('timer');
+    if (state.timerHandle) clearInterval(state.timerHandle);
+    state.timerHandle = setInterval(() => {
+      if (state.remaining <= 0) {
+        clearInterval(state.timerHandle);
+        el.textContent = '00:00:00';
+        el.className = 'timer-box danger';
+        updateNavTimer();
+        submitTest();
+        return;
+      }
+      state.remaining -= 1;
       el.textContent = fmtTimer(state.remaining);
+      if      (state.remaining <= 300) el.className = 'timer-box danger';
+      else if (state.remaining <= 900) el.className = 'timer-box warning';
+      else                             el.className = 'timer-box';
+      updateNavTimer();
+    }, 1000);
+    el.textContent = fmtTimer(state.remaining);
+    updateNavTimer();
+  }
+
+  function updateNavTimer() {
+    const el = document.getElementById('snav-timeleft');
+    if (el) el.textContent = 'Time Left : ' + fmtTimer(state.remaining);
+  }
+
+  // ── Render Tabs ────────────────────────────────────────────────────
+  function renderTabs() {
+    const nav = document.getElementById('section-tabs');
+    nav.innerHTML = `
+      <div class="snav-row1" id="snav-row1"></div>
+      <div class="snav-row2">
+        <span class="snav-sections-lbl">Sections</span>
+        <button class="snav-arrow" id="snav-prev">&#8249;</button>
+        <div class="snav-pills" id="snav-pills"></div>
+        <button class="snav-arrow" id="snav-next">&#8250;</button>
+        <span class="snav-timeleft" id="snav-timeleft"></span>
+      </div>`;
+
+    const row1  = document.getElementById('snav-row1');
+    const pills = document.getElementById('snav-pills');
+
+    state.tabs.forEach((t, idx) => {
+      const name = t.tab_name || `Section ${idx+1}`;
+      // Row 1: all sections as tabs
+      const t1 = document.createElement('button');
+      t1.className = 'snav-tab' + (idx === state.currentTabIdx ? ' active' : '');
+      t1.innerHTML = `${name} <span class="snav-info">&#9432;</span>`;
+      t1.addEventListener('click', () => { state.currentTabIdx = idx; state.currentQIdx = 0; renderAll(); });
+      row1.appendChild(t1);
+      // Row 2: only active section as pill
+      if (idx === state.currentTabIdx) {
+        const p = document.createElement('button');
+        p.className = 'snav-pill active';
+        p.innerHTML = `${name} <span class="snav-info">&#9432;</span>`;
+        pills.appendChild(p);
+      }
+    });
+
+    document.getElementById('snav-prev').onclick = () => {
+      if (state.currentTabIdx > 0) { state.currentTabIdx--; state.currentQIdx = 0; renderAll(); }
+    };
+    document.getElementById('snav-next').onclick = () => {
+      if (state.currentTabIdx < state.tabs.length - 1) { state.currentTabIdx++; state.currentQIdx = 0; renderAll(); }
+    };
+  }
+
+  // ── Render Question Grid ───────────────────────────────────────────
+  function renderQuestionList() {
+    const list = document.getElementById('question-list');
+    list.innerHTML = '';
+    const tab = state.tabs[state.currentTabIdx];
+    const secLabel = document.getElementById('q-grid-section-label');
+    if (secLabel) secLabel.textContent = tab.tab_name || `Section ${state.currentTabIdx + 1}`;
+    (tab.mcq_records || []).forEach((q, qi) => {
+      const btn = document.createElement('button');
+      const sc  = qStateClass(state.currentTabIdx, qi);
+      btn.className = `q-cell ${sc}` + (qi === state.currentQIdx ? ' current' : '');
+      btn.textContent = qi + 1;
+      btn.addEventListener('click', () => { state.currentQIdx = qi; renderAll(); });
+      list.appendChild(btn);
+    });
+    updateCounts();
+  }
+
+  // ── Summary Counts ─────────────────────────────────────────────────
+  function updateCounts() {
+    const tab   = state.tabs[state.currentTabIdx];
+    const total = (tab.mcq_records || []).length;
+    let answered = 0, notAnswered = 0, notVisited = 0, review = 0;
+    for (let qi = 0; qi < total; qi++) {
+      const sc = qStateClass(state.currentTabIdx, qi);
+      if (sc === 's-answered' || sc === 's-answered-review') answered++;
+      else if (sc === 's-not-answered') notAnswered++;
+      else if (sc === 's-not-visited')  notVisited++;
+      if (sc === 's-review' || sc === 's-answered-review') review++;
     }
+    document.getElementById('cnt-answered').textContent     = answered;
+    document.getElementById('cnt-not-answered').textContent = notAnswered;
+    document.getElementById('cnt-not-visited').textContent  = notVisited;
+    document.getElementById('cnt-review').textContent       = review;
+  }
 
-    function renderTabs() {
-      const wrap = document.getElementById('tab-list');
-      wrap.innerHTML = '';
-      state.tabs.forEach((t, idx) => {
-        const chip = document.createElement('div');
-        chip.className = 'tab-chip' + (idx === state.currentTabIdx ? ' active' : '');
-        chip.textContent = t.tab_name || `Tab ${idx+1}`;
-        chip.addEventListener('click', () => { state.currentTabIdx = idx; state.currentQIdx = 0; renderAll(); });
-        wrap.appendChild(chip);
-      });
-    }
+  // ── Render Question ────────────────────────────────────────────────
+  function renderQuestion() {
+    const tab = state.tabs[state.currentTabIdx];
+    const q   = (tab.mcq_records || [])[state.currentQIdx];
+    if (!q) return;
 
-    function renderQuestionList() {
-      const list = document.getElementById('question-list');
-      list.innerHTML = '';
-      const tab = state.tabs[state.currentTabIdx];
-      tab.mcq_records.forEach((q, idx) => {
-        const pill = document.createElement('li');
-        pill.className = 'q-pill';
-        pill.textContent = idx + 1;
-        const key = `${state.currentTabIdx}|${idx}`;
-        const ans = state.answers[key];
-        if (ans?.value != null) pill.classList.add('answered');
-        if (ans?.review) pill.classList.add('review');
-        if (idx === state.currentQIdx) pill.classList.add('current');
-        pill.addEventListener('click', () => { state.currentQIdx = idx; renderAll(); });
-        list.appendChild(pill);
-      });
-    }
+    // Mark visited
+    setAns(state.currentTabIdx, state.currentQIdx, { visited: true });
 
-    function renderQuestion() {
-      const tab = state.tabs[state.currentTabIdx];
-      const q = tab.mcq_records[state.currentQIdx];
-      document.getElementById('q-path').textContent = `${tab.tab_name} • Q${state.currentQIdx + 1}`;
-      document.getElementById('question-stem').innerHTML = q.question || '(no question)';
+    // Header
+    document.getElementById('q-num-label').textContent =
+      `Question No. ${state.currentQIdx + 1}`;
+    const marks = q.marks || {};
+    document.getElementById('marks-pos').textContent = `+${marks.correct  || 4}`;
+    document.getElementById('marks-neg').textContent = `−${marks.negative || 1}`;
 
-      const opts = document.getElementById('options');
-      opts.innerHTML = '';
-      const key = `${state.currentTabIdx}|${state.currentQIdx}`;
-      const saved = state.answers[key]?.value;
-      const optionList = q.options && q.options.length ? q.options : [];
-      optionList.forEach((opt, idx) => {
-        const row = document.createElement('div');
-        row.className = 'option' + (saved === idx ? ' selected' : '');
-        row.innerHTML = `<strong>${String.fromCharCode(65+idx)}.</strong> <span>${opt}</span>`;
-        row.addEventListener('click', () => {
-          state.answers[key] = { value: idx, review: state.answers[key]?.review || false };
-          renderQuestionList();
-          renderQuestion();
-        });
-        opts.appendChild(row);
-      });
-    }
+    // Question text (bilingual: prefer lang-specific field, fall back to English)
+    const qText = (currentLang === 'hi' && q.question_hi) ? q.question_hi : q.question;
+    document.getElementById('question-stem').innerHTML = qText || '(No question text)';
 
-    function bindControls() {
-      document.getElementById('next').onclick = () => {
-        const tab = state.tabs[state.currentTabIdx];
-        if (state.currentQIdx < tab.mcq_records.length - 1) {
-          state.currentQIdx += 1;
-        } else if (state.currentTabIdx < state.tabs.length -1) {
-          state.currentTabIdx += 1; state.currentQIdx = 0;
-        }
-        renderAll();
-      };
-      document.getElementById('prev').onclick = () => {
-        if (state.currentQIdx > 0) {
-          state.currentQIdx -= 1;
-        } else if (state.currentTabIdx > 0) {
-          state.currentTabIdx -= 1;
-          const tab = state.tabs[state.currentTabIdx];
-          state.currentQIdx = Math.max(0, tab.mcq_records.length -1);
-        }
-        renderAll();
-      };
-      document.getElementById('clear-answer').onclick = () => {
-        const key = `${state.currentTabIdx}|${state.currentQIdx}`;
-        if (state.answers[key]) state.answers[key].value = null;
+    // Sync dropdown to current lang
+    document.getElementById('lang-select').value = currentLang;
+
+    // Scroll to top
+    document.getElementById('q-area-scroll').scrollTop = 0;
+
+    // Options
+    const opts  = document.getElementById('options');
+    opts.innerHTML = '';
+    const saved = getAns(state.currentTabIdx, state.currentQIdx).value;
+    const optionList = (currentLang === 'hi' && q.options_hi && q.options_hi.length)
+      ? q.options_hi : (q.options || []);
+    optionList.forEach((opt, oi) => {
+      const row = document.createElement('div');
+      row.className = 'option-row' + (saved === oi ? ' selected' : '');
+      row.innerHTML = `
+        <div class="opt-radio"><div class="opt-radio-inner"></div></div>
+        <span class="opt-text">${opt}</span>`;
+      row.addEventListener('click', () => {
+        setAns(state.currentTabIdx, state.currentQIdx, { value: oi });
         renderQuestionList();
         renderQuestion();
-      };
-      document.getElementById('mark-review').onclick = () => {
-        const key = `${state.currentTabIdx}|${state.currentQIdx}`;
-        const existing = state.answers[key] || {};
-        state.answers[key] = { ...existing, review: !existing.review };
-        renderQuestionList();
-      };
-      document.getElementById('submit').onclick = () => {
-        const ok = confirm('Submit test?');
-        if (ok) submitTest();
-      };
-    }
+      });
+      opts.appendChild(row);
+    });
+  }
 
-    function submitTest() {
-      const answered = Object.values(state.answers).filter(a => a?.value != null).length;
-      alert(`Submitting... answered ${answered}`);
-    }
+  // ── Controls ───────────────────────────────────────────────────────
+  function bindControls() {
+    document.getElementById('next').onclick = () => {
+      const tab = state.tabs[state.currentTabIdx];
+      if (state.currentQIdx < (tab.mcq_records||[]).length - 1) {
+        state.currentQIdx++;
+      } else if (state.currentTabIdx < state.tabs.length - 1) {
+        state.currentTabIdx++;
+        state.currentQIdx = 0;
+      }
+      renderAll();
+    };
 
-    function renderAll() {
-      renderTabs();
+    // Back button removed from UI; kept as internal helper if needed.
+
+    document.getElementById('clear-answer').onclick = () => {
+      setAns(state.currentTabIdx, state.currentQIdx, { value: null });
       renderQuestionList();
       renderQuestion();
-    }
+    };
 
-    async function bootstrap() {
-      const res = await fetch(apiUrl);
-      const data = await res.json();
-      const tabs = data.tabs || [];
-      // normalize mcq_records fallback
-      tabs.forEach(t => { t.mcq_records = t.mcq_records || []; });
-      state.tabs = tabs;
-      document.getElementById('exam-title').textContent = data.mocktest?.title || 'Mock Test';
-      document.getElementById('exam-meta').textContent = `${data.mocktest?.exam || ''} • ${data.mocktest?.mock_type || ''}`;
-      const maxTime = Math.max(...tabs.map(t => t.time_limit_minutes || 0));
-      if (maxTime > 0) startTimer(maxTime * 60);
-      bindControls();
+    document.getElementById('mark-review').onclick = () => {
+      const a = getAns(state.currentTabIdx, state.currentQIdx);
+      setAns(state.currentTabIdx, state.currentQIdx, { review: !a.review });
+      // advance to next question (like digialm does)
+      const tab = state.tabs[state.currentTabIdx];
+      if (state.currentQIdx < (tab.mcq_records||[]).length - 1) state.currentQIdx++;
       renderAll();
-    }
+    };
 
-    bootstrap().catch(err => {
-      console.error(err);
-      alert('Failed to load mock test');
-    });
-  </script>
+    document.getElementById('submit').onclick = () => {
+      if (confirm('Are you sure you want to submit the test?')) submitTest();
+    };
+  }
+
+  function submitTest() {
+    const answered = Object.values(state.answers).filter(a => a?.value != null).length;
+    alert(`Submitting… You answered ${answered} question(s).`);
+  }
+
+  // ── Render All ─────────────────────────────────────────────────────
+  function renderAll() {
+    renderTabs();
+    renderQuestionList();
+    renderQuestion();
+  }
+
+  // ── Init ───────────────────────────────────────────────────────────
+  async function init() {
+    const res  = await fetch(apiUrl);
+    const data = await res.json();
+    const tabs = data.tabs || [];
+    tabs.forEach(t => { t.mcq_records = t.mcq_records || []; });
+    state.tabs = tabs;
+
+    const mt = data.mocktest || {};
+    document.getElementById('hdr-exam-title').textContent = mt.title || 'Mock Test';
+    document.getElementById('hdr-exam-sub').textContent   = [mt.exam, mt.mock_type].filter(Boolean).join(' • ');
+    document.title = mt.title || 'Mock Test';
+
+    const maxTime = Math.max(0, ...tabs.map(t => t.time_limit_minutes || 0));
+    if (maxTime > 0) startTimer(maxTime * 60);
+
+    bindControls();
+    renderAll();
+  }
+
+  init().catch(err => {
+    console.error(err);
+    document.getElementById('question-stem').textContent = 'Failed to load test. Please refresh.';
+  });
+</script>
 </body>
 </html>
