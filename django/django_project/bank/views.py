@@ -1267,6 +1267,147 @@ def word(request,string,no):
     return render(request,'home/english.html',{'job': jobs,'form':userform,'login':login,'params':params_int,'p':day,'page':page,'params':word1,'next':next,'previous':previous,'word1':word1,'word_e1':word_e1,'word2':word2,'word_e2':word_e2,'header1':header1,'header2':header2,'header_e1':header_e1,'header_e2':header_e2,'list_day':list_day})
 
 
+def math_home(request):
+    """Math chapter home page showing all chapters with question counts."""
+    from django.db.models import Count
+
+    # Chapter slug → URL-friendly slug mapping
+    CHAPTER_URL_MAP = {
+        'alligation_n_mixture':   'alligation-and-mixture',
+        'average':                'average',
+        'boats_n_stream':         'boats-and-stream',
+        'compound_interest':      'compound-interest',
+        'partnership':            'partnership',
+        'percentage':             'percentage',
+        'permutation_combination':'permutation-combination',
+        'pipe_cistern':           'pipe-cistern',
+        'probability':            'probability',
+        'problem_on_age':         'problem-on-age',
+        'profit_n_loss':          'profit-and-loss',
+        'ratio_n_proportion':     'ratio-and-proportion',
+        'simple_interest':        'simple-interest',
+        'simplification':         'simplification',
+        'time_n_distance':        'time-and-distance',
+        'time_n_work':            'time-and-work',
+        'volume_n_surface_area':  'volume-and-surface-area',
+    }
+
+    CHAPTER_DISPLAY_MAP = {
+        'alligation_n_mixture':   'Alligation & Mixture',
+        'average':                'Average',
+        'boats_n_stream':         'Boats & Streams',
+        'compound_interest':      'Compound Interest',
+        'partnership':            'Partnership',
+        'percentage':             'Percentage',
+        'permutation_combination':'Permutation & Combination',
+        'pipe_cistern':           'Pipes & Cisterns',
+        'probability':            'Probability',
+        'problem_on_age':         'Problems on Age',
+        'profit_n_loss':          'Profit & Loss',
+        'ratio_n_proportion':     'Ratio & Proportion',
+        'simple_interest':        'Simple Interest',
+        'simplification':         'Simplification',
+        'time_n_distance':        'Time & Distance',
+        'time_n_work':            'Time & Work',
+        'volume_n_surface_area':  'Volume & Surface Area',
+    }
+
+    # Counts from DB (exclude None and 'any')
+    counts_qs = (
+        math.objects
+        .exclude(chapter__isnull=True)
+        .exclude(chapter='any')
+        .exclude(chapter='')
+        .values('chapter')
+        .annotate(cnt=Count('id'))
+        .order_by('-cnt')
+    )
+    db_counts = {row['chapter']: row['cnt'] for row in counts_qs}
+    total_questions = sum(db_counts.values())
+
+    chapters = []
+    for slug, display in CHAPTER_DISPLAY_MAP.items():
+        cnt = db_counts.get(slug, 0)
+        url_slug = CHAPTER_URL_MAP.get(slug, slug.replace('_', '-'))
+        chapters.append({
+            'slug':    slug,
+            'display': display,
+            'url_slug': url_slug,
+            'count':   cnt,
+            'url':     f'/math/{url_slug}/1/',
+        })
+
+    # Sort by count desc
+    chapters.sort(key=lambda x: x['count'], reverse=True)
+    max_count = chapters[0]['count'] if chapters else 1
+
+    return render(request, 'math/math_home.html', {
+        'chapters': chapters,
+        'total_questions': total_questions,
+        'total_chapters': len([c for c in chapters if c['count'] > 0]),
+        'max_count': max_count,
+    })
+
+
+def reasoning_home(request):
+    """Reasoning chapter home page showing all chapters with question counts."""
+    from django.db.models import Count
+
+    CHAPTER_DISPLAY_MAP = {
+        'analogy':                          'Analogy',
+        'classification':                   'Classification',
+        'alpha_numaric_symbol':             'Alpha Numeric Symbol',
+        'coding_decoding':                  'Coding & Decoding',
+        'fictious_symbol':                  'Fictitious Symbol',
+        'seating_arrangment':               'Seating Arrangement',
+        'Ranking_test':                     'Ranking Test',
+        'inequality_and_coded_inequality':  'Inequality & Coded Inequality',
+        'input_output':                     'Input Output',
+        'circle_puzzle':                    'Circle Puzzle',
+        'squere_puzzle':                    'Square Puzzle',
+        'flore_puzzle':                     'Floor Puzzle',
+        'blood_relation':                   'Blood Relation',
+        'coded_relationship':               'Coded Relationship',
+        'decision_making':                  'Decision Making',
+        'syllogism':                        'Syllogism',
+        'clock':                            'Clock',
+        'calender':                         'Calendar',
+        'arguments':                        'Arguments',
+        'cause_n_effect':                   'Cause & Effect',
+        'direction_test':                   'Direction Test',
+    }
+
+    counts_qs = (
+        reasoning.objects
+        .exclude(chapter__isnull=True)
+        .exclude(chapter='any')
+        .exclude(chapter='')
+        .values('chapter')
+        .annotate(cnt=Count('id'))
+        .order_by('-cnt')
+    )
+    db_counts = {row['chapter']: row['cnt'] for row in counts_qs}
+    total_questions = sum(db_counts.values())
+
+    chapters = []
+    for slug, display in CHAPTER_DISPLAY_MAP.items():
+        cnt = db_counts.get(slug, 0)
+        chapters.append({
+            'slug':    slug,
+            'display': display,
+            'count':   cnt,
+            'url':     f'/reasoning/{slug}/1/',
+        })
+
+    chapters.sort(key=lambda x: x['count'], reverse=True)
+    max_count = chapters[0]['count'] if chapters else 1
+
+    return render(request, 'reasoning/reasoning_home.html', {
+        'chapters': chapters,
+        'total_questions': total_questions,
+        'total_chapters': len([c for c in chapters if c['count'] > 0]),
+        'max_count': max_count,
+    })
 
 
 def math_all(request,string,params):
