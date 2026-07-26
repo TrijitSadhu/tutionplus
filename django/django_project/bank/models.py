@@ -655,6 +655,94 @@ class total_english(models.Model):
         super(total_english, self).save(*args, **kwargs)
         
 
+MATH_CHAPTER_CHOICES = (
+    ("profit_n_loss", "profit_n_loss"),
+    ("squre_n_cube", "squre_n_cube"),
+    ("simplification", "simplification"),
+    ("average", "average"),
+    ("percentage", "percentage"),
+    ("problem_on_age", "problem_on_age"),
+    ("ratio_n_proportion", "ratio_n_proportion"),
+    ("partnership", "partnership"),
+    ("time_n_work", "time_n_work"),
+    ("pipe_cistern", "pipe_cistern"),
+    ("time_n_distance", "time_n_distance"),
+    ("boats_n_stream", "boats_n_stream"),
+    ("alligation_n_mixture", "alligation_n_mixture"),
+    ("simple_interest", "simple_interest"),
+    ("compound_interest", "compound_interest"),
+    ("volume_n_surface_area", "volume_n_surface_area"),
+    ("probability", "probability"),
+    ("permutation_combination", "permutation_combination"),
+    ("bar_graph", "bar_graph"),
+    ("pie_charts", "pie_charts"),
+    ("line_graph", "line_graph"),
+)
+
+RULE_NAME_CHOICES = tuple(("Rule %d" % i, "Rule %d" % i) for i in range(1, 51))
+
+
+class rule_math(models.Model):
+    chapter = models.CharField(max_length=50, choices=MATH_CHAPTER_CHOICES, db_index=True)
+    rule_name = models.CharField(max_length=20, choices=RULE_NAME_CHOICES)
+    rule_text_with_latex = models.TextField(blank=True, null=True)
+    rule_html = models.TextField(blank=True, null=True, default='')
+
+    class Meta:
+        ordering = ['chapter', 'rule_name']
+        unique_together = ('chapter', 'rule_name')
+
+    def __str__(self):
+        return self.chapter + '  —  ' + self.rule_name
+
+
+MATH_LANGUAGE_CHOICES = (
+    ('en', 'English'),
+    ('hi', 'Hindi'),
+    ('bn', 'Bengali'),
+    ('ta', 'Tamil'),
+    ('te', 'Telugu'),
+    ('mr', 'Marathi'),
+)
+
+
+class math_translation(models.Model):
+    """Stores translated text of a math question for a given language."""
+    math = models.ForeignKey('math', on_delete=models.CASCADE, related_name='translations', db_index=True)
+    language = models.CharField(max_length=5, choices=MATH_LANGUAGE_CHOICES, db_index=True)
+    question = models.TextField(blank=True, null=True)
+    a = models.CharField(max_length=500, blank=True, null=True)
+    b = models.CharField(max_length=500, blank=True, null=True)
+    c = models.CharField(max_length=500, blank=True, null=True)
+    d = models.CharField(max_length=500, blank=True, null=True)
+    e = models.CharField(max_length=500, blank=True, null=True)
+    solution = models.TextField(blank=True, null=True)
+    shortcut = models.TextField(blank=True, null=True)
+    extra = models.TextField(blank=True, null=True)
+    rule_based_explanation = models.TextField(blank=True, null=True)
+
+    class Meta:
+        unique_together = ('math', 'language')
+        ordering = ['math', 'language']
+
+    def __str__(self):
+        return f'{self.math_id} — {self.language}'
+
+
+class rule_math_translation(models.Model):
+    """Stores translated text of a rule_math entry for a given language."""
+    rule = models.ForeignKey('rule_math', on_delete=models.CASCADE, related_name='translations', db_index=True)
+    language = models.CharField(max_length=5, choices=MATH_LANGUAGE_CHOICES, db_index=True)
+    rule_html = models.TextField(blank=True, null=True)
+    rule_text_with_latex = models.TextField(blank=True, null=True)
+
+    class Meta:
+        unique_together = ('rule', 'language')
+
+    def __str__(self):
+        return f'{self.rule} — {self.language}'
+
+
 class math(models.Model):
     question_no = models.IntegerField (default=1,blank=True, null=True)
     question = models.TextField()
@@ -700,36 +788,8 @@ class math(models.Model):
 
     use_image = models.IntegerField (default=0)
     time = models.IntegerField (blank=True,null=True)
-    s= (
-    ("profit_n_loss", "profit_n_loss"),   
-    ("squre_n_cube", "squre_n_cube"),
-    ("simplification", "simplification"),
-    ("average", "average"),
-    ("percentage", "percentage"),
-    ("problem_on_age", "problem_on_age"),
-    ("ratio_n_proportion", "ratio_n_proportion"),
-    ("partnership", "partnership"),
-    ("time_n_work", "time_n_work"),
-    ("pipe_cistern", "pipe_cistern"),
-    ("time_n_distance", "time_n_distance"),
-    ("problem_on_age", "problem_on_age"),
-    ("boats_n_stream", "boats_n_stream"),
-    ("alligation_n_mixture", "alligation_n_mixture"),
-    ("simple_interest", "simple_interest"),
-    ("compound_interest", "compound_interest"),
-    
-    ("volume_n_surface_area", "volume_n_surface_area"),
-    ("probability", "probability"),
-    ("permutation_combination", "permutation_combination"),
-    ("bar_graph", "bar_graph"),
-    ("pie_charts", "pie_charts"),
-    ("line_graph", "line_graph"),
-   
-    
-
-    )
     chapter = models.CharField(max_length=50,
-                  choices=s,
+                  choices=MATH_CHAPTER_CHOICES,
                   default="any",blank=True,null=True,db_index=True)
     subject_name = models.CharField(max_length=100, blank=True, null=True, db_index=True)
     sub_chapter = models.CharField(max_length=100, blank=True, null=True, db_index=True)
@@ -745,6 +805,29 @@ class math(models.Model):
                           choices=s,
                           default="easy",blank=True,null=True,db_index=True)
     extra = models.TextField(blank=True,null=True,default='')
+
+    VALIDATION_CHOICES = (
+        ('not_validated', 'not validated'),
+        ('validated', 'validated'),
+    )
+    validation_status = models.CharField(
+        max_length=20,
+        choices=VALIDATION_CHOICES,
+        default='not_validated',
+        db_index=True
+    )
+    llm_used = models.TextField(blank=True, null=True, default='')
+    rules_html = models.TextField(blank=True, null=True, default='')
+    exam_and_year = models.TextField(blank=True, null=True, default='')
+    from_json = models.BooleanField(default=False)
+    rule_based_explanation = models.TextField(blank=True, null=True, default='')
+    rule = models.ForeignKey('rule_math', on_delete=models.SET_NULL, blank=True, null=True, db_index=True)
+    translated_language = models.TextField(blank=True, null=True, default='')
+    source_math = models.ForeignKey(
+        'self', on_delete=models.SET_NULL, blank=True, null=True,
+        db_index=True, related_name='variants',
+        help_text='If this question was copied/rephrased from another, that original question.'
+    )
 
     class Meta:
         ordering = ["-day",'creation_time']
@@ -2496,6 +2579,18 @@ class reasoning(models.Model):
                   choices=s,
                   default="any",blank=True,null=True,db_index=True)
     home = models.BooleanField(default=False,db_index=True)
+
+    VALIDATION_CHOICES = (
+        ('not_validated', 'not validated'),
+        ('validated', 'validated'),
+    )
+    validation_status = models.CharField(
+        max_length=20,
+        choices=VALIDATION_CHOICES,
+        default='not_validated',
+        db_index=True
+    )
+    llm_used = models.TextField(blank=True, null=True, default='')
 
     class Meta:
         ordering = ["-day",'creation_time']

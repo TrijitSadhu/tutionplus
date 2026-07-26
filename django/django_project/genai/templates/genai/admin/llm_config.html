@@ -1,0 +1,477 @@
+{% extends 'admin/base_site.html' %}
+{% load static %}
+
+{% block title %}LLM Configuration{% endblock %}
+
+{% block extra_head %}
+<style>
+/* ══════════════════════════════════════════════════════
+   LLM Config UI — variables
+══════════════════════════════════════════════════════ */
+:root{
+  --bg:#0f1117;--card:#1a1d27;--card2:#22263a;
+  --border:#2e3250;--accent:#6c63ff;--accent2:#00d4aa;
+  --warn:#f59e0b;--danger:#ef4444;--ok:#22c55e;
+  --text:#e2e8f0;--muted:#8892a4;--white:#fff;
+  --groq:#7c3aed;--gemini:#1a73e8;--openai:#10a37f;
+  --radius:12px;--shadow:0 4px 24px rgba(0,0,0,.45);
+}
+
+body{background:#f0f0f0}
+
+.lc-wrap{max-width:1100px;margin:0 auto;padding:28px 24px;font-family:'Segoe UI',system-ui,sans-serif}
+
+/* ─── Header ─── */
+.lc-header{background:linear-gradient(135deg,#1e1b4b 0%,#312e81 50%,#1e3a5f 100%);
+  border-radius:var(--radius);padding:32px 36px;margin-bottom:28px;
+  display:flex;align-items:center;gap:20px;box-shadow:var(--shadow)}
+.lc-header-icon{font-size:48px;line-height:1}
+.lc-header h1{margin:0;color:var(--white);font-size:26px;font-weight:700}
+.lc-header p{margin:6px 0 0;color:#a5b4fc;font-size:14px}
+.env-badge{margin-left:auto;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
+  border-radius:8px;padding:10px 16px;font-size:12px;color:#c7d2fe;min-width:220px}
+.env-badge strong{color:var(--white);display:block;margin-bottom:4px;font-size:13px}
+.env-badge span{word-break:break-all;opacity:.9}
+.env-active-dot{width:8px;height:8px;background:var(--ok);border-radius:50%;
+  display:inline-block;margin-right:6px;box-shadow:0 0 6px var(--ok)}
+
+/* ─── Alerts ─── */
+.lc-alert{padding:14px 18px;border-radius:10px;margin-bottom:20px;
+  display:flex;align-items:center;gap:10px;font-size:14px;font-weight:500}
+.lc-alert-ok  {background:#052e16;border:1px solid #166534;color:#bbf7d0}
+.lc-alert-err {background:#450a0a;border:1px solid #991b1b;color:#fecaca}
+
+/* ─── Layout ─── */
+.lc-grid{display:grid;grid-template-columns:1fr 320px;gap:24px;align-items:start}
+@media(max-width:860px){.lc-grid{grid-template-columns:1fr}}
+
+/* ─── Provider tabs ─── */
+.lc-tabs{display:flex;gap:6px;margin-bottom:20px}
+.tab-btn{flex:1;padding:11px 18px;border:2px solid var(--border);border-radius:10px;
+  background:var(--card);color:var(--muted);font-size:14px;font-weight:600;cursor:pointer;
+  transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px}
+.tab-btn:hover{border-color:var(--accent);color:var(--text)}
+.tab-btn.active-groq  {background:#2d1f5e;border-color:var(--groq);  color:#c4b5fd}
+.tab-btn.active-gemini{background:#1a2f4e;border-color:var(--gemini);color:#93c5fd}
+.tab-btn.active-openai{background:#0d2b24;border-color:var(--openai);color:#6ee7b7}
+.tab-dot{width:8px;height:8px;border-radius:50%;background:currentColor;opacity:.6}
+
+/* ─── Card ─── */
+.lc-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);
+  padding:28px;box-shadow:var(--shadow)}
+.lc-card-title{font-size:16px;font-weight:700;color:var(--text);margin:0 0 20px;
+  display:flex;align-items:center;gap:8px}
+.lc-card-title .pill{font-size:11px;padding:2px 10px;border-radius:20px;
+  background:rgba(108,99,255,.2);color:var(--accent);font-weight:600;border:1px solid rgba(108,99,255,.3)}
+
+/* ─── Form fields ─── */
+.field-group{margin-bottom:20px}
+.field-group label{display:block;font-size:12px;font-weight:600;color:var(--muted);
+  text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.field-desc{font-size:11px;color:var(--muted);margin-bottom:8px;opacity:.8}
+.lc-input{width:100%;background:var(--card2);border:1.5px solid var(--border);
+  border-radius:8px;padding:10px 14px;color:var(--text);font-size:14px;
+  box-sizing:border-box;transition:border-color .2s;outline:none;font-family:inherit}
+.lc-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(108,99,255,.15)}
+.lc-select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238892a4' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 12px center;padding-right:36px}
+.lc-input-key{font-family:'Consolas','Courier New',monospace;font-size:13px;
+  letter-spacing:.02em;color:#a5f3fc}
+input[type=range].lc-slider{-webkit-appearance:none;width:100%;height:6px;
+  border-radius:3px;background:var(--card2);border:1.5px solid var(--border);padding:0;outline:none}
+input[type=range].lc-slider::-webkit-slider-thumb{-webkit-appearance:none;
+  width:18px;height:18px;border-radius:50%;background:var(--accent);cursor:pointer;
+  box-shadow:0 0 8px rgba(108,99,255,.5)}
+.range-row{display:flex;align-items:center;gap:12px}
+.range-val{min-width:36px;text-align:right;font-weight:700;color:var(--accent);font-size:15px}
+
+/* ─── Model select with description ─── */
+.model-select-wrap{position:relative}
+.model-desc{font-size:11px;color:var(--accent2);margin-top:6px;min-height:16px}
+
+/* ─── Tab panels ─── */
+.tab-panel{display:none}.tab-panel.active{display:block}
+
+/* ─── Active provider toggle ─── */
+.provider-toggle{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}
+.prov-btn{padding:8px 18px;border-radius:8px;border:2px solid var(--border);
+  background:var(--card2);color:var(--muted);font-size:13px;cursor:pointer;transition:all .2s}
+.prov-btn.sel-groq  {background:#1e0a3c;border-color:var(--groq);  color:#c4b5fd;font-weight:700}
+.prov-btn.sel-gemini{background:#071e3f;border-color:var(--gemini);color:#93c5fd;font-weight:700}
+.prov-btn.sel-openai{background:#031f17;border-color:var(--openai);color:#6ee7b7;font-weight:700}
+.prov-label{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;
+  letter-spacing:.07em;margin-bottom:8px;display:block}
+
+/* ─── Save button ─── */
+.lc-save-btn{width:100%;padding:14px;background:linear-gradient(135deg,var(--accent),#4338ca);
+  color:var(--white);border:none;border-radius:10px;font-size:15px;font-weight:700;
+  cursor:pointer;transition:all .25s;letter-spacing:.03em;margin-top:8px;
+  box-shadow:0 4px 15px rgba(108,99,255,.4)}
+.lc-save-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(108,99,255,.55)}
+.lc-save-btn:active{transform:none}
+
+/* ─── Right sidebar ─── */
+.lc-status-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);
+  padding:24px;box-shadow:var(--shadow);position:sticky;top:20px}
+.lc-status-card h3{margin:0 0 16px;font-size:14px;font-weight:700;color:var(--muted);
+  text-transform:uppercase;letter-spacing:.07em}
+.status-row{display:flex;justify-content:space-between;align-items:baseline;
+  padding:9px 0;border-bottom:1px solid var(--border);font-size:13px}
+.status-row:last-child{border-bottom:none}
+.status-key{color:var(--muted)}
+.status-val{color:var(--text);font-weight:600;font-family:monospace;font-size:12px;
+  max-width:180px;word-break:break-all;text-align:right}
+.status-val.good{color:var(--ok)}
+.status-val.warn{color:var(--warn)}
+
+/* ─── Test button ─── */
+.test-btn{width:100%;margin-top:14px;padding:10px;border:2px solid var(--border);
+  border-radius:8px;background:var(--card2);color:var(--text);font-size:13px;
+  font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;
+  justify-content:center;gap:8px}
+.test-btn:hover{border-color:var(--accent2);color:var(--accent2)}
+.test-result{margin-top:10px;padding:10px 12px;border-radius:8px;font-size:12px;
+  display:none;word-break:break-all}
+.test-ok {background:#052e16;border:1px solid #166534;color:#bbf7d0}
+.test-err{background:#450a0a;border:1px solid #991b1b;color:#fecaca}
+
+/* ─── Env files panel ─── */
+.env-files{margin-top:20px}
+.env-file-row{padding:10px 12px;border-radius:8px;margin-bottom:6px;
+  display:flex;align-items:center;gap:10px;font-size:12px;
+  border:1px solid var(--border);background:var(--card2)}
+.ef-path{color:var(--muted);font-family:monospace;flex:1;word-break:break-all}
+.ef-badge{padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap}
+.ef-active{background:#052e16;color:#4ade80;border:1px solid #166534}
+.ef-inactive{background:var(--card);color:var(--muted);border:1px solid var(--border)}
+
+/* ─── Spinner ─── */
+@keyframes spin{to{transform:rotate(360deg)}}
+.spinner{width:14px;height:14px;border:2px solid currentColor;border-top-color:transparent;
+  border-radius:50%;animation:spin .6s linear infinite;display:inline-block}
+</style>
+{% endblock %}
+
+{% block content %}
+<form method="post" id="lcForm">
+{% csrf_token %}
+<input type="hidden" name="DEFAULT_LLM_PROVIDER" id="hid-provider" value="{{ current.DEFAULT_LLM_PROVIDER|default:'groq' }}">
+
+<div class="lc-wrap">
+
+  <!-- ── Header ── -->
+  <div class="lc-header">
+    <div class="lc-header-icon">🤖</div>
+    <div>
+      <h1>LLM Configuration</h1>
+      <p>Select the AI model used for translation &amp; generation — changes apply instantly without server restart.</p>
+    </div>
+    <div class="env-badge">
+      <strong><span class="env-active-dot"></span>Active .env file</strong>
+      <span>{{ active_env.path }}</span>
+    </div>
+  </div>
+
+  {% if ok_msg %}
+  <div class="lc-alert lc-alert-ok">✅ {{ ok_msg }}</div>
+  {% endif %}
+  {% if error_msg %}
+  <div class="lc-alert lc-alert-err">❌ {{ error_msg }}</div>
+  {% endif %}
+
+  <div class="lc-grid">
+
+    <!-- ════ LEFT: config form ════ -->
+    <div>
+
+      <!-- Active provider selector -->
+      <div class="lc-card" style="margin-bottom:20px">
+        <div class="lc-card-title">🌐 Active Provider <span class="pill">used by all operations</span></div>
+        <span class="prov-label">Select which provider handles all AI calls</span>
+        <div class="provider-toggle" id="providerToggle">
+          {% for prov,icon,color in "groq,🟣,groq|gemini,🔵,gemini|openai,🟢,openai"|ljust:0|slice:":0"|default:""|cut:" " %}{% endfor %}
+          <button type="button" class="prov-btn {% if current.DEFAULT_LLM_PROVIDER == 'groq' or not current.DEFAULT_LLM_PROVIDER %}sel-groq{% endif %}"
+                  data-prov="groq" onclick="setProvider('groq')">🟣 Groq</button>
+          <button type="button" class="prov-btn {% if current.DEFAULT_LLM_PROVIDER == 'gemini' %}sel-gemini{% endif %}"
+                  data-prov="gemini" onclick="setProvider('gemini')">🔵 Gemini</button>
+          <button type="button" class="prov-btn {% if current.DEFAULT_LLM_PROVIDER == 'openai' %}sel-openai{% endif %}"
+                  data-prov="openai" onclick="setProvider('openai')">🟢 OpenAI</button>
+        </div>
+      </div>
+
+      <!-- Provider tabs -->
+      <div class="lc-card">
+        <div class="lc-tabs">
+          <button type="button" class="tab-btn active-groq"   id="t-groq"   onclick="showTab('groq')">  🟣 Groq</button>
+          <button type="button" class="tab-btn"               id="t-gemini" onclick="showTab('gemini')">🔵 Gemini</button>
+          <button type="button" class="tab-btn"               id="t-openai" onclick="showTab('openai')">🟢 OpenAI</button>
+        </div>
+
+        <!-- ── GROQ ── -->
+        <div class="tab-panel active" id="panel-groq">
+          <div class="lc-card-title">🟣 Groq Configuration</div>
+
+          <div class="field-group">
+            <label>API Key</label>
+            <input class="lc-input lc-input-key" type="password" name="GROQ_API_KEY"
+                   id="groq-api-key" value="{{ current.GROQ_API_KEY }}"
+                   placeholder="gsk_…" autocomplete="new-password">
+            <div style="margin-top:6px">
+              <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-size:12px;text-transform:none;color:var(--muted)">
+                <input type="checkbox" onchange="toggleKeyVis('groq-api-key',this)"> Show key
+              </label>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label>Model</label>
+            <div class="model-select-wrap">
+              <select class="lc-input lc-select" name="GROQ_MODEL" id="groq-model"
+                      onchange="updateModelDesc('groq')">
+                {% for val,name,desc in groq_models %}
+                <option value="{{ val }}" {% if current.GROQ_MODEL == val %}selected{% endif %}
+                        data-desc="{{ desc }}">{{ name }} — {{ val }}</option>
+                {% endfor %}
+              </select>
+              <div class="model-desc" id="groq-model-desc"></div>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label>Max Output Tokens</label>
+            <div class="field-desc">Qwen uses max_completion_tokens (4 096 recommended). Others use max_tokens (8 192 recommended).</div>
+            <input class="lc-input" type="number" name="GROQ_MAX_OUTPUT_TOKENS"
+                   value="{{ current.GROQ_MAX_OUTPUT_TOKENS|default:'8192' }}" min="256" max="32768" step="256">
+          </div>
+
+          <div class="field-group">
+            <label>Temperature  <span id="groq-temp-val" style="color:var(--accent);font-weight:700">{{ current.GROQ_TEMPERATURE|default:'0.7' }}</span></label>
+            <div class="range-row">
+              <input type="range" class="lc-slider" name="GROQ_TEMPERATURE" min="0" max="1" step="0.05"
+                     value="{{ current.GROQ_TEMPERATURE|default:'0.7' }}"
+                     oninput="document.getElementById('groq-temp-val').textContent=this.value">
+            </div>
+          </div>
+        </div>
+
+        <!-- ── GEMINI ── -->
+        <div class="tab-panel" id="panel-gemini">
+          <div class="lc-card-title">🔵 Gemini Configuration</div>
+
+          <div class="field-group">
+            <label>API Key</label>
+            <input class="lc-input lc-input-key" type="password" name="GEMINI_API_KEY"
+                   id="gemini-api-key" value="{{ current.GEMINI_API_KEY }}"
+                   placeholder="AIzaSy…" autocomplete="new-password">
+            <div style="margin-top:6px">
+              <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-size:12px;text-transform:none;color:var(--muted)">
+                <input type="checkbox" onchange="toggleKeyVis('gemini-api-key',this)"> Show key
+              </label>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label>Model</label>
+            <div class="model-select-wrap">
+              <select class="lc-input lc-select" name="GEMINI_MODEL" id="gemini-model"
+                      onchange="updateModelDesc('gemini')">
+                {% for val,name,desc in gemini_models %}
+                <option value="{{ val }}" {% if current.GEMINI_MODEL == val %}selected{% endif %}
+                        data-desc="{{ desc }}">{{ name }} — {{ val }}</option>
+                {% endfor %}
+              </select>
+              <div class="model-desc" id="gemini-model-desc"></div>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label>Max Output Tokens</label>
+            <input class="lc-input" type="number" name="GEMINI_MAX_OUTPUT_TOKENS"
+                   value="{{ current.GEMINI_MAX_OUTPUT_TOKENS|default:'8192' }}" min="256" max="32768" step="256">
+          </div>
+
+          <div class="field-group">
+            <label>Temperature  <span id="gem-temp-val" style="color:var(--gemini);font-weight:700">{{ current.GEMINI_TEMPERATURE|default:'0.7' }}</span></label>
+            <div class="range-row">
+              <input type="range" class="lc-slider" name="GEMINI_TEMPERATURE" min="0" max="1" step="0.05"
+                     value="{{ current.GEMINI_TEMPERATURE|default:'0.7' }}"
+                     oninput="document.getElementById('gem-temp-val').textContent=this.value">
+            </div>
+          </div>
+        </div>
+
+        <!-- ── OPENAI ── -->
+        <div class="tab-panel" id="panel-openai">
+          <div class="lc-card-title">🟢 OpenAI Configuration</div>
+
+          <div class="field-group">
+            <label>API Key</label>
+            <input class="lc-input lc-input-key" type="password" name="OPENAI_API_KEY"
+                   id="openai-api-key" value="{{ current.OPENAI_API_KEY }}"
+                   placeholder="sk-…" autocomplete="new-password">
+            <div style="margin-top:6px">
+              <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-size:12px;text-transform:none;color:var(--muted)">
+                <input type="checkbox" onchange="toggleKeyVis('openai-api-key',this)"> Show key
+              </label>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label>Model</label>
+            <div class="model-select-wrap">
+              <select class="lc-input lc-select" name="OPENAI_MODEL" id="openai-model"
+                      onchange="updateModelDesc('openai')">
+                {% for val,name,desc in openai_models %}
+                <option value="{{ val }}" {% if current.OPENAI_MODEL == val %}selected{% endif %}
+                        data-desc="{{ desc }}">{{ name }} — {{ val }}</option>
+                {% endfor %}
+              </select>
+              <div class="model-desc" id="openai-model-desc"></div>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label>Temperature  <span id="oai-temp-val" style="color:var(--openai);font-weight:700">{{ current.OPENAI_TEMPERATURE|default:'0.7' }}</span></label>
+            <div class="range-row">
+              <input type="range" class="lc-slider" name="OPENAI_TEMPERATURE" min="0" max="1" step="0.05"
+                     value="{{ current.OPENAI_TEMPERATURE|default:'0.7' }}"
+                     oninput="document.getElementById('oai-temp-val').textContent=this.value">
+            </div>
+          </div>
+        </div>
+
+        <!-- Save -->
+        <button type="submit" class="lc-save-btn" onclick="this.innerHTML='⏳ Saving…';this.disabled=true;lcForm.submit()">
+          💾 Save &amp; Hot-Reload Config
+        </button>
+      </div>
+    </div>
+
+    <!-- ════ RIGHT: status sidebar ════ -->
+    <div>
+      <div class="lc-status-card">
+        <h3>📊 Current Active Config</h3>
+        <div class="status-row">
+          <span class="status-key">Provider</span>
+          <span class="status-val good">{{ current.DEFAULT_LLM_PROVIDER|default:'groq'|upper }}</span>
+        </div>
+        <div class="status-row">
+          <span class="status-key">Groq Model</span>
+          <span class="status-val {% if '120b' in current.GROQ_MODEL|default:'' %}warn{% else %}good{% endif %}">
+            {{ current.GROQ_MODEL|default:'—' }}
+          </span>
+        </div>
+        <div class="status-row">
+          <span class="status-key">Gemini Model</span>
+          <span class="status-val">{{ current.GEMINI_MODEL|default:'—' }}</span>
+        </div>
+        <div class="status-row">
+          <span class="status-key">OpenAI Model</span>
+          <span class="status-val">{{ current.OPENAI_MODEL|default:'—' }}</span>
+        </div>
+        <div class="status-row">
+          <span class="status-key">Max Tokens</span>
+          <span class="status-val">{{ current.GROQ_MAX_OUTPUT_TOKENS|default:'8192' }}</span>
+        </div>
+
+        {% if '120b' in current.GROQ_MODEL|default:'' %}
+        <div style="margin-top:14px;padding:12px;background:#451a03;border:1px solid #92400e;border-radius:8px;font-size:12px;color:#fde68a">
+          ⚠️ <strong>openai/gpt-oss-120b</strong> has a 4 096-token context limit and causes 413 errors on long text. Switch to <strong>qwen/qwen3-32b</strong>.
+        </div>
+        {% endif %}
+
+        <!-- Test connection -->
+        <h3 style="margin-top:20px">🔌 Test Connection</h3>
+        <button type="button" class="test-btn" id="testBtn" onclick="testModel()">
+          <span id="testBtnText">⚡ Test Active Model</span>
+        </button>
+        <div class="test-result" id="testResult"></div>
+
+        <!-- .env files list -->
+        <h3 style="margin-top:20px">📁 .env Files</h3>
+        <div class="env-files">
+          {% for env in all_envs %}
+          <div class="env-file-row">
+            <span class="env-active-dot" {% if not env.active %}style="background:var(--muted);box-shadow:none"{% endif %}></span>
+            <span class="ef-path">{{ env.path }}</span>
+            <span class="ef-badge {% if env.active %}ef-active{% else %}ef-inactive{% endif %}">
+              {% if env.active %}ACTIVE{% else %}unused{% endif %}
+            </span>
+          </div>
+          {% endfor %}
+          <p style="font-size:11px;color:var(--muted);margin:8px 0 0">
+            genai/config.py loads the <strong style="color:var(--text)">Root .env</strong> at startup (3 paths up).
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /lc-grid -->
+</div><!-- /lc-wrap -->
+</form>
+
+<script>
+// ─── Tab switching ───────────────────────────────────────────────────────────
+const TABS = ['groq','gemini','openai'];
+function showTab(name){
+  TABS.forEach(t=>{
+    document.getElementById('panel-'+t).classList.toggle('active', t===name);
+    const tb = document.getElementById('t-'+t);
+    tb.className = 'tab-btn' + (t===name ? ' active-'+t : '');
+  });
+}
+// Open tab matching active provider on load
+(function(){
+  const prov = document.getElementById('hid-provider').value||'groq';
+  showTab(TABS.includes(prov)?prov:'groq');
+})();
+
+// ─── Active provider selector ────────────────────────────────────────────────
+function setProvider(p){
+  document.getElementById('hid-provider').value = p;
+  document.querySelectorAll('.prov-btn').forEach(b=>{
+    b.className = 'prov-btn' + (b.dataset.prov===p ? ' sel-'+p : '');
+  });
+  showTab(p);
+}
+
+// ─── Model description ───────────────────────────────────────────────────────
+function updateModelDesc(prov){
+  const sel = document.getElementById(prov+'-model');
+  const opt = sel.options[sel.selectedIndex];
+  const el  = document.getElementById(prov+'-model-desc');
+  if(el) el.textContent = opt ? opt.dataset.desc||'' : '';
+}
+['groq','gemini','openai'].forEach(updateModelDesc);
+
+// ─── Toggle key visibility ───────────────────────────────────────────────────
+function toggleKeyVis(id, cb){
+  document.getElementById(id).type = cb.checked ? 'text' : 'password';
+}
+
+// ─── Test connection ─────────────────────────────────────────────────────────
+function testModel(){
+  const prov  = document.getElementById('hid-provider').value||'groq';
+  const btn   = document.getElementById('testBtn');
+  const res   = document.getElementById('testResult');
+  const txt   = document.getElementById('testBtnText');
+  txt.innerHTML = '<span class="spinner"></span> Testing…';
+  btn.disabled = true;
+  res.style.display='none';
+  fetch('{% url "genai:llm_test" %}?provider='+prov)
+    .then(r=>r.json())
+    .then(d=>{
+      res.className = 'test-result ' + (d.ok?'test-ok':'test-err');
+      res.style.display='block';
+      res.innerHTML = d.ok
+        ? '✅ <strong>'+d.model+'</strong> responded: ' + d.reply
+        : '❌ '+d.error;
+    })
+    .catch(e=>{
+      res.className='test-result test-err';res.style.display='block';
+      res.innerHTML='❌ Request failed: '+e;
+    })
+    .finally(()=>{ txt.innerHTML='⚡ Test Active Model'; btn.disabled=false; });
+}
+</script>
+{% endblock %}

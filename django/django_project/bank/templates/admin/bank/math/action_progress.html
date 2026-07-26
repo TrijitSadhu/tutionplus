@@ -1,0 +1,367 @@
+{% extends "admin/base_site.html" %}
+{% block title %}{{ mode_label }} Progress | Admin{% endblock %}
+
+{% block extrahead %}
+<style>
+  .prog-card {
+    max-width: 700px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 28px;
+    margin-top: 16px;
+  }
+  .stat-row {
+    display: flex;
+    gap: 16px;
+    margin: 18px 0;
+    flex-wrap: wrap;
+  }
+  .stat-box {
+    flex: 1;
+    min-width: 110px;
+    text-align: center;
+    padding: 14px 10px;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+  }
+  .stat-box .num { font-size: 32px; font-weight: 700; }
+  .stat-box .lbl { font-size: 12px; color: #777; margin-top: 4px; }
+  .stat-total  { background: #e8eaf6; }
+  .stat-done   { background: #e8f5e9; }
+  .stat-remain { background: #fff8e1; }
+  .stat-errors { background: #fce4ec; }
+  .progress-bar-wrap {
+    background: #eee;
+    border-radius: 8px;
+    height: 18px;
+    overflow: hidden;
+    margin: 10px 0 18px;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #00796b, #26a69a);
+    border-radius: 8px;
+    transition: width 0.4s ease;
+  }
+  .log-box {
+    background: #1e1e2e;
+    color: #cdd6f4;
+    border-radius: 6px;
+    padding: 12px 14px;
+    font-family: monospace;
+    font-size: 12px;
+    max-height: 300px;
+    overflow-y: auto;
+    margin-top: 14px;
+  }
+  .log-line { margin: 2px 0; white-space: pre-wrap; word-break: break-word; }
+  .log-ok   { color: #a6e3a1; }
+  .log-err  { color: #f38ba8; }
+  .log-warn { color: #f9e2af; }
+  /* ── Preview cards ── */
+  .preview-section { margin-top: 24px; }
+  .preview-section-title {
+    font-size: 14px; font-weight: 700; color: #333; margin-bottom: 10px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .preview-card {
+    border: 1px solid #c8e6c9; border-radius: 8px; margin-bottom: 16px;
+    background: #fafafa; overflow: hidden;
+  }
+  .preview-card-header {
+    background: #e8f5e9; padding: 10px 16px; font-weight: 600; font-size: 13px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .field-block { padding: 10px 16px; border-top: 1px solid #eeeeee; }
+  .field-label {
+    font-size: 11px; font-weight: 700; color: #555; text-transform: uppercase;
+    letter-spacing: .5px; margin-bottom: 6px;
+  }
+  .field-orig {
+    background: #fff3e0; border-radius: 4px; padding: 7px 10px;
+    font-size: 13px; color: #4e342e; margin-bottom: 5px;
+    white-space: pre-wrap; word-break: break-word;
+  }
+  .field-new {
+    background: #e8f5e9; border-radius: 4px; padding: 7px 10px;
+    font-size: 13px; color: #1b5e20;
+    white-space: pre-wrap; word-break: break-word;
+  }
+  .field-tag {
+    display: inline-block; font-size: 10px; font-weight: 700;
+    margin-right: 6px; opacity: .65;
+  }
+  .save-btn {
+    background: #00796b; color: #fff; border: none; padding: 6px 18px;
+    border-radius: 5px; cursor: pointer; font-size: 12px; font-weight: 600;
+  }
+  .save-btn:hover   { background: #004d40; }
+  .save-btn:disabled { background: #9e9e9e; cursor: default; }
+  .save-new-btn {
+    background: #6a1b9a; color: #fff; border: none; padding: 6px 18px;
+    border-radius: 5px; cursor: pointer; font-size: 12px; font-weight: 600;
+  }
+  .save-new-btn:hover   { background: #4a148c; }
+  .save-new-btn:disabled { background: #9e9e9e; cursor: default; }
+  .variant-links { margin-top: 6px; display: flex; flex-wrap: wrap; gap: 6px; }
+  .save-all-btn {
+    background: #1565c0; color: #fff; border: none; padding: 7px 20px;
+    border-radius: 5px; cursor: pointer; font-size: 13px; font-weight: 600;
+  }
+  .save-all-btn:hover { background: #0d47a1; }
+</style>
+{% endblock %}
+
+{% block content %}
+<h1>{{ mode_label }}</h1>
+
+{% if error %}
+  <p style="color:red;">{{ error }}</p>
+{% else %}
+<div class="prog-card">
+
+  <p id="status-text" style="font-size:15px;color:#555;">
+    Running <strong>{{ mode_label }}</strong> on <strong>{{ total }}</strong> question(s)&nbsp;&mdash; please wait&hellip;
+  </p>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="prog-bar" style="width:0%"></div>
+  </div>
+  <div style="font-size:12px;color:#888;text-align:right;margin-top:-14px;margin-bottom:10px;">
+    <span id="pct-text">0%</span>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat-box stat-total">
+      <div class="num" id="s-total">{{ total }}</div>
+      <div class="lbl">Total</div>
+    </div>
+    <div class="stat-box stat-done">
+      <div class="num" id="s-done">0</div>
+      <div class="lbl">Done ✓</div>
+    </div>
+    <div class="stat-box stat-remain">
+      <div class="num" id="s-remain">{{ total }}</div>
+      <div class="lbl">Remaining</div>
+    </div>
+    <div class="stat-box stat-errors">
+      <div class="num" id="s-errors">0</div>
+      <div class="lbl">Errors ✗</div>
+    </div>
+  </div>
+
+  <div class="log-box" id="log-box">
+    <div class="log-line" style="color:#888;">Starting &hellip;</div>
+  </div>
+
+  <!-- Preview cards (shown for modify_language mode) -->
+  <div id="preview-area" class="preview-section" style="display:none;">
+    <div class="preview-section-title">
+      <span>&#128065; Previews &mdash; review before saving</span>
+      <button class="save-all-btn" id="save-all-btn" onclick="saveAll()">&#128190; Save All</button>
+    </div>
+    <div id="preview-cards"></div>
+  </div>
+
+  <form id="csrf-form" style="display:none;">{% csrf_token %}</form>
+
+  <div id="btn-area" style="margin-top:20px;display:flex;gap:12px;align-items:center;">
+    <span id="spinner" style="color:#00796b;font-size:14px;">&#9696; Running&hellip;</span>
+  </div>
+</div>
+{% endif %}
+
+<script>
+var JOB_ID = '{{ job_id }}';
+var pollTimer;
+var renderedIds = {};
+
+var FIELD_LABELS = {
+  question: 'Question', a: 'Option A', b: 'Option B', c: 'Option C',
+  d: 'Option D', e: 'Option E', solution: 'Solution', shortcut: 'Shortcut',
+  extra: 'Extra', rule_based_explanation: 'Rule-based Explanation'
+};
+var FIELD_ORDER = ['question','a','b','c','d','e','solution','shortcut','extra','rule_based_explanation'];
+
+function escHtml(s) {
+  return String(s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function getCsrf() {
+  return document.querySelector('#csrf-form [name=csrfmiddlewaretoken]').value;
+}
+
+function cssClass(line) {
+  if (line.startsWith('ERR')) return 'log-err';
+  if (line.startsWith('OK'))  return 'log-ok';
+  return 'log-warn';
+}
+
+function renderPreviews(previews) {
+  if (!previews || !Object.keys(previews).length) return;
+  var area  = document.getElementById('preview-area');
+  var cards = document.getElementById('preview-cards');
+  area.style.display = '';
+
+  Object.keys(previews).forEach(function(mathId) {
+    if (renderedIds[mathId]) return;
+    renderedIds[mathId] = true;
+
+    var fields = previews[mathId];
+    var card = document.createElement('div');
+    card.className = 'preview-card';
+    card.id = 'pcard-' + mathId;
+
+    var html = '<div class="preview-card-header">'
+      + '<span>Question&nbsp;id&nbsp;=&nbsp;' + escHtml(mathId) + '</span>'
+      + '<button class="save-btn" id="sbtn-' + mathId + '" onclick="saveOne(\'' + mathId + '\')">'
+      + '&#128190; Save (overwrite)</button>'
+      + ' <button class="save-new-btn" id="snbtn-' + mathId + '" onclick="saveAsNew(\'' + mathId + '\')">'
+      + '&#10010; Save as New Question</button>'
+      + '<div class="variant-links" id="vlinks-' + mathId + '"></div>'
+      + '</div>';
+
+    FIELD_ORDER.forEach(function(k) {
+      var f = fields[k];
+      if (!f || !f.orig) return;
+      html += '<div class="field-block">'
+        + '<div class="field-label">' + escHtml(FIELD_LABELS[k] || k) + '</div>'
+        + '<div class="field-orig"><span class="field-tag">ORIG</span>' + escHtml(f.orig) + '</div>'
+        + '<div class="field-new"><span class="field-tag">NEW&nbsp;</span>' + escHtml(f.new) + '</div>'
+        + '</div>';
+    });
+
+    card.innerHTML = html;
+    cards.appendChild(card);
+  });
+}
+
+function saveOne(mathId) {
+  var btn = document.getElementById('sbtn-' + mathId);
+  btn.disabled = true;
+  btn.textContent = 'Saving…';
+  fetch('../action-save-preview/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'X-CSRFToken': getCsrf(),
+    },
+    body: 'job_id=' + encodeURIComponent(JOB_ID) + '&math_id=' + encodeURIComponent(mathId),
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(d) {
+    if (d.ok) {
+      btn.textContent = '\u2713 Overwritten';
+      btn.style.background = '#2e7d32';
+      document.getElementById('pcard-' + mathId).style.borderColor = '#81c784';
+    } else {
+      btn.textContent = '\u2717 Error: ' + (d.error || '');
+      btn.disabled = false;
+    }
+  })
+  .catch(function() { btn.textContent = '\u2717 Error'; btn.disabled = false; });
+}
+
+function saveAsNew(mathId) {
+  var btn = document.getElementById('snbtn-' + mathId);
+  btn.disabled = true;
+  btn.textContent = 'Creating…';
+  fetch('../action-save-as-new/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'X-CSRFToken': getCsrf(),
+    },
+    body: 'job_id=' + encodeURIComponent(JOB_ID) + '&math_id=' + encodeURIComponent(mathId),
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(d) {
+    if (d.ok) {
+      btn.disabled = false;   // allow creating more variants
+      btn.textContent = '\u2713 Saved as New';
+      btn.style.background = '#4a148c';
+      var vlinks = document.getElementById('vlinks-' + mathId);
+      var a = document.createElement('a');
+      a.href = '../' + mathId + '/variants/';
+      a.target = '_blank';
+      a.style.cssText = 'font-size:11px;color:#6a1b9a;text-decoration:underline;margin-right:10px;';
+      a.textContent = 'New id=' + d.new_id + ' \u2014 view all variants \u2197';
+      vlinks.appendChild(a);
+    } else {
+      btn.textContent = '\u2717 ' + (d.error || 'Error');
+      btn.disabled = false;
+    }
+  })
+  .catch(function() { btn.textContent = '\u2717 Error'; btn.disabled = false; });
+}
+
+function saveAll() {
+  var ids = Object.keys(renderedIds);
+  if (!ids.length) return;
+  var allBtn = document.getElementById('save-all-btn');
+  allBtn.disabled = true;
+  allBtn.textContent = 'Saving all…';
+  ids.forEach(function(id) { saveOne(id); });
+  setTimeout(function() {
+    allBtn.textContent = '\u2713 Done \u2014 check individual buttons for status';
+  }, ids.length * 300 + 500);
+}
+
+function poll() {
+  fetch('../action-poll/?job_id=' + JOB_ID)
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      if (d.error) { console.error(d.error); return; }
+
+      var total  = d.total  || 0;
+      var done   = d.done   || 0;
+      var errors = d.errors || 0;
+      var remain = total - done;
+      var pct    = total > 0 ? Math.round(done / total * 100) : 0;
+
+      document.getElementById('s-total').textContent  = total;
+      document.getElementById('s-done').textContent   = done;
+      document.getElementById('s-remain').textContent = remain;
+      document.getElementById('s-errors').textContent = errors;
+      document.getElementById('prog-bar').style.width = pct + '%';
+      document.getElementById('pct-text').textContent = pct + '%';
+
+      if (d.log && d.log.length) {
+        var box = document.getElementById('log-box');
+        box.innerHTML = '';
+        d.log.forEach(function(line) {
+          var div = document.createElement('div');
+          div.className = 'log-line ' + cssClass(line);
+          div.textContent = line;
+          box.appendChild(div);
+        });
+        box.scrollTop = box.scrollHeight;
+      }
+
+      if (d.previews) { renderPreviews(d.previews); }
+
+      if (d.done_flag) {
+        clearInterval(pollTimer);
+        document.getElementById('spinner').style.display = 'none';
+        var statusEl = document.getElementById('status-text');
+        if (errors === 0) {
+          statusEl.innerHTML = '<strong style="color:#2e7d32;">&#10003; Completed!</strong> All '
+            + done + ' questions processed.';
+        } else {
+          statusEl.innerHTML = '<strong style="color:#c62828;">Finished with errors.</strong> '
+            + done + ' processed, ' + errors + ' errors.';
+        }
+        document.getElementById('btn-area').innerHTML =
+          '<a href="../" style="background:#00796b;color:#fff;padding:10px 22px;border-radius:6px;'
+          + 'font-size:14px;text-decoration:none;font-weight:600;">&#8592; Back to Math list</a>';
+      }
+    })
+    .catch(function(e) { console.error('Poll error:', e); });
+}
+
+pollTimer = setInterval(poll, 2000);
+poll();
+</script>
+{% endblock %}

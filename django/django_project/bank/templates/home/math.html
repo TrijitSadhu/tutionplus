@@ -110,6 +110,107 @@
 	.table td, .table th {
     font-size: 14px;
 	}
+
+/* ── Multi-language styles ───────────────────────── */
+.math-lang-btn {
+  background: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  padding: 4px 14px;
+  font-size: 12px;
+  cursor: pointer;
+  color: #444;
+  font-weight: 500;
+  transition: background 0.2s, color 0.2s;
+}
+.math-lang-btn:hover { background: #e0e0e0; }
+.math-lang-active {
+  background: #3F51B5 !important;
+  color: #fff !important;
+  border-color: #3F51B5 !important;
+}
+</style>
+
+<style>
+/* ---- Rule Slide Panel ---- */
+.rule-slide-overlay {
+	display: none;
+	position: fixed;
+	top: 0; left: 0;
+	width: 100%; height: 100%;
+	background: rgba(0,0,0,0.45);
+	z-index: 9998;
+}
+.rule-slide-overlay.open {
+	display: block;
+}
+.rule-slide-panel {
+	position: fixed;
+	top: 0; right: -460px;
+	width: 440px;
+	max-width: 96vw;
+	height: 100%;
+	background: #fff;
+	box-shadow: -4px 0 28px rgba(0,0,0,0.22);
+	overflow-y: auto;
+	transition: right 0.38s cubic-bezier(.4,0,.2,1);
+	z-index: 9999;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+}
+.rule-slide-panel.open {
+	right: 0;
+}
+.rule-panel-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	background: #4D90FE;
+	color: #fff;
+	padding: 14px 18px 12px 18px;
+	position: sticky;
+	top: 0;
+	z-index: 1;
+}
+.rule-panel-header h5 {
+	margin: 0;
+	font-size: 15px;
+	font-weight: 700;
+	letter-spacing: 0.3px;
+}
+.rule-panel-close-btn {
+	background: transparent;
+	border: none;
+	color: #fff;
+	font-size: 22px;
+	cursor: pointer;
+	line-height: 1;
+	padding: 0 4px;
+}
+.rule-panel-close-btn:hover {
+	color: #ffe;
+}
+.rule-panel-body {
+	padding: 20px 22px;
+	font-size: 15px;
+	color: #222;
+	line-height: 1.7;
+	flex: 1;
+}
+.btn-rule {
+	color: #fff;
+	background-color: #e67e22;
+	border: none;
+	margin-left: 8px;
+	display: inline-block;
+	margin-top: 16px;
+	float: left;
+}
+.btn-rule:hover {
+	background-color: #cf6d17;
+	color: #fff;
+}
 </style>
   <!--==========================
     Header
@@ -465,12 +566,22 @@
 				 
 						
 				
+
+<!-- ─── GLOBAL LANGUAGE SELECTOR ─── -->
+<div id="math-lang-bar" style="margin-bottom:14px;padding:10px 14px;background:#f8f9fa;border-radius:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;border:1px solid #e0e0e0;">
+  <span style="font-weight:600;color:#555;font-size:13px;margin-right:4px;">&#127760; Language:</span>
+  {% for lcode, lname in math_languages %}
+  <button class="math-lang-btn {% if lcode == current_lang %}math-lang-active{% endif %}"
+          data-lang="{{lcode}}" onclick="setMathLang('{{lcode}}')">{{lname}}</button>
+  {% endfor %}
+  <span id="lang-loading" style="display:none;font-size:12px;color:#888;margin-left:8px;">Changing language...</span>
+</div>
 							  		{% for math in math %}
 
-												<div style="text-align:justify"id="" class="box wow fadeInUp" > 
+												<div style="text-align:justify" id="mathcard-{{forloop.counter}}" class="box wow fadeInUp" data-math-id="{{math.id}}" data-counter="{{forloop.counter}}"> 
 														{{math.question_no}}:	
 												<h4 style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol';font-size:17px;font-weight:400;margin-left:20px;">
-												{% autoescape off %}	{{math.question}} {% endautoescape %} </h4>
+												<span id="mathq-{{forloop.counter}}">{% if math.trans %}{% autoescape off %}{{math.trans.question}}{% endautoescape %}{% else %}{% autoescape off %}{{math.question}}{% endautoescape %}{% endif %}</span></h4>
 																{% if math.use_image == 0 %}
 
 																{% endif %}
@@ -517,7 +628,7 @@
 																					{% if math.a_img == none  %}
 
 																					
-																						{{math.a}}
+																						<span id="mathoa-{{forloop.counter}}">{% if math.trans %}{{math.trans.a}}{% else %}{{math.a}}{% endif %}</span>
 																						
 																						{% else %}
 																						
@@ -539,7 +650,7 @@
 																					<input type="radio" name="radio1" id="{{forloop.counter}}2" value="option1">
 																					 
 																					<label for="{{forloop.counter}}2">
-																						{{math.b}}
+																						<span id="mathob-{{forloop.counter}}">{% if math.trans %}{{math.trans.b}}{% else %}{{math.b}}{% endif %}</span>
 																					</label>
 																					<div id="{{forloop.counter}}w2"style="text-align:center;display:none">
 																					<img src="{% static "/c.png" %}" class="img-rounded"> 
@@ -555,7 +666,7 @@
 																																		 
 																					<input type="radio" name="radio1" id="{{forloop.counter}}3" value="option1">
 																					<label for="{{forloop.counter}}3">
-																						{{math.c}}
+																						<span id="mathoc-{{forloop.counter}}">{% if math.trans %}{{math.trans.c}}{% else %}{{math.c}}{% endif %}</span>
 																					</label>
 																				<div id="{{forloop.counter}}w3"style="text-align:center;display:none">
 																					<img src="{% static "/c.png" %}" class="img-rounded"> 
@@ -570,7 +681,7 @@
 																					
 																					 <input type="radio" name="radio1" id="{{forloop.counter}}4" value="option1">
 																					<label for="{{forloop.counter}}4">
-																						{{math.d}}
+																						<span id="mathod-{{forloop.counter}}">{% if math.trans %}{{math.trans.d}}{% else %}{{math.d}}{% endif %}</span>
 																					</label>
 																					<div id="{{forloop.counter}}w4"style="text-align:center;display:none">
 																					<img src="{% static "/c.png" %}" class="img-rounded"> 
@@ -585,7 +696,7 @@
 																					
 																					 <input type="radio" name="radio1" id="{{forloop.counter}}5" value="option1">
 																					<label for="{{forloop.counter}}5" >
-																						{{math.e}}
+																						<span id="mathoe-{{forloop.counter}}">{% if math.trans %}{{math.trans.e}}{% else %}{{math.e}}{% endif %}</span>
 																					</label>
 																					
 																					
@@ -611,22 +722,29 @@
 				style=" color: #fff;background-color:#4D90FE;float:left;display:inline-block" type="submit" class="btn  btn-sm"
 																						
 																						
-																						> See Solutoins</button> 
+> See Solutoins</button>
+																		
 																						
 													</div>			
 
-													<div id="solution{{forloop.counter}}"style="text-align:center;display:none">
+													<div id="solution{{forloop.counter}}" style="position:relative;text-align:center;display:none">
+														{% if math.rule %}<button type="button" class="btn btn-sm btn-rule" onclick="openRulePanel('rule_panel_{{forloop.counter}}')" style="position:absolute;top:8px;right:8px;background-color:#e67e22;color:#fff;z-index:10;">&#128218; Rule</button>{% endif %}
 													 
 															<p  id="sol_upper{{forloop.counter}}"class="bg-info" style="text-align:center;"> <b>Correct<img src="{% static "/thh.png" %}" class="img-rounded" ></b> </p> 
 															<p> <b>  Answer :</b></p> 
-																<div  style="display:block;text-align:justify;border:1px solid;padding:12px">
-															{% autoescape off %}	{{math.solution}} {% endautoescape %} </div>
+																<div id="mathsol-{{forloop.counter}}" style="display:block;text-align:justify;border:1px solid;padding:12px">{% if math.trans %}{% autoescape off %}{{math.trans.solution}}{% endautoescape %}{% else %}{% autoescape off %}{{math.solution}}{% endautoescape %}{% endif %} </div>
+													{% if math.rule_based_explanation or math.trans.rule_based_explanation %}
+													<div id="mathrbe-{{forloop.counter}}" style="display:block;text-align:justify;border:1px solid;padding:12px;background:#f9f0e0;margin-top:6px">
+													<span style="color:#7d4c00;font-weight:600">&#128218; Rule-based Explanation:</span><br>
+													{% if math.trans and math.trans.rule_based_explanation %}{% autoescape off %}{{math.trans.rule_based_explanation}}{% endautoescape %}{% else %}{% autoescape off %}{{math.rule_based_explanation}}{% endautoescape %}{% endif %}
+													</div>
+													{% endif %}
 															
 															
 															{% if math.shortcut != '' %}
-																<div  style="display:block;text-align:justify;border:1px solid;padding:10px">
+																<div id="mathsc-{{forloop.counter}}" style="display:block;text-align:justify;border:1px solid;padding:10px">
 																<span style="color:#4955e0;display:table">Quicker Method:</span> 
-																	{% autoescape off %}	{{math.shortcut}} {% endautoescape %} 
+																	{% if math.trans and math.trans.shortcut %}{% autoescape off %}{{math.trans.shortcut}}{% endautoescape %}{% else %}{% autoescape off %}{{math.shortcut}}{% endautoescape %}{% endif %} 
 																</div>
 																{% endif %}
 														
@@ -638,6 +756,18 @@
 														
 											
 													
+{% if math.rule %}
+<div id="rule_panel_{{forloop.counter}}" class="rule-slide-panel">
+  <div class="rule-panel-header">
+    <h5>&#128218; {{math.rule.chapter|title}} &mdash; {{math.rule.rule_name}}</h5>
+    <button class="rule-panel-close-btn" onclick="closeRulePanel('rule_panel_{{forloop.counter}}')" title="Close">&times;</button>
+  </div>
+  <div class="rule-panel-body" id="rule_body_{{forloop.counter}}">
+    {% autoescape off %}{% if math.rule_trans and math.rule_trans.rule_html %}{{math.rule_trans.rule_html}}{% else %}{{math.rule.rule_html}}{% endif %}{% endautoescape %}
+  </div>
+</div>
+{% endif %}
+
 													{% endfor %}
 													<!--end math-->
 							  <!-- page start-->
@@ -1397,6 +1527,120 @@ $('.show-hide1').addClass("expand");
 	<script>
 	
 </script>
+<div class="rule-slide-overlay" id="rule_overlay" onclick="closeAllRulePanels()"></div>
+<script>
+function openRulePanel(id) {
+  document.querySelectorAll(".rule-slide-panel").forEach(function(p){ p.classList.remove("open"); });
+  document.getElementById(id).classList.add("open");
+  document.getElementById("rule_overlay").classList.add("open");
+}
+function closeRulePanel(id) {
+  document.getElementById(id).classList.remove("open");
+  document.getElementById("rule_overlay").classList.remove("open");
+}
+function closeAllRulePanels() {
+  document.querySelectorAll(".rule-slide-panel").forEach(function(p){ p.classList.remove("open"); });
+  document.getElementById("rule_overlay").classList.remove("open");
+}
+</script>
+
+<script>
+/* ── Multi-language JS ───────────────────────────────────────── */
+
+// Current global language (set by server)
+var currentMathLang = '{{ current_lang }}';
+
+// Available languages for per-question switcher
+var mathLangOptions = [
+  {code: 'en',  name: 'English'},
+  {code: 'hi',  name: '\u0939\u093f\u0902\u0926\u0940'},
+  {code: 'bn',  name: '\u09ac\u09be\u0982\u09b2\u09be'},
+  {code: 'ta',  name: '\u0ba4\u0bae\u0bbf\u0bb4\u0bcd'},
+  {code: 'te',  name: '\u0c24\u0c46\u0c32\u0c41\u0c17\u0c41'},
+  {code: 'mr',  name: '\u092e\u0930\u093e\u0920\u0940'}
+];
+
+// ── Mode 1: Set global language (reloads page) ──────────────────
+function setMathLang(lang) {
+  if (lang === currentMathLang) return;
+  var el = document.getElementById('lang-loading');
+  if (el) el.style.display = 'inline';
+  fetch('/math/set-language/?lang=' + lang)
+    .then(function(r) { return r.json(); })
+    .then(function() { window.location.reload(); })
+    .catch(function() { window.location.reload(); });
+}
+
+// ── Mode 2: Per-question AJAX language switch ───────────────────
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.box[data-math-id]').forEach(function(card) {
+    var mathId  = card.getAttribute('data-math-id');
+    var counter = card.getAttribute('data-counter');
+
+    // Build the select dropdown
+    var sel = document.createElement('select');
+    sel.title = 'Change language for this question';
+    sel.style.cssText = (
+      'position:absolute;top:6px;right:6px;font-size:11px;padding:2px 8px;' +
+      'border:1px solid #ccc;border-radius:12px;background:#fff;cursor:pointer;' +
+      'z-index:6;max-width:100px;color:#333;'
+    );
+    mathLangOptions.forEach(function(l) {
+      var opt = document.createElement('option');
+      opt.value = l.code;
+      opt.textContent = l.name;
+      if (l.code === currentMathLang) opt.selected = true;
+      sel.appendChild(opt);
+    });
+
+    sel.addEventListener('change', function() {
+      var lang = this.value;
+      this.disabled = true;
+      fetchMathTranslation(mathId, lang, counter, this);
+    });
+
+    card.style.position = 'relative';
+    card.insertBefore(sel, card.firstChild);
+  });
+});
+
+// Fetch translation from server and update DOM for one card
+function fetchMathTranslation(mathId, lang, counter, selEl) {
+  fetch('/math/translate/' + mathId + '/' + lang + '/')
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (data.error) {
+        selEl.disabled = false;
+        return;
+      }
+      var q = document.getElementById('mathq-'  + counter);
+      if (q)  q.innerHTML  = data.question || '';
+
+      ['a','b','c','d','e'].forEach(function(opt) {
+        var el = document.getElementById('matho' + opt + '-' + counter);
+        if (el && data[opt] !== undefined) el.innerHTML = data[opt];
+      });
+
+      var sol = document.getElementById('mathsol-' + counter);
+      if (sol) sol.innerHTML = data.solution || '';
+
+      var sc = document.getElementById('mathsc-' + counter);
+      if (sc && data.shortcut) sc.innerHTML = data.shortcut;
+
+      var rbe = document.getElementById('mathrbe-' + counter);
+      if (rbe && data.rule_based_explanation !== undefined) rbe.innerHTML =
+        '<span style="color:#7d4c00;font-weight:600">&#128218; Rule-based Explanation:</span><br>' +
+        (data.rule_based_explanation || '');
+
+      var ruleBody = document.getElementById('rule_body_' + counter);
+      if (ruleBody && data.rule_html !== undefined && data.rule_html) ruleBody.innerHTML = data.rule_html;
+
+      selEl.disabled = false;
+    })
+    .catch(function() { selEl.disabled = false; });
+}
+</script>
+
 </body>
 </html>
  

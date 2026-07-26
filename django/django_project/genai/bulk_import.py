@@ -56,8 +56,18 @@ class BulkImporter:
             print(f"   Type of parsed data: {type(self.records)}")
             
             if not isinstance(self.records, list):
-                print(f"   ⚠️  Data is not a list, wrapping in list")
-                self.records = [self.records]
+                # Check if it's a wrapper dict with a single list value (e.g. {"questions": [...]})
+                if isinstance(self.records, dict):
+                    list_values = [v for v in self.records.values() if isinstance(v, list)]
+                    if len(list_values) == 1:
+                        print(f"   ⚠️  Data is a wrapper dict — unwrapping inner list")
+                        self.records = list_values[0]
+                    else:
+                        print(f"   ⚠️  Data is not a list, wrapping in list")
+                        self.records = [self.records]
+                else:
+                    print(f"   ⚠️  Data is not a list, wrapping in list")
+                    self.records = [self.records]
             
             print(f"   ✅ Total records to import: {len(self.records)}")
             for idx, record in enumerate(self.records[:3]):

@@ -157,12 +157,60 @@
         border-left: 4px solid #17a2b8;
         color: #0c5460;
     }
+
+    .llm-banner {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: #1a2133;
+        border: 2px solid #4f8ef7;
+        border-radius: 8px;
+        padding: 14px 20px;
+        margin-bottom: 20px;
+        color: #e2e8f0;
+    }
+
+    .llm-banner .llm-icon { font-size: 1.6rem; }
+    .llm-banner .llm-label { font-size: 0.75rem; color: #8899b5; text-transform: uppercase; letter-spacing: 1px; }
+    .llm-banner .llm-value { font-size: 1rem; font-weight: 700; color: #4f8ef7; font-family: monospace; }
+
+    .select-field { width: 100%; padding: 8px 10px; border: 1px solid #417690; border-radius: 4px; font-size: 0.9rem; background: #fff; }
+    .select-field:focus { outline: none; border-color: #2c5266; box-shadow: 0 0 0 2px rgba(65,118,144,0.2); }
+
+    .extract-rule-section {
+        background: #fff8e1;
+        border: 2px solid #ffc107;
+        border-radius: 8px;
+    }
+    .extract-rule-section h3 { color: #895a00; border-bottom-color: #ffc107; }
+    .extract-rule-note {
+        background: #fff3cd;
+        border-left: 4px solid #ffc107;
+        color: #856404;
+        padding: 10px 15px;
+        border-radius: 4px;
+        margin-bottom: 12px;
+        font-size: 0.9em;
+    }
+    #rule-fields { display: none; margin-top: 14px; }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="math-processing-form">
     <h1>📊 Process Math Problem #{{ math_problem.id }}</h1>
+
+    <!-- LLM Banner -->
+    <div class="llm-banner">
+        <div class="llm-icon">🤖</div>
+        <div>
+            <div class="llm-label">Active LLM Provider</div>
+            <div class="llm-value">{{ llm_provider }} &mdash; {{ llm_display }}</div>
+        </div>
+        <div style="margin-left:auto;">
+            <a href="{% url 'genai:llm_config' %}" style="font-size:0.8rem;color:#8be9fd;text-decoration:none;">⚙️ Change LLM config</a>
+        </div>
+    </div>
     
     <div class="problem-info">
         <h3>Current Problem Details</h3>
@@ -335,12 +383,129 @@
             {{ form.errors }}
         </div>
         {% endif %}
-        
+
+        <!-- Prompt Selection -->
+        <div class="form-section">
+            <h3>📝 Prompt Selection</h3>
+            <div class="alert alert-info">
+                Choose which saved prompt to use. Select <strong>— Auto (use default) —</strong> to let the system pick automatically.
+                <br>Manage prompts in
+                <a href="{% url 'admin:genai_llmprompt_changelist' %}" target="_blank">Admin → LLM Prompts</a>.
+            </div>
+
+            <div class="number-input-group" style="gap:30px;">
+                <div class="number-input-item">
+                    <label for="{{ form.pdf_prompt.id_for_label }}" style="font-weight:bold;display:block;margin-bottom:5px;">
+                        📄 Prompt for PDF Processing
+                    </label>
+                    <select name="{{ form.pdf_prompt.html_name }}" id="{{ form.pdf_prompt.id_for_label }}" class="select-field">
+                        {% for val, label in form.fields.pdf_prompt.choices %}
+                            <option value="{{ val }}" {% if form.pdf_prompt.value == val %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                    <span class="help-text">{{ form.pdf_prompt.help_text }}</span>
+                </div>
+
+                <div class="number-input-item">
+                    <label for="{{ form.expression_prompt.id_for_label }}" style="font-weight:bold;display:block;margin-bottom:5px;">
+                        🔢 Prompt for Expression Processing
+                    </label>
+                    <select name="{{ form.expression_prompt.html_name }}" id="{{ form.expression_prompt.id_for_label }}" class="select-field">
+                        {% for val, label in form.fields.expression_prompt.choices %}
+                            <option value="{{ val }}" {% if form.expression_prompt.value == val %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                    <span class="help-text">{{ form.expression_prompt.help_text }}</span>
+                </div>
+            </div>
+
+            {% if prompt_qs %}
+            <details style="margin-top:14px;">
+                <summary style="cursor:pointer;color:#417690;font-weight:bold;">🔍 View all available prompts ({{ prompt_qs|length }})</summary>
+                <table style="width:100%;border-collapse:collapse;font-size:0.8rem;margin-top:8px;">
+                    <tr style="background:#f0f0f0;">
+                        <th style="padding:6px;text-align:left;border:1px solid #ddd;">ID</th>
+                        <th style="padding:6px;text-align:left;border:1px solid #ddd;">Type</th>
+                        <th style="padding:6px;text-align:left;border:1px solid #ddd;">Source URL</th>
+                        <th style="padding:6px;text-align:left;border:1px solid #ddd;">Default</th>
+                        <th style="padding:6px;text-align:left;border:1px solid #ddd;">Action</th>
+                    </tr>
+                    {% for p in prompt_qs %}
+                    <tr>
+                        <td style="padding:5px;border:1px solid #ddd;">{{ p.id }}</td>
+                        <td style="padding:5px;border:1px solid #ddd;">{{ p.get_prompt_type_display }}</td>
+                        <td style="padding:5px;border:1px solid #ddd;">{{ p.source_url|default:"(Default)" }}</td>
+                        <td style="padding:5px;border:1px solid #ddd;">{% if p.is_default %}✅{% else %}—{% endif %}</td>
+                        <td style="padding:5px;border:1px solid #ddd;">
+                            <a href="{% url 'admin:genai_llmprompt_change' p.id %}" target="_blank" style="font-size:0.75rem;">Edit</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </details>
+            {% endif %}
+        </div>
+
+        <!-- Extract Rule Section -->
+        <div class="form-section extract-rule-section">
+            <h3>📐 Extract Rule (instead of MCQs)</h3>
+            <div class="extract-rule-note">
+                ⚠️ When checked, the system will extract the <strong>rule/theorem content</strong> from the PDF pages
+                and save it to the <strong>rule_math</strong> table — no MCQs will be generated.
+            </div>
+            <div class="checkbox-item">
+                {{ form.extract_rule }}
+                <label for="{{ form.extract_rule.id_for_label }}" style="font-weight:bold;">
+                    {{ form.extract_rule.label }}
+                </label>
+            </div>
+
+            <div id="rule-fields">
+                <div class="number-input-item" style="margin-top:12px; max-width:320px;">
+                    <label for="{{ form.rule_number.id_for_label }}" style="font-weight:bold;display:block;margin-bottom:5px;">
+                        Rule Number
+                    </label>
+                    <select name="{{ form.rule_number.html_name }}" id="{{ form.rule_number.id_for_label }}" class="select-field">
+                        {% for val, label in form.fields.rule_number.choices %}
+                            <option value="{{ val }}" {% if form.rule_number.value == val %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                    <span class="help-text">
+                        Chapter: <strong>{{ math_chapter|default:"(not set)" }}</strong>
+                        &nbsp;|&nbsp;
+                        <a href="{% url 'admin:bank_rule_math_changelist' %}" target="_blank">View existing rules →</a>
+                    </span>
+                </div>
+            </div>
+        </div>
+
         <!-- Submit Section -->
         <div class="submit-section">
-            <button type="submit" class="btn-process">🚀 Proceed with Processing</button>
+            <button type="submit" class="btn-process" id="submit-btn">🚀 Proceed with Processing</button>
             <a href="{% url 'admin:genai_mathproblemgeneration_change' math_problem.pk %}" class="btn-cancel">Cancel</a>
         </div>
     </form>
 </div>
+
+<script>
+(function() {
+    var cb = document.getElementById('{{ form.extract_rule.id_for_label }}');
+    var ruleFields = document.getElementById('rule-fields');
+    var submitBtn = document.getElementById('submit-btn');
+
+    function toggle() {
+        if (cb.checked) {
+            ruleFields.style.display = 'block';
+            submitBtn.textContent = '📐 Extract Rule';
+            submitBtn.style.background = '#895a00';
+        } else {
+            ruleFields.style.display = 'none';
+            submitBtn.textContent = '🚀 Proceed with Processing';
+            submitBtn.style.background = '#417690';
+        }
+    }
+    cb.addEventListener('change', toggle);
+    toggle();
+})();
+</script>
 {% endblock %}

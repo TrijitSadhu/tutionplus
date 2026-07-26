@@ -779,10 +779,19 @@ Difficulty Guidelines:
             logger.error(f"[DIFFICULTY] Classification error: {e}")
             return {'difficulty': 'medium', 'confidence': 0.0, 'reasoning': f'Error: {str(e)}'}
     
-    def get_or_create_mcq_extraction_prompt(self) -> str:
+    def get_or_create_mcq_extraction_prompt(self, prompt_id=None) -> str:
         """Get or create LLM prompt for MCQ extraction from PDF text"""
         from genai.models import LLMPrompt
-        
+
+        # Use explicitly selected prompt if provided
+        if prompt_id:
+            try:
+                prompt_obj = LLMPrompt.objects.get(id=prompt_id, is_active=True)
+                print(f"✅ [PROMPT FETCH] Using user-selected prompt ID={prompt_id}")
+                return prompt_obj.prompt_text
+            except LLMPrompt.DoesNotExist:
+                print(f"⚠️ [PROMPT FETCH] Selected prompt ID={prompt_id} not found, falling back to default")
+
         print(f"\n[PROMPT FETCH] Method: get_or_create_mcq_extraction_prompt()")
         print(f"[PROMPT FETCH] Looking for: source_url='http://pdfmcqprompt.com'")
         
@@ -910,10 +919,19 @@ IMPORTANT NOTES:
         
         return default_prompt
     
-    def get_or_create_expression_mcq_prompt(self) -> str:
+    def get_or_create_expression_mcq_prompt(self, prompt_id=None) -> str:
         """Get or create LLM prompt for MCQ generation from expression (Convert to LaTeX)"""
         from genai.models import LLMPrompt
-        
+
+        # Use explicitly selected prompt if provided
+        if prompt_id:
+            try:
+                prompt_obj = LLMPrompt.objects.get(id=prompt_id, is_active=True)
+                print(f"✅ [PROMPT FETCH] Using user-selected prompt ID={prompt_id}")
+                return prompt_obj.prompt_text
+            except LLMPrompt.DoesNotExist:
+                print(f"⚠️ [PROMPT FETCH] Selected prompt ID={prompt_id} not found, falling back to default")
+
         print(f"\n[PROMPT FETCH] Method: get_or_create_expression_mcq_prompt()")
         print(f"[PROMPT FETCH] Looking for: source_url='http://mcqpromptFOR-MATH-EXPRESSION.com'")
         
@@ -1046,7 +1064,10 @@ IMPORTANT NOTES:
             log_entry.save()
             
             # Determine processing mode
-            if config['process_pdf'] and math_problem.pdf_file:
+            if config.get('extract_rule') and config['process_pdf'] and math_problem.pdf_file:
+                print("[MODE] Rule Extraction Mode\n")
+                result = self._process_rule_extraction_mode(math_problem, config, log_entry)
+            elif config['process_pdf'] and math_problem.pdf_file:
                 print("[MODE] PDF Processing Mode\n")
                 result = self._process_pdf_mode(math_problem, config, log_entry)
             elif math_problem.expression:
@@ -1123,7 +1144,9 @@ IMPORTANT NOTES:
             print(f"[DIFFICULTY] Using pre-set: {difficulty}")
         
         # Fetch prompt from database (Expression mode uses different source_url)
-        prompt_template = self.get_or_create_expression_mcq_prompt()
+        prompt_template = self.get_or_create_expression_mcq_prompt(
+            prompt_id=config.get('expression_prompt_id')
+        )
         
         # Replace placeholders
         prompt = prompt_template.replace('{text}', math_problem.expression)
@@ -1276,7 +1299,18 @@ IMPORTANT NOTES:
             print(f"  [DIFFICULTY] Using: {difficulty}\n")
             
             # Generate MCQs using LLM
-            mcqs = self._extract_mcqs_from_text(combined_text, chapter, difficulty)
+            result = self._extract_mcqs_from_text(combined_text, chapter, difficulty, prompt_id=config.get('pdf_prompt_id'))
+            
+            # Handle error dict vs plain list
+            if isinstance(result, dict) and 'error' in result:
+                llm_error = result['error']
+                print(f"\n❌ LLM Error: {llm_error}\n")
+                return {
+                    'success': False,
+                    'error': f"LLM error: {llm_error}",
+                    'mcq_count': 0
+                }
+            mcqs = result if isinstance(result, list) else []
             
             print(f"  [MCQS] Extracted {len(mcqs)} MCQs\n")
             
@@ -1302,10 +1336,11 @@ IMPORTANT NOTES:
         
         # Check if any MCQs were generated
         if not all_mcqs:
-            error_msg = "No MCQs generated. OCR failed to extract text from PDF. Please check:\n"
-            error_msg += "1. Enable Tesseract OCR (recommended - works reliably)\n"
-            error_msg += "2. PaddleOCR/EasyOCR have DLL issues - see OCR_INSTALLATION_STATUS.md\n"
-            error_msg += "3. Ensure PDF contains readable text/images"
+            error_msg = "No MCQs generated. The LLM returned no questions. Possible causes:\n"
+            error_msg += "1. Token/rate limit exceeded - try a model with higher limits or reduce pages per batch\n"
+            error_msg += "2. Prompt template may be too long for the selected model\n"
+            error_msg += "3. OCR text quality may be too low for the LLM to parse MCQs\n"
+            error_msg += "4. Text may not contain MCQ-format questions"
             print(f"\n❌ {error_msg}\n")
             return {
                 'success': False,
@@ -1347,8 +1382,230 @@ IMPORTANT NOTES:
         except Exception as e:
             logger.error(f"Error determining page count: {e}")
             return [(0, 0)]
-    
-    def _extract_mcqs_from_text(self, text: str, chapter: str, difficulty: str) -> List[Dict]:
+
+    # ──────────────────────────────────────────────────────────────────────────
+    # RULE EXTRACTION MODE
+    # ──────────────────────────────────────────────────────────────────────────
+
+    def _process_rule_extraction_mode(self, math_problem, config: Dict, log_entry) -> Dict[str, Any]:
+        """OCR the PDF pages then extract rule content via LLM and save to rule_math."""
+        import json
+        from bank.models import rule_math as RuleMath
+
+        rule_name = config.get('rule_number')
+        chapter = math_problem.chapter or 'any'
+
+        print(f"\n[RULE EXTRACTION MODE] chapter={chapter}  rule={rule_name}\n")
+
+        if not rule_name:
+            return {'success': False, 'error': 'No rule number selected. Please select a rule number before extracting.'}
+
+        # ── OCR pages ────────────────────────────────────────────────────────
+        pdf_path = math_problem.pdf_file.path
+        page_from = max(0, (config.get('page_from') or 1) - 1)
+        page_to_raw = config.get('page_to') or 0
+
+        ocr_config = {
+            'use_paddle_ocr': config.get('use_paddle_ocr', False),
+            'use_easy_ocr': config.get('use_easy_ocr', False),
+            'use_tesseract': config.get('use_tesseract', True),
+        }
+
+        combined_text = ''
+        try:
+            from genai.tasks.ocr_dispatcher import OCRDispatcher
+            ocr = OCRDispatcher(ocr_config)
+
+            if page_to_raw == 0:
+                # determine last page
+                from PyPDF2 import PdfReader
+                total_pages = len(PdfReader(pdf_path).pages)
+                page_to = total_pages - 1
+            else:
+                page_to = page_to_raw - 1
+
+            texts = []
+            for idx in range(page_from, page_to + 1):
+                print(f"  [OCR] Page {idx + 1} (OCR index: {idx})...")
+                page_text = ocr.extract_text(pdf_path, idx)
+                texts.append(f"\n=== Page {idx + 1} ===\n{page_text}")
+            combined_text = '\n'.join(texts)
+        except Exception as e:
+            return {'success': False, 'error': f'OCR failed: {e}'}
+
+        if not combined_text.strip():
+            return {'success': False, 'error': 'OCR extracted no text from the PDF pages.'}
+
+        print(f"[RULE EXTRACTION] Extracted {len(combined_text)} chars from PDF")
+
+        # ── LLM extraction ────────────────────────────────────────────────────
+        rule_result = self._extract_rule_from_text(combined_text, chapter, rule_name)
+        if isinstance(rule_result, dict) and 'error' in rule_result:
+            return {'success': False, 'error': rule_result['error']}
+
+        rule_text_with_latex = rule_result.get('rule_text_with_latex', '')
+        rule_html = rule_result.get('rule_html', '')
+
+        # ── Save to rule_math ─────────────────────────────────────────────────
+        obj, created = RuleMath.objects.update_or_create(
+            chapter=chapter,
+            rule_name=rule_name,
+            defaults={
+                'rule_text_with_latex': rule_text_with_latex,
+                'rule_html': rule_html,
+            }
+        )
+        action = 'Created' if created else 'Updated'
+        print(f"✅ [RULE EXTRACTION] {action} rule_math id={obj.id}  chapter={chapter}  rule={rule_name}")
+
+        log_entry.output_data = json.dumps({
+            'action': action,
+            'rule_math_id': obj.id,
+            'chapter': chapter,
+            'rule_name': rule_name,
+        })
+
+        return {
+            'success': True,
+            'mode': 'rule_extraction',
+            'action': action,
+            'rule_math_id': obj.id,
+            'chapter': chapter,
+            'rule_name': rule_name,
+        }
+
+    def _extract_rule_from_text(self, text: str, chapter: str, rule_name: str):
+        """Ask LLM to extract rule content and return rule_text_with_latex + rule_html."""
+        print(f"\n{'='*80}")
+        print(f"[RULE EXTRACTION LLM] chapter={chapter}  rule={rule_name}")
+        print(f"[RULE EXTRACTION LLM] Input text length: {len(text)} chars")
+        print(f"{'='*80}\n")
+
+        # ── Fetch prompt from DB, or create a default if none exists ──
+        from genai.models import LLMPrompt
+        prompt_template = None
+        try:
+            prompt_obj = LLMPrompt.objects.filter(
+                prompt_type='rule_extraction',
+                is_default=True,
+                is_active=True,
+            ).first()
+            if not prompt_obj:
+                prompt_obj = LLMPrompt.objects.filter(
+                    prompt_type='rule_extraction',
+                    is_active=True,
+                ).first()
+            if prompt_obj:
+                prompt_template = prompt_obj.prompt_text
+                print(f"[RULE EXTRACTION] Using DB prompt id={prompt_obj.id}")
+        except Exception as e:
+            print(f"[RULE EXTRACTION] Could not fetch DB prompt: {e}")
+
+        if not prompt_template:
+            # Create and save the default prompt so admin can edit it
+            prompt_template = """You are an expert math educator creating structured study material for competitive exam students (SSC, Banking, Railway).
+
+From the provided textbook content, extract and explain the rule/theorem "{rule_name}" from the chapter "{chapter}".
+
+Return a JSON object with exactly TWO keys:
+
+1. "rule_text_with_latex"
+   Plain text + LaTeX math. Use $...$ for inline and $$...$$ for block equations.
+   Include: rule statement, formula, brief derivation if useful.
+
+2. "rule_html"
+   Full structured HTML using the template below.
+   ALL math expressions must use \\( ... \\) for inline and \\[ ... \\] for display.
+
+HTML template to fill:
+<section class="rule-card">
+  <div class="rc-header">
+    <div class="rc-num">{rule_name}</div>
+    <h2 class="rc-title">[Short descriptive title]</h2>
+  </div>
+  <div class="rc-section rc-statement">
+    <p>[Beginner-friendly explanation in plain words, 2-3 sentences]</p>
+  </div>
+  <div class="rc-section rc-formula">
+    <div class="rc-label">📐 Formula</div>
+    <div class="rc-formula-box">\\[ [main formula] \\]</div>
+    <p>[One line describing each variable]</p>
+  </div>
+  <div class="rc-section rc-visual">
+    <div class="rc-label">🔍 Step-by-Step Breakdown</div>
+    <ol class="rc-steps">
+      <li><span class="step-tag">Identify</span> [what to find] → \\( [expression] \\)</li>
+      <li><span class="step-tag">Set up</span> [formula] → \\( [expression] \\)</li>
+      <li><span class="step-tag">Simplify</span> → \\( [expression] \\)</li>
+      <li><span class="step-tag">Result</span> → \\( [final answer form] \\)</li>
+    </ol>
+  </div>
+  <div class="rc-section rc-intuition">
+    <div class="rc-label">💡 Why It Works</div>
+    <p>[Intuitive explanation without jargon, 2-3 sentences]</p>
+  </div>
+  <div class="rc-section rc-pattern">
+    <div class="rc-label">🎯 When to Use This Rule</div>
+    <ul class="rc-triggers">
+      <li>[Question pattern or keyword 1]</li>
+      <li>[Question pattern or keyword 2]</li>
+      <li>[Question pattern or keyword 3]</li>
+    </ul>
+  </div>
+  <div class="rc-section rc-example">
+    <div class="rc-label">✏️ Worked Example</div>
+    <p class="rc-example-problem">[Realistic exam-style problem statement]</p>
+    <div class="rc-solution-steps">
+      <p>Given: \\( [values] \\)</p>
+      <p>Step 1: \\[ [substitution] \\]</p>
+      <p>Step 2: \\[ [simplification] \\]</p>
+      <p><strong>Answer: \\( [result] \\)</strong></p>
+    </div>
+  </div>
+  <div class="rc-section rc-mistake">
+    <div class="rc-label">⚠️ Common Mistake</div>
+    <p><span class="wrong">✗ Wrong:</span> [typical error students make]</p>
+    <p><span class="right">✓ Correct:</span> [right approach with brief reason]</p>
+  </div>
+</section>
+
+Textbook content (use this as your source):
+{text}
+
+Respond with ONLY the JSON object — no explanation, no markdown fences."""
+            try:
+                if not LLMPrompt.objects.filter(prompt_type='rule_extraction').exists():
+                    LLMPrompt.objects.create(
+                        prompt_type='rule_extraction',
+                        prompt_text=prompt_template,
+                        is_default=True,
+                        is_active=True,
+                    )
+                    print("[RULE EXTRACTION] Created default prompt in DB")
+            except Exception as e:
+                print(f"[RULE EXTRACTION] Could not save default prompt: {e}")
+
+        # Fill in placeholders
+        prompt = prompt_template.replace('{rule_name}', rule_name) \
+                                 .replace('{chapter}', chapter) \
+                                 .replace('{text}', text[:3000])
+
+        try:
+            print(f"[LLM CALL] Sending rule extraction prompt...")
+            print(f"[LLM CALL] Provider: {self.llm.__class__.__name__}")
+            response = self.llm.generate_json(prompt)
+            if response and 'rule_text_with_latex' in response:
+                print(f"✅ [RULE EXTRACTION LLM] SUCCESS")
+                return response
+            else:
+                print(f"❌ [RULE EXTRACTION LLM] LLM did not return expected keys. Got: {list(response.keys()) if response else None}")
+                return {'error': f'LLM response missing expected keys. Got: {list(response.keys()) if response else "empty response"}'}
+        except Exception as e:
+            logger.error(f"Rule extraction LLM error: {e}")
+            print(f"❌ [RULE EXTRACTION LLM] Error: {e}")
+            return {'error': str(e)}
+
+    def _extract_mcqs_from_text(self, text: str, chapter: str, difficulty: str, prompt_id=None):
         """Extract MCQs from text using LLM"""
         print(f"\n{'='*80}")
         print(f"[MCQ EXTRACTION] Starting LLM-based MCQ extraction")
@@ -1361,10 +1618,13 @@ IMPORTANT NOTES:
         
         try:
             # Fetch prompt from database
-            prompt_template = self.get_or_create_mcq_extraction_prompt()
+            prompt_template = self.get_or_create_mcq_extraction_prompt(
+                prompt_id=prompt_id
+            )
             
             # Replace placeholders in template
-            prompt = prompt_template.replace('{text}', text[:5000])
+            # Limit text to ~2000 chars to stay within model TPM limits
+            prompt = prompt_template.replace('{text}', text[:2000])
             prompt = prompt.replace('{chapter}', chapter)
             prompt = prompt.replace('{difficulty}', difficulty)
             
@@ -1390,7 +1650,8 @@ IMPORTANT NOTES:
         
         except Exception as e:
             logger.error(f"Error extracting MCQs: {e}")
-            return []
+            print(f"❌ [MCQ EXTRACTION] Error: {e}")
+            return {'error': str(e), 'questions': []}
     
     def _convert_answer_to_int(self, answer: str) -> int:
         """Convert answer letter to integer"""

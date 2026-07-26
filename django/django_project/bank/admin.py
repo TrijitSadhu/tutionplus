@@ -28,6 +28,8 @@ from .models import close
 
 from .models import total_math
 from .models import math
+from .models import rule_math
+from .models import math_translation
 from .models import currentaffairs_mcq
 from .models import currentaffairs_mcq_info_2018
 from .models import currentaffairs_mcq_info_2019
@@ -99,6 +101,157 @@ class CurrentAffairsDescriptiveInfoAdmin(admin.ModelAdmin):
 class SubjectMetaAdmin(admin.ModelAdmin):
     list_display = ('id', 'subject_name', 'sub_chapter', 'section')
     search_fields = ('subject_name', 'sub_chapter', 'section')
+
+
+class RuleMathAdmin(admin.ModelAdmin):
+    list_display = ('id', 'chapter', 'rule_name')
+    list_filter = ('chapter',)
+    search_fields = ('chapter', 'rule_name')
+    ordering = ('chapter', 'rule_name')
+
+
+from bank.admin_math_actions import (
+    action_modify_language, action_validation_check,
+    action_validate_math, action_modify_and_validate,
+)
+
+
+def translate_questions_action(modeladmin, request, queryset):
+    """Single action: redirect to language-select + progress page."""
+    from django.http import HttpResponseRedirect
+    ids = ','.join(str(q.id) for q in queryset)
+    request.session['translate_math_ids'] = ids
+    return HttpResponseRedirect('translate-select/')
+
+translate_questions_action.short_description = 'Translate selected questions'
+
+
+from django.utils.html import format_html
+
+
+class HasVariantsFilter(admin.SimpleListFilter):
+    title = 'Has variants'
+    parameter_name = 'has_variants'
+
+    def lookups(self, request, model_admin):
+        return (
+            ('yes', 'Yes — has variants'),
+            ('no',  'No variants'),
+        )
+
+    def queryset(self, request, queryset):
+        from django.db.models import Count
+        qs = queryset.annotate(_vc=Count('variants'))
+        if self.value() == 'yes':
+            return qs.filter(_vc__gt=0)
+        if self.value() == 'no':
+            return qs.filter(_vc=0)
+        return queryset
+
+
+class IsVariantFilter(admin.SimpleListFilter):
+    title = 'Is a variant'
+    parameter_name = 'is_variant'
+
+    def lookups(self, request, model_admin):
+        return (
+            ('yes', 'Yes — copied from another'),
+            ('no',  'No — original'),
+        )
+
+    def queryset(self, request, queryset):
+        if self.value() == 'yes':
+            return queryset.filter(source_math__isnull=False)
+        if self.value() == 'no':
+            return queryset.filter(source_math__isnull=True)
+        return queryset
+
+
+class MathAdmin(admin.ModelAdmin):
+    list_display = ('id', 'question_preview', 'chapter', 'subject_name', 'sub_chapter', 'section',
+                    'validation_status', 'translated_language', 'source_info', 'variants_link', 'llm_used')
+    list_filter = ('validation_status', 'chapter', HasVariantsFilter, IsVariantFilter)
+    search_fields = ('question', 'subject_name', 'sub_chapter', 'section')
+    list_editable = ('validation_status', 'llm_used')
+    actions = [
+        translate_questions_action,
+        action_modify_language,
+        action_validation_check,
+        action_validate_math,
+        action_modify_and_validate,
+    ]
+
+    def get_urls(self):
+        from django.urls import path
+        from bank.admin_translate_views import (
+            translate_select_view, translate_start_view,
+            translate_progress_view, translate_progress_poll,
+        )
+        from bank.admin_math_actions import (
+            action_progress_view, action_progress_poll,
+            action_save_preview, action_save_as_new, math_variants_view,
+        )
+        custom = [
+            path('translate-select/',    translate_select_view,   name='math_translate_select'),
+            path('translate-start/',     translate_start_view,    name='math_translate_start'),
+            path('translate-progress/',  translate_progress_view, name='math_translate_progress'),
+            path('translate-poll/',      translate_progress_poll, name='math_translate_poll'),
+            path('action-progress/',     action_progress_view,    name='math_action_progress'),
+            path('action-poll/',         action_progress_poll,    name='math_action_poll'),
+            path('action-save-preview/', action_save_preview,     name='math_action_save_preview'),
+            path('action-save-as-new/',  action_save_as_new,      name='math_action_save_as_new'),
+            path('<int:math_id>/variants/', math_variants_view,   name='math_variants'),
+        ]
+        return custom + super().get_urls()
+
+    def get_changelist_form(self, request, **kwargs):
+        class MathListForm(forms.ModelForm):
+            llm_used = forms.CharField(required=False, widget=TextInput(attrs={'size': '20'}))
+        return MathListForm
+
+    def question_preview(self, obj):
+        return obj.question[:60] + '...' if len(obj.question) > 60 else obj.question
+    question_preview.short_description = 'Question'
+
+    def source_info(self, obj):
+        if obj.source_math_id:
+            url = reverse('admin:bank_math_change', args=[obj.source_math_id])
+            return format_html('<a href="{}">&#128279; orig&nbsp;id={}</a>', url, obj.source_math_id)
+        return ''
+    source_info.short_description = 'Source'
+
+    def variants_link(self, obj):
+        count = obj.variants.count()
+        if count == 0:
+            return ''
+        url = reverse('admin:math_variants', args=[obj.id])
+        return format_html('<a href="{}">&#128441; {}&nbsp;variant{}</a>',
+                           url, count, 's' if count != 1 else '')
+    variants_link.short_description = 'Variants'
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        if obj and obj.chapter:
+            form.base_fields['rule'].queryset = rule_math.objects.filter(chapter=obj.chapter)
+        else:
+            form.base_fields['rule'].queryset = rule_math.objects.all()
+        return form
+
+
+class ReasoningAdmin(admin.ModelAdmin):
+    list_display = ('id', 'question_preview', 'validation_status', 'llm_used', 'chapter')
+    list_filter = ('validation_status', 'chapter')
+    search_fields = ('question',)
+    list_editable = ('validation_status', 'llm_used')
+
+    def get_changelist_form(self, request, **kwargs):
+        class ReasoningListForm(forms.ModelForm):
+            llm_used = forms.CharField(required=False, widget=TextInput(attrs={'size': '20'}))
+        return ReasoningListForm
+
+    def question_preview(self, obj):
+        return obj.question[:60] + '...' if len(obj.question) > 60 else obj.question
+    question_preview.short_description = 'Question'
 
 # Lists of models for grouping on admin index
 mcq_info_tables = [
@@ -206,7 +359,9 @@ admin_site.register(the_economy_word_list1)
 admin_site.register(the_economy_word_Header2)
 admin_site.register(the_economy_word_list2)
 admin_site.register(total_english)
-admin_site.register(math, SubjectMetaAdmin)
+admin_site.register(math, MathAdmin)
+admin_site.register(rule_math, RuleMathAdmin)
+admin_site.register(math_translation)
 admin_site.register(total_math)
 admin_site.register(job)
 admin_site.register(total_job)
@@ -221,7 +376,7 @@ admin_site.register(topic)
 
 
 admin_site.register(total_reasoning)
-admin_site.register(reasoning)
+admin_site.register(reasoning, ReasoningAdmin)
 
 admin_site.register(total_close)
 admin_site.register(close)

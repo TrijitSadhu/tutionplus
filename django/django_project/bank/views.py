@@ -1349,6 +1349,116 @@ def math_home(request):
     })
 
 
+def math_rules(request, chapter):
+    """Show all rules/formulas for a given chapter from rule_math table."""
+    from bank.models import rule_math as RuleMath
+
+    CHAPTER_DISPLAY_MAP = {
+        'alligation_n_mixture':    'Alligation & Mixture',
+        'average':                 'Average',
+        'boats_n_stream':          'Boats & Streams',
+        'compound_interest':       'Compound Interest',
+        'partnership':             'Partnership',
+        'percentage':              'Percentage',
+        'permutation_combination': 'Permutation & Combination',
+        'pipe_cistern':            'Pipes & Cisterns',
+        'probability':             'Probability',
+        'problem_on_age':          'Problems on Age',
+        'profit_n_loss':           'Profit & Loss',
+        'ratio_n_proportion':      'Ratio & Proportion',
+        'simple_interest':         'Simple Interest',
+        'simplification':          'Simplification',
+        'squre_n_cube':            'Square & Cube',
+        'time_n_distance':         'Time & Distance',
+        'time_n_work':             'Time & Work',
+        'volume_n_surface_area':   'Volume & Surface Area',
+    }
+
+    chapter_display = CHAPTER_DISPLAY_MAP.get(chapter, chapter.replace('_', ' ').title())
+    rules = RuleMath.objects.filter(chapter=chapter).order_by('rule_name')
+
+    # Build all chapters list for sidebar navigation
+    all_chapters = [
+        {'slug': slug, 'display': display, 'active': slug == chapter}
+        for slug, display in CHAPTER_DISPLAY_MAP.items()
+    ]
+
+    return render(request, 'math/math_rules.html', {
+        'chapter': chapter,
+        'chapter_display': chapter_display,
+        'rules': rules,
+        'all_chapters': all_chapters,
+        'rule_count': rules.count(),
+    })
+
+
+def math_rule_detail(request, chapter, rule_id):
+    """Show a single rule/formula in full-page detail view."""
+    from bank.models import rule_math as RuleMath
+    from django.shortcuts import get_object_or_404
+
+    CHAPTER_DISPLAY_MAP = {
+        'alligation_n_mixture':    'Alligation & Mixture',
+        'average':                 'Average',
+        'boats_n_stream':          'Boats & Streams',
+        'compound_interest':       'Compound Interest',
+        'partnership':             'Partnership',
+        'percentage':              'Percentage',
+        'permutation_combination': 'Permutation & Combination',
+        'pipe_cistern':            'Pipes & Cisterns',
+        'probability':             'Probability',
+        'problem_on_age':          'Problems on Age',
+        'profit_n_loss':           'Profit & Loss',
+        'ratio_n_proportion':      'Ratio & Proportion',
+        'simple_interest':         'Simple Interest',
+        'simplification':          'Simplification',
+        'squre_n_cube':            'Square & Cube',
+        'time_n_distance':         'Time & Distance',
+        'time_n_work':             'Time & Work',
+        'volume_n_surface_area':   'Volume & Surface Area',
+    }
+
+    rule = get_object_or_404(RuleMath, id=rule_id, chapter=chapter)
+    chapter_display = CHAPTER_DISPLAY_MAP.get(chapter, chapter.replace('_', ' ').title())
+
+    # All rules for this chapter for prev/next navigation
+    all_rules = list(RuleMath.objects.filter(chapter=chapter).order_by('rule_name'))
+    current_idx = next((i for i, r in enumerate(all_rules) if r.id == rule.id), 0)
+    prev_rule = all_rules[current_idx - 1] if current_idx > 0 else None
+    next_rule = all_rules[current_idx + 1] if current_idx < len(all_rules) - 1 else None
+
+    # Sidebar chapters
+    all_chapters = [
+        {'slug': slug, 'display': display, 'active': slug == chapter}
+        for slug, display in CHAPTER_DISPLAY_MAP.items()
+    ]
+
+    # Fix double-escaped backslashes from LLM JSON encoding:
+    # LLM outputs \( → JSON stores \\( → DB has literal two backslashes
+    def fix_latex(text):
+        if not text:
+            return text
+        return text.replace('\\\\', '\\')
+
+    rule_html_content = fix_latex(rule.rule_html or '')
+    rule_latex = fix_latex(rule.rule_text_with_latex or '')
+    # Prefer rule_html (structured HTML with sections) over plain latex text
+    # rule_html_content is the primary display; rule_latex is the fallback
+
+    return render(request, 'math/math_rule_detail.html', {
+        'rule': rule,
+        'rule_latex': rule_latex,
+        'rule_html_content': rule_html_content,
+        'chapter': chapter,
+        'chapter_display': chapter_display,
+        'all_chapters': all_chapters,
+        'prev_rule': prev_rule,
+        'next_rule': next_rule,
+        'rule_number': current_idx + 1,
+        'total_rules': len(all_rules),
+    })
+
+
 def reasoning_home(request):
     """Reasoning chapter home page showing all chapters with question counts."""
     from django.db.models import Count
@@ -1408,6 +1518,79 @@ def reasoning_home(request):
         'total_chapters': len([c for c in chapters if c['count'] > 0]),
         'max_count': max_count,
     })
+
+
+# ─── Subjects hub + individual subject home views ────────────────────────────
+
+def subjects_home(request):
+    """Static hub page listing all subjects in two groups."""
+    return render(request, 'subjects/subjects_home.html', {})
+
+
+def _subject_chapters_home(request, subject_slug, model_class, subject_title,
+                            accent, accent2, emoji):
+    """Shared logic for all 7 subject chapter home pages."""
+    from django.db.models import Count
+
+    counts_qs = (
+        model_class.objects
+        .exclude(subject_name__isnull=True)
+        .exclude(subject_name='')
+        .values('subject_name')
+        .annotate(cnt=Count('id'))
+        .order_by('-cnt')
+    )
+    chapters = [
+        {
+            'display': row['subject_name'],
+            'count':   row['cnt'],
+            'url':     f'/subject/{subject_slug}/question-answare/mcq/{row["subject_name"]}/1/',
+        }
+        for row in counts_qs
+    ]
+    total_questions = sum(c['count'] for c in chapters)
+    max_count = chapters[0]['count'] if chapters else 1
+
+    return render(request, 'subjects/subject_chapters.html', {
+        'chapters':        chapters,
+        'total_questions': total_questions,
+        'total_chapters':  len(chapters),
+        'max_count':       max_count,
+        'subject_slug':    subject_slug,
+        'subject_title':   subject_title,
+        'accent':          accent,
+        'accent2':         accent2,
+        'emoji':           emoji,
+    })
+
+
+def biology_home(request):
+    return _subject_chapters_home(request, 'biology', biology,
+                                  'Biology', '#059669', '#34d399', '🔬')
+
+def physics_home(request):
+    return _subject_chapters_home(request, 'physics', physics,
+                                  'Physics', '#7c3aed', '#a78bfa', '⚛️')
+
+def chemistry_home(request):
+    return _subject_chapters_home(request, 'chemistry', chemistry,
+                                  'Chemistry', '#dc2626', '#f87171', '⚗️')
+
+def history_home(request):
+    return _subject_chapters_home(request, 'history', history,
+                                  'History', '#d97706', '#fbbf24', '🏛️')
+
+def geography_home(request):
+    return _subject_chapters_home(request, 'geography', geography,
+                                  'Geography', '#0891b2', '#22d3ee', '🌍')
+
+def polity_home(request):
+    return _subject_chapters_home(request, 'polity', polity,
+                                  'Polity', '#6366f1', '#818cf8', '⚖️')
+
+def economics_home(request):
+    return _subject_chapters_home(request, 'economics', economics,
+                                  'Economics', '#16a34a', '#4ade80', '📊')
 
 
 def math_all(request,string,params):
@@ -1692,10 +1875,192 @@ def math_all(request,string,params):
 
 
     #slide = current_affairs.objects.values('upper_heading','yellow_heading','key_1','key_2','key_3','day','new_id','paragraph','all_key_points','ca_img').order_by('-day','-creation_time')[p:mul]
-    mathh = math.objects.values().filter(chapter=string).all().order_by('day')[p:mul]
 
-    return render(request,'home/math.html',{'job': jobs,'form':userform,'login':login,'params':params_int,'p':2,'page':page,'params':params,'next':next,'previous':previous,'math':mathh,'chapter':string.replace('_',' '),'tag_page':string})
+    # ── Language support ──────────────────────────────────────────────────────
+    MATH_UI_LANGUAGES = [
+        ('en', 'English'), ('hi', 'हिंदी'), ('bn', 'বাংলা'),
+        ('ta', 'தமிழ்'), ('te', 'తెలుగు'), ('mr', 'मराठी'),
+    ]
+    current_lang = request.session.get('math_lang', 'en')
 
+    mathh = list(math.objects.filter(chapter=string).select_related('rule').order_by('day')[p:mul])
+
+    if current_lang != 'en':
+        from .models import math_translation, rule_math_translation
+        ids = [q.id for q in mathh]
+        trans_map = {
+            t.math_id: t
+            for t in math_translation.objects.filter(math_id__in=ids, language=current_lang)
+        }
+        rule_ids = [q.rule_id for q in mathh if q.rule_id]
+        rule_trans_map = {
+            t.rule_id: t
+            for t in rule_math_translation.objects.filter(rule_id__in=rule_ids, language=current_lang)
+        } if rule_ids else {}
+        for q in mathh:
+            q.trans = trans_map.get(q.id)
+            q.rule_trans = rule_trans_map.get(q.rule_id) if q.rule_id else None
+    else:
+        for q in mathh:
+            q.trans = None
+            q.rule_trans = None
+    # ─────────────────────────────────────────────────────────────────────────
+
+    return render(request, 'home/math.html', {
+        'job': jobs, 'form': userform, 'login': login,
+        'params': params, 'params_int': params_int, 'p': 2,
+        'page': page, 'next': next, 'previous': previous,
+        'math': mathh,
+        'chapter': string.replace('_', ' '),
+        'tag_page': string,
+        'current_lang': current_lang,
+        'math_languages': MATH_UI_LANGUAGES,
+    })
+
+
+def math_set_language(request):
+    """Set the global math language preference in the session (GET ?lang=hi)."""
+    from django.http import JsonResponse
+    VALID = {'en', 'hi', 'bn', 'ta', 'te', 'mr'}
+    lang = request.GET.get('lang', 'en')
+    if lang not in VALID:
+        lang = 'en'
+    request.session['math_lang'] = lang
+    request.session.modified = True
+    return JsonResponse({'ok': True, 'lang': lang})
+
+
+# ── Admin translation tool wrappers ──────────────────────────────────────────
+from bank.admin_translate_views import (
+    translate_select_view  as admin_translate_select,
+    translate_start_view   as admin_translate_start,
+    translate_progress_view as admin_translate_progress,
+    translate_progress_poll as admin_translate_poll,
+)
+# ─────────────────────────────────────────────────────────────────────────────
+
+
+def math_translate_single(request, math_id, lang):
+    """
+    AJAX: Return translated fields for one math question.
+    Tries DB first; on miss, calls Groq and saves result.
+    """
+    from django.http import JsonResponse
+    from .models import math as Math, math_translation as MathTrans
+
+    LANG_NAMES = {'hi': 'Hindi', 'bn': 'Bengali', 'ta': 'Tamil', 'te': 'Telugu', 'mr': 'Marathi'}
+
+    if lang not in LANG_NAMES and lang != 'en':
+        return JsonResponse({'error': 'Invalid language'}, status=400)
+
+    try:
+        q = Math.objects.select_related('rule').get(id=math_id)
+    except Math.DoesNotExist:
+        return JsonResponse({'error': 'Question not found'}, status=404)
+
+    if lang == 'en':
+        resp = {
+            'lang': 'en',
+            'question': q.question or '',
+            'a': q.a or '', 'b': q.b or '', 'c': q.c or '',
+            'd': q.d or '', 'e': q.e or '',
+            'solution': q.solution or '',
+            'shortcut': q.shortcut or '',
+            'extra': q.extra or '',
+            'rule_based_explanation': q.rule_based_explanation or '',
+        }
+        if q.rule:
+            resp['rule_html'] = q.rule.rule_html or ''
+        return JsonResponse(resp)
+
+    # Try DB cache first
+    try:
+        t = MathTrans.objects.get(math=q, language=lang)
+        from .models import rule_math_translation as RuleTrans
+        rule_html_trans = ''
+        if q.rule:
+            try:
+                rt = RuleTrans.objects.get(rule=q.rule, language=lang)
+                rule_html_trans = rt.rule_html or q.rule.rule_html or ''
+            except RuleTrans.DoesNotExist:
+                rule_html_trans = q.rule.rule_html or ''
+        return JsonResponse({
+            'lang': lang,
+            'question': t.question or q.question or '',
+            'a': t.a or q.a or '', 'b': t.b or q.b or '',
+            'c': t.c or q.c or '', 'd': t.d or q.d or '',
+            'e': t.e or q.e or '',
+            'solution': t.solution or q.solution or '',
+            'shortcut': t.shortcut or q.shortcut or '',
+            'extra': t.extra or q.extra or '',
+            'rule_based_explanation': t.rule_based_explanation or q.rule_based_explanation or '',
+            'rule_html': rule_html_trans,
+        })
+    except MathTrans.DoesNotExist:
+        pass
+
+    # On-demand: call Groq and cache the result
+    try:
+        import json as _json
+        from bank.admin_translate_views import _translate_question, _translate_fields, _TRANSLATE_PROMPT, _reload_config
+        from .models import rule_math_translation as RuleTrans
+
+        cfg = _reload_config()
+        GROQ_API_KEY = cfg.GROQ_API_KEY
+        GROQ_MODEL   = cfg.GROQ_MODEL
+        from groq import Groq
+
+        client = Groq(api_key=GROQ_API_KEY)
+
+        # Split into two calls: short fields + long fields
+        result = _translate_question(client, GROQ_MODEL, q, LANG_NAMES[lang], _json)
+
+        MathTrans.objects.update_or_create(
+            math=q, language=lang,
+            defaults={
+                'question': result.get('question', ''),
+                'a': result.get('a', ''), 'b': result.get('b', ''),
+                'c': result.get('c', ''), 'd': result.get('d', ''),
+                'e': result.get('e', ''),
+                'solution': result.get('solution', ''),
+                'shortcut': result.get('shortcut', ''),
+                'extra': result.get('extra', ''),
+                'rule_based_explanation': result.get('rule_based_explanation', ''),
+            }
+        )
+
+        # Also translate associated rule on-demand
+        rule_html_trans = ''
+        if q.rule:
+            try:
+                rt = RuleTrans.objects.get(rule=q.rule, language=lang)
+                rule_html_trans = rt.rule_html or q.rule.rule_html or ''
+            except RuleTrans.DoesNotExist:
+                try:
+                    rule_payload = {'rule_html': q.rule.rule_html or '', 'rule_text_with_latex': q.rule.rule_text_with_latex or ''}
+                    rule_result = _translate_fields(client, GROQ_MODEL, rule_payload, LANG_NAMES[lang], _json)
+                    RuleTrans.objects.update_or_create(
+                        rule=q.rule, language=lang,
+                        defaults={'rule_html': rule_result.get('rule_html', ''), 'rule_text_with_latex': rule_result.get('rule_text_with_latex', '')}
+                    )
+                    rule_html_trans = rule_result.get('rule_html', q.rule.rule_html or '')
+                except Exception:
+                    rule_html_trans = q.rule.rule_html or ''
+
+        return JsonResponse({
+            'lang': lang,
+            'question': result.get('question', q.question or ''),
+            'a': result.get('a', q.a or ''), 'b': result.get('b', q.b or ''),
+            'c': result.get('c', q.c or ''), 'd': result.get('d', q.d or ''),
+            'e': result.get('e', q.e or ''),
+            'solution': result.get('solution', q.solution or ''),
+            'shortcut': result.get('shortcut', q.shortcut or ''),
+            'extra': result.get('extra', q.extra or ''),
+            'rule_based_explanation': result.get('rule_based_explanation', q.rule_based_explanation or ''),
+            'rule_html': rule_html_trans,
+        })
+    except Exception as ex:
+        return JsonResponse({'error': str(ex)}, status=500)
 
 
     
@@ -3446,6 +3811,14 @@ def subject(request,subject,topic,subtopic,chapter,user_page_no):
    
                 
     return render(request,'home/mcq.html',{'mcq_2019_info': mcq_2019_info,'mcq_2018_info': mcq_2018_info,'mcq_all': mcq_all,'user_year':user_year,'user_month':user_month,'user_day':user_page_no,'form':userform,'login':login,'p':diff_from_top,'page':page,'params':params_int,'next':next,'previous':previous,'tag_page':tag_page})
+
+
+def api_docs(request):
+    import os
+    html_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'api_docs.html')
+    with open(html_path, 'r', encoding='utf-8') as f:
+        content = f.read()
+    return HttpResponse(content, content_type='text/html')
 
 
 def database(request):

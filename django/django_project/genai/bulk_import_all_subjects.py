@@ -210,6 +210,13 @@ class SubjectBulkImporter:
                 self.records = data
             elif isinstance(data, dict) and 'records' in data:
                 self.records = data['records']
+            elif isinstance(data, dict):
+                # Unwrap any wrapper dict with a single list value (e.g. {"questions": [...]})
+                list_values = [v for v in data.values() if isinstance(v, list)]
+                if len(list_values) == 1:
+                    self.records = list_values[0]
+                else:
+                    raise ValueError("JSON must be array or object with a single list value")
             else:
                 raise ValueError("JSON must be array or object with 'records' key")
             

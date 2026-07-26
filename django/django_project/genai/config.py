@@ -20,7 +20,7 @@ DEFAULT_LLM_PROVIDER = os.getenv('DEFAULT_LLM_PROVIDER', 'groq')
 # Groq Configuration (DEFAULT)
 # Available Groq Models: openai/gpt-oss-120b, llama-3.3-70b-versatile
 GROQ_API_KEY = os.getenv('GROQ_API_KEY', 'your-groq-api-key-here')
-GROQ_MODEL = os.getenv('GROQ_MODEL', 'openai/gpt-oss-120b')
+GROQ_MODEL = os.getenv('GROQ_MODEL', 'qwen/qwen3-32b')
 GROQ_TEMPERATURE = float(os.getenv('GROQ_TEMPERATURE', '0.7'))
 GROQ_MAX_OUTPUT_TOKENS_ENV = os.getenv('GROQ_MAX_OUTPUT_TOKENS')
 GROQ_MAX_OUTPUT_TOKENS = int(GROQ_MAX_OUTPUT_TOKENS_ENV) if GROQ_MAX_OUTPUT_TOKENS_ENV else 8192

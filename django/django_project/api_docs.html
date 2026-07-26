@@ -1,0 +1,1981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TutionPlus — API & URL Reference</title>
+  <style>
+    :root {
+      --bg: #0f1117;
+      --sidebar-bg: #161b27;
+      --card-bg: #1a2133;
+      --card-border: #2a3450;
+      --accent: #4f8ef7;
+      --text: #e2e8f0;
+      --muted: #8899b5;
+      --get: #22c55e;
+      --post: #f59e0b;
+      --delete: #ef4444;
+      --put: #a78bfa;
+      --tag-bg: #1e2d4a;
+      --search-bg: #111827;
+      --code-bg: #0d1526;
+      --radius: 8px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* ─── Sidebar ─────────────────────────────────── */
+    #sidebar {
+      width: 270px;
+      min-width: 240px;
+      background: var(--sidebar-bg);
+      border-right: 1px solid var(--card-border);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    #sidebar-header {
+      padding: 20px 16px 14px;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    #sidebar-header h1 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 0.5px;
+    }
+
+    #sidebar-header p {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+
+    #search-box {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    #search-box input {
+      width: 100%;
+      background: var(--search-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      color: var(--text);
+      font-size: 0.82rem;
+      padding: 7px 10px;
+      outline: none;
+    }
+
+    #search-box input::placeholder { color: var(--muted); }
+    #search-box input:focus { border-color: var(--accent); }
+
+    #nav-links {
+      overflow-y: auto;
+      flex: 1;
+      padding: 8px 0 18px;
+    }
+
+    .nav-group-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--muted);
+      padding: 12px 16px 4px;
+    }
+
+    .nav-link {
+      display: block;
+      padding: 6px 16px;
+      font-size: 0.8rem;
+      color: #aab8d0;
+      text-decoration: none;
+      border-left: 2px solid transparent;
+      transition: all 0.15s;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .nav-link:hover, .nav-link.active {
+      background: rgba(79,142,247,0.08);
+      color: var(--accent);
+      border-left-color: var(--accent);
+    }
+
+    /* ─── Main content ────────────────────────────── */
+    #main {
+      flex: 1;
+      overflow-y: auto;
+      padding: 28px 32px 60px;
+    }
+
+    .page-title {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+
+    .page-subtitle {
+      color: var(--muted);
+      font-size: 0.87rem;
+      margin-bottom: 32px;
+    }
+
+    /* ─── Section ─────────────────────────────────── */
+    .section {
+      margin-bottom: 48px;
+    }
+
+    .section-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text);
+      border-bottom: 2px solid var(--card-border);
+      padding-bottom: 8px;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-badge {
+      font-size: 0.68rem;
+      background: var(--tag-bg);
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      border-radius: 20px;
+      padding: 2px 10px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    /* ─── Endpoint Card ───────────────────────────── */
+    .ep-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      margin-bottom: 14px;
+      overflow: hidden;
+      transition: border-color 0.15s;
+    }
+
+    .ep-card:hover { border-color: #3a4f7a; }
+
+    .ep-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .ep-header:hover { background: rgba(255,255,255,0.02); }
+
+    .method-badge {
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 4px;
+      min-width: 52px;
+      text-align: center;
+      letter-spacing: 0.5px;
+    }
+
+    .m-get    { background: rgba(34,197,94,0.15);  color: var(--get); }
+    .m-post   { background: rgba(245,158,11,0.15); color: var(--post); }
+    .m-delete { background: rgba(239,68,68,0.15);  color: var(--delete); }
+    .m-put    { background: rgba(167,139,250,0.15);color: var(--put); }
+    .m-multi  { background: rgba(79,142,247,0.15); color: var(--accent); }
+
+    .ep-url {
+      font-family: 'Cascadia Code', 'Fira Code', monospace;
+      font-size: 0.85rem;
+      color: #c9d8f0;
+      flex: 1;
+      word-break: break-all;
+    }
+
+    .ep-desc-short {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-left: auto;
+      max-width: 260px;
+      text-align: right;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .ep-toggle-icon {
+      color: var(--muted);
+      font-size: 0.75rem;
+      transition: transform 0.2s;
+    }
+
+    .ep-card.open .ep-toggle-icon { transform: rotate(180deg); }
+
+    /* ─── Ep Body ─────────────────────────────────── */
+    .ep-body {
+      display: none;
+      padding: 0 16px 16px;
+      border-top: 1px solid var(--card-border);
+    }
+
+    .ep-card.open .ep-body { display: block; }
+
+    .ep-body h4 {
+      font-size: 0.73rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--muted);
+      margin: 14px 0 6px;
+    }
+
+    .ep-body p {
+      font-size: 0.84rem;
+      color: #b8c8e0;
+      line-height: 1.6;
+    }
+
+    .tag-list { display: flex; flex-wrap: wrap; gap: 6px; }
+
+    .tag {
+      background: var(--tag-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 4px;
+      font-size: 0.75rem;
+      padding: 3px 9px;
+      color: #aac0df;
+      font-family: monospace;
+    }
+
+    .tag-auth { border-color: #5a3a5a; color: #e0a0e0; background: #2a1a2a; }
+    .tag-json { border-color: #3a5a3a; color: #a0e0a0; background: #1a2a1a; }
+    .tag-html { border-color: #3a4a6a; color: #a0c0e0; background: #1a2040; }
+
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+      font-family: 'Cascadia Code', 'Fira Code', monospace;
+      font-size: 0.8rem;
+      color: #8be9fd;
+      overflow-x: auto;
+      white-space: pre;
+      margin-top: 4px;
+    }
+
+    .params-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+      margin-top: 4px;
+    }
+
+    .params-table th {
+      text-align: left;
+      color: var(--muted);
+      border-bottom: 1px solid var(--card-border);
+      padding: 4px 10px 4px 0;
+      font-weight: 600;
+    }
+
+    .params-table td {
+      padding: 5px 10px 5px 0;
+      border-bottom: 1px solid rgba(42,52,80,0.5);
+      vertical-align: top;
+      color: #c0d0e8;
+    }
+
+    .params-table td code {
+      color: #f9a8d4;
+      font-family: monospace;
+      font-size: 0.82rem;
+    }
+
+    .req-badge {
+      font-size: 0.65rem;
+      color: var(--post);
+      border: 1px solid var(--post);
+      border-radius: 3px;
+      padding: 1px 5px;
+      margin-left: 4px;
+    }
+
+    .opt-badge {
+      font-size: 0.65rem;
+      color: var(--muted);
+      border: 1px solid var(--card-border);
+      border-radius: 3px;
+      padding: 1px 5px;
+      margin-left: 4px;
+    }
+
+    /* ─── Stats bar ───────────────────────────────── */
+    .stats-bar {
+      display: flex;
+      gap: 18px;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+    }
+
+    .stat-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 12px 20px;
+      text-align: center;
+      min-width: 90px;
+    }
+
+    .stat-num { font-size: 1.5rem; font-weight: 700; color: var(--accent); }
+    .stat-lbl { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
+
+    /* ─── Scrollbar ───────────────────────────────── */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #2a3450; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #3a4a70; }
+
+    /* ─── Hide by search ──────────────────────────── */
+    .ep-card.hidden { display: none; }
+
+    @media (max-width: 900px) {
+      body { flex-direction: column; overflow: auto; height: auto; }
+      #sidebar { width: 100%; min-width: unset; height: auto; border-right: none; border-bottom: 1px solid var(--card-border); }
+      #nav-links { max-height: 200px; }
+      #main { padding: 20px 16px 40px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════ SIDEBAR ══════════ -->
+<aside id="sidebar">
+  <div id="sidebar-header">
+    <h1>⚡ TutionPlus API Docs</h1>
+    <p>Complete URL &amp; API Reference</p>
+  </div>
+  <div id="search-box">
+    <input type="text" id="search-input" placeholder="🔍  Search endpoints..."/>
+  </div>
+  <nav id="nav-links">
+    <div class="nav-group-label">Overview</div>
+    <a class="nav-link" href="#overview">Stats &amp; Route Prefixes</a>
+
+    <div class="nav-group-label">Bank App</div>
+    <a class="nav-link" href="#bank-public">Public Pages</a>
+    <a class="nav-link" href="#bank-auth">Auth Endpoints</a>
+    <a class="nav-link" href="#bank-ajax">AJAX Endpoints</a>
+    <a class="nav-link" href="#bank-math">Math Endpoints</a>
+    <a class="nav-link" href="#bank-subjects">Subjects &amp; GK</a>
+    <a class="nav-link" href="#bank-admin">Admin Custom URLs</a>
+
+    <div class="nav-group-label">GenAI App</div>
+    <a class="nav-link" href="#genai-api">JSON API Endpoints</a>
+    <a class="nav-link" href="#genai-admin">Admin / Staff Views</a>
+
+    <div class="nav-group-label">MockTest App</div>
+    <a class="nav-link" href="#mocktest">MockTest Endpoints</a>
+
+    <div class="nav-group-label">Students App</div>
+    <a class="nav-link" href="#students-api">Student JSON APIs</a>
+    <a class="nav-link" href="#students-pages">Student Pages</a>
+
+    <div class="nav-group-label">Notes</div>
+    <a class="nav-link" href="#notes">Auth &amp; CSRF Notes</a>
+  </nav>
+</aside>
+
+<!-- ══════════ MAIN ══════════ -->
+<main id="main">
+
+  <div class="page-title">TutionPlus — API &amp; URL Reference</div>
+  <div class="page-subtitle">All endpoints across Bank · GenAI · MockTest · Students apps. Click any card to expand details &amp; examples.</div>
+
+  <!-- Overview -->
+  <div id="overview" class="section">
+    <div class="section-title">Overview <span class="section-badge">Route Map</span></div>
+
+    <div class="stats-bar">
+      <div class="stat-card"><div class="stat-num">37</div><div class="stat-lbl">Bank URLs</div></div>
+      <div class="stat-card"><div class="stat-num">9</div><div class="stat-lbl">Admin Custom</div></div>
+      <div class="stat-card"><div class="stat-num">13</div><div class="stat-lbl">GenAI</div></div>
+      <div class="stat-card"><div class="stat-num">5</div><div class="stat-lbl">MockTest</div></div>
+      <div class="stat-card"><div class="stat-num">16</div><div class="stat-lbl">Students</div></div>
+      <div class="stat-card"><div class="stat-num">80</div><div class="stat-lbl">Total</div></div>
+    </div>
+
+    <div class="ep-card">
+      <div class="ep-header" onclick="toggleCard(this)">
+        <span class="method-badge m-multi">ALL</span>
+        <span class="ep-url">Route Prefix Map</span>
+        <span class="ep-desc-short">Main urls.py</span>
+        <span class="ep-toggle-icon">▼</span>
+      </div>
+      <div class="ep-body">
+        <h4>Route Prefixes — django_project/urls.py</h4>
+        <table class="params-table">
+          <tr><th>Prefix</th><th>App</th><th>Notes</th></tr>
+          <tr><td><code>/admin/</code></td><td>Django Admin</td><td>Custom BankAdminSite</td></tr>
+          <tr><td><code>/genai/</code></td><td>GenAI app</td><td>AI generation endpoints</td></tr>
+          <tr><td><code>/mocktest/</code></td><td>MockTest app</td><td>Exam runner</td></tr>
+          <tr><td><code>/api/</code></td><td>Students app</td><td>Student portal + JSON APIs</td></tr>
+          <tr><td><code>/</code></td><td>Bank app</td><td>Catch-all — public content</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ BANK: PUBLIC PAGES ═══ -->
+  <div id="bank-public" class="section">
+    <div class="section-title">Bank App — Public Pages <span class="section-badge">/</span></div>
+
+    <!-- Home -->
+    <div class="ep-card" data-search="index home get post">
+      <div class="ep-header" onclick="toggleCard(this)">
+        <span class="method-badge m-multi">GET/POST</span>
+        <span class="ep-url">/</span>
+        <span class="ep-desc-short">Home page</span>
+        <span class="ep-toggle-icon">▼</span>
+      </div>
+      <div class="ep-body">
+        <h4>Description</h4>
+        <p>Home page — shows vocab words, jobs, reasoning, cloze test, current affairs slides. POST registers a new user.</p>
+        <h4>Methods</h4>
+        <div class="tag-list"><span class="tag">GET</span><span class="tag">POST</span><span class="tag tag-html">HTML Response</span></div>
+        <h4>POST Parameters</h4>
+        <table class="params-table">
+          <tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr>
+          <tr><td><code>username</code></td><td>string</td><td><span class="req-badge">req</span></td><td>New user's username</td></tr>
+          <tr><td><code>email</code></td><td>string</td><td><span class="req-badge">req</span></td><td>Email address</td></tr>
+          <tr><td><code>password1</code></td><td>string</td><td><span class="req-badge">req</span></td><td>Password</td></tr>
+        </table>
+        <h4>Example</h4>
+        <pre>GET /
+# Returns home page HTML
+
+POST /
+# Register via home form</pre>
+      </div>
+    </div>
+
+    <!-- CA Detail -->
+    <div class="ep-card" data-search="current affairs detail paginated">
+      <div class="ep-header" onclick="toggleCard(this)">
+        <span class="method-badge m-get">GET</span>
+        <span class="ep-url">/current-affairs/detail/&lt;user_year_month&gt;/&lt;user_page_no&gt;/</span>
+        <span class="ep-desc-short">CA descriptive detail</span>
+        <span class="ep-toggle-icon">▼</span>
+      </div>
+      <div class="ep-body">
+        <h4>Description</h4>
+        <p>Paginated current-affairs descriptive detail page.</p>
+        <h4>URL Parameters</h4>
+        <table class="params-table">
+          <tr><th>Param</th><th>Example</th><th>Description</th></tr>
+          <tr><td><code>user_year_month</code></td><td><code>current-affairs-january-2024</code></td><td>Month-year slug</td></tr>
+          <tr><td><code>user_page_no</code></td><td><code>1</code></td><td>Page number (integer)</td></tr>
+        </table>
+        <h4>Example</h4>
+        <pre>GET /current-affairs/detail/current-affairs-january-2024/1/</pre>
+      </div>
+    </div>
+
+    <!-- CA MCQ -->
+    <div class="ep-card" data-search="current affairs mcq paginated">
+      <div class="ep-header" onclick="toggleCard(this)">
+        <span class="method-badge m-get">GET</span>
+        <span class="ep-url">/current-affairs/mcq/&lt;user_year_month&gt;/&lt;user_page_no&gt;/</span>
+        <span class="ep-desc-short">CA MCQ page</span>
+        <span class="ep-toggle-icon">▼</span>
+      </div>
+      <div class="ep-body">
+        <h4>Description</h4>
+        <p>Paginated current-affairs MCQ page. Same routing logic as the descriptive detail.</p>
+        <h4>Example</h4>
+        <pre>GET /current-affairs/mcq/current-affairs-march-2024/2/</pre>
+      </div>
+    </div>
+
+    <!-- Current category -->
+    <div class="ep-card" data-search="current category listing page">
+      <div class="ep-header" onclick="toggleCard(this)">
+        <span class="method-badge m-get">GET</span>
+        <span class="ep-url">/current/&lt;string&gt;/&lt;params&gt;/</span>
+        <span class="ep-desc-short">CA category listing</span>
+        <span class="ep-toggle-icon">▼</span>
+      </div>
+      <div class="ep-body">
+        <h4>Description</h4>
+        <p>Category-based current-affairs listing. <code>string</code> = DB field name used as category filter; <code>params</code> = page number.</p>
+        <h4>Example</h4>
+        <pre>GET /current/economy/1/</pre>
+      </div>
+    </div>
+
+    <!-- Single CA article -->
+    <div class="ep-card" data-search="current affairs single article">
+      <div class="ep-header" onclick="toggleCard(this)">
+        <span class="method-badge m-get">GET</span>
+        <span class="ep-url">/cuttent_affirs/&lt;string&gt;/</span>
+        <span class="ep-desc-short">Single CA article</span>
+        <span class="ep-toggle-icon">▼</span>
+      </div>
+      <div class="ep-body">
+        <h4>Description</h4>
+        <p>Single current-affairs article. <code>string</code> = <code>new_id</code> of the record.</p>
+        <h4>Example</h4>
+        <pre>GET /cuttent_affirs/ca-economy-2024-01-15/</pre>
+      </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div class="ep-card" data-search="dashboard user saved articles">
+      <div class="ep-header" onclick="toggleCard(this)">
+        <span class="method-badge m-get">GET</span>
+        <span class="ep-url">/dashboard/&lt;string&gt;/</span>
+        <span class="ep-desc-short">User dashboard</span>
+        <span class="ep-toggle-icon">▼</span>
+      </div>
+      <div class="ep-body">
+        <h4>Description</h4>
+        <p>User dashboard — shows saved articles for <code>string</code> (username).</p>
+        <h4>Example</h4>
+        <pre>GET /dashboard/johndoe/</pre>
+      </div>
+    </div>
+
+    <!-- Word -->
+    <div class="ep-card" data-search="english word vocab vocabulary">
+      <div class="ep-header" onclick="toggleCard(this)">
+        <span class="method-badge m-get">GET</span>
+        <span class="ep-url">/english/word/&lt;string&gt;/&lt;no&gt;/</span>
+        <span class="ep-desc-short">Vocabulary page</span>
+        <span class="ep-toggle-icon">▼</span>
+      </div>
+      <div class="ep-body">
+        <h4>Description</h4>
+        <p>English vocabulary page. <code>string</code> = <code>"page"</code> or a date string; <code>no</code> = page or count.</p>
+        <h4>Example</h4>
+        <pre>GET /english/word/page/1/
+GET /english/word/2024-01-15/5/</pre>
+      </div>
+    </div>
+
+    <!-- Job -->
+    <div class="ep-card" data-search="job listing">
+      <div class="ep-header" onclick="toggleCard(this)">
+        <span class="method-badge m-get">GET</span>
+        <span class="ep-url">/job/&lt;string&gt;/&lt;after_string&gt;/&lt;params&gt;/</span>
+        <span class="ep-desc-short">Job listing</span>
+        <span class="ep-toggle-icon">▼</span>
+      </div>
+      <div class="ep-body">
+        <h4>Description</h4>
+        <p>Job listing with category identifiers and pagination.</p>
+        <h4>Example</h4>
+        <pre>GET /job/government/ssc/1/</pre>
+      </div>
+    </div>
+
+    <!-- Formula -->
+    <div class="ep-card" data-search="formula math reference">
+      <div class="ep-header" onclick="toggleCard(this)">
+        <span class="method-badge m-get">GET</span>
+        <span class="ep-url">/formula/&lt;string&gt;/</span>
+        <span class="ep-desc-short">Math formulas</span>
+        <span class="ep-toggle-icon">▼</span>
+      </div>
+      <div class="ep-body">
+        <h4>Description</h4>
+        <p>Math formula reference page. <code>string</code> = formula category.</p>
+        <h4>Example</h4>
+        <pre>GET /formula/algebra/
+GET /formula/geometry/</pre>
+      </div>
+    </div>
+
+    <!-- GK today -->
+    <div class="ep-card" data-search="gk today article">
+      <div class="ep-header" onclick="toggleCard(this)">
+        <span class="method-badge m-get">GET</span>
+        <span class="ep-url">/gktoday/&lt;subject&gt;/&lt;folder&gt;/&lt;html&gt;/&lt;no&gt;/</span>
+        <span class="ep-desc-short">GK Today article</span>
+        <span class="ep-toggle-icon">▼</span>
+      </div>
+      <div class="ep-body">
+        <h4>Description</h4>
+        <p>GK Today article. <code>no</code> = page number.</p>
+        <h4>Example</h4>
+        <pre>GET /gktoday/history/ancient/mauryas/1/</pre>
+      </div>
+    </div>
+
+    <!-- GK index -->
+    <div class="ep-card" data-search="gk index landing subject">
+      <div class="ep-header" onclick="toggleCard(this)">
+        <span class="method-badge m-get">GET</span>
+        <span class="ep-url">/gk/&lt;subject&gt;/</span>
+        <span class="ep-desc-short">GK subject index</span>
+        <span class="ep-toggle-icon">▼</span>
+      </div>
+      <div class="ep-body">
+        <h4>Description</h4>
+        <p>GK index/landing page for a subject. Renders <code>&lt;subject&gt;/&lt;subject&gt;.html</code> template.</p>
+        <h4>Example</h4>
+        <pre>GET /gk/history/
+GET /gk/science/</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ BANK: AUTH ═══ -->
+  <div id="bank-auth" class="section">
+    <div class="section-title">Bank App — Auth Endpoints <span class="section-badge">Auth</span></div>
+
+    <!-- Signup -->
+    <div class="ep-card" data-search="signup register ajax">
+      <div class="ep-header" onclick="toggleCard(this)">
+        <span class="method-badge m-multi">GET/POST</span>
+        <span class="ep-url">/signup/</span>
+        <span class="ep-desc-short">AJAX signup</span>
+        <span class="ep-toggle-icon">▼</span>
+      </div>
+      <div class="ep-body">
+        <h4>Description</h4>
+        <p>AJAX-safe signup. Returns <code>"true"</code> on success or error string otherwise. Sends email activation link.</p>
+        <h4>Headers Required</h4>
+        <div class="tag-list"><span class="tag">X-Requested-With: XMLHttpRequest</span></div>
+        <h4>POST Parameters</h4>
+        <table class="params-table">
+          <tr><th>Field</th><th>Type</th><th>Required</th></tr>
+          <tr><td><code>username</code></td><td>string</td><td><span class="req-badge">req</span></td></tr>
+          <tr><td><code>email</code></td><td>string (email)</td><td><span class="req-badge">req</span></td></tr>
+          <tr><td><code>password1</code></td><td>string</td><td><span class="req-badge">req</span></td></tr>
+          <tr><td><code>password2</code></td><td>string</td><td><span class="req-badge">req</span></td></tr>
+        </table>
+        <h4>Response</h4>
+        <pre>// Success
+"true"
+
+// Error
+"Username already taken"</pre>
+        <h4>Example (fetch)</h4>
+        <pre>const fd = new FormData();
+fd.append('username', 'alice');
+fd.append('email', 'alice@example.com');
+fd.append('password1', 'secret123');
+fd.append('password2', 'secret123');
+
+fetch('/signup/', {
+  method: 'POST',
+  headers: {'X-Requested-With': 'XMLHttpRequest'},
+  body: fd
+}).then(r => r.text()).then(console.log);</pre>
+      </div>
+    </div>
+
+    <!-- Login -->
+    <div class="ep-card" data-search="login ajax">
+      <div class="ep-header" onclick="toggleCard(this)">
+        <span class="method-badge m-multi">GET/POST</span>
+        <span class="ep-url">/login/</span>
+        <span class="ep-desc-short">AJAX login</span>
+        <span class="ep-toggle-icon">▼</span>
+      </div>
+      <div class="ep-body">
+        <h4>Description</h4>
+        <p>AJAX login. Returns <code>"true"</code> on success or error string otherwise.</p>
+        <h4>Headers Required</h4>
+        <div class="tag-list"><span class="tag">X-Requested-With: XMLHttpRequest</span></div>
+        <h4>POST Parameters</h4>
+        <table class="params-table">
+          <tr><th>Field</th><th>Type</th><th>Required</th></tr>
+          <tr><td><code>username</code></td><td>string</td><td><span class="req-badge">req</span></td></tr>
+          <tr><td><code>password</code></td><td>string</td><td><span class="req-badge">req</span></td></tr>
+        </table>
+        <h4>Example</h4>
+        <pre>fetch('/login/', {
+  method: 'POST',
+  headers: {'X-Requested-With': 'XMLHttpRequest'},
+  body: new URLSearchParams({username: 'alice', password: 'secret123'})
+}).then(r => r.text());</pre>
+      </div>
+    </div>
+
+    <!-- Activate -->
+    <div class="ep-card" data-search="activate email token uid">
+      <div class="ep-header" onclick="toggleCard(this)">
+        <span class="method-badge m-get">GET</span>
+        <span class="ep-url">/activate/&lt;uidb64&gt;/&lt;token&gt;/</span>
+        <span class="ep-desc-short">Email activation</span>
+        <span class="ep-toggle-icon">▼</span>
+      </div>
+      <div class="ep-body">
+        <h4>Description</h4>
+        <p>Email account activation. Validates token, activates user, redirects to home.</p>
+        <h4>Example</h4>
+        <pre>GET /activate/MQ/abc-123-token/
+# Sent via activation email to user</pre>
+      </div>
+    </div>
+
+    <!-- Logout -->
+    <div class="ep-card" data-search="logout">
+      <div class="ep-header" onclick="toggleCard(this)">
+        <span class="method-badge m-get">GET</span>
+        <span class="ep-url">/logout/</span>
+        <span class="ep-desc-short">Logout → redirect /</span>
+        <span class="ep-toggle-icon">▼</span>
+      </div>
+      <div class="ep-body">
+        <h4>Description</h4>
+        <p>Django LogoutView. Logs out the current user and redirects to <code>/</code>.</p>
+        <h4>Example</h4>
+        <pre>GET /logout/</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ BANK: AJAX ═══ -->
+  <div id="bank-ajax" class="section">
+    <div class="section-title">Bank App — AJAX Endpoints <span class="section-badge">AJAX Plain Text</span></div>
+    <p style="font-size:0.82rem;color:var(--muted);margin-bottom:14px;">⚠ These use <code>request.is_ajax()</code> — require <strong>X-Requested-With: XMLHttpRequest</strong> header and return plain <code>HttpResponse</code> text, not JSON.</p>
+
+    <!-- Add -->
+    <div class="ep-card" data-search="add current affairs save article ajax">
+      <div class="ep-header" onclick="toggleCard(this)">
+        <span class="method-badge m-post">POST</span>
+        <span class="ep-url">/add/</span>
+        <span class="ep-desc-short">Save CA article</span>
+        <span class="ep-toggle-icon">▼</span>
+      </div>
+      <div class="ep-body">
+        <h4>Description</h4>
+        <p>Save a current-affairs article to user's saved list.</p>
+        <h4>POST Parameters</h4>
+        <table class="params-table">
+          <tr><th>Field</th><th>Required</th><th>Description</th></tr>
+          <tr><td><code>link</code></td><td><span class="req-badge">req</span></td><td>Article URL</td></tr>
+          <tr><td><code>user_name</code></td><td><span class="req-badge">req</span></td><td>Username</td></tr>
+          <tr><td><code>im_url</code></td><td><span class="req-badge">req</span></td><td>Image URL</td></tr>
+          <tr><td><code>head</code></td><td><span class="req-badge">req</span></td><td>Article headline</td></tr>
+        </table>
+        <h4>Response</h4>
+        <pre>"success"
+"Already Added"</pre>
+        <h4>Example</h4>
+        <pre>fetch('/add/', {
+  method: 'POST',
+  headers: {'X-Requested-With': 'XMLHttpRequest'},
+  body: new URLSearchParams({
+    link: 'https://example.com/article',
+    user_name: 'alice',
+    im_url: 'https://example.com/img.jpg',
+    head: 'Budget 2024 Highlights'
+  })
+}).then(r => r.text());</pre>
+      </div>
+    </div>
+
+    <!-- Delete -->
+    <div class="ep-card" data-search="delete remove current affairs ajax">
+      <div class="ep-header" onclick="toggleCard(this)">
+        <span class="method-badge m-post">POST</span>
+        <span class="ep-url">/del/</span>
+        <span class="ep-desc-short">Delete CA article</span>
+        <span class="ep-toggle-icon">▼</span>
+      </div>
+      <div class="ep-body">
+        <h4>Description</h4>
+        <p>Delete a saved article from user's list.</p>
+        <h4>POST Parameters</h4>
+        <table class="params-table">
+          <tr><th>Field</th><th>Required</th><th>Description</th></tr>
+          <tr><td><code>link</code></td><td><span class="req-badge">req</span></td><td>Article URL to remove</td></tr>
+          <tr><td><code>user</code></td><td><span class="req-badge">req</span></td><td>Username</td></tr>
+        </table>
+        <h4>Response</h4>
+        <pre>"success"
+"Already Deleted"</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ BANK: MATH ═══ -->
+  <div id="bank-math" class="section">
+    <div class="section-title">Bank App — Math Endpoints <span class="section-badge">/math/</span></div>
+
+    <!-- Math home -->
+    <div class="ep-card" data-search="math home landing">
+      <div class="ep-header" onclick="toggleCard(this)">
+        <span class="method-badge m-get">GET</span>
+        <span class="ep-url">/math/home/</span>
+        <span class="ep-desc-short">Math section home</span>
+        <span class="ep-toggle-icon">▼</span>
+      </div>
+      <div class="ep-body">
+        <h4>Description</h4><p>Math section landing page.</p>
+        <h4>Example</h4><pre>GET /math/home/</pre>
+      </div>
+    </div>
+
+    <!-- Math set language -->
+    <div class="ep-card" data-search="math set language session json">
+      <div class="ep-header" onclick="toggleCard(this)">
+        <span class="method-badge m-get">GET</span>
+        <span class="ep-url">/math/set-language/</span>
+        <span class="ep-desc-short">Set math language (JSON)</span>
+        <span class="ep-toggle-icon">▼</span>
+      </div>
+      <div class="ep-body">
+        <h4>Description</h4>
+        <p>Set session math language. Returns JSON confirmation.</p>
+        <h4>Query Parameters</h4>
+        <table class="params-table">
+          <tr><th>Param</th><th>Values</th><th>Required</th></tr>
+          <tr><td><code>lang</code></td><td><code>hi | bn | ta | te | mr | en</code></td><td><span class="req-badge">req</span></td></tr>
+        </table>
+        <h4>Response</h4>
+        <pre>{"ok": true, "lang": "hi"}</pre>
+        <h4>Example</h4>
+        <pre>GET /math/set-language/?lang=hi
+
+// Response
+{"ok": true, "lang": "hi"}</pre>
+      </div>
+    </div>
+
+    <!-- Math translate single -->
+    <div class="ep-card" data-search="math translate single json groq cache">
+      <div class="ep-header" onclick="toggleCard(this)">
+        <span class="method-badge m-get">GET</span>
+        <span class="ep-url">/math/translate/&lt;int:math_id&gt;/&lt;str:lang&gt;/</span>
+        <span class="ep-desc-short">Translate math question (JSON)</span>
+        <span class="ep-toggle-icon">▼</span>
+      </div>
+      <div class="ep-body">
+        <h4>Description</h4>
+        <p>Return translated fields for one math question. Tries DB cache; on cache miss calls Groq LLM and saves result.</p>
+        <h4>URL Parameters</h4>
+        <table class="params-table">
+          <tr><th>Param</th><th>Type</th><th>Description</th></tr>
+          <tr><td><code>math_id</code></td><td>int</td><td>Primary key of the math record</td></tr>
+          <tr><td><code>lang</code></td><td>string</td><td><code>hi | bn | ta | te | mr</code> (not <code>en</code>)</td></tr>
+        </table>
+        <h4>Response</h4>
+        <pre>{
+  "question": "...",
+  "a": "...", "b": "...", "c": "...", "d": "...", "e": "...",
+  "solution": "...",
+  "shortcut": "...",
+  "rule_html": "..."
+}
+
+// Error
+{"error": "Invalid language"}</pre>
+        <h4>Example</h4>
+        <pre>GET /math/translate/42/hi/
+
+// Translates math question #42 to Hindi</pre>
+      </div>
+    </div>
+
+    <!-- Math all -->
+    <div class="ep-card" data-search="math all paginated list">
+      <div class="ep-header" onclick="toggleCard(this)">
+        <span class="method-badge m-get">GET</span>
+        <span class="ep-url">/math/&lt;string&gt;/&lt;params&gt;/</span>
+        <span class="ep-desc-short">Paginated math questions</span>
+        <span class="ep-toggle-icon">▼</span>
+      </div>
+      <div class="ep-body">
+        <h4>Description</h4>
+        <p>Paginated math questions filtered by topic/chapter. <code>string</code> = topic/chapter filter; <code>params</code> = page number.</p>
+        <h4>Example</h4>
+        <pre>GET /math/percentage/1/
+GET /math/profit-loss/2/</pre>
+      </div>
+    </div>
+
+    <!-- Math rules / formulas -->
+    <div class="ep-card" data-search="math rules formulas latex katex chapter theorem">
+      <div class="ep-header" onclick="toggleCard(this)">
+        <span class="method-badge m-get">GET</span>
+        <span class="ep-url">/math/rules/&lt;str:chapter&gt;/</span>
+        <span class="ep-desc-short">All rules &amp; formulas for a chapter</span>
+        <span class="ep-toggle-icon">▼</span>
+      </div>
+      <div class="ep-body">
+        <h4>Description</h4>
+        <p>Animated page listing all <code>rule_math</code> entries for the given chapter slug.
+        Rule content is rendered with KaTeX (LaTeX). Includes chapter sidebar navigation and live search.
+        Rules are stored via the admin PDF processing <em>Extract Rule</em> feature.</p>
+        <h4>URL Parameters</h4>
+        <table class="params-table">
+          <tr><th>Param</th><th>Type</th><th>Description</th></tr>
+          <tr><td><code>chapter</code></td><td>string</td><td>Chapter slug, e.g. <code>profit_n_loss</code>, <code>alligation_n_mixture</code>, <code>time_n_work</code>, …</td></tr>
+        </table>
+        <h4>Chapter Slugs</h4>
+        <pre>profit_n_loss | alligation_n_mixture | average | boats_n_stream
+compound_interest | partnership | percentage | permutation_combination
+pipe_cistern | probability | problem_on_age | ratio_n_proportion
+simple_interest | simplification | squre_n_cube | time_n_distance
+time_n_work | volume_n_surface_area</pre>
+        <h4>Data Source</h4>
+        <p><code>bank_rule_math</code> table — fields: <code>chapter</code>, <code>rule_name</code>, <code>rule_text_with_latex</code>, <code>rule_html</code>.</p>
+        <h4>Example</h4>
+        <pre>GET /math/rules/profit_n_loss/
+GET /math/rules/alligation_n_mixture/</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ BANK: SUBJECTS ═══ -->
+  <div id="bank-subjects" class="section">
+    <div class="section-title">Bank App — Subjects &amp; GK <span class="section-badge">/subject/</span></div>
+
+    <div class="ep-card" data-search="subjects home landing hub">
+      <div class="ep-header" onclick="toggleCard(this)">
+        <span class="method-badge m-get">GET</span>
+        <span class="ep-url">/subjects/home/</span>
+        <span class="ep-desc-short">Subjects hub</span>
+        <span class="ep-toggle-icon">▼</span>
+      </div>
+      <div class="ep-body"><p>Subjects landing hub page.</p></div>
+    </div>
+
+    <div class="ep-card" data-search="subject question paginated topic subtopic chapter">
+      <div class="ep-header" onclick="toggleCard(this)">
+        <span class="method-badge m-get">GET</span>
+        <span class="ep-url">/subject/&lt;subject&gt;/&lt;topic&gt;/&lt;subtopic&gt;/&lt;chapter&gt;/&lt;user_page_no&gt;/</span>
+        <span class="ep-desc-short">Paginated subject questions</span>
+        <span class="ep-toggle-icon">▼</span>
+      </div>
+      <div class="ep-body">
+        <h4>Description</h4>
+        <p>Paginated subject questions filtered by topic/subtopic/chapter. DB filtered by <code>total_&lt;subject&gt;</code> model.</p>
+        <h4>Example</h4>
+        <pre>GET /subject/history/ancient/mauryas/administration/1/
+GET /subject/biology/cell/structure/mitosis/3/</pre>
+      </div>
+    </div>
+
+    <!-- Subject homes (collapsed as one card) -->
+    <div class="ep-card" data-search="biology physics chemistry history geography polity economics home">
+      <div class="ep-header" onclick="toggleCard(this)">
+        <span class="method-badge m-get">GET</span>
+        <span class="ep-url">/biology|physics|chemistry|history|geography|polity|economics/home/</span>
+        <span class="ep-desc-short">Subject home pages</span>
+        <span class="ep-toggle-icon">▼</span>
+      </div>
+      <div class="ep-body">
+        <h4>Description</h4>
+        <p>Individual subject section homes. One endpoint per subject.</p>
+        <h4>URLs</h4>
+        <div class="tag-list">
+          <span class="tag">/biology/home/</span>
+          <span class="tag">/physics/home/</span>
+          <span class="tag">/chemistry/home/</span>
+          <span class="tag">/history/home/</span>
+          <span class="tag">/geography/home/</span>
+          <span class="tag">/polity/home/</span>
+          <span class="tag">/economics/home/</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reasoning -->
+    <div class="ep-card" data-search="reasoning home single paginated">
+      <div class="ep-header" onclick="toggleCard(this)">
+        <span class="method-badge m-get">GET</span>
+        <span class="ep-url">/reasoning/home/ &nbsp;|&nbsp; /reasoning/&lt;string&gt;/&lt;params&gt;/ &nbsp;|&nbsp; /reasoning/&lt;string&gt;/</span>
+        <span class="ep-desc-short">Reasoning pages</span>
+        <span class="ep-toggle-icon">▼</span>
+      </div>
+      <div class="ep-body">
+        <table class="params-table">
+          <tr><th>URL</th><th>Description</th></tr>
+          <tr><td><code>/reasoning/home/</code></td><td>Reasoning section landing</td></tr>
+          <tr><td><code>/reasoning/&lt;string&gt;/&lt;params&gt;/</code></td><td>Paginated reasoning questions</td></tr>
+          <tr><td><code>/reasoning/&lt;string&gt;/</code></td><td>Single reasoning question</td></tr>
+        </table>
+        <h4>Example</h4>
+        <pre>GET /reasoning/home/
+GET /reasoning/seating-arrangement/1/
+GET /reasoning/seating-abc-2024/</pre>
+      </div>
+    </div>
+
+    <!-- Cloze / Error correction -->
+    <div class="ep-card" data-search="closetest cloze error correction">
+      <div class="ep-header" onclick="toggleCard(this)">
+        <span class="method-badge m-get">GET</span>
+        <span class="ep-url">/closetest/&lt;string&gt;/&lt;params&gt;/ &nbsp;|&nbsp; /error_correction/&lt;string&gt;/&lt;params&gt;/</span>
+        <span class="ep-desc-short">Cloze &amp; Error correction</span>
+        <span class="ep-toggle-icon">▼</span>
+      </div>
+      <div class="ep-body">
+        <table class="params-table">
+          <tr><th>URL</th><th>Description</th></tr>
+          <tr><td><code>/closetest/&lt;string&gt;/&lt;params&gt;/</code></td><td>Paginated cloze test questions</td></tr>
+          <tr><td><code>/error_correction/&lt;string&gt;/&lt;params&gt;/</code></td><td>Paginated error-correction questions</td></tr>
+        </table>
+        <h4>Example</h4>
+        <pre>GET /closetest/english-cloze-1/1/
+GET /error_correction/grammar/2/</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ BANK: ADMIN CUSTOM ═══ -->
+  <div id="bank-admin" class="section">
+    <div class="section-title">Bank Admin — Custom Math URLs <span class="section-badge">/admin/bank/math/</span></div>
+    <p style="font-size:0.82rem;color:var(--muted);margin-bottom:14px;">All protected by <code>@staff_member_required</code>. Registered via <code>MathAdmin.get_urls()</code>.</p>
+
+    <div class="ep-card" data-search="translate select language picker admin">
+      <div class="ep-header" onclick="toggleCard(this)">
+        <span class="method-badge m-get">GET</span>
+        <span class="ep-url">/admin/bank/math/translate-select/</span>
+        <span class="ep-desc-short">Language picker (admin)</span>
+        <span class="ep-toggle-icon">▼</span>
+      </div>
+      <div class="ep-body">
+        <h4>Description</h4>
+        <p>Language picker form for batch translation. Shows available target languages.</p>
+        <h4>Example</h4><pre>GET /admin/bank/math/translate-select/?ids=1,2,3</pre>
+      </div>
+    </div>
+
+    <div class="ep-card" data-search="translate start batch background thread">
+      <div class="ep-header" onclick="toggleCard(this)">
+        <span class="method-badge m-post">POST</span>
+        <span class="ep-url">/admin/bank/math/translate-start/</span>
+        <span class="ep-desc-short">Start batch translation</span>
+        <span class="ep-toggle-icon">▼</span>
+      </div>
+      <div class="ep-body">
+        <h4>Description</h4>
+        <p>Kicks off a background translation thread. Returns job_id or redirects to progress page.</p>
+        <h4>POST Parameters</h4>
+        <table class="params-table">
+          <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+          <tr><td><code>lang</code></td><td>string</td><td>Target language code e.g. <code>hi</code></td></tr>
+          <tr><td><code>math_ids</code></td><td>string</td><td>Comma-separated math IDs</td></tr>
+        </table>
+        <h4>Response</h4>
+        <pre>// JSON on error
+{"error": "No IDs provided"}
+
+// Redirect on success
+302 → /admin/bank/math/translate-progress/?job_id=abc123</pre>
+      </div>
+    </div>
+
+    <div class="ep-card" data-search="translate progress poll job status">
+      <div class="ep-header" onclick="toggleCard(this)">
+        <span class="method-badge m-get">GET</span>
+        <span class="ep-url">/admin/bank/math/translate-progress/ &nbsp;|&nbsp; /admin/bank/math/translate-poll/</span>
+        <span class="ep-desc-short">Translation job progress</span>
+        <span class="ep-toggle-icon">▼</span>
+      </div>
+      <div class="ep-body">
+        <table class="params-table">
+          <tr><th>URL</th><th>Return</th><th>Description</th></tr>
+          <tr><td><code>translate-progress/</code></td><td>HTML</td><td>Progress page — shows live job status UI</td></tr>
+          <tr><td><code>translate-poll/</code></td><td>JSON</td><td>AJAX poll — returns job stats</td></tr>
+        </table>
+        <h4>Poll Response</h4>
+        <pre>GET /admin/bank/math/translate-poll/?job_id=abc123
+
+{
+  "total": 10,
+  "done": 4,
+  "errors": 0,
+  "done_flag": false,
+  "log": ["✓ #42 translated to Hindi", "✓ #43 translated to Hindi", ...]
+}</pre>
+      </div>
+    </div>
+
+    <div class="ep-card" data-search="action progress poll modify language validate admin">
+      <div class="ep-header" onclick="toggleCard(this)">
+        <span class="method-badge m-get">GET</span>
+        <span class="ep-url">/admin/bank/math/action-progress/ &nbsp;|&nbsp; /admin/bank/math/action-poll/</span>
+        <span class="ep-desc-short">Action job progress</span>
+        <span class="ep-toggle-icon">▼</span>
+      </div>
+      <div class="ep-body">
+        <table class="params-table">
+          <tr><th>URL</th><th>Return</th><th>Description</th></tr>
+          <tr><td><code>action-progress/</code></td><td>HTML</td><td>Progress UI for LLM validate / modify actions</td></tr>
+          <tr><td><code>action-poll/</code></td><td>JSON</td><td>AJAX poll for action job</td></tr>
+        </table>
+        <h4>Poll Response</h4>
+        <pre>GET /admin/bank/math/action-poll/?job_id=xyz789
+
+{
+  "total": 5,
+  "done": 2,
+  "errors": 0,
+  "done_flag": false,
+  "mode": "modify_language",
+  "log": ["✓ #12 processed", "✓ #13 processed"],
+  "previews": {
+    "12": {
+      "question": {"orig": "...", "new": "..."},
+      "a": {"orig": "...", "new": "..."}
+    }
+  }
+}</pre>
+      </div>
+    </div>
+
+    <div class="ep-card" data-search="action save preview new question variant source_math">
+      <div class="ep-header" onclick="toggleCard(this)">
+        <span class="method-badge m-post">POST</span>
+        <span class="ep-url">/admin/bank/math/action-save-preview/ &nbsp;|&nbsp; /admin/bank/math/action-save-as-new/</span>
+        <span class="ep-desc-short">Save / Save-as-New</span>
+        <span class="ep-toggle-icon">▼</span>
+      </div>
+      <div class="ep-body">
+        <table class="params-table">
+          <tr><th>URL</th><th>Description</th></tr>
+          <tr><td><code>action-save-preview/</code></td><td>Overwrite original math record with previewed fields</td></tr>
+          <tr><td><code>action-save-as-new/</code></td><td>Clone row as new variant; sets <code>source_math</code> FK to original</td></tr>
+        </table>
+        <h4>POST Parameters</h4>
+        <table class="params-table">
+          <tr><th>Field</th><th>Description</th></tr>
+          <tr><td><code>math_id</code></td><td>ID of the original math question</td></tr>
+          <tr><td><code>job_id</code></td><td>Job ID from action-poll</td></tr>
+        </table>
+        <h4>Save-as-New Response</h4>
+        <pre>// Success JSON
+{
+  "ok": true,
+  "new_id": 101,
+  "variants_url": "/admin/bank/math/99/variants/"
+}</pre>
+      </div>
+    </div>
+
+    <div class="ep-card" data-search="variants view math source_math side by side">
+      <div class="ep-header" onclick="toggleCard(this)">
+        <span class="method-badge m-get">GET</span>
+        <span class="ep-url">/admin/bank/math/&lt;int:math_id&gt;/variants/</span>
+        <span class="ep-desc-short">Math variants table</span>
+        <span class="ep-toggle-icon">▼</span>
+      </div>
+      <div class="ep-body">
+        <h4>Description</h4>
+        <p>Side-by-side comparison table showing original + all variant records for a math question. Includes Edit/Delete links per column.</p>
+        <h4>Example</h4>
+        <pre>GET /admin/bank/math/42/variants/
+# Shows original #42 + all records where source_math_id=42</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ GENAI: JSON API ═══ -->
+  <div id="genai-api" class="section">
+    <div class="section-title">GenAI App — JSON API Endpoints <span class="section-badge">/genai/api/</span></div>
+    <p style="font-size:0.82rem;color:var(--muted);margin-bottom:14px;">All use <code>@csrf_exempt</code> — safe for external POST calls from non-browser clients. No authentication required.</p>
+
+    <!-- CA MCQ -->
+    <div class="ep-card" data-search="current affairs mcq generate scrape process genai">
+      <div class="ep-header" onclick="toggleCard(this)">
+        <span class="method-badge m-post">POST</span>
+        <span class="ep-url">/genai/api/current-affairs/mcq/</span>
+        <span class="ep-desc-short">Generate CA MCQs</span>
+        <span class="ep-toggle-icon">▼</span>
+      </div>
+      <div class="ep-body">
+        <h4>Description</h4>
+        <p>Trigger scrape + LLM generation of current-affairs MCQs.</p>
+        <h4>Request Body (JSON)</h4>
+        <table class="params-table">
+          <tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr>
+          <tr><td><code>sources</code></td><td>string[]</td><td><span class="opt-badge">opt</span></td><td>List of source URLs to scrape. Defaults to configured sources.</td></tr>
+        </table>
+        <h4>Response</h4>
+        <pre>{
+  "success": true,
+  "message": "Current affairs MCQs generated successfully",
+  "data": { ... }
+}</pre>
+        <h4>Example (curl)</h4>
+        <pre>curl -X POST /genai/api/current-affairs/mcq/ \
+  -H "Content-Type: application/json" \
+  -d '{"sources": ["https://example.com/news"]}'</pre>
+      </div>
+    </div>
+
+    <!-- CA Descriptive -->
+    <div class="ep-card" data-search="current affairs descriptive generate genai">
+      <div class="ep-header" onclick="toggleCard(this)">
+        <span class="method-badge m-post">POST</span>
+        <span class="ep-url">/genai/api/current-affairs/descriptive/</span>
+        <span class="ep-desc-short">Generate CA descriptive</span>
+        <span class="ep-toggle-icon">▼</span>
+      </div>
+      <div class="ep-body">
+        <h4>Description</h4><p>Trigger scrape + LLM generation of CA descriptive content.</p>
+        <h4>Response</h4>
+        <pre>{"success": true, "message": "...", "data": { ... }}</pre>
+        <h4>Example</h4>
+        <pre>curl -X POST /genai/api/current-affairs/descriptive/ \
+  -H "Content-Type: application/json" \
+  -d '{}'</pre>
+      </div>
+    </div>
+
+    <!-- PDF process -->
+    <div class="ep-card" data-search="pdf process upload multipart subject mcq genai">
+      <div class="ep-header" onclick="toggleCard(this)">
+        <span class="method-badge m-post">POST</span>
+        <span class="ep-url">/genai/api/pdf/process/</span>
+        <span class="ep-desc-short">Process PDF → MCQs</span>
+        <span class="ep-toggle-icon">▼</span>
+      </div>
+      <div class="ep-body">
+        <h4>Description</h4>
+        <p>Upload PDF → routes to task_router → generates MCQs/descriptive content and saves to DB.</p>
+        <h4>Request (multipart/form-data)</h4>
+        <table class="params-table">
+          <tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr>
+          <tr><td><code>pdf_file</code></td><td>file</td><td><span class="req-badge">req</span></td><td>PDF file to process</td></tr>
+          <tr><td><code>subject</code></td><td>string</td><td><span class="opt-badge">opt</span></td><td>Subject name</td></tr>
+          <tr><td><code>task_type</code></td><td>string</td><td><span class="opt-badge">opt</span></td><td><code>pdf_to_mcq</code> (default)</td></tr>
+          <tr><td><code>difficulty_level</code></td><td>string</td><td><span class="opt-badge">opt</span></td><td><code>Easy | Medium | Hard</code></td></tr>
+          <tr><td><code>output_format</code></td><td>string</td><td><span class="opt-badge">opt</span></td><td>Output format</td></tr>
+          <tr><td><code>num_items</code></td><td>int</td><td><span class="opt-badge">opt</span></td><td>Number of items to generate</td></tr>
+          <tr><td><code>start_page</code></td><td>int</td><td><span class="opt-badge">opt</span></td><td>Start page (default 1)</td></tr>
+          <tr><td><code>end_page</code></td><td>int</td><td><span class="opt-badge">opt</span></td><td>End page</td></tr>
+        </table>
+        <h4>Response</h4>
+        <pre>{
+  "success": true,
+  "task_id": "abc-123",
+  "message": "Processing complete",
+  "data": {
+    "task_type": "pdf_to_mcq",
+    "subject": "history",
+    "saved_items": 15
+  }
+}</pre>
+        <h4>Example (curl)</h4>
+        <pre>curl -X POST /genai/api/pdf/process/ \
+  -F "pdf_file=@/path/to/chapter.pdf" \
+  -F "subject=history" \
+  -F "difficulty_level=Medium" \
+  -F "num_items=10"</pre>
+      </div>
+    </div>
+
+    <!-- Math process -->
+    <div class="ep-card" data-search="math process problem latex mcq genai llm">
+      <div class="ep-header" onclick="toggleCard(this)">
+        <span class="method-badge m-post">POST</span>
+        <span class="ep-url">/genai/api/math/process/</span>
+        <span class="ep-desc-short">Process math problem</span>
+        <span class="ep-toggle-icon">▼</span>
+      </div>
+      <div class="ep-body">
+        <h4>Description</h4>
+        <p>Process a math problem statement via LLM, generate LaTeX MCQ.</p>
+        <h4>Request Body (JSON)</h4>
+        <table class="params-table">
+          <tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr>
+          <tr><td><code>problem</code></td><td>string</td><td><span class="req-badge">req</span></td><td>Math problem text</td></tr>
+          <tr><td><code>difficulty</code></td><td>string</td><td><span class="opt-badge">opt</span></td><td><code>Easy | Medium | Hard</code> (default: <code>Medium</code>)</td></tr>
+        </table>
+        <h4>Response</h4>
+        <pre>{"success": true, "message": "...", "data": { ... }}</pre>
+        <h4>Example</h4>
+        <pre>curl -X POST /genai/api/math/process/ \
+  -H "Content-Type: application/json" \
+  -d '{"problem": "Train A travels at 60 km/h...", "difficulty": "Medium"}'</pre>
+      </div>
+    </div>
+
+    <!-- Math batch -->
+    <div class="ep-card" data-search="math batch problems genai llm">
+      <div class="ep-header" onclick="toggleCard(this)">
+        <span class="method-badge m-post">POST</span>
+        <span class="ep-url">/genai/api/math/batch/</span>
+        <span class="ep-desc-short">Batch math problems</span>
+        <span class="ep-toggle-icon">▼</span>
+      </div>
+      <div class="ep-body">
+        <h4>Description</h4>
+        <p>Batch-process multiple math problems.</p>
+        <h4>Request Body (JSON)</h4>
+        <table class="params-table">
+          <tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr>
+          <tr><td><code>problems</code></td><td>string[]</td><td><span class="req-badge">req</span></td><td>Array of math problem texts</td></tr>
+          <tr><td><code>chapter</code></td><td>string</td><td><span class="opt-badge">opt</span></td><td>Chapter name/tag</td></tr>
+          <tr><td><code>difficulty</code></td><td>string</td><td><span class="opt-badge">opt</span></td><td><code>Easy | Medium | Hard</code></td></tr>
+        </table>
+        <h4>Response</h4>
+        <pre>{"success": true, "message": "...", "data": { ... }}</pre>
+        <h4>Example</h4>
+        <pre>curl -X POST /genai/api/math/batch/ \
+  -H "Content-Type: application/json" \
+  -d '{
+    "problems": [
+      "A pipe fills a tank in 3 hours...",
+      "Two trains start from opposite ends..."
+    ],
+    "chapter": "Time and Work",
+    "difficulty": "Hard"
+  }'</pre>
+      </div>
+    </div>
+
+    <!-- Status -->
+    <div class="ep-card" data-search="genai status health check available tasks">
+      <div class="ep-header" onclick="toggleCard(this)">
+        <span class="method-badge m-get">GET</span>
+        <span class="ep-url">/genai/api/status/</span>
+        <span class="ep-desc-short">GenAI health check</span>
+        <span class="ep-toggle-icon">▼</span>
+      </div>
+      <div class="ep-body">
+        <h4>Description</h4>
+        <p>Health/status check for GenAI system. Returns available task types.</p>
+        <h4>Response</h4>
+        <pre>{
+  "status": "ok",
+  "available_tasks": [
+    "currentaffairs_mcq",
+    "currentaffairs_descriptive",
+    "pdf_to_mcq",
+    "math_problem"
+  ]
+}</pre>
+        <h4>Example</h4>
+        <pre>curl /genai/api/status/</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ GENAI: ADMIN ═══ -->
+  <div id="genai-admin" class="section">
+    <div class="section-title">GenAI App — Admin / Staff Views <span class="section-badge">Staff Only</span></div>
+
+    <div class="ep-card" data-search="genai admin dashboard processing logs stats">
+      <div class="ep-header" onclick="toggleCard(this)">
+        <span class="method-badge m-get">GET</span>
+        <span class="ep-url">/genai/admin/dashboard/</span>
+        <span class="ep-desc-short">Processing dashboard</span>
+        <span class="ep-toggle-icon">▼</span>
+      </div>
+      <div class="ep-body">
+        <h4>Description</h4>
+        <p>Processing task dashboard. Shows recent logs, stats (total/completed/running/failed/pending).</p>
+        <h4>Auth</h4><div class="tag-list"><span class="tag tag-auth">@staff_required</span></div>
+        <h4>Example</h4><pre>GET /genai/admin/dashboard/</pre>
+      </div>
+    </div>
+
+    <div class="ep-card" data-search="trigger fetch management command currentaffairs mcq descriptive">
+      <div class="ep-header" onclick="toggleCard(this)">
+        <span class="method-badge m-post">POST</span>
+        <span class="ep-url">/genai/admin/trigger-fetch/</span>
+        <span class="ep-desc-short">Trigger fetch command</span>
+        <span class="ep-toggle-icon">▼</span>
+      </div>
+      <div class="ep-body">
+        <h4>Description</h4>
+        <p>Synchronously runs <code>manage.py fetch_all_content</code>. Timeout: 300s.</p>
+        <h4>Auth</h4><div class="tag-list"><span class="tag tag-auth">@staff_required</span></div>
+        <h4>POST Parameters</h4>
+        <table class="params-table">
+          <tr><th>Field</th><th>Values</th><th>Description</th></tr>
+          <tr><td><code>task_type</code></td><td><code>currentaffairs_mcq | currentaffairs_descriptive | both</code></td><td>Which fetch task to run</td></tr>
+        </table>
+        <h4>Response</h4>
+        <pre>{
+  "success": true,
+  "message": "Fetch completed",
+  "task_id": "123",
+  "output": "...",
+  "error": null
+}</pre>
+      </div>
+    </div>
+
+    <div class="ep-card" data-search="genai task status poll processing log">
+      <div class="ep-header" onclick="toggleCard(this)">
+        <span class="method-badge m-get">GET</span>
+        <span class="ep-url">/genai/admin/task-status/&lt;int:task_id&gt;/</span>
+        <span class="ep-desc-short">Poll task status</span>
+        <span class="ep-toggle-icon">▼</span>
+      </div>
+      <div class="ep-body">
+        <h4>Description</h4>
+        <p>Poll status of any <code>ProcessingLog</code> task.</p>
+        <h4>Auth</h4><div class="tag-list"><span class="tag tag-auth">@staff_required</span></div>
+        <h4>Response</h4>
+        <pre>{
+  "id": 42,
+  "status": "completed",
+  "task_type": "currentaffairs_mcq",
+  "progress": 100,
+  "processed": 15,
+  "total": 15,
+  "success_count": 14,
+  "error_count": 1,
+  "duration": 45.3,
+  "created_at": "2024-01-15T10:30:00Z",
+  "completed_at": "2024-01-15T10:30:45Z",
+  "error_message": null
+}</pre>
+      </div>
+    </div>
+
+    <div class="ep-card" data-search="pdf form process options subject mcq ca genai">
+      <div class="ep-header" onclick="toggleCard(this)">
+        <span class="method-badge m-multi">GET/POST</span>
+        <span class="ep-url">/genai/process-pdf-form/</span>
+        <span class="ep-desc-short">PDF processing options form</span>
+        <span class="ep-toggle-icon">▼</span>
+      </div>
+      <div class="ep-body">
+        <h4>Description</h4>
+        <p>Intermediate form between PDF admin list action and actual processing. Routes subject MCQ, CA MCQ, or CA descriptive.</p>
+        <h4>Auth</h4><div class="tag-list"><span class="tag tag-auth">@staff_required</span></div>
+        <h4>Session Data Used</h4>
+        <div class="tag-list"><span class="tag">pdf_ids[]</span><span class="tag">process_type</span></div>
+        <h4>POST Parameters</h4>
+        <table class="params-table">
+          <tr><th>Field</th><th>Description</th></tr>
+          <tr><td><code>processing_type</code></td><td>Type of processing</td></tr>
+          <tr><td><code>chapter</code></td><td>Chapter name</td></tr>
+          <tr><td><code>difficulty</code></td><td>Difficulty level</td></tr>
+          <tr><td><code>num_items</code></td><td>Number of items</td></tr>
+          <tr><td><code>page_from / page_to</code></td><td>Page range</td></tr>
+          <tr><td><code>ca_date / ca_year</code></td><td>CA date info</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="ep-card" data-search="math pdf processing form go button ocr genai extract rule">
+      <div class="ep-header" onclick="toggleCard(this)">
+        <span class="method-badge m-multi">GET/POST</span>
+        <span class="ep-url">/genai/admin/math-pdf-processing/&lt;int:pk&gt;/</span>
+        <span class="ep-desc-short">Math PDF processing (GO button)</span>
+        <span class="ep-toggle-icon">▼</span>
+      </div>
+      <div class="ep-body">
+        <h4>Description</h4>
+        <p>"GO button" form for configuring math PDF OCR + MCQ generation options. <code>pk</code> = <code>MathProblemGeneration.id</code>.</p>
+        <p>Also supports <strong>Extract Rule mode</strong>: check "Extract Rule", select a rule number → LLM extracts
+        the theorem/formula from the PDF and saves <code>rule_text_with_latex</code> + <code>rule_html</code> to <code>rule_math</code> table.</p>
+        <h4>POST Fields (key ones)</h4>
+        <table class="params-table">
+          <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+          <tr><td><code>extract_rule</code></td><td>bool</td><td>When true, skips MCQ extraction and runs rule extraction instead</td></tr>
+          <tr><td><code>rule_number</code></td><td>string</td><td>e.g. <code>Rule 1</code> … <code>Rule 50</code> — which rule to save</td></tr>
+          <tr><td><code>pdf_prompt_id</code></td><td>int</td><td>Optional LLMPrompt ID to use for MCQ extraction</td></tr>
+          <tr><td><code>page_from / page_to</code></td><td>int</td><td>Page range to OCR</td></tr>
+        </table>
+        <h4>Auth</h4><div class="tag-list"><span class="tag tag-auth">@staff_member_required</span></div>
+        <h4>Example</h4>
+        <pre>GET  /genai/admin/math-pdf-processing/7/
+POST /genai/admin/math-pdf-processing/7/  {extract_rule: true, rule_number: "Rule 1", ...}</pre>
+      </div>
+    </div>
+
+    <div class="ep-card" data-search="fix json latex backslash escape utility">
+      <div class="ep-header" onclick="toggleCard(this)">
+        <span class="method-badge m-multi">GET/POST</span>
+        <span class="ep-url">/genai/fixjson/</span>
+        <span class="ep-desc-short">Fix LaTeX JSON utility</span>
+        <span class="ep-toggle-icon">▼</span>
+      </div>
+      <div class="ep-body">
+        <h4>Description</h4>
+        <p>Utility to fix invalid LaTeX backslash escapes in JSON strings.</p>
+        <h4>Auth</h4><div class="tag-list"><span class="tag tag-auth">@staff_member_required</span></div>
+        <h4>POST Body (JSON)</h4>
+        <table class="params-table">
+          <tr><th>Field</th><th>Description</th></tr>
+          <tr><td><code>json_text</code></td><td>Raw JSON string with bad LaTeX escapes</td></tr>
+        </table>
+        <h4>Response</h4>
+        <pre>{"success": true, "fixed_json": "{ ... }"}</pre>
+      </div>
+    </div>
+
+    <div class="ep-card" data-search="llm config env groq gemini openai provider hot reload">
+      <div class="ep-header" onclick="toggleCard(this)">
+        <span class="method-badge m-multi">GET/POST</span>
+        <span class="ep-url">/genai/admin/llm-config/</span>
+        <span class="ep-desc-short">LLM config (hot reload)</span>
+        <span class="ep-toggle-icon">▼</span>
+      </div>
+      <div class="ep-body">
+        <h4>Description</h4>
+        <p>Read/write the root <code>.env</code> file and hot-reload <code>genai.config</code> without server restart.</p>
+        <h4>Auth</h4><div class="tag-list"><span class="tag tag-auth">@staff_member_required</span></div>
+        <h4>POST Fields</h4>
+        <div class="tag-list">
+          <span class="tag">DEFAULT_LLM_PROVIDER</span>
+          <span class="tag">GROQ_API_KEY</span>
+          <span class="tag">GROQ_MODEL</span>
+          <span class="tag">GROQ_TEMPERATURE</span>
+          <span class="tag">GROQ_MAX_OUTPUT_TOKENS</span>
+          <span class="tag">GEMINI_*</span>
+          <span class="tag">OPENAI_*</span>
+        </div>
+        <h4>Example</h4>
+        <pre>POST /genai/admin/llm-config/
+Content-Type: application/x-www-form-urlencoded
+
+DEFAULT_LLM_PROVIDER=groq&GROQ_MODEL=qwen/qwen3-32b&GROQ_TEMPERATURE=0.7</pre>
+      </div>
+    </div>
+
+    <div class="ep-card" data-search="llm test ping provider groq gemini openai connectivity">
+      <div class="ep-header" onclick="toggleCard(this)">
+        <span class="method-badge m-get">GET</span>
+        <span class="ep-url">/genai/admin/llm-test/</span>
+        <span class="ep-desc-short">LLM connectivity test</span>
+        <span class="ep-toggle-icon">▼</span>
+      </div>
+      <div class="ep-body">
+        <h4>Description</h4>
+        <p>Ping the selected LLM provider with a tiny test prompt to verify connectivity.</p>
+        <h4>Auth</h4><div class="tag-list"><span class="tag tag-auth">@staff_member_required</span></div>
+        <h4>Query Parameters</h4>
+        <table class="params-table">
+          <tr><th>Param</th><th>Values</th></tr>
+          <tr><td><code>provider</code></td><td><code>groq | gemini | openai</code></td></tr>
+        </table>
+        <h4>Response</h4>
+        <pre>// Success
+{"ok": true, "model": "qwen/qwen3-32b", "reply": "Hello! ..."}
+
+// Error
+{"ok": false, "error": "Invalid API key"}</pre>
+        <h4>Example</h4>
+        <pre>GET /genai/admin/llm-test/?provider=groq</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ MOCKTEST ═══ -->
+  <div id="mocktest" class="section">
+    <div class="section-title">MockTest App <span class="section-badge">/mocktest/</span></div>
+
+    <div class="ep-card" data-search="mocktest config cached live resolved">
+      <div class="ep-header" onclick="toggleCard(this)">
+        <span class="method-badge m-get">GET</span>
+        <span class="ep-url">/mocktest/api/mocktests/&lt;int:mocktest_id&gt;/config/</span>
+        <span class="ep-desc-short">Mock test config (cached)</span>
+        <span class="ep-toggle-icon">▼</span>
+      </div>
+      <div class="ep-body">
+        <h4>Description</h4>
+        <p>Return cached <code>config_json</code> for the mock test. Falls back to live snapshot if cache is empty.</p>
+        <h4>Example</h4>
+        <pre>GET /mocktest/api/mocktests/5/config/
+
+// Returns config JSON for mock test #5</pre>
+      </div>
+    </div>
+
+    <div class="ep-card" data-search="mocktest config live snapshot">
+      <div class="ep-header" onclick="toggleCard(this)">
+        <span class="method-badge m-get">GET</span>
+        <span class="ep-url">/mocktest/api/mocktests/&lt;int:mocktest_id&gt;/config/live/</span>
+        <span class="ep-desc-short">Mock test config (live)</span>
+        <span class="ep-toggle-icon">▼</span>
+      </div>
+      <div class="ep-body">
+        <h4>Description</h4>
+        <p>Generate and return a fresh live snapshot of the mock test config (bypasses cache).</p>
+        <h4>Example</h4>
+        <pre>GET /mocktest/api/mocktests/5/config/live/</pre>
+      </div>
+    </div>
+
+    <div class="ep-card" data-search="mocktest config resolved bulk fetch mcq exam ui questions">
+      <div class="ep-header" onclick="toggleCard(this)">
+        <span class="method-badge m-get">GET</span>
+        <span class="ep-url">/mocktest/api/mocktests/&lt;int:mocktest_id&gt;/config/resolved/</span>
+        <span class="ep-desc-short">Config + resolved MCQ data</span>
+        <span class="ep-toggle-icon">▼</span>
+      </div>
+      <div class="ep-body">
+        <h4>Description</h4>
+        <p>Config + bulk-fetched MCQ records (resolved by <code>new_id</code>/<code>id</code>). Used by the exam UI to load all question data.</p>
+        <h4>Example</h4>
+        <pre>GET /mocktest/api/mocktests/5/config/resolved/
+
+// Returns full exam data including all question content</pre>
+      </div>
+    </div>
+
+    <div class="ep-card" data-search="mocktest instructions exam runner">
+      <div class="ep-header" onclick="toggleCard(this)">
+        <span class="method-badge m-get">GET</span>
+        <span class="ep-url">/mocktest/mocktests/&lt;int:mocktest_id&gt;/instructions/ &nbsp;|&nbsp; .../exam/</span>
+        <span class="ep-desc-short">Instructions &amp; Exam UI</span>
+        <span class="ep-toggle-icon">▼</span>
+      </div>
+      <div class="ep-body">
+        <table class="params-table">
+          <tr><th>URL</th><th>Description</th></tr>
+          <tr><td><code>.../instructions/</code></td><td>Pre-exam instructions page</td></tr>
+          <tr><td><code>.../exam/</code></td><td>Exam UI shell — data loaded client-side from <code>/config/resolved/</code></td></tr>
+        </table>
+        <h4>Example</h4>
+        <pre>GET /mocktest/mocktests/5/instructions/
+GET /mocktest/mocktests/5/exam/</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ STUDENTS: JSON ═══ -->
+  <div id="students-api" class="section">
+    <div class="section-title">Students App — JSON APIs <span class="section-badge">/api/</span></div>
+    <p style="font-size:0.82rem;color:var(--muted);margin-bottom:14px;">All require <code>@login_required</code>.</p>
+
+    <div class="ep-card" data-search="world state student subjects strength score level insights">
+      <div class="ep-header" onclick="toggleCard(this)">
+        <span class="method-badge m-get">GET</span>
+        <span class="ep-url">/api/world-state/</span>
+        <span class="ep-desc-short">Student world state (JSON)</span>
+        <span class="ep-toggle-icon">▼</span>
+      </div>
+      <div class="ep-body">
+        <h4>Description</h4>
+        <p>Full "world state" of the student — subject strengths, insights, level, and recommended next action. Returns demo data if no records exist.</p>
+        <h4>Response</h4>
+        <pre>{
+  "exam": "SSC CGL",
+  "theme": "space",
+  "subjects": [
+    {
+      "name": "Mathematics",
+      "strength_score": 72.5,
+      "previous_strength_score": 68.0,
+      "average_confusion_index": 0.3,
+      "total_confused_questions": 5
+    }
+  ],
+  "mastery_streak": 3,
+  "insights": ["Strong in Algebra", "Weak in Geometry"],
+  "recommendation": "Practice Time & Work",
+  "level": "Intermediate"
+}</pre>
+      </div>
+    </div>
+
+    <div class="ep-card" data-search="question update attempt option review time spent">
+      <div class="ep-header" onclick="toggleCard(this)">
+        <span class="method-badge m-post">POST</span>
+        <span class="ep-url">/api/question-update/</span>
+        <span class="ep-desc-short">Update question attempt</span>
+        <span class="ep-toggle-icon">▼</span>
+      </div>
+      <div class="ep-body">
+        <h4>Description</h4>
+        <p>Atomically update a <code>QuestionAttempt</code> during an exam (option selection, review flag, time tracking).</p>
+        <h4>POST Parameters</h4>
+        <table class="params-table">
+          <tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr>
+          <tr><td><code>question_attempt_id</code></td><td>int</td><td><span class="req-badge">req</span></td><td>QuestionAttempt PK</td></tr>
+          <tr><td><code>selected_option</code></td><td>int or blank</td><td><span class="opt-badge">opt</span></td><td>Selected answer option (1-5)</td></tr>
+          <tr><td><code>is_marked_for_review</code></td><td>bool</td><td><span class="opt-badge">opt</span></td><td>Mark for review flag</td></tr>
+          <tr><td><code>time_spent_delta</code></td><td>int (seconds)</td><td><span class="opt-badge">opt</span></td><td>Additional time spent</td></tr>
+        </table>
+        <h4>Response</h4>
+        <pre>{"ok": true}
+// or
+HTTP 400 Bad Request</pre>
+      </div>
+    </div>
+
+    <div class="ep-card" data-search="submit mocktest finalize scores rankings confusion index">
+      <div class="ep-header" onclick="toggleCard(this)">
+        <span class="method-badge m-post">POST</span>
+        <span class="ep-url">/api/submit-mocktest/</span>
+        <span class="ep-desc-short">Submit mock test</span>
+        <span class="ep-toggle-icon">▼</span>
+      </div>
+      <div class="ep-body">
+        <h4>Description</h4>
+        <p>Submit a mock test: marks attempt inactive, finalizes section scores + confusion index, computes overall score, updates subject performance, recalculates all rankings.</p>
+        <h4>POST Parameters</h4>
+        <table class="params-table">
+          <tr><th>Field</th><th>Type</th><th>Required</th></tr>
+          <tr><td><code>mock_test_attempt_id</code></td><td>int</td><td><span class="req-badge">req</span></td></tr>
+        </table>
+        <h4>Response</h4>
+        <pre>{
+  "ok": true,
+  "mock_test_attempt_id": 42,
+  "total_score": 85.5,
+  "ranking_summary": {
+    "rank": 3,
+    "total_participants": 150
+  }
+}</pre>
+      </div>
+    </div>
+
+    <div class="ep-card" data-search="leaderboard ranking top student score mock test">
+      <div class="ep-header" onclick="toggleCard(this)">
+        <span class="method-badge m-get">GET</span>
+        <span class="ep-url">/api/leaderboard/&lt;int:mock_test_id&gt;/</span>
+        <span class="ep-desc-short">Leaderboard</span>
+        <span class="ep-toggle-icon">▼</span>
+      </div>
+      <div class="ep-body">
+        <h4>Description</h4>
+        <p>Leaderboard top-10 + student's own rank/score for a mock test.</p>
+        <h4>Response</h4>
+        <pre>{
+  "mock_test_id": 5,
+  "total_participants": 150,
+  "student_rank": 3,
+  "student_score": 85.5,
+  "topper_score": 95.0,
+  "leaderboard_top": [
+    {"rank": 1, "student_name": "Alice", "total_score": 95.0},
+    {"rank": 2, "student_name": "Bob",   "total_score": 90.0}
+  ]
+}</pre>
+        <h4>Example</h4>
+        <pre>GET /api/leaderboard/5/</pre>
+      </div>
+    </div>
+
+    <div class="ep-card" data-search="cinematic race results animation top three score">
+      <div class="ep-header" onclick="toggleCard(this)">
+        <span class="method-badge m-get">GET</span>
+        <span class="ep-url">/api/cinematic-race/&lt;int:mock_test_id&gt;/</span>
+        <span class="ep-desc-short">Cinematic race data</span>
+        <span class="ep-toggle-icon">▼</span>
+      </div>
+      <div class="ep-body">
+        <h4>Description</h4>
+        <p>Cinematic results race animation data. Returns demo data if no real rankings exist.</p>
+        <h4>Response</h4>
+        <pre>{
+  "mock_test_id": 5,
+  "total_participants": 150,
+  "student_rank": 3,
+  "student_score": 85.5,
+  "topper_score": 95.0,
+  "top_three": [
+    {"rank": 1, "score": 95.0},
+    {"rank": 2, "score": 90.0},
+    {"rank": 3, "score": 85.5}
+  ]
+}</pre>
+      </div>
+    </div>
+
+    <div class="ep-card" data-search="topic insights weak strong subjects chapter accuracy confusion">
+      <div class="ep-header" onclick="toggleCard(this)">
+        <span class="method-badge m-get">GET</span>
+        <span class="ep-url">/api/topic-insights/</span>
+        <span class="ep-desc-short">Per-topic performance</span>
+        <span class="ep-toggle-icon">▼</span>
+      </div>
+      <div class="ep-body">
+        <h4>Description</h4>
+        <p>Per-topic performance breakdown. Falls back to live data or demo data if no TopicPerformance records exist.</p>
+        <h4>Response</h4>
+        <pre>{
+  "weak_topics": [
+    {
+      "subject": "Mathematics",
+      "chapter": "Geometry",
+      "accuracy": 42.0,
+      "confusion": 0.6,
+      "strength": 38.5
+    }
+  ],
+  "strong_topics": [...],
+  "avg_confusion": 0.3,
+  "recommendation": "Focus on Geometry"
+}</pre>
+      </div>
+    </div>
+
+    <div class="ep-card" data-search="mocktest history attempts submitted score confusion sections">
+      <div class="ep-header" onclick="toggleCard(this)">
+        <span class="method-badge m-get">GET</span>
+        <span class="ep-url">/api/mocktest-history/</span>
+        <span class="ep-desc-short">Mock test history</span>
+        <span class="ep-toggle-icon">▼</span>
+      </div>
+      <div class="ep-body">
+        <h4>Description</h4>
+        <p>Full mocktest history for the logged-in student.</p>
+        <h4>Response</h4>
+        <pre>{
+  "attempts": [
+    {
+      "id": 42,
+      "mock_test_id": 5,
+      "mock_test_name": "SSC CGL Mock 1",
+      "submitted_at": "2024-01-15T10:30:00Z",
+      "total_score": 85.5,
+      "confusion_index": 0.28,
+      "attempt_count": 2,
+      "sections": [
+        {"name": "Quant", "score": 22.5, "confusion": 0.3},
+        {"name": "English", "score": 19.0, "confusion": 0.2}
+      ]
+    }
+  ]
+}</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ STUDENTS: PAGES ═══ -->
+  <div id="students-pages" class="section">
+    <div class="section-title">Students App — Portal Pages <span class="section-badge">HTML @login_required</span></div>
+
+    <div class="ep-card" data-search="student portal pages world space experiment stellar neural cave forest wormhole performance dashboard">
+      <div class="ep-header" onclick="toggleCard(this)">
+        <span class="method-badge m-get">GET</span>
+        <span class="ep-url">/api/world/ · /api/space/ · /api/experiment/ · /api/stellar/ · ... </span>
+        <span class="ep-desc-short">Student portal pages</span>
+        <span class="ep-toggle-icon">▼</span>
+      </div>
+      <div class="ep-body">
+        <table class="params-table">
+          <tr><th>URL</th><th>View</th><th>Template</th></tr>
+          <tr><td><code>/api/world/</code></td><td>world_home</td><td>students/world/world_home.html</td></tr>
+          <tr><td><code>/api/space/</code></td><td>world_space</td><td>students/world/world_space.html</td></tr>
+          <tr><td><code>/api/experiment/</code></td><td>world_experiment</td><td>students/world/world_experiment.html</td></tr>
+          <tr><td><code>/api/stellar/</code></td><td>stellar</td><td>students/world/stellar.html</td></tr>
+          <tr><td><code>/api/neural/</code></td><td>neural</td><td>students/world/neural.html</td></tr>
+          <tr><td><code>/api/cave/</code></td><td>cave</td><td>students/world/cave.html</td></tr>
+          <tr><td><code>/api/forest/</code></td><td>forest</td><td>students/world/forest.html</td></tr>
+          <tr><td><code>/api/wormhole/</code></td><td>wormhole</td><td>students/world/wormhole.html</td></tr>
+          <tr><td><code>/api/performance-dashboard/</code></td><td>performance_dashboard</td><td>students/dashboard/performance_dashboard.html</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ NOTES ═══ -->
+  <div id="notes" class="section">
+    <div class="section-title">Auth &amp; CSRF Notes <span class="section-badge">Important</span></div>
+    <div class="ep-card">
+      <div class="ep-header" onclick="toggleCard(this)">
+        <span class="method-badge m-multi">INFO</span>
+        <span class="ep-url">Authentication &amp; CSRF Reference</span>
+        <span class="ep-desc-short">Key security notes</span>
+        <span class="ep-toggle-icon">▼</span>
+      </div>
+      <div class="ep-body">
+        <h4>CSRF</h4>
+        <p>All <code>/genai/api/</code> endpoints use <code>@csrf_exempt</code> — safe for external POST calls from non-browser clients (curl, Postman, etc.).</p>
+
+        <h4>Authentication Decorators</h4>
+        <table class="params-table">
+          <tr><th>Decorator</th><th>Used On</th><th>Behavior on Failure</th></tr>
+          <tr><td><code>@staff_required</code></td><td>GenAI admin views</td><td>Returns JSON <code>{"error": "Forbidden", "code": 403}</code></td></tr>
+          <tr><td><code>@staff_member_required</code></td><td>Some GenAI + all bank admin views</td><td>Redirects to <code>/admin/login/</code></td></tr>
+          <tr><td><code>@login_required</code></td><td>All students app endpoints</td><td>Redirects to <code>/accounts/login/</code></td></tr>
+          <tr><td><em>None</em></td><td>Bank public pages, GenAI JSON APIs, MockTest APIs</td><td>Accessible without login</td></tr>
+        </table>
+
+        <h4>Bank AJAX Note</h4>
+        <p>Bank AJAX views (<code>/add/</code>, <code>/del/</code>, <code>/login/</code>, <code>/signup/</code>) check <code>request.is_ajax()</code>. They require the <code>X-Requested-With: XMLHttpRequest</code> header and return plain <code>HttpResponse</code> text — not JSON.</p>
+
+        <h4>Only JSON-returning Bank Endpoint</h4>
+        <p><code>/math/translate/&lt;int:math_id&gt;/&lt;str:lang&gt;/</code> is the only bank endpoint that returns a proper <code>JsonResponse</code>.</p>
+
+        <h4>File Upload</h4>
+        <p><code>/genai/api/pdf/process/</code> requires <code>Content-Type: multipart/form-data</code>, not <code>application/json</code>.</p>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+  // Toggle card open/close
+  function toggleCard(header) {
+    const card = header.closest('.ep-card');
+    card.classList.toggle('open');
+  }
+
+  // Search
+  const searchInput = document.getElementById('search-input');
+  const allCards = document.querySelectorAll('.ep-card');
+
+  searchInput.addEventListener('input', () => {
+    const q = searchInput.value.toLowerCase().trim();
+    allCards.forEach(card => {
+      if (!q) {
+        card.classList.remove('hidden');
+        return;
+      }
+      const searchData = (card.dataset.search || '') + ' ' +
+        (card.querySelector('.ep-url')?.textContent || '') + ' ' +
+        (card.querySelector('.ep-desc-short')?.textContent || '') + ' ' +
+        (card.querySelector('.ep-body')?.textContent || '');
+      card.classList.toggle('hidden', !searchData.toLowerCase().includes(q));
+    });
+  });
+
+  // Sidebar nav highlight
+  const navLinks = document.querySelectorAll('.nav-link');
+  const sections = document.querySelectorAll('.section');
+  const mainEl = document.getElementById('main');
+
+  mainEl.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => {
+      if (mainEl.scrollTop >= s.offsetTop - 60) current = s.id;
+    });
+    navLinks.forEach(l => {
+      l.classList.toggle('active', l.getAttribute('href') === '#' + current);
+    });
+  });
+
+  // Smooth scroll for sidebar links
+  navLinks.forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      const target = document.querySelector(link.getAttribute('href'));
+      if (target) {
+        mainEl.scrollTo({ top: target.offsetTop - 20, behavior: 'smooth' });
+      }
+    });
+  });
+</script>
+</body>
+</html>

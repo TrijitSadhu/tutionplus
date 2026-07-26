@@ -5,6 +5,7 @@ GenAI URL Configuration
 from django.urls import path, re_path
 from . import views
 from . import admin as admin_views
+from . import llm_config_views
 
 app_name = 'genai'
 
@@ -33,4 +34,11 @@ urlpatterns = [
     
     # Math PDF Processing Form (GO button handler)
     path('admin/math-pdf-processing/<int:pk>/', views.math_pdf_processing_form, name='math_pdf_processing_form'),
+
+    # Fix JSON tool
+    path('fixjson/', views.fix_json_page, name='fix_json'),
+
+    # LLM Configuration UI
+    path('admin/llm-config/', llm_config_views.llm_config_view, name='llm_config'),
+    path('admin/llm-test/',   llm_config_views.llm_test_view,   name='llm_test'),
 ]

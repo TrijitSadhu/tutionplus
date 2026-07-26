@@ -94,7 +94,42 @@ class MathPDFProcessingForm(forms.Form):
         label="Process Entire PDF",
         help_text="Process all pages in chunks (ignores page_from/page_to)"
     )
-    
+
+    # Extract Rule Mode
+    extract_rule = forms.BooleanField(
+        required=False,
+        initial=False,
+        label="Extract Rule (instead of MCQs)",
+        help_text="When checked, extracts rule theorem/content from the PDF and saves it to the rule_math table"
+    )
+
+    rule_number = forms.ChoiceField(
+        required=False,
+        label="Rule Number",
+        help_text="Select which rule number this PDF page corresponds to"
+    )
+
+    # Prompt Selection
+    pdf_prompt = forms.ChoiceField(
+        required=False,
+        label="Prompt for PDF Processing",
+        help_text="Select which LLMPrompt to use when extracting MCQs from PDF"
+    )
+
+    expression_prompt = forms.ChoiceField(
+        required=False,
+        label="Prompt for Expression Processing",
+        help_text="Select which LLMPrompt to use when processing an expression/text"
+    )
+
+    def __init__(self, *args, **kwargs):
+        prompt_choices = kwargs.pop('prompt_choices', [])
+        rule_choices = kwargs.pop('rule_choices', [('', '— Select Rule —')])
+        super().__init__(*args, **kwargs)
+        self.fields['pdf_prompt'].choices = prompt_choices
+        self.fields['expression_prompt'].choices = prompt_choices
+        self.fields['rule_number'].choices = rule_choices
+
     def clean(self):
         cleaned_data = super().clean()
         process_pdf = cleaned_data.get('process_pdf')

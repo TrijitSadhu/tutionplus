@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Subjects</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #0a0d14;
+      --bg2:     #111520;
+      --surface: #161d2e;
+      --border:  rgba(255,255,255,.07);
+      --text:    #e4eaf2;
+      --muted:   #7a90aa;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ─── Background ─────────────────────────────── */
+    .bg-grid {
+      position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+      background-size: 50px 50px;
+      animation: gridShift 20s linear infinite;
+    }
+    @keyframes gridShift { from { background-position: 0 0; } to { background-position: 50px 50px; } }
+
+    .bg-glow {
+      position: fixed; top: -200px; left: 50%;
+      width: 900px; height: 600px;
+      transform: translateX(-50%);
+      background: radial-gradient(ellipse at center, rgba(99,102,241,.08) 0%, transparent 70%);
+      pointer-events: none; z-index: 0;
+      animation: glowPulse 5s ease-in-out infinite alternate;
+    }
+    @keyframes glowPulse {
+      from { opacity: .5; transform: translateX(-50%) scale(1); }
+      to   { opacity: 1;  transform: translateX(-50%) scale(1.1); }
+    }
+
+    /* ─── Particles ──────────────────────────────── */
+    .particles { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+    .particle  { position: absolute; border-radius: 50%; opacity: 0; animation: floatP linear infinite; }
+    @keyframes floatP {
+      0%   { opacity: 0; transform: translateY(0) scale(0); }
+      10%  { opacity: .35; }
+      90%  { opacity: .15; }
+      100% { opacity: 0; transform: translateY(-110vh) scale(1.2); }
+    }
+
+    /* ─── Layout ─────────────────────────────────── */
+    .wrapper {
+      position: relative; z-index: 1;
+      max-width: 1200px; margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+
+    /* ─── Hero ───────────────────────────────────── */
+    .hero {
+      text-align: center;
+      padding: 72px 20px 56px;
+      animation: fadeDown .7s cubic-bezier(.22,1,.36,1) both;
+    }
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(99,102,241,.14);
+      border: 1px solid rgba(99,102,241,.28);
+      color: #818cf8;
+      border-radius: 100px; padding: 6px 16px;
+      font-size: 12px; font-weight: 600; letter-spacing: .9px; text-transform: uppercase;
+      margin-bottom: 22px;
+    }
+    .hero-badge .dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: #818cf8;
+      animation: blink 1.5s ease-in-out infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.2} }
+
+    .hero h1 {
+      font-size: clamp(36px, 5.5vw, 60px);
+      font-weight: 800; line-height: 1.1;
+      background: linear-gradient(135deg, #e4eaf2 0%, #818cf8 55%, #6366f1 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      margin-bottom: 14px;
+    }
+    .hero p {
+      color: var(--muted); font-size: 16px; max-width: 480px; margin: 0 auto;
+      line-height: 1.65;
+    }
+
+    /* ─── Theme toggle ───────────────────────────── */
+    .top-controls {
+      display: flex; justify-content: center;
+      margin: 20px 0 0;
+    }
+    .theme-toggle {
+      display: flex;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 50px; padding: 3px; gap: 2px;
+    }
+    .theme-btn {
+      background: none; border: none; border-radius: 50px;
+      color: var(--muted); font-size: 13px; font-weight: 600;
+      padding: 7px 14px; cursor: pointer;
+      transition: background .18s, color .18s;
+    }
+    .theme-btn.active { background: rgba(99,102,241,.18); color: #818cf8; }
+
+    /* ─── Section ────────────────────────────────── */
+    .section {
+      margin-bottom: 56px;
+      animation: fadeUp .6s cubic-bezier(.22,1,.36,1) both;
+    }
+    .section:nth-child(1) { animation-delay: .15s; }
+    .section:nth-child(2) { animation-delay: .28s; }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .section-header {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 24px;
+    }
+    .section-icon {
+      width: 38px; height: 38px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+    }
+    .section-title {
+      font-size: 20px; font-weight: 700; color: var(--text);
+    }
+    .section-badge {
+      font-size: 11px; font-weight: 700; color: var(--muted);
+      background: rgba(255,255,255,.06); border: 1px solid var(--border);
+      border-radius: 100px; padding: 3px 10px; letter-spacing: .5px;
+    }
+    .section-line {
+      flex: 1; height: 1px; background: var(--border);
+    }
+
+    /* ─── Subject cards grid ─────────────────────── */
+    .subjects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 18px;
+    }
+
+    /* ─── Subject card ───────────────────────────── */
+    .subj-card {
+      position: relative;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 28px 24px 22px;
+      text-decoration: none;
+      display: flex; flex-direction: column; gap: 12px;
+      overflow: hidden;
+      transition: transform .3s cubic-bezier(.22,1,.36,1),
+                  box-shadow .3s cubic-bezier(.22,1,.36,1),
+                  border-color .3s;
+      animation: cardIn .5s cubic-bezier(.22,1,.36,1) both;
+    }
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(24px) scale(.97); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .subj-card::before {
+      content: '';
+      position: absolute; inset: 0; border-radius: 20px;
+      background: linear-gradient(135deg, var(--c1), var(--c2));
+      opacity: 0; transition: opacity .3s; z-index: 0;
+    }
+    .subj-card:hover::before { opacity: .08; }
+    .subj-card:hover {
+      transform: translateY(-6px) scale(1.015);
+      box-shadow: 0 22px 60px rgba(0,0,0,.5),
+                  0 0 0 1px color-mix(in srgb, var(--c1) 40%, transparent);
+      border-color: color-mix(in srgb, var(--c1) 45%, transparent);
+    }
+    /* shine sweep */
+    .subj-card::after {
+      content: '';
+      position: absolute; top: 0; left: -100%;
+      width: 60%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.04) 50%, transparent);
+      transform: skewX(-20deg);
+      transition: left .6s ease; z-index: 1;
+    }
+    .subj-card:hover::after { left: 150%; }
+    .subj-card > * { position: relative; z-index: 2; }
+
+    .subj-icon {
+      width: 54px; height: 54px; border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px;
+      background: linear-gradient(135deg, var(--c1), var(--c2));
+      box-shadow: 0 8px 24px rgba(0,0,0,.35);
+      transition: transform .3s cubic-bezier(.22,1,.36,1);
+    }
+    .subj-card:hover .subj-icon { transform: scale(1.1) rotate(-5deg); }
+
+    .subj-name {
+      font-size: 18px; font-weight: 700; color: var(--text);
+    }
+    .subj-desc {
+      font-size: 13px; color: var(--muted); line-height: 1.5; flex: 1;
+    }
+    .subj-footer {
+      display: flex; align-items: center; justify-content: space-between;
+      border-top: 1px solid var(--border); padding-top: 12px; margin-top: 4px;
+    }
+    .subj-cta {
+      font-size: 12px; font-weight: 700; letter-spacing: .4px; text-transform: uppercase;
+      color: var(--c2);
+    }
+    .subj-arrow {
+      width: 30px; height: 30px; border-radius: 50%;
+      background: rgba(255,255,255,.06); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; color: var(--muted);
+      transition: background .2s, color .2s, transform .2s;
+    }
+    .subj-card:hover .subj-arrow {
+      background: linear-gradient(135deg, var(--c1), var(--c2));
+      color: #fff; transform: translateX(3px); border-color: transparent;
+    }
+
+    /* ─── Day Theme ──────────────────────────────── */
+    [data-theme="day"] {
+      --bg:      #f0f3f8;
+      --bg2:     #ffffff;
+      --surface: #ffffff;
+      --border:  rgba(0,0,0,.10);
+      --text:    #111827;
+      --muted:   #6b7280;
+    }
+    [data-theme="day"] .bg-grid {
+      background-image:
+        linear-gradient(rgba(99,102,241,.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(99,102,241,.05) 1px, transparent 1px);
+    }
+    [data-theme="day"] .bg-glow {
+      background: radial-gradient(ellipse at center, rgba(99,102,241,.05) 0%, transparent 70%);
+    }
+    [data-theme="day"] .hero h1 {
+      background: linear-gradient(135deg, #1e293b 0%, #6366f1 60%, #4f46e5 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    [data-theme="day"] .subj-card { box-shadow: 0 2px 14px rgba(0,0,0,.07); }
+    [data-theme="day"] .subj-card:hover {
+      box-shadow: 0 22px 55px rgba(0,0,0,.13),
+                  0 0 0 1px color-mix(in srgb, var(--c1) 40%, transparent);
+    }
+    [data-theme="day"] .subj-arrow { background: rgba(0,0,0,.05); border-color: rgba(0,0,0,.10); color: #6b7280; }
+
+    /* ─── Responsive ─────────────────────────────── */
+    @media (max-width: 600px) {
+      .hero { padding: 48px 16px 36px; }
+      .subjects-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+      .subj-card { padding: 20px 16px 16px; }
+    }
+    @media (max-width: 380px) {
+      .subjects-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="bg-glow"></div>
+<div class="particles" id="particles"></div>
+
+<div class="wrapper">
+
+  <!-- ─── Hero ──────────────────────────────────── -->
+  <div class="hero">
+    <div class="hero-badge"><span class="dot"></span>Study Hub</div>
+    <h1>Choose Your Subject</h1>
+    <p>Explore General Science and General Studies topics. Pick a subject to practice chapter-wise questions.</p>
+    <div class="top-controls">
+      <div class="theme-toggle">
+        <button class="theme-btn" id="theme-night">🌙 Night</button>
+        <button class="theme-btn" id="theme-day">☀️ Day</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── General Science ───────────────────────── -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:linear-gradient(135deg,#059669,#34d399);">🔭</div>
+      <span class="section-title">General Science</span>
+      <span class="section-badge">3 Subjects</span>
+      <div class="section-line"></div>
+    </div>
+    <div class="subjects-grid">
+
+      <a class="subj-card" href="/biology/home/"
+         style="--c1:#059669;--c2:#34d399; animation-delay:0ms;">
+        <div class="subj-icon">🔬</div>
+        <div class="subj-name">Biology</div>
+        <div class="subj-desc">Cell biology, genetics, ecology, human physiology and more.</div>
+        <div class="subj-footer">
+          <span class="subj-cta">Explore</span>
+          <span class="subj-arrow">→</span>
+        </div>
+      </a>
+
+      <a class="subj-card" href="/physics/home/"
+         style="--c1:#7c3aed;--c2:#a78bfa; animation-delay:80ms;">
+        <div class="subj-icon">⚛️</div>
+        <div class="subj-name">Physics</div>
+        <div class="subj-desc">Mechanics, thermodynamics, optics, electricity and modern physics.</div>
+        <div class="subj-footer">
+          <span class="subj-cta">Explore</span>
+          <span class="subj-arrow">→</span>
+        </div>
+      </a>
+
+      <a class="subj-card" href="/chemistry/home/"
+         style="--c1:#dc2626;--c2:#f87171; animation-delay:160ms;">
+        <div class="subj-icon">⚗️</div>
+        <div class="subj-name">Chemistry</div>
+        <div class="subj-desc">Organic, inorganic, physical chemistry and periodic trends.</div>
+        <div class="subj-footer">
+          <span class="subj-cta">Explore</span>
+          <span class="subj-arrow">→</span>
+        </div>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- ─── General Studies ───────────────────────── -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:linear-gradient(135deg,#d97706,#fbbf24);">📚</div>
+      <span class="section-title">General Studies</span>
+      <span class="section-badge">4 Subjects</span>
+      <div class="section-line"></div>
+    </div>
+    <div class="subjects-grid">
+
+      <a class="subj-card" href="/history/home/"
+         style="--c1:#d97706;--c2:#fbbf24; animation-delay:0ms;">
+        <div class="subj-icon">🏛️</div>
+        <div class="subj-name">History</div>
+        <div class="subj-desc">Ancient, medieval and modern Indian & world history.</div>
+        <div class="subj-footer">
+          <span class="subj-cta">Explore</span>
+          <span class="subj-arrow">→</span>
+        </div>
+      </a>
+
+      <a class="subj-card" href="/geography/home/"
+         style="--c1:#0891b2;--c2:#22d3ee; animation-delay:80ms;">
+        <div class="subj-icon">🌍</div>
+        <div class="subj-name">Geography</div>
+        <div class="subj-desc">Physical, human and Indian geography — rivers, soils, climate and more.</div>
+        <div class="subj-footer">
+          <span class="subj-cta">Explore</span>
+          <span class="subj-arrow">→</span>
+        </div>
+      </a>
+
+      <a class="subj-card" href="/polity/home/"
+         style="--c1:#6366f1;--c2:#818cf8; animation-delay:160ms;">
+        <div class="subj-icon">⚖️</div>
+        <div class="subj-name">Polity</div>
+        <div class="subj-desc">Indian constitution, governance, parliament, judiciary and rights.</div>
+        <div class="subj-footer">
+          <span class="subj-cta">Explore</span>
+          <span class="subj-arrow">→</span>
+        </div>
+      </a>
+
+      <a class="subj-card" href="/economics/home/"
+         style="--c1:#16a34a;--c2:#4ade80; animation-delay:240ms;">
+        <div class="subj-icon">📊</div>
+        <div class="subj-name">Economics</div>
+        <div class="subj-desc">Micro, macro economics, Indian economy, banking and finance.</div>
+        <div class="subj-footer">
+          <span class="subj-cta">Explore</span>
+          <span class="subj-arrow">→</span>
+        </div>
+      </a>
+
+    </div>
+  </div>
+
+</div><!-- /wrapper -->
+
+<script>
+// ─── Flash-free theme restore ────────────────────────────────────
+(function() {
+  if (localStorage.getItem('subjects-theme') === 'day')
+    document.documentElement.setAttribute('data-theme', 'day');
+})();
+
+// ─── Theme toggle ────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  const nightBtn = document.getElementById('theme-night');
+  const dayBtn   = document.getElementById('theme-day');
+  function applyTheme(mode) {
+    if (mode === 'day') document.documentElement.setAttribute('data-theme', 'day');
+    else document.documentElement.removeAttribute('data-theme');
+    localStorage.setItem('subjects-theme', mode);
+    nightBtn.classList.toggle('active', mode === 'night');
+    dayBtn.classList.toggle('active',   mode === 'day');
+  }
+  const init = localStorage.getItem('subjects-theme') || 'night';
+  nightBtn.classList.toggle('active', init === 'night');
+  dayBtn.classList.toggle('active',   init === 'day');
+  nightBtn.addEventListener('click', () => applyTheme('night'));
+  dayBtn.addEventListener('click',   () => applyTheme('day'));
+});
+
+// ─── Floating particles ──────────────────────────────────────────
+const COLORS = ['#6366f1','#818cf8','#059669','#22d3ee','#d97706','#dc2626','#16a34a'];
+const el = document.getElementById('particles');
+for (let i = 0; i < 24; i++) {
+  const p = document.createElement('div');
+  p.className = 'particle';
+  const sz = Math.random()*5+2, col = COLORS[i%COLORS.length];
+  p.style.cssText = `width:${sz}px;height:${sz}px;background:${col};left:${Math.random()*100}%;bottom:-${sz}px;animation-delay:${Math.random()*20}s;animation-duration:${Math.random()*18+10}s;box-shadow:0 0 ${sz*2}px ${col};`;
+  el.appendChild(p);
+}
+</script>
+</body>
+</html>

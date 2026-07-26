@@ -387,6 +387,7 @@ class LLMPrompt(models.Model):
     PROMPT_TYPE_CHOICES = [
         ('mcq', 'MCQ'),
         ('descriptive', 'Descriptive'),
+        ('rule_extraction', 'Rule Extraction'),
     ]
     
     source_url = models.URLField(

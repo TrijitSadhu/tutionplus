@@ -1,0 +1,132 @@
+{% extends "admin/base_site.html" %}
+{% block title %}Variants of Question {{ math_id }} | Admin{% endblock %}
+
+{% block extrahead %}
+<style>
+  .var-page { max-width: 100%; }
+  h1 { font-size: 20px; margin-bottom: 6px; }
+  .sub { color: #666; font-size: 13px; margin-bottom: 18px; }
+  .var-table-wrap { overflow-x: auto; margin-top: 16px; }
+  table.var-table {
+    border-collapse: collapse;
+    min-width: 700px;
+    width: 100%;
+    font-size: 13px;
+  }
+  .var-table th, .var-table td {
+    border: 1px solid #ddd;
+    padding: 8px 12px;
+    vertical-align: top;
+    text-align: left;
+  }
+  .var-table thead th {
+    background: #1565c0;
+    color: #fff;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .var-table thead th.orig-col { background: #2e7d32; }
+  .var-table tbody tr:nth-child(even) { background: #f5f5f5; }
+  .var-table .field-label {
+    font-weight: 700;
+    color: #333;
+    background: #e8eaf6;
+    white-space: nowrap;
+    width: 140px;
+  }
+  .cell-orig { background: #e8f5e9; }
+  .cell-variant { background: #fff8e1; }
+  .diff-highlight { background: #fff3e0; }
+  /* highlight changed words */
+  .changed { background: #ffcc80; border-radius: 3px; padding: 1px 3px; }
+  .actions-row { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
+  .btn-del {
+    background: #c62828; color: #fff; border: none; padding: 7px 16px;
+    border-radius: 5px; cursor: pointer; font-size: 12px; font-weight: 600;
+  }
+  .btn-del:hover { background: #b71c1c; }
+  .btn-edit {
+    background: #1565c0; color: #fff; border: none; padding: 7px 16px;
+    border-radius: 5px; cursor: pointer; font-size: 12px; font-weight: 600;
+    text-decoration: none; display: inline-block;
+  }
+  .btn-edit:hover { background: #0d47a1; color: #fff; }
+  .tag-original {
+    display: inline-block; background: #2e7d32; color: #fff;
+    font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 10px;
+    margin-left: 6px; vertical-align: middle;
+  }
+  .tag-variant {
+    display: inline-block; background: #e65100; color: #fff;
+    font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 10px;
+    margin-left: 6px; vertical-align: middle;
+  }
+  .empty-msg { color: #888; font-style: italic; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="var-page">
+  <h1>
+    Variants of Question id={{ math_id }}
+    <span class="tag-original">ORIGINAL</span>
+  </h1>
+  <p class="sub">
+    Original + {{ variants|length }} variant(s).
+    Each variant has <code>source_math_id = {{ math_id }}</code>.
+    Delete rows you don't want to keep.
+  </p>
+
+  {% if error %}
+    <p style="color:red;">{{ error }}</p>
+  {% else %}
+
+  <div class="var-table-wrap">
+    <table class="var-table">
+      <thead>
+        <tr>
+          <th style="width:130px;">Field</th>
+          {% for q in all_rows %}
+            {% if forloop.first %}
+              <th class="orig-col">
+                id={{ q.id }} <span class="tag-original">ORIG</span><br>
+                <a href="{% url 'admin:bank_math_change' q.id %}" style="color:#a5d6a7;font-size:11px;">Edit</a>
+                &nbsp;|&nbsp;
+                <a href="{% url 'admin:bank_math_delete' q.id %}" style="color:#ef9a9a;font-size:11px;">Delete</a>
+              </th>
+            {% else %}
+              <th>
+                id={{ q.id }} <span class="tag-variant">VARIANT</span><br>
+                <a href="{% url 'admin:bank_math_change' q.id %}" style="color:#1565c0;font-size:11px;">Edit</a>
+                &nbsp;|&nbsp;
+                <a href="{% url 'admin:bank_math_delete' q.id %}" style="color:#c62828;font-size:11px;">Delete</a>
+              </th>
+            {% endif %}
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in rows %}
+        <tr>
+          <td class="field-label">{{ row.label }}</td>
+          {% for cell in row.cells %}
+            {% if forloop.first %}
+              <td class="cell-orig">{{ cell|default:"—" }}</td>
+            {% else %}
+              <td class="cell-variant">{{ cell|default:"—" }}</td>
+            {% endif %}
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="actions-row">
+    <a href="{% url 'admin:bank_math_changelist' %}" class="btn-edit">&#8592; Back to Math list</a>
+    <a href="{% url 'admin:bank_math_change' math_id %}" class="btn-edit" style="background:#00796b;">Edit Original</a>
+  </div>
+
+  {% endif %}
+</div>
+{% endblock %}

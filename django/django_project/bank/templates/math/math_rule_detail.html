@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>{{ rule.rule_name }} — {{ chapter_display }}</title>
+
+  <!-- KaTeX for LaTeX rendering -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="initKaTeX();"></script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #0f1117;
+      --bg2:      #161b27;
+      --surface:  #1e2535;
+      --surface2: #232d42;
+      --border:   rgba(255,255,255,.07);
+      --text:     #e8eaf0;
+      --muted:    #8892a4;
+      --accent:   #6366f1;
+      --accent2:  #818cf8;
+      --gold:     #f59e0b;
+      --gold2:    #fbbf24;
+      --green:    #10b981;
+      --sidebar-w: 260px;
+    }
+
+    /* ── Day Theme ───────────────────────────────────── */
+    [data-theme="day"] {
+      --bg:      #f4f6fb;
+      --bg2:     #ffffff;
+      --surface: #ffffff;
+      --surface2:#f0f2f8;
+      --border:  rgba(0,0,0,.09);
+      --text:    #111827;
+      --muted:   #6b7280;
+      --accent2: #4f46e5;
+      --gold2:   #d97706;
+      --gold:    #b45309;
+    }
+    [data-theme="day"] body { background: var(--bg); }
+    [data-theme="day"] .bg-grid {
+      background-image:
+        linear-gradient(rgba(99,102,241,.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(99,102,241,.05) 1px, transparent 1px);
+    }
+    [data-theme="day"] .bg-glow {
+      background: radial-gradient(ellipse, rgba(99,102,241,.06) 0%, transparent 70%);
+    }
+    [data-theme="day"] .content-card { box-shadow: 0 2px 20px rgba(0,0,0,.08); }
+    [data-theme="day"] .latex-content .katex-display {
+      background: rgba(245,158,11,.06);
+      border-left-color: var(--gold);
+    }
+    [data-theme="day"] .hero-title {
+      background: linear-gradient(135deg, #1e293b 0%, #d97706 55%, #b45309 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    [data-theme="day"] .nav-card:hover { background: var(--surface2); }
+    [data-theme="day"] .back-btn:hover { background: var(--surface2); }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Background ─────────────────────────────────── */
+    .particles { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+    .particle {
+      position: absolute; border-radius: 50%; opacity: 0;
+      animation: floatP linear infinite;
+    }
+    @keyframes floatP {
+      0%   { opacity: 0; transform: translateY(0) scale(0); }
+      10%  { opacity: .35; }
+      90%  { opacity: .15; }
+      100% { opacity: 0; transform: translateY(-110vh) scale(1.2); }
+    }
+    .bg-grid {
+      position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      background-image:
+        linear-gradient(rgba(99,102,241,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(99,102,241,.04) 1px, transparent 1px);
+      background-size: 50px 50px;
+      animation: gridShift 20s linear infinite;
+    }
+    @keyframes gridShift { from { background-position: 0 0; } to { background-position: 50px 50px; } }
+    .bg-glow {
+      position: fixed; top: -200px; left: 50%;
+      width: 800px; height: 600px; transform: translateX(-50%);
+      background: radial-gradient(ellipse, rgba(99,102,241,.1) 0%, transparent 70%);
+      pointer-events: none; z-index: 0;
+      animation: glowPulse 4s ease-in-out infinite alternate;
+    }
+    @keyframes glowPulse {
+      from { opacity: .6; transform: translateX(-50%) scale(1); }
+      to   { opacity: 1;  transform: translateX(-50%) scale(1.08); }
+    }
+
+    /* ── Layout ─────────────────────────────────────── */
+    .layout { display: flex; position: relative; z-index: 1; min-height: 100vh; }
+
+    /* ── Sidebar ─────────────────────────────────────── */
+    .sidebar {
+      width: var(--sidebar-w);
+      background: var(--bg2);
+      border-right: 1px solid var(--border);
+      position: sticky; top: 0; height: 100vh;
+      overflow-y: auto;
+      flex-shrink: 0;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(99,102,241,.3) transparent;
+      animation: slideLeft .5s cubic-bezier(.22,1,.36,1) both;
+    }
+    @keyframes slideLeft {
+      from { opacity: 0; transform: translateX(-20px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+    .sidebar-header { padding: 24px 20px 16px; border-bottom: 1px solid var(--border); }
+    .sidebar-header a {
+      display: inline-flex; align-items: center; gap: 8px;
+      color: var(--muted); text-decoration: none; font-size: 13px;
+      transition: color .2s; margin-bottom: 14px;
+    }
+    .sidebar-header a:hover { color: var(--accent2); }
+    .sidebar-title { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+    .sidebar nav { padding: 12px 10px; }
+    .nav-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 12px; border-radius: 8px;
+      color: var(--muted); text-decoration: none;
+      font-size: 13px; font-weight: 500;
+      transition: background .18s, color .18s;
+      margin-bottom: 2px;
+    }
+    .nav-item:hover { background: rgba(99,102,241,.1); color: var(--text); }
+    .nav-item.active { background: rgba(99,102,241,.2); color: var(--accent2); border: 1px solid rgba(99,102,241,.3); }
+    .nav-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; background: var(--border); }
+    .nav-item.active .nav-dot { background: var(--accent); box-shadow: 0 0 6px var(--accent); }
+
+    /* ── Main ────────────────────────────────────────── */
+    .main { flex: 1; padding: 0 40px 100px; min-width: 0; }
+
+    /* ── Breadcrumb ──────────────────────────────────── */
+    .breadcrumb {
+      display: flex; align-items: center; gap: 8px;
+      padding: 28px 0 0;
+      font-size: 13px; color: var(--muted);
+      flex-wrap: wrap;
+      animation: fadeDown .5s cubic-bezier(.22,1,.36,1) both;
+    }
+    .breadcrumb a { color: var(--muted); text-decoration: none; transition: color .2s; }
+    .breadcrumb a:hover { color: var(--accent2); }
+    .breadcrumb .sep { color: rgba(255,255,255,.2); }
+    .breadcrumb .current { color: var(--text); font-weight: 600; }
+
+    /* ── Hero ────────────────────────────────────────── */
+    .hero {
+      padding: 24px 0 36px;
+      animation: fadeDown .6s cubic-bezier(.22,1,.36,1) .05s both;
+    }
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(245,158,11,.12); border: 1px solid rgba(245,158,11,.3);
+      color: var(--gold2); border-radius: 100px;
+      padding: 5px 14px; font-size: 11px; font-weight: 700;
+      letter-spacing: .9px; text-transform: uppercase; margin-bottom: 14px;
+    }
+    .hero-badge .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); animation: blink 1.5s ease-in-out infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.2} }
+
+    .hero-top {
+      display: flex; align-items: flex-start; justify-content: space-between; gap: 20px;
+      flex-wrap: wrap;
+    }
+    .hero-text { flex: 1; }
+    .rule-num-badge {
+      display: flex; align-items: center; justify-content: center;
+      width: 72px; height: 72px; border-radius: 20px; flex-shrink: 0;
+      background: linear-gradient(135deg, rgba(245,158,11,.2), rgba(251,191,36,.1));
+      border: 1px solid rgba(245,158,11,.3);
+      font-size: 20px; font-weight: 800; color: var(--gold2);
+      box-shadow: 0 8px 28px rgba(245,158,11,.15);
+    }
+
+    .hero-title {
+      font-size: clamp(24px, 4vw, 42px);
+      font-weight: 800; line-height: 1.15;
+      background: linear-gradient(135deg, #e8eaf0 0%, var(--gold2) 55%, var(--gold) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      margin-bottom: 10px;
+    }
+    .hero-sub { color: var(--muted); font-size: 15px; line-height: 1.6; }
+
+    .hero-meta {
+      display: flex; align-items: center; gap: 16px; margin-top: 18px; flex-wrap: wrap;
+    }
+    .meta-chip {
+      display: flex; align-items: center; gap: 6px;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 100px;
+      padding: 5px 14px; font-size: 12px; color: var(--muted);
+    }
+    .meta-chip strong { color: var(--text); }
+    .tag-latex {
+      background: rgba(99,102,241,.15); border: 1px solid rgba(99,102,241,.3);
+      color: var(--accent2); border-radius: 100px;
+      padding: 5px 14px; font-size: 11px; font-weight: 700; letter-spacing: .7px; text-transform: uppercase;
+    }
+    .tag-html {
+      background: rgba(16,185,129,.1); border: 1px solid rgba(16,185,129,.2);
+      color: var(--green); border-radius: 100px;
+      padding: 5px 14px; font-size: 11px; font-weight: 700; letter-spacing: .7px; text-transform: uppercase;
+    }
+
+    /* ── Content card ────────────────────────────────── */
+    .content-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+      margin-bottom: 24px;
+      animation: cardIn .6s cubic-bezier(.22,1,.36,1) .15s both;
+      box-shadow: 0 4px 30px rgba(0,0,0,.3);
+    }
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(24px) scale(.98); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .content-card::before {
+      content: '';
+      display: block; height: 3px;
+      background: linear-gradient(90deg, var(--gold), var(--accent), var(--accent2));
+    }
+
+    .content-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 28px 16px;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap; gap: 12px;
+    }
+    .content-title {
+      font-size: 13px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1px; color: var(--muted);
+      display: flex; align-items: center; gap: 8px;
+    }
+
+    .content-body {
+      padding: 20px 24px 24px;
+    }
+
+    /* ── Shared content typography ─────────────────────── */
+    .rule-content {
+      font-size: 15px;
+      line-height: 1.55;
+      color: var(--text);
+    }
+    .rule-content p { margin: 0 0 8px; }
+    .rule-content ul, .rule-content ol { padding-left: 22px; margin: 6px 0 10px; }
+    .rule-content li { margin-bottom: 5px; }
+    .rule-content h2 {
+      font-size: 17px; font-weight: 800; color: var(--gold2);
+      margin: 0 0 12px; padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    .rule-content strong, .rule-content b { color: var(--gold2); }
+    .rule-content em { color: var(--accent2); font-style: italic; }
+    /* KaTeX display blocks */
+    .rule-content .katex-display {
+      margin: 6px 0 10px;
+      padding: 10px 16px;
+      background: rgba(0,0,0,.22);
+      border-radius: 8px;
+      border-left: 3px solid var(--gold);
+      overflow-x: auto;
+    }
+    [data-theme="day"] .rule-content .katex-display {
+      background: rgba(245,158,11,.07);
+    }
+    .rule-content .katex-display .katex-html { overflow-x: auto; }
+    .rule-content .katex { font-size: 1.05em; }
+
+    /* ── Rule section blocks ────────────────────────── */
+    .rule-card { display: flex; flex-direction: column; gap: 0; }
+    .rule-card > section,
+    .rule-card > div[class^="rule-"] {
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .rule-card > div[class^="rule-"]:last-child { border-bottom: none; }
+
+    .rule-statement { }
+    .rule-formula {
+      background: rgba(245,158,11,.05);
+      margin: 0 -24px;
+      padding: 12px 24px;
+      border-radius: 0;
+    }
+    .rule-visual ul { list-style: none; padding: 0; }
+    .rule-visual li {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 5px 0;
+      border-bottom: 1px solid rgba(255,255,255,.04);
+    }
+    .rule-visual li::before {
+      content: '▶';
+      color: var(--gold); font-size: 9px; margin-top: 5px; flex-shrink: 0;
+    }
+    .rule-intuition {
+      background: rgba(99,102,241,.06);
+      margin: 0 -24px;
+      padding: 12px 24px;
+      border-radius: 0;
+    }
+    .rule-pattern { }
+    .rule-example {
+      background: rgba(16,185,129,.05);
+      margin: 0 -24px;
+      padding: 12px 24px;
+      border-radius: 0;
+    }
+    .rule-example p:first-child strong { color: var(--green); }
+    .rule-mistake {
+      background: rgba(239,68,68,.05);
+      margin: 0 -24px;
+      padding: 12px 24px;
+      border-radius: 0;
+    }
+    .rule-mistake p:first-child strong { color: #f87171; }
+    [data-theme="day"] .rule-formula { background: rgba(245,158,11,.06); }
+    [data-theme="day"] .rule-intuition { background: rgba(99,102,241,.06); }
+    [data-theme="day"] .rule-example { background: rgba(16,185,129,.06); }
+    [data-theme="day"] .rule-mistake { background: rgba(239,68,68,.06); }
+    [data-theme="day"] .rule-visual li { border-bottom-color: rgba(0,0,0,.05); }
+
+    /* ── Fallback plain-latex content ──────────────────── */
+    .latex-content {
+      font-size: 15px; line-height: 1.55; color: var(--text);
+    }
+    .latex-content .katex-display {
+      margin: 6px 0 10px; padding: 10px 16px;
+      background: rgba(0,0,0,.22); border-radius: 8px;
+      border-left: 3px solid var(--gold); overflow-x: auto;
+    }
+    .latex-content .katex { font-size: 1.05em; }
+    .latex-content p { margin: 0 0 6px; }
+    .latex-content ul, .latex-content ol { padding-left: 22px; margin: 6px 0; }
+    .latex-content li { margin-bottom: 3px; }
+    .latex-content h1, .latex-content h2, .latex-content h3 {
+      color: var(--gold2); margin: 12px 0 4px; font-weight: 700;
+    }
+    .latex-content strong, .latex-content b { color: var(--gold2); }
+    .latex-content em { color: var(--accent2); font-style: italic; }
+
+    /* Empty state */
+    .empty-content {
+      text-align: center; padding: 60px 20px;
+      color: var(--muted); font-size: 14px; font-style: italic;
+    }
+    .empty-icon { font-size: 52px; margin-bottom: 16px; opacity: .6; }
+
+    /* ── Navigation footer ───────────────────────────── */
+    .nav-footer {
+      display: flex; align-items: stretch; gap: 14px;
+      margin-top: 12px;
+      animation: cardIn .6s cubic-bezier(.22,1,.36,1) .25s both;
+      flex-wrap: wrap;
+    }
+    .nav-card {
+      flex: 1; min-width: 200px;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+      padding: 18px 22px;
+      text-decoration: none;
+      display: flex; flex-direction: column; gap: 6px;
+      transition: background .2s, border-color .2s, transform .2s;
+    }
+    .nav-card:hover {
+      background: var(--surface2); border-color: rgba(99,102,241,.3);
+      transform: translateY(-2px);
+    }
+    .nav-card .nav-dir {
+      font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .8px;
+      color: var(--muted); display: flex; align-items: center; gap: 6px;
+    }
+    .nav-card .nav-name { font-size: 15px; font-weight: 700; color: var(--text); }
+    .nav-card .nav-sub { font-size: 12px; color: var(--muted); }
+    .nav-card.prev .nav-dir::before { content: '←'; }
+    .nav-card.next { text-align: right; }
+    .nav-card.next .nav-dir { justify-content: flex-end; }
+    .nav-card.next .nav-dir::after { content: '→'; }
+
+    .back-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+      padding: 18px 22px; text-decoration: none; color: var(--muted);
+      font-size: 13px; font-weight: 600;
+      transition: background .2s, border-color .2s, color .2s;
+      flex-shrink: 0;
+    }
+    .back-btn:hover { background: var(--surface2); border-color: rgba(99,102,241,.3); color: var(--accent2); }
+
+    /* ── Responsive ──────────────────────────────────── */
+    @media (max-width: 900px) {
+      .sidebar { display: none; }
+      .main { padding: 0 16px 80px; }
+    }
+    @media (max-width: 600px) {
+      .hero { padding: 20px 0 24px; }
+      .content-body { padding: 20px 16px 24px; }
+      .content-header { padding: 14px 16px; }
+      .nav-footer { flex-direction: column; }
+    }
+
+    /* ── Theme toggle ─────────────────────────────────── */
+    .theme-toggle {
+      display: flex;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 50px; padding: 3px; gap: 2px;
+    }
+    .theme-btn {
+      background: none; border: none; border-radius: 50px;
+      color: var(--muted); font-size: 12px; font-weight: 600;
+      padding: 5px 12px; cursor: pointer;
+      transition: background .18s, color .18s; white-space: nowrap;
+    }
+    .theme-btn.active { background: rgba(99,102,241,.18); color: var(--accent2); }
+
+    /* ── Scrollbar ───────────────────────────────────── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(99,102,241,.3); border-radius: 3px; }
+  </style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="bg-glow"></div>
+<div class="particles" id="particles"></div>
+
+<div class="layout">
+
+  <!-- ── Sidebar ─────────────────────────────────────── -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <a href="/math/home/">← Math Home</a>
+      <div class="sidebar-title">📚 Chapters</div>
+    </div>
+    <nav>
+      {% for ch in all_chapters %}
+      <a href="/math/rules/{{ ch.slug }}/" class="nav-item {% if ch.active %}active{% endif %}">
+        <span class="nav-dot"></span>
+        {{ ch.display }}
+      </a>
+      {% endfor %}
+    </nav>
+  </aside>
+
+  <!-- ── Main ──────────────────────────────────────────── -->
+  <main class="main">
+
+    <!-- Top controls: breadcrumb + theme toggle -->
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;padding-top:24px;">
+      <div class="breadcrumb" style="padding-top:0;">
+      <a href="/math/home/">Math Home</a>
+      <span class="sep">›</span>
+      <a href="/math/rules/{{ chapter }}/">{{ chapter_display }}</a>
+      <span class="sep">›</span>
+        <span class="current">{{ rule.rule_name }}</span>
+      </div>
+      <div class="theme-toggle">
+        <button class="theme-btn" id="theme-night">🌙 Night</button>
+        <button class="theme-btn" id="theme-day">☀️ Day</button>
+      </div>
+    </div>
+
+    <!-- Hero -->
+    <div class="hero">
+      <div class="hero-badge"><span class="dot"></span>Formula Detail</div>
+      <div class="hero-top">
+        <div class="hero-text">
+          <h1 class="hero-title">{{ rule.rule_name }}</h1>
+          <p class="hero-sub">{{ chapter_display }} &mdash; rule {{ rule_number }} of {{ total_rules }}</p>
+          <div class="hero-meta">
+            <div class="meta-chip">📐 <strong>{{ chapter_display }}</strong></div>
+            <div class="meta-chip">🔢 Rule #{{ rule_number }}</div>
+            {% if rule_html_content %}
+              <span class="tag-html">Structured</span>
+            {% elif rule_latex %}
+              <span class="tag-latex">LaTeX</span>
+            {% endif %}
+          </div>
+        </div>
+        <div class="rule-num-badge">#{{ rule_number }}</div>
+      </div>
+    </div>
+
+    <!-- Content card -->
+    <div class="content-card">
+      <div class="content-header">
+        <span class="content-title">📋 Rule Content</span>
+        {% if rule_html_content %}
+          <span class="tag-html">Structured</span>
+        {% elif rule_latex %}
+          <span class="tag-latex">LaTeX</span>
+        {% endif %}
+      </div>
+      <div class="content-body">
+        {% if rule_html_content %}
+          <div class="rule-content" id="ruleContent">{{ rule_html_content|safe }}</div>
+        {% elif rule_latex %}
+          <div class="latex-content rule-content" id="ruleContent">{{ rule_latex|safe }}</div>
+        {% else %}
+          <div class="empty-content">
+            <div class="empty-icon">📐</div>
+            <p>No content extracted yet for this rule.<br>
+               <a href="/genai/admin/math-pdf-processing/" style="color:var(--accent2);">Go to PDF Processor →</a>
+            </p>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Prev / Next navigation -->
+    <div class="nav-footer">
+      {% if prev_rule %}
+      <a href="/math/rules/{{ chapter }}/{{ prev_rule.id }}/" class="nav-card prev">
+        <span class="nav-dir">Previous Rule</span>
+        <span class="nav-name">{{ prev_rule.rule_name }}</span>
+        <span class="nav-sub">{{ chapter_display }}</span>
+      </a>
+      {% endif %}
+
+      <a href="/math/rules/{{ chapter }}/" class="back-btn">
+        ⬡ All {{ chapter_display }} Rules
+      </a>
+
+      {% if next_rule %}
+      <a href="/math/rules/{{ chapter }}/{{ next_rule.id }}/" class="nav-card next">
+        <span class="nav-dir">Next Rule</span>
+        <span class="nav-name">{{ next_rule.rule_name }}</span>
+        <span class="nav-sub">{{ chapter_display }}</span>
+      </a>
+      {% endif %}
+    </div>
+
+  </main>
+</div>
+
+<script>
+// ── Apply saved theme immediately (no flash) ────────────────────
+(function(){
+  const t = localStorage.getItem('rule-detail-theme') || 'night';
+  if (t === 'day') document.documentElement.setAttribute('data-theme','day');
+})();
+
+// ── KaTeX init ────────────────────────────────────────────────────
+function initKaTeX() {
+  const container = document.getElementById('ruleContent');
+  if (!container) return;
+
+  renderMathInElement(container, {
+    delimiters: [
+      {left: '$$', right: '$$', display: true},
+      {left: '$',  right: '$',  display: false},
+      {left: '\\[', right: '\\]', display: true},
+      {left: '\\(', right: '\\)', display: false}
+    ],
+    throwOnError: false
+  });
+}
+
+// ── Theme toggle ─────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', function(){
+  const nightBtn = document.getElementById('theme-night');
+  const dayBtn   = document.getElementById('theme-day');
+  function applyTheme(mode) {
+    if (mode === 'day') document.documentElement.setAttribute('data-theme','day');
+    else document.documentElement.removeAttribute('data-theme');
+    localStorage.setItem('rule-detail-theme', mode);
+    nightBtn.classList.toggle('active', mode === 'night');
+    dayBtn.classList.toggle('active',   mode === 'day');
+  }
+  const init = localStorage.getItem('rule-detail-theme') || 'night';
+  nightBtn.classList.toggle('active', init === 'night');
+  dayBtn.classList.toggle('active',   init === 'day');
+  nightBtn.addEventListener('click', () => applyTheme('night'));
+  dayBtn.addEventListener('click',   () => applyTheme('day'));
+});
+
+// ── Floating particles ───────────────────────────────────────────
+(function(){
+  const cont = document.getElementById('particles');
+  const colors = ['#6366f1','#818cf8','#f59e0b','#fbbf24','#10b981','#22d3ee'];
+  for(let i = 0; i < 20; i++){
+    const el = document.createElement('div');
+    el.className = 'particle';
+    const size = Math.random()*5+2;
+    el.style.cssText = [
+      `width:${size}px`, `height:${size}px`,
+      `left:${Math.random()*100}%`,
+      `bottom:${Math.random()*5}%`,
+      `background:${colors[Math.floor(Math.random()*colors.length)]}`,
+      `animation-duration:${Math.random()*14+8}s`,
+      `animation-delay:${Math.random()*12}s`,
+    ].join(';');
+    cont.appendChild(el);
+  }
+})();
+</script>
+
+</body>
+</html>

@@ -438,8 +438,18 @@ def math_pdf_processing_form(request, pk):
     math_problem = get_object_or_404(MathProblemGeneration, pk=pk)
     
     if request.method == 'POST':
-        form = MathPDFProcessingForm(request.POST)
-        
+        # Build prompt choices needed for form validation (populated after form build below)
+        from genai.models import LLMPrompt as LLMPromptModel
+        from genai.config import DEFAULT_LLM_PROVIDER, GROQ_MODEL, GROQ_TEMPERATURE, GEMINI_MODEL, OPENAI_MODEL
+        _prompt_qs_post = LLMPromptModel.objects.filter(is_active=True).order_by('-is_default', 'prompt_type', 'source_url')
+        _prompt_choices_post = [('', '— Auto (use default) —')] + [
+            (str(p.id), f"[{p.get_prompt_type_display()}] {str(p)}")
+            for p in _prompt_qs_post
+        ]
+        from bank.models import RULE_NAME_CHOICES
+        _rule_choices_post = [('', '— Select Rule —')] + list(RULE_NAME_CHOICES)
+        form = MathPDFProcessingForm(request.POST, prompt_choices=_prompt_choices_post, rule_choices=_rule_choices_post)
+
         if form.is_valid():
             print(f"\n{'='*80}")
             print(f"[MATH PDF PROCESSING] Starting for ID: {pk}")
@@ -458,6 +468,10 @@ def math_pdf_processing_form(request, pk):
                 'process_all_the_mcq_of_the_pageRange': form.cleaned_data['process_all_the_mcq_of_the_pageRange'],
                 'no_of_pages_at_a_time_For_EntirePDF': form.cleaned_data['no_of_pages_at_a_time_For_EntirePDF'],
                 'process_all_the_mcq_all_pages': form.cleaned_data['process_all_the_mcq_all_pages'],
+                'pdf_prompt_id': form.cleaned_data.get('pdf_prompt') or None,
+                'expression_prompt_id': form.cleaned_data.get('expression_prompt') or None,
+                'extract_rule': form.cleaned_data.get('extract_rule', False),
+                'rule_number': form.cleaned_data.get('rule_number') or None,
             }
             
             print(f"[CONFIG] Processing Configuration:")
@@ -492,7 +506,10 @@ def math_pdf_processing_form(request, pk):
                 )
                 
                 if result.get('success'):
-                    messages.success(request, f"✅ Successfully processed math problem. Generated {result.get('mcq_count', 0)} MCQs.")
+                    if config.get('extract_rule'):
+                        messages.success(request, f"✅ Rule extracted and saved: {result.get('rule_name', '')} for chapter {result.get('chapter', '')}.")
+                    else:
+                        messages.success(request, f"✅ Successfully processed math problem. Generated {result.get('mcq_count', 0)} MCQs.")
                 else:
                     messages.error(request, f"❌ Processing failed: {result.get('error', 'Unknown error')}")
                     
@@ -510,27 +527,50 @@ def math_pdf_processing_form(request, pk):
             
             # Redirect back to admin
             return redirect('admin:genai_mathproblemgeneration_change', pk)
-    
+
+    # ── GET (or POST that failed validation) ─────────────────────────────────
+    from genai.models import LLMPrompt as LLMPromptModel
+    from genai.config import DEFAULT_LLM_PROVIDER, GROQ_MODEL, GROQ_TEMPERATURE, GEMINI_MODEL, OPENAI_MODEL
+    prompt_qs = LLMPromptModel.objects.filter(is_active=True).order_by('-is_default', 'prompt_type', 'source_url')
+    prompt_choices = [('', '— Auto (use default) —')] + [
+        (str(p.id), f"[{p.get_prompt_type_display()}] {str(p)}")
+        for p in prompt_qs
+    ]
+
+    # Rule number choices for the Extract Rule dropdown (all 50 rules)
+    from bank.models import RULE_NAME_CHOICES
+    rule_choices = [('', '— Select Rule —')] + list(RULE_NAME_CHOICES)
+
+    # Determine active LLM info for display
+    provider = DEFAULT_LLM_PROVIDER.lower()
+    if provider == 'groq':
+        llm_display = f"Groq — {GROQ_MODEL}  (temp: {GROQ_TEMPERATURE})"
+    elif provider == 'gemini':
+        llm_display = f"Gemini — {GEMINI_MODEL}"
+    elif provider == 'openai':
+        llm_display = f"OpenAI — {OPENAI_MODEL}"
     else:
-        # GET request - show form
+        llm_display = provider
+
+    if request.method != 'POST':
         initial_data = {
             'process_pdf': bool(math_problem.pdf_file),
             'chapter_decide_by_llm': not bool(math_problem.chapter),
             'difficulty_level_decide_by_llm': False,
-            'use_paddle_ocr': False,  # Disabled by default - has DLL issues
-            'use_easy_ocr': False,     # Disabled by default - has DLL issues
-            'use_tesseract': True,     # Enabled by default - works reliably
-            'page_from': 1,  # 1-based: first page
-            'page_to': 0,    # 0 means last page
+            'use_paddle_ocr': False,
+            'use_easy_ocr': False,
+            'use_tesseract': True,
+            'page_from': 1,
+            'page_to': 0,
             'no_of_pages_at_a_time_For_EntirePDF': 2,
             'process_all_the_mcq_of_the_pageRange': False,
             'process_all_the_mcq_all_pages': False,
         }
-        form = MathPDFProcessingForm(initial=initial_data)
-    
+        form = MathPDFProcessingForm(initial=initial_data, prompt_choices=prompt_choices, rule_choices=rule_choices)
+
     # Get chapter choices dynamically
     chapter_choices = MathProblemGeneration.get_chapter_choices()
-    
+
     context = {
         'form': form,
         'math_problem': math_problem,
@@ -539,7 +579,61 @@ def math_pdf_processing_form(request, pk):
         'has_expression': bool(math_problem.expression),
         'title': f'Process Math Problem #{pk}',
         'opts': MathProblemGeneration._meta,
+        'llm_display': llm_display,
+        'llm_provider': provider.upper(),
+        'prompt_qs': prompt_qs,
+        'rule_choices': rule_choices,
+        'math_chapter': math_problem.chapter or '',
     }
-    
+
     return render(request, 'admin/genai/math_pdf_processing_form.html', context)
+
+
+@staff_member_required
+def fix_json_page(request):
+    """HTML page + API to fix invalid LaTeX escape sequences in JSON strings."""
+    if request.method == 'GET':
+        return render(request, 'genai/admin/fix_json.html', {'title': 'Fix JSON'})
+
+    # POST — fix and return corrected JSON
+    try:
+        body = json.loads(request.body)
+        raw = body.get('json_text', '')
+        if not raw:
+            return JsonResponse({'success': False, 'error': 'No json_text provided.'})
+    except Exception:
+        return JsonResponse({'success': False, 'error': 'Invalid request body.'})
+
+    import re
+
+    def fix_backslashes(text):
+        # Valid JSON escape sequences: \", \\, \/, \b, \f, \n, \r, \t, \uXXXX
+        # Everything else (e.g. \( \) \[ \] \frac \text) is invalid and must be doubled.
+        valid_escape = re.compile(r'\\(?:["\\/bfnrt]|u[0-9a-fA-F]{4})')
+
+        result = []
+        i = 0
+        while i < len(text):
+            if text[i] == '\\':
+                m = valid_escape.match(text, i)
+                if m:
+                    result.append(m.group())
+                    i = m.end()
+                else:
+                    # Lone backslash — double it
+                    result.append('\\\\')
+                    i += 1
+            else:
+                result.append(text[i])
+                i += 1
+        return ''.join(result)
+
+    fixed_text = fix_backslashes(raw)
+
+    try:
+        json.loads(fixed_text)
+    except json.JSONDecodeError as e:
+        return JsonResponse({'success': False, 'error': f'Could not auto-fix JSON: {str(e)}'})
+
+    return JsonResponse({'success': True, 'fixed_json': fixed_text})
 
