@@ -1,6 +1,7 @@
 # Generated migration to add missing fields to MCQ model
+# important_day already exists from 0001_initial — no-op
 
-from django.db import migrations, models
+from django.db import migrations
 
 
 class Migration(migrations.Migration):
@@ -10,9 +11,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AddField(
-            model_name='mcq',
-            name='important_day',
-            field=models.BooleanField(default=False),
-        ),
+        # important_day was already created in 0001_initial, skipping
     ]

@@ -2,7 +2,9 @@ Django==3.0
 netifaces==0.11.0
 pytz==2024.2
 sqlparse==0.4.4
-psycopg2==2.8.6
+psycopg2-binary==2.9.9
+gunicorn==21.2.0
+groq>=0.11.0
 
 # GenAI Dependencies - LLM Providers
 google-generativeai>=0.3.0  # Google Gemini Pro (DEFAULT)
