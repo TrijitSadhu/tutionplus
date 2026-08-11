@@ -91,10 +91,10 @@ EMAIL_PORT = 587
 # ─── Static & Media ───────────────────────────────────────────────────────────
 STATIC_URL = '/static/'
 # Files land at this path after COPY . /app/ in Dockerfile
-STATIC_ROOT = '/app/django/django_project/django_project/static'
+STATIC_ROOT = '/app/static'
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = '/app/django/django_project/django_project/media'
+MEDIA_ROOT = '/app/media'
 
 # ─── Internationalisation ─────────────────────────────────────────────────────
 LANGUAGE_CODE = 'en-us'
