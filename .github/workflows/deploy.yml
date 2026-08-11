@@ -25,7 +25,7 @@ jobs:
             git pull origin main
 
             echo "==> Backing up database before deploy..."
-            /home/tutionplus/scripts/backup_db.sh
+            /home/tutionplus/app/scripts/backup_db.sh
 
             echo "==> Rebuilding and restarting containers..."
             docker compose -f docker-compose.prod.yml up --build -d

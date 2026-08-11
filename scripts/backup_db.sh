@@ -24,17 +24,17 @@ mkdir -p "$BACKUP_DIR"
 echo "[$(date)] Starting backup: $FILENAME"
 
 # Dump from running Docker postgres container
-docker exec tutionplus-db-1 pg_dump \
+docker exec app-db-1 pg_dump \
   -U "$DB_USER" \
   -d "$DB_NAME" \
   -F c \
   -f "/tmp/${FILENAME}"
 
 # Copy dump out of container to host
-docker cp "tutionplus-db-1:/tmp/${FILENAME}" "${BACKUP_DIR}/${FILENAME}"
+docker cp "app-db-1:/tmp/${FILENAME}" "${BACKUP_DIR}/${FILENAME}"
 
 # Remove temp file from container
-docker exec tutionplus-db-1 rm -f "/tmp/${FILENAME}"
+docker exec app-db-1 rm -f "/tmp/${FILENAME}"
 
 echo "[$(date)] Backup saved: ${BACKUP_DIR}/${FILENAME}"
 
