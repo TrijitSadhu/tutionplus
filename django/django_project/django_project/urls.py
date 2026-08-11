@@ -42,3 +42,5 @@ urlpatterns = [
 urlpatterns += staticfiles_urlpatterns() 
 urlpatterns +=static(settings.STATIC_URL,document_root=settings.STATIC_ROOT)
 urlpatterns +=static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
+# Legacy: serve /img/ directly (old templates use /img/ instead of /static/img/)
+urlpatterns +=static('/img/', document_root=settings.STATIC_ROOT + '/img')
