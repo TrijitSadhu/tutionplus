@@ -1,0 +1,36 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches:
+      - main   # triggers on every push to main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to Interserver VPS via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT }}
+          script: |
+            set -e
+            cd /home/tutionplus/app
+
+            echo "==> Pulling latest code..."
+            git pull origin main
+
+            echo "==> Backing up database before deploy..."
+            /home/tutionplus/scripts/backup_db.sh
+
+            echo "==> Rebuilding and restarting containers..."
+            docker compose -f docker-compose.prod.yml up --build -d
+
+            echo "==> Cleaning up old Docker images..."
+            docker image prune -f
+
+            echo "==> Deploy complete!"
