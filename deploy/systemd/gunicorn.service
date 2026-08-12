@@ -1,0 +1,21 @@
+[Unit]
+Description=Gunicorn daemon for tutionplus
+After=network.target postgresql.service redis-server.service
+Requires=postgresql.service redis-server.service
+
+[Service]
+Type=simple
+WorkingDirectory=/home/tutionplus/app/django/django_project
+EnvironmentFile=/home/tutionplus/app/.env
+Environment=DJANGO_SETTINGS_MODULE=django_project.settings_production
+ExecStart=/home/tutionplus/venv/bin/gunicorn django_project.wsgi:application \
+    --bind 127.0.0.1:8000 \
+    --workers 3 \
+    --timeout 120 \
+    --access-logfile /home/tutionplus/logs/gunicorn-access.log \
+    --error-logfile /home/tutionplus/logs/gunicorn-error.log
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

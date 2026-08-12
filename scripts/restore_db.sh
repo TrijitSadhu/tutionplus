@@ -1,13 +1,23 @@
 #!/bin/bash
 # ─── Restore PostgreSQL from backup ──────────────────────────────────────────
+# Runs natively on the VPS host against the native PostgreSQL install.
 # Usage: ./restore_db.sh /home/tutionplus/db_backups/tutionplus_2026-08-11_02-00.dump
 # WARNING: This will WIPE the current database and restore from the backup file.
 
 set -e
 
+ENV_FILE="/home/tutionplus/app/.env"
+if [ -f "$ENV_FILE" ]; then
+  set -a
+  source "$ENV_FILE"
+  set +a
+fi
+
 BACKUP_FILE="$1"
 DB_NAME="${DB_NAME:-tutionplus}"
 DB_USER="${DB_USER:-postgres}"
+DB_HOST="${DB_HOST:-localhost}"
+DB_PORT="${DB_PORT:-5432}"
 
 if [ -z "$BACKUP_FILE" ]; then
   echo "Usage: $0 <path_to_backup.dump>"
@@ -29,17 +39,14 @@ if [ "$CONFIRM" != "yes" ]; then
   exit 0
 fi
 
-echo "[$(date)] Copying backup into container..."
-docker cp "$BACKUP_FILE" tutionplus-db-1:/tmp/restore.dump
-
 echo "[$(date)] Restoring database..."
-docker exec tutionplus-db-1 pg_restore \
+PGPASSWORD="$DB_PASSWORD" pg_restore \
+  -h "$DB_HOST" \
+  -p "$DB_PORT" \
   -U "$DB_USER" \
   -d "$DB_NAME" \
   --clean --if-exists \
   -F c \
-  /tmp/restore.dump
-
-docker exec tutionplus-db-1 rm -f /tmp/restore.dump
+  "$BACKUP_FILE"
 
 echo "[$(date)] Restore complete from: $BACKUP_FILE"

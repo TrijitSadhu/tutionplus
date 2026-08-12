@@ -24,14 +24,23 @@ jobs:
             echo "==> Pulling latest code..."
             git pull origin main
 
+            echo "==> Installing/updating Python dependencies..."
+            /home/tutionplus/venv/bin/pip install -r requirements.txt
+
             echo "==> Backing up database before deploy..."
             chmod +x /home/tutionplus/app/scripts/backup_db.sh
             bash /home/tutionplus/app/scripts/backup_db.sh
 
-            echo "==> Rebuilding and restarting containers..."
-            docker compose -f docker-compose.prod.yml up --build -d
+            echo "==> Running migrations..."
+            cd /home/tutionplus/app/django/django_project
+            set -a; source /home/tutionplus/app/.env; set +a
+            export DJANGO_SETTINGS_MODULE=django_project.settings_production
+            /home/tutionplus/venv/bin/python manage.py migrate --noinput
 
-            echo "==> Cleaning up old Docker images..."
-            docker image prune -f
+            echo "==> Collecting static files..."
+            /home/tutionplus/venv/bin/python manage.py collectstatic --noinput
+
+            echo "==> Restarting application service..."
+            systemctl restart gunicorn
 
             echo "==> Deploy complete!"
