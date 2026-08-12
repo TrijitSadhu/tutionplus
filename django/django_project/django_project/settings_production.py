@@ -3,7 +3,7 @@ Native (non-Docker) production settings for tutionplus.
 Used when DJANGO_SETTINGS_MODULE=django_project.settings_production
 
 Runs directly on the Ubuntu VPS under Gunicorn + systemd, talking to a
-native PostgreSQL and Redis instead of Docker service containers.
+native PostgreSQL instead of Docker service containers.
 All values come from the .env file (never hardcode secrets here).
 """
 import os
@@ -76,12 +76,6 @@ DATABASES = {
         }
     }
 }
-
-# ─── Cache / Celery (native Redis on localhost) ───────────────────────────────
-REDIS_URL = os.environ.get('REDIS_URL', 'redis://localhost:6379/0')
-
-CELERY_BROKER_URL = REDIS_URL
-CELERY_RESULT_BACKEND = REDIS_URL
 
 # ─── Email ────────────────────────────────────────────────────────────────────
 EMAIL_USE_TLS = True
