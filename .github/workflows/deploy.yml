@@ -40,6 +40,10 @@ jobs:
             echo "==> Collecting static files..."
             /home/tutionplus/venv/bin/python manage.py collectstatic --noinput
 
+            echo "==> Syncing systemd unit files..."
+            cp /home/tutionplus/app/deploy/systemd/gunicorn.service /etc/systemd/system/gunicorn.service
+            systemctl daemon-reload
+
             echo "==> Restarting application service..."
             systemctl restart gunicorn
 
