@@ -57,6 +57,8 @@ db.sqlite3-journal
 /media
 /static
 /staticfiles
+django/django_project/media/
+django/django_project/staticfiles/
 
 # Testing
 .tox/

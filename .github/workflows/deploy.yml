@@ -22,7 +22,8 @@ jobs:
             cd /home/tutionplus/app
 
             echo "==> Pulling latest code..."
-            git pull origin main
+            git fetch origin main
+            git reset --hard origin/main
 
             echo "==> Installing/updating Python dependencies..."
             /home/tutionplus/venv/bin/pip install -r requirements.txt
