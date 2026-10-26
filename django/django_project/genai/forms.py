@@ -36,7 +36,8 @@ class MathPromptGenerationForm(forms.Form):
     llm_provider = forms.ChoiceField(
         label="LLM Provider",
         choices=[('', '— use site default —'), ('groq', 'Groq'), ('gemini', 'Gemini'),
-                 ('openai', 'OpenAI'), ('deepseek', 'DeepSeek'), ('nvidia', 'NVIDIA NIM')],
+                 ('openai', 'OpenAI'), ('deepseek', 'DeepSeek'), ('nvidia', 'NVIDIA NIM'),
+                 ('claude', 'Claude (Anthropic)')],
         required=False,
         help_text="Which LLM to send each row's prompt to. Leave as default to use the site-wide setting."
     )

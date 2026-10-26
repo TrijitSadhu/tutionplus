@@ -58,8 +58,17 @@ NVIDIA_TEMPERATURE = float(os.getenv('NVIDIA_TEMPERATURE', '0.7'))
 NVIDIA_MAX_OUTPUT_TOKENS = int(os.getenv('NVIDIA_MAX_OUTPUT_TOKENS', '32768'))
 NVIDIA_REQUEST_TIMEOUT = int(os.getenv('NVIDIA_REQUEST_TIMEOUT', '420'))
 
-# Alternative LLM Providers (add as needed)
-# ANTHROPIC_API_KEY = os.getenv('ANTHROPIC_API_KEY')
+# Claude Configuration (official Anthropic SDK, Messages API)
+# Note: a claude.ai / Claude Code subscription does NOT include API access - the key comes from
+# console.anthropic.com and is billed per token. Left empty, the SDK falls back to the
+# ANTHROPIC_API_KEY env var or an `ant auth login` profile. Claude Opus 5.5 always thinks before
+# answering; ANTHROPIC_EFFORT (low/medium/high/xhigh/max) controls how much - its own default is
+# medium, 'high' suits multi-step math validation.
+ANTHROPIC_API_KEY = os.getenv('ANTHROPIC_API_KEY', '')
+ANTHROPIC_MODEL = os.getenv('ANTHROPIC_MODEL', 'claude-opus-5-5')
+ANTHROPIC_EFFORT = os.getenv('ANTHROPIC_EFFORT', 'high')
+ANTHROPIC_MAX_OUTPUT_TOKENS = int(os.getenv('ANTHROPIC_MAX_OUTPUT_TOKENS', '64000'))
+ANTHROPIC_REQUEST_TIMEOUT = int(os.getenv('ANTHROPIC_REQUEST_TIMEOUT', '600'))
 
 # Web Scraping Configuration - HARDCODED FALLBACK (use database for main sources)
 CURRENT_AFFAIRS_SOURCES = {

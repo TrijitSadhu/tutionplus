@@ -14,7 +14,9 @@ from genai.config import (
     DEEPSEEK_API_KEY, DEEPSEEK_MODEL, DEEPSEEK_BASE_URL, DEEPSEEK_TEMPERATURE, DEEPSEEK_MAX_OUTPUT_TOKENS,
     DEEPSEEK_REQUEST_TIMEOUT,
     NVIDIA_API_KEY, NVIDIA_MODEL, NVIDIA_BASE_URL, NVIDIA_TEMPERATURE, NVIDIA_MAX_OUTPUT_TOKENS,
-    NVIDIA_REQUEST_TIMEOUT
+    NVIDIA_REQUEST_TIMEOUT,
+    ANTHROPIC_API_KEY, ANTHROPIC_MODEL, ANTHROPIC_EFFORT, ANTHROPIC_MAX_OUTPUT_TOKENS,
+    ANTHROPIC_REQUEST_TIMEOUT
 )
 
 logger = logging.getLogger(__name__)
@@ -507,6 +509,133 @@ IMPORTANT: Your response MUST be valid JSON only. Do not include any markdown fo
         return {}
 
 
+class ClaudeProvider(LLMProvider):
+    """Claude provider (official Anthropic SDK, Messages API)"""
+
+    def __init__(self, api_key: str = ANTHROPIC_API_KEY, model: str = ANTHROPIC_MODEL):
+        super().__init__(model)
+        self.api_key = api_key
+        self.model = model
+        self.effort = ANTHROPIC_EFFORT
+        self.max_output_tokens = ANTHROPIC_MAX_OUTPUT_TOKENS
+
+        try:
+            import anthropic
+            # api_key=None lets the SDK resolve credentials itself (env var or `ant auth login` profile)
+            self.client = anthropic.Anthropic(api_key=api_key or None, timeout=ANTHROPIC_REQUEST_TIMEOUT)
+        except ImportError:
+            logger.error("anthropic library not installed. Install with: pip install anthropic")
+            raise
+
+    def generate(self, prompt: str, **kwargs) -> str:
+        """
+        Generate text using the Claude Messages API
+
+        Args:
+            prompt: The prompt to send to the model
+            **kwargs: Additional parameters
+
+        Returns:
+            Generated text from the model
+        """
+        try:
+            print(f"\n{'='*80}")
+            print(f"[CLAUDE API CALL]")
+            print(f"{'='*80}")
+            print(f"Model: {self.model}")
+            print(f"Effort: {self.effort}")
+            print(f"Prompt Length: {len(prompt)} chars")
+            print(f"Prompt Preview (first 300 chars):\n{prompt[:300]}")
+            print(f"{'='*80}\n")
+
+            # Streamed because a max_tokens this large would hit HTTP timeouts on a plain request.
+            # fallbacks="default" re-runs a request the model's safety classifiers decline on
+            # Anthropic's recommended fallback model instead of returning the refusal.
+            with self.client.beta.messages.stream(
+                model=self.model,
+                max_tokens=self.max_output_tokens,
+                output_config={"effort": self.effort},
+                betas=["server-side-fallback-2026-07-01"],
+                fallbacks="default",
+                messages=[
+                    {"role": "user", "content": prompt}
+                ],
+                **kwargs
+            ) as stream:
+                response = stream.get_final_message()
+
+            # Mapped to the OpenAI-style finish_reason the callers check ('length' = truncated)
+            self.last_finish_reason = 'length' if response.stop_reason == 'max_tokens' else response.stop_reason
+            if response.stop_reason == 'refusal':
+                category = response.stop_details.category if response.stop_details else None
+                logger.warning(f"Claude declined the request (refusal, category={category})")
+                return ""
+            if self.last_finish_reason == 'length':
+                logger.warning(
+                    "Claude response was truncated (stop_reason=max_tokens) - it hit "
+                    "ANTHROPIC_MAX_OUTPUT_TOKENS before finishing. Increase that setting "
+                    "or reduce how much content/how many questions are requested per call."
+                )
+            response_content = "".join(block.text for block in response.content if block.type == "text")
+
+            print(f"\n{'='*80}")
+            print(f"[CLAUDE RESPONSE]")
+            print(f"{'='*80}")
+            print(f"Served by: {response.model}")
+            print(f"Response Length: {len(response_content)}")
+            print(f"Response Preview:\n{response_content[:500] if response_content else 'EMPTY'}")
+            print(f"{'='*80}\n")
+
+            return response_content
+        except Exception as e:
+            logger.error(f"Claude API Error: {str(e)}")
+            print(f"\n{'='*80}")
+            print(f"[CLAUDE ERROR]")
+            print(f"{'='*80}")
+            print(f"Error: {str(e)}")
+            print(f"{'='*80}\n")
+            raise
+
+    def generate_json(self, prompt: str, **kwargs) -> Dict[str, Any]:
+        """Generate JSON response from the model"""
+        json_prompt = f"""{prompt}
+
+IMPORTANT: Your response MUST be valid JSON only. Do not include any markdown formatting or explanations."""
+
+        response_text = self.generate(json_prompt, **kwargs)
+
+        if not response_text:
+            logger.error("Empty response from Claude")
+            return {}
+
+        # Try to parse as is first
+        try:
+            return json.loads(response_text)
+        except json.JSONDecodeError:
+            pass
+
+        # Try to extract JSON from markdown code blocks
+        import re
+        json_match = re.search(r'```(?:json)?\s*(.*?)\s*```', response_text, re.DOTALL)
+        if json_match:
+            try:
+                return json.loads(json_match.group(1).strip())
+            except json.JSONDecodeError:
+                pass
+
+        # Try to find JSON object in response
+        try:
+            start = response_text.find('{')
+            end = response_text.rfind('}')
+            if start != -1 and end != -1 and end > start:
+                return json.loads(response_text[start:end + 1])
+        except json.JSONDecodeError:
+            pass
+
+        logger.error(f"Failed to parse JSON response: {response_text}")
+        return {}
+
+
 class MockLLMProvider(LLMProvider):
     """Mock provider for testing without API calls"""
     
@@ -528,7 +657,7 @@ def get_llm_provider(provider: str = None, **kwargs) -> LLMProvider:
     Get an LLM provider instance
     
     Args:
-        provider: 'groq' (default), 'gemini', 'openai', 'deepseek', 'nvidia', 'mock', etc.
+        provider: 'groq' (default), 'gemini', 'openai', 'deepseek', 'nvidia', 'claude', 'mock', etc.
         **kwargs: Additional parameters for the provider
     
     Returns:
@@ -554,6 +683,8 @@ def get_llm_provider(provider: str = None, **kwargs) -> LLMProvider:
         return DeepSeekProvider(**kwargs)
     elif provider.lower() == "nvidia":
         return NvidiaProvider(**kwargs)
+    elif provider.lower() in ("claude", "anthropic"):
+        return ClaudeProvider(**kwargs)
     elif provider.lower() == "mock":
         return MockLLMProvider(**kwargs)
     else:
