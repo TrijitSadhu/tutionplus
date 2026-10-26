@@ -38,6 +38,26 @@ OPENAI_API_KEY = os.getenv('OPENAI_API_KEY', 'your-openai-api-key-here')
 OPENAI_MODEL = os.getenv('OPENAI_MODEL', 'gpt-4')
 OPENAI_TEMPERATURE = float(os.getenv('OPENAI_TEMPERATURE', '0.7'))
 
+# DeepSeek Configuration (OpenAI-compatible API)
+# Note: reasoning-capable DeepSeek models spend a chunk of the token budget on hidden
+# reasoning before writing the visible answer, and this app's prompts ask for verbose
+# HTML/SVG-formatted solutions - 8192 is too tight and truncates mid-JSON. 24576 leaves
+# headroom (~7000 completion tokens was typical in testing against the real math prompt).
+DEEPSEEK_API_KEY = os.getenv('DEEPSEEK_API_KEY', 'your-deepseek-api-key-here')
+DEEPSEEK_MODEL = os.getenv('DEEPSEEK_MODEL', 'deepseek-chat')
+DEEPSEEK_BASE_URL = os.getenv('DEEPSEEK_BASE_URL', 'https://api.deepseek.com')
+DEEPSEEK_TEMPERATURE = float(os.getenv('DEEPSEEK_TEMPERATURE', '0.7'))
+DEEPSEEK_MAX_OUTPUT_TOKENS = int(os.getenv('DEEPSEEK_MAX_OUTPUT_TOKENS', '32768'))
+DEEPSEEK_REQUEST_TIMEOUT = int(os.getenv('DEEPSEEK_REQUEST_TIMEOUT', '420'))
+
+# NVIDIA NIM Configuration (OpenAI-compatible API, integrate.api.nvidia.com)
+NVIDIA_API_KEY = os.getenv('NVIDIA_API_KEY', 'your-nvidia-api-key-here')
+NVIDIA_MODEL = os.getenv('NVIDIA_MODEL', 'qwen/qwen3.5-397b-a17b')
+NVIDIA_BASE_URL = os.getenv('NVIDIA_BASE_URL', 'https://integrate.api.nvidia.com/v1')
+NVIDIA_TEMPERATURE = float(os.getenv('NVIDIA_TEMPERATURE', '0.7'))
+NVIDIA_MAX_OUTPUT_TOKENS = int(os.getenv('NVIDIA_MAX_OUTPUT_TOKENS', '32768'))
+NVIDIA_REQUEST_TIMEOUT = int(os.getenv('NVIDIA_REQUEST_TIMEOUT', '420'))
+
 # Alternative LLM Providers (add as needed)
 # ANTHROPIC_API_KEY = os.getenv('ANTHROPIC_API_KEY')
 

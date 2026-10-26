@@ -138,78 +138,117 @@
 	position: fixed;
 	top: 0; left: 0;
 	width: 100%; height: 100%;
-	background: rgba(0,0,0,0.45);
+	background: rgba(15,23,42,0.55);
+	backdrop-filter: blur(2px);
+	-webkit-backdrop-filter: blur(2px);
 	z-index: 9998;
+	opacity: 0;
+	transition: opacity 0.3s ease;
 }
 .rule-slide-overlay.open {
 	display: block;
+	opacity: 1;
 }
 .rule-slide-panel {
 	position: fixed;
-	top: 0; right: -460px;
-	width: 440px;
-	max-width: 96vw;
-	height: 100%;
-	background: #fff;
-	box-shadow: -4px 0 28px rgba(0,0,0,0.22);
+	top: 7vh;
+	left: 50%;
+	width: 460px;
+	max-width: 92vw;
+	max-height: 82vh;
+	background: rgba(255,250,243,0.94);
+	backdrop-filter: blur(10px);
+	-webkit-backdrop-filter: blur(10px);
+	box-shadow: 0 24px 64px rgba(15,23,42,0.35);
 	overflow-y: auto;
-	transition: right 0.38s cubic-bezier(.4,0,.2,1);
+	transition: opacity 0.3s ease, transform 0.32s cubic-bezier(.22,1,.36,1);
+	transform: translate(-50%, -26px) scale(0.94);
+	transform-origin: top center;
+	opacity: 0;
+	pointer-events: none;
 	z-index: 9999;
 	padding: 0;
 	display: flex;
 	flex-direction: column;
+	border-radius: 20px;
 }
 .rule-slide-panel.open {
-	right: 0;
+	opacity: 1;
+	transform: translate(-50%, 0) scale(1);
+	pointer-events: auto;
+}
+.rule-slide-panel::-webkit-scrollbar {
+	width: 8px;
+}
+.rule-slide-panel::-webkit-scrollbar-thumb {
+	background: #e6c79c;
+	border-radius: 8px;
 }
 .rule-panel-header {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	background: #4D90FE;
+	gap: 12px;
+	background: linear-gradient(135deg,#f5a623,#e67e22);
 	color: #fff;
-	padding: 14px 18px 12px 18px;
+	padding: 18px 22px;
 	position: sticky;
 	top: 0;
 	z-index: 1;
+	border-radius: 20px 20px 0 0;
+	box-shadow: 0 2px 12px rgba(230,126,34,0.3);
 }
 .rule-panel-header h5 {
 	margin: 0;
-	font-size: 15px;
+	font-size: 15.5px;
 	font-weight: 700;
-	letter-spacing: 0.3px;
+	letter-spacing: 0.2px;
+	line-height: 1.4;
 }
 .rule-panel-close-btn {
-	background: transparent;
+	background: rgba(255,255,255,0.2);
 	border: none;
 	color: #fff;
-	font-size: 22px;
+	font-size: 20px;
+	width: 32px;
+	height: 32px;
+	min-width: 32px;
+	border-radius: 50%;
 	cursor: pointer;
 	line-height: 1;
-	padding: 0 4px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: background 0.2s ease, transform 0.2s ease;
 }
 .rule-panel-close-btn:hover {
-	color: #ffe;
+	background: rgba(255,255,255,0.34);
+	transform: rotate(90deg);
 }
 .rule-panel-body {
-	padding: 20px 22px;
+	padding: 24px 26px 32px 26px;
 	font-size: 15px;
-	color: #222;
-	line-height: 1.7;
+	color: #2b2b2b;
+	line-height: 1.75;
 	flex: 1;
 }
 .btn-rule {
 	color: #fff;
-	background-color: #e67e22;
+	background: linear-gradient(135deg,#f5a623,#e67e22);
 	border: none;
-	margin-left: 8px;
-	display: inline-block;
-	margin-top: 16px;
-	float: left;
+	border-radius: 20px;
+	padding: 6px 14px;
+	font-size: 12.5px;
+	font-weight: 600;
+	letter-spacing: 0.2px;
+	box-shadow: 0 3px 10px rgba(230,126,34,0.4);
+	transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
 }
 .btn-rule:hover {
-	background-color: #cf6d17;
+	background: linear-gradient(135deg,#e67e22,#d35400);
 	color: #fff;
+	transform: translateY(-1px);
+	box-shadow: 0 5px 14px rgba(230,126,34,0.5);
 }
 </style>
   <!--==========================
@@ -728,7 +767,7 @@
 													</div>			
 
 													<div id="solution{{forloop.counter}}" style="position:relative;text-align:center;display:none">
-														{% if math.rule %}<button type="button" class="btn btn-sm btn-rule" onclick="openRulePanel('rule_panel_{{forloop.counter}}')" style="position:absolute;top:8px;right:8px;background-color:#e67e22;color:#fff;z-index:10;">&#128218; Rule</button>{% endif %}
+														{% if math.rule %}<button type="button" class="btn btn-sm btn-rule" onclick="openRulePanel('rule_panel_{{forloop.counter}}')" style="position:absolute;top:8px;right:8px;z-index:10;">&#128218; Rule</button>{% endif %}
 													 
 															<p  id="sol_upper{{forloop.counter}}"class="bg-info" style="text-align:center;"> <b>Correct<img src="{% static "/thh.png" %}" class="img-rounded" ></b> </p> 
 															<p> <b>  Answer :</b></p> 

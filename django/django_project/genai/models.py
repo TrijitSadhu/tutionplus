@@ -544,3 +544,31 @@ class JsonImport(models.Model):
     def __str__(self):
         return f"{self.get_to_table_display()} - {self.created_at.strftime('%d/%m/%Y %H:%M')}"
 
+
+class MathPromptTemplate(models.Model):
+    """A reusable extraction prompt for the Math JSON generation page, so it doesn't have
+    to be pasted in by hand on every run."""
+
+    name = models.CharField(max_length=150, unique=True)
+    prompt_text = models.TextField(help_text="Use {difficulty} as a placeholder.")
+    is_default = models.BooleanField(
+        default=False,
+        help_text="Auto-fill this prompt when the generation page loads."
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+
+    class Meta:
+        verbose_name = 'Math Prompt Template'
+        verbose_name_plural = 'Math Prompt Templates'
+        ordering = ['-is_default', 'name']
+
+    def save(self, *args, **kwargs):
+        if self.is_default:
+            MathPromptTemplate.objects.exclude(pk=self.pk).update(is_default=False)
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.name
+

@@ -35,6 +35,16 @@ urlpatterns = [
     # Math PDF Processing Form (GO button handler)
     path('admin/math-pdf-processing/<int:pk>/', views.math_pdf_processing_form, name='math_pdf_processing_form'),
 
+    # Math JSON generation: paste your prompt + PDF + chapter/rule/page-range rows
+    path('admin/math-prompt-generation/', views.math_prompt_generation_view, name='math_prompt_generation'),
+    path('admin/math-prompt-generation/progress/', views.math_prompt_generation_progress,
+         name='math_prompt_generation_progress'),
+    path('admin/math-prompt-generation/poll/', views.math_prompt_generation_poll,
+         name='math_prompt_generation_poll'),
+
+    # One-click "Insert into Math Table" button on the JsonImport change page
+    path('admin/jsonimport/<int:pk>/quick-insert/', views.jsonimport_quick_insert, name='jsonimport_quick_insert'),
+
     # Fix JSON tool
     path('fixjson/', views.fix_json_page, name='fix_json'),
 

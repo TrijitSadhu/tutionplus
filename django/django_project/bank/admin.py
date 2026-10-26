@@ -168,11 +168,12 @@ class IsVariantFilter(admin.SimpleListFilter):
 
 
 class MathAdmin(admin.ModelAdmin):
-    list_display = ('id', 'question_preview', 'chapter', 'subject_name', 'sub_chapter', 'section',
+    list_display = ('id', 'question_preview', 'chapter', 'rule_link', 'subject_name', 'sub_chapter', 'section',
                     'validation_status', 'translated_language', 'source_info', 'variants_link', 'llm_used')
     list_filter = ('validation_status', 'chapter', HasVariantsFilter, IsVariantFilter)
     search_fields = ('question', 'subject_name', 'sub_chapter', 'section')
     list_editable = ('validation_status', 'llm_used')
+    list_select_related = ('rule',)
     actions = [
         translate_questions_action,
         action_modify_language,
@@ -219,6 +220,14 @@ class MathAdmin(admin.ModelAdmin):
             return format_html('<a href="{}">&#128279; orig&nbsp;id={}</a>', url, obj.source_math_id)
         return ''
     source_info.short_description = 'Source'
+
+    def rule_link(self, obj):
+        if not obj.rule_id:
+            return ''
+        url = reverse('admin:bank_rule_math_change', args=[obj.rule_id])
+        return format_html('<a href="{}">{}</a>', url, obj.rule.rule_name)
+    rule_link.short_description = 'Rule'
+    rule_link.admin_order_field = 'rule__rule_name'
 
     def variants_link(self, obj):
         count = obj.variants.count()

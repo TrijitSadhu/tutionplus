@@ -1,0 +1,213 @@
+{% extends "admin/base_site.html" %}
+{% block title %}Math JSON Generation Progress{% endblock %}
+
+{% block extrahead %}
+<style>
+  .prog-card {
+    max-width: 900px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 28px;
+    margin-top: 16px;
+  }
+  .stat-row {
+    display: flex;
+    gap: 16px;
+    margin: 18px 0;
+    flex-wrap: wrap;
+  }
+  .stat-box {
+    flex: 1;
+    min-width: 110px;
+    text-align: center;
+    padding: 14px 10px;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+  }
+  .stat-box .num { font-size: 32px; font-weight: 700; }
+  .stat-box .lbl { font-size: 12px; color: #777; margin-top: 4px; }
+  .stat-total  { background: #e8eaf6; }
+  .stat-done   { background: #e8f5e9; }
+  .stat-remain { background: #fff8e1; }
+  .stat-errors { background: #fce4ec; }
+  .progress-bar-wrap {
+    background: #eee;
+    border-radius: 8px;
+    height: 18px;
+    overflow: hidden;
+    margin: 10px 0 18px;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #417690, #5c6bc0);
+    border-radius: 8px;
+    transition: width 0.4s ease;
+  }
+  .log-box {
+    background: #1e1e2e;
+    color: #cdd6f4;
+    border-radius: 6px;
+    padding: 12px 14px;
+    font-family: monospace;
+    font-size: 12px;
+    max-height: 320px;
+    overflow-y: auto;
+    margin-top: 14px;
+  }
+  .log-line { margin: 2px 0; white-space: pre-wrap; }
+  .log-err { color: #f38ba8; }
+  .prompt-details { margin-bottom: 10px; }
+  .prompt-details summary { cursor: pointer; font-weight: bold; }
+  .prompt-textarea {
+    width: 100%; height: 250px; font-family: monospace; font-size: 12px; margin-top: 6px;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<h1>Generating Math JSON&hellip;</h1>
+
+{% if error %}
+<div class="prog-card"><p style="color:#c62828;">{{ error }}</p></div>
+{% else %}
+<div class="prog-card">
+
+  <p id="status-text" style="font-size:15px;color:#555;">
+    Processing <strong id="s-total-inline">{{ total }}</strong> row(s) &mdash; please wait&hellip;
+  </p>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="prog-bar" style="width:0%"></div>
+  </div>
+  <div style="font-size:12px;color:#888;text-align:right;margin-top:-14px;margin-bottom:10px;">
+    <span id="pct-text">0%</span>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat-box stat-total">
+      <div class="num" id="s-total">{{ total }}</div>
+      <div class="lbl">Rows</div>
+    </div>
+    <div class="stat-box stat-done">
+      <div class="num" id="s-done">0</div>
+      <div class="lbl">Completed</div>
+    </div>
+    <div class="stat-box stat-remain">
+      <div class="num" id="s-remain">{{ total }}</div>
+      <div class="lbl">Remaining</div>
+    </div>
+    <div class="stat-box stat-errors">
+      <div class="num" id="s-errors">0</div>
+      <div class="lbl">Errors</div>
+    </div>
+  </div>
+
+  <div class="log-box" id="log-box">
+    <div class="log-line" style="color:#888;">Starting&hellip;</div>
+  </div>
+
+  <div id="result-area" style="margin-top:20px;"></div>
+
+  <div id="btn-area" style="margin-top:20px;">
+    <span id="spinner" style="color:#417690;font-size:14px;">&#9696; Running&hellip;</span>
+  </div>
+</div>
+
+<script>
+var JOB_ID = '{{ job_id }}';
+var POLL_URL = "{% url 'genai:math_prompt_generation_poll' %}?job_id=" + JOB_ID;
+var pollTimer = null;
+
+function mpgCopyPromptP(textareaId, statusId) {
+  var ta = document.getElementById(textareaId);
+  var status = document.getElementById(statusId);
+  if (!ta) { return; }
+  navigator.clipboard.writeText(ta.value).then(function() {
+    if (status) { status.textContent = '✔ Copied!'; setTimeout(function() { status.textContent = ''; }, 2000); }
+  }, function() {
+    ta.focus(); ta.select();
+    if (status) { status.textContent = 'Selected — press Ctrl+C to copy'; setTimeout(function() { status.textContent = ''; }, 3000); }
+  });
+}
+window.mpgCopyPromptP = mpgCopyPromptP;
+
+function poll() {
+  fetch(POLL_URL)
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      if (d.error) { return; }
+      var total  = d.total  || 0;
+      var done   = d.done   || 0;
+      var errors = d.errors || 0;
+      var remain = Math.max(total - done, 0);
+      var pct    = total > 0 ? Math.round(done / total * 100) : 0;
+
+      document.getElementById('s-total').textContent  = total;
+      document.getElementById('s-done').textContent   = done;
+      document.getElementById('s-remain').textContent = remain;
+      document.getElementById('s-errors').textContent = errors;
+      document.getElementById('prog-bar').style.width = pct + '%';
+      document.getElementById('pct-text').textContent = pct + '%';
+
+      if (d.log && d.log.length) {
+        var box = document.getElementById('log-box');
+        box.innerHTML = '';
+        d.log.forEach(function(line) {
+          var div = document.createElement('div');
+          div.className = 'log-line' + (line.indexOf('⚠️') !== -1 || line.toLowerCase().indexOf('error') !== -1 || line.toLowerCase().indexOf('skipped') !== -1 ? ' log-err' : '');
+          div.textContent = line;
+          box.appendChild(div);
+        });
+        box.scrollTop = box.scrollHeight;
+      }
+
+      if (d.done_flag) {
+        clearInterval(pollTimer);
+        document.getElementById('spinner').style.display = 'none';
+
+        var statusEl = document.getElementById('status-text');
+        var resultArea = document.getElementById('result-area');
+        var res = d.result || {};
+
+        if (res.success) {
+          statusEl.innerHTML = '<strong style="color:#2e7d32;">&#10003; Generation complete!</strong> ' + (res.message || '');
+          var html = '<div style="border:1px solid #2e7d32;border-radius:6px;padding:14px;margin-bottom:14px;">' +
+            '<a class="default" href="' + res.json_import_url + '">&rarr; Review &amp; Insert JsonImport #' + res.json_import_id + '</a>' +
+            '</div>';
+          resultArea.innerHTML = html;
+        } else {
+          statusEl.innerHTML = '<strong style="color:#c62828;">Generation finished with no results.</strong> ' + (res.message || '');
+        }
+
+        if (res.row_prompts && res.row_prompts.length) {
+          var promptsHtml = '<h3>Prompts sent to the LLM (one per row)</h3>';
+          res.row_prompts.forEach(function(rp, i) {
+            var taId = 'mpg-prog-prompt-' + i;
+            var statusId = 'mpg-prog-prompt-status-' + i;
+            promptsHtml += '<details class="prompt-details"><summary>' + rp.label + '</summary>' +
+              '<div style="margin-top:8px;">' +
+              '<button type="button" class="default" onclick="mpgCopyPromptP(\'' + taId + '\',\'' + statusId + '\')">📋 Copy this prompt</button>' +
+              '<span id="' + statusId + '" style="margin-left:6px;color:#2e7d32;font-weight:bold;"></span>' +
+              '<textarea id="' + taId + '" class="prompt-textarea" readonly></textarea>' +
+              '</div></details>';
+          });
+          resultArea.innerHTML += promptsHtml;
+          // Set textarea values via DOM (not string-interpolated HTML) to avoid escaping issues
+          res.row_prompts.forEach(function(rp, i) {
+            document.getElementById('mpg-prog-prompt-' + i).value = rp.prompt;
+          });
+        }
+
+        var btnArea = document.getElementById('btn-area');
+        btnArea.innerHTML = '<a href="{% url "genai:math_prompt_generation" %}" class="default">&larr; Back to generation form</a>';
+      }
+    })
+    .catch(function(e) { console.error('Poll error:', e); });
+}
+
+pollTimer = setInterval(poll, 2000);
+poll();
+</script>
+{% endif %}
+{% endblock %}

@@ -6,7 +6,7 @@ Handles mapping JSON fields to model fields and saving records
 import json
 import logging
 from datetime import datetime, date, time
-from typing import Dict, Any, List, Tuple
+from typing import Dict, Any, List, Tuple, Optional
 from decimal import Decimal
 
 logger = logging.getLogger(__name__)
@@ -41,6 +41,8 @@ class BulkImporter:
         self.errors = []
         self.created_count = 0
         self.updated_count = 0
+        self.skipped_rules = []  # rule_math (chapter, rule_name) combos that already existed and were NOT overwritten
+        self.batch_rule_conflicts = []  # two different rule_html bodies mapped to the same (chapter, rule_name) within one import
         
         print(f"   ✅ Importer initialized")
         print(f"   Using date: {self.form_date}")
@@ -471,7 +473,212 @@ class BulkImporter:
             logger.error(error_msg)
             return False
     
-    def import_data(self) -> Dict[str, Any]:
+    def _collect_rule_groups(self, rules) -> Dict[Tuple[str, str], List[str]]:
+        """
+        Group rules_html entries by (chapter, rule_name), preserving order of first
+        appearance. An LLM often splits one rule into several cards (a combined-time
+        card, a special-case card, a pattern card, ...) but mislabels them all with the
+        same rule_name (e.g. four cards all called "Rule 5") - this keeps every one of
+        them instead of only the first/second.
+        """
+        from collections import OrderedDict
+        grouped: 'OrderedDict[Tuple[str, str], List[str]]' = OrderedDict()
+        for rule_entry in rules:
+            if not isinstance(rule_entry, dict):
+                continue
+            chapter = rule_entry.get('chapter')
+            rule_name = rule_entry.get('rule_name')
+            rule_html = (rule_entry.get('rule_html') or '').strip()
+            if not chapter or not rule_name:
+                continue
+            grouped.setdefault((chapter, rule_name), []).append(rule_html)
+        return grouped
+
+    def scan_math_conflicts(self, payload) -> list:
+        """
+        Dry-run check for a math payload's rules_html: finds (chapter, rule_name) collisions
+        WITHOUT writing anything, so the caller can ask the user to resolve them (pick which
+        cards to merge) before the real import runs. For each colliding key this returns every
+        distinct version found - however many cards the LLM produced under that rule name, plus
+        the existing rule_math row if one is already saved and differs - so the resolution UI can
+        offer all of them (not just the first two) for selective or auto merge.
+        Returns a list of dicts: {key, chapter, rule_name, variant_count, variants:[{label, html, source}]}.
+        """
+        from django.apps import apps
+        rule_math_model = apps.get_model('bank.rule_math')
+
+        rules = payload.get('rules_html') or [] if isinstance(payload, dict) else []
+        grouped = self._collect_rule_groups(rules)
+
+        conflicts = []
+        for (chapter, rule_name), html_list in grouped.items():
+            existing = rule_math_model.objects.filter(chapter=chapter, rule_name=rule_name).first()
+            existing_html = (existing.rule_html or '').strip() if existing else None
+
+            variants = []
+            if existing_html is not None:
+                variants.append({'label': 'Already in rule_math (existing)', 'html': existing_html, 'source': 'existing'})
+            for i, h in enumerate(html_list):
+                variants.append({'label': f'Card {i + 1} in this import', 'html': h, 'source': 'batch'})
+
+            distinct_htmls = []
+            for v in variants:
+                if v['html'] not in distinct_htmls:
+                    distinct_htmls.append(v['html'])
+
+            if len(distinct_htmls) <= 1:
+                continue
+
+            conflicts.append({
+                'key': f"{chapter}|||{rule_name}",
+                'chapter': chapter,
+                'rule_name': rule_name,
+                'variant_count': len(variants),
+                'variants': variants,
+            })
+
+        return conflicts
+
+    def process_math_payload(self, payload, model_class, resolutions: Optional[dict] = None) -> bool:
+        """
+        Process a math import payload of shape {"rules_html": [...], "questions": [...]}
+        (also accepts a bare list of question dicts for backwards compatibility with the
+        older manual paste-from-chat format).
+
+        - Creates a rule_math row for any (chapter, rule_name) not already present.
+        - NEVER overwrites an existing rule_math row's text on its own — if one already exists
+          and differs from the generated text, the default is to keep the existing text and
+          record it in self.skipped_rules/self.batch_rule_conflicts so the caller can surface
+          it as an alert. If the caller passes `resolutions` (keyed by "chapter|||rule_name",
+          from scan_math_conflicts) with a `merged_html`, that combined text is saved instead -
+          however many duplicate cards (or an existing DB row) fed into it.
+        - Fixes the correct_answer -> ans mapping that the generic importer misses.
+        """
+        from django.apps import apps
+        rule_math_model = apps.get_model('bank.rule_math')
+        resolutions = resolutions or {}
+
+        if isinstance(payload, list):
+            questions = payload
+            rules = []
+        elif isinstance(payload, dict):
+            questions = payload.get('questions') or []
+            rules = payload.get('rules_html') or []
+        else:
+            self.errors.append(f"Unexpected JSON structure for math import: {type(payload)}")
+            return False
+
+        # Step 1: resolve/create rule_math rows, keyed by (chapter, rule_name). Every card
+        # sharing a (chapter, rule_name) - however many the LLM produced - is grouped together
+        # first, then resolved as a whole, instead of comparing entries pairwise as they stream by.
+        rule_lookup = {}
+        grouped = self._collect_rule_groups(rules)
+        for (chapter, rule_name), html_list in grouped.items():
+            key = (chapter, rule_name)
+            key_str = f"{chapter}|||{rule_name}"
+            resolution = resolutions.get(key_str)
+
+            existing = rule_math_model.objects.filter(chapter=chapter, rule_name=rule_name).first()
+            existing_html = (existing.rule_html or '').strip() if existing else None
+
+            distinct = []
+            for h in ([existing_html] if existing_html is not None else []) + html_list:
+                if h not in distinct:
+                    distinct.append(h)
+
+            if len(distinct) <= 1:
+                final_html = html_list[0] if html_list else (existing_html or '')
+            else:
+                merged_html = (resolution.get('merged_html') or '').strip() if resolution else ''
+                if merged_html:
+                    final_html = merged_html
+                elif existing_html is not None:
+                    # No resolution supplied - keep existing untouched, just flag what differed.
+                    final_html = existing_html
+                    for h in html_list:
+                        if h != existing_html:
+                            self.skipped_rules.append({
+                                'chapter': chapter, 'rule_name': rule_name, 'generated_html': h,
+                            })
+                else:
+                    # No resolution supplied - keep the first card, flag the rest as discarded.
+                    final_html = html_list[0]
+                    for h in html_list[1:]:
+                        if h != html_list[0]:
+                            self.batch_rule_conflicts.append({
+                                'chapter': chapter, 'rule_name': rule_name, 'discarded_html': h,
+                            })
+
+            if existing:
+                if (existing.rule_html or '').strip() != final_html.strip():
+                    existing.rule_html = final_html
+                    existing.save(update_fields=['rule_html'])
+                rule_lookup[key] = existing
+            else:
+                rule_lookup[key] = rule_math_model.objects.create(
+                    chapter=chapter, rule_name=rule_name, rule_html=final_html,
+                )
+
+        # Step 2: create/update math rows, linking to the resolved rule where possible
+        ans_map = {'A': 1, 'B': 2, 'C': 3, 'D': 4, '1': 1, '2': 2, '3': 3, '4': 4}
+
+        for record in questions:
+            if not isinstance(record, dict):
+                self.errors.append(f"Question record is not a dict: {record}")
+                continue
+
+            question_text = record.get('question')
+            if not question_text:
+                self.errors.append("Question record missing 'question' text - skipped")
+                continue
+
+            ans_val = record.get('ans', record.get('correct_answer'))
+            if isinstance(ans_val, str):
+                ans_val = ans_map.get(ans_val.strip().upper())
+            try:
+                ans_val = int(ans_val)
+            except (TypeError, ValueError):
+                self.errors.append(f"Invalid/missing correct answer for question: {str(question_text)[:60]}")
+                ans_val = 1
+
+            defaults = {
+                'a': record.get('a', ''),
+                'b': record.get('b', ''),
+                'c': record.get('c', ''),
+                'd': record.get('d', ''),
+                'ans': ans_val,
+                'solution': record.get('solution', ''),
+                'rule_based_explanation': record.get('rule_based_explanation', ''),
+                'shortcut': record.get('shortcut', ''),
+                'chapter': record.get('chapter', ''),
+                'validation_status': record.get('validation_status', 'not_validated'),
+                'llm_used': record.get('llm_used', ''),
+                'exam_and_year': record.get('exam_and_year', ''),
+                'from_json': record.get('from_json', True),
+                'day': self.form_date,
+            }
+
+            rule_obj = rule_lookup.get((record.get('chapter'), record.get('rule_name')))
+            if rule_obj:
+                defaults['rule'] = rule_obj
+
+            try:
+                obj, created = model_class.objects.update_or_create(
+                    question=question_text,
+                    defaults=defaults,
+                )
+                if created:
+                    self.created_count += 1
+                else:
+                    self.updated_count += 1
+            except Exception as e:
+                error_msg = f"Error processing math question '{str(question_text)[:50]}...': {str(e)}"
+                self.errors.append(error_msg)
+                logger.error(error_msg)
+
+        return True
+
+    def import_data(self, resolutions: Optional[dict] = None) -> Dict[str, Any]:
         """Main import method"""
         print("\n" + "="*80)
         print(f"🚀 [IMPORT_DATA] import_data() MAIN METHOD STARTED")
@@ -484,9 +691,45 @@ class BulkImporter:
             'created': 0,
             'updated': 0,
             'errors': [],
+            'skipped_rules': [],
+            'batch_rule_conflicts': [],
             'message': ''
         }
-        
+
+        # Math has its own payload shape ({"rules_html": [...], "questions": [...]}) that the
+        # generic list-of-records flow below can't represent, so it's handled separately here.
+        if self.table_name == 'math':
+            try:
+                payload = json.loads(self.json_data)
+            except json.JSONDecodeError as e:
+                result['errors'] = [f"Invalid JSON: {str(e)}"]
+                result['message'] = f"Failed to parse JSON: {str(e)}"
+                return result
+
+            try:
+                model_class = self.get_model_class()
+            except Exception as e:
+                result['errors'] = [str(e)]
+                result['message'] = f"Failed to get model class: {str(e)}"
+                logger.error(f"Model class error: {str(e)}")
+                return result
+
+            self.process_math_payload(payload, model_class, resolutions=resolutions)
+
+            result['success'] = True
+            result['created'] = self.created_count
+            result['updated'] = self.updated_count
+            result['errors'] = self.errors
+            result['skipped_rules'] = self.skipped_rules
+            result['batch_rule_conflicts'] = self.batch_rule_conflicts
+            result['message'] = (
+                f"Import completed! Created: {self.created_count}, Updated: {self.updated_count}, "
+                f"Errors: {len(self.errors)}, Rules skipped (already existed): {len(self.skipped_rules)}, "
+                f"Batch rule conflicts: {len(self.batch_rule_conflicts)}"
+            )
+            logger.info(result['message'])
+            return result
+
         # Parse JSON
         print(f"\n[STEP 1] PARSING JSON")
         print(f"   Calling parse_json()...")

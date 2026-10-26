@@ -10,7 +10,11 @@ from genai.config import (
     DEFAULT_LLM_PROVIDER,
     GROQ_API_KEY, GROQ_MODEL, GROQ_TEMPERATURE, GROQ_MAX_OUTPUT_TOKENS,
     GEMINI_API_KEY, GEMINI_MODEL, GEMINI_TEMPERATURE, GEMINI_MAX_OUTPUT_TOKENS,
-    OPENAI_API_KEY, OPENAI_MODEL, OPENAI_TEMPERATURE
+    OPENAI_API_KEY, OPENAI_MODEL, OPENAI_TEMPERATURE,
+    DEEPSEEK_API_KEY, DEEPSEEK_MODEL, DEEPSEEK_BASE_URL, DEEPSEEK_TEMPERATURE, DEEPSEEK_MAX_OUTPUT_TOKENS,
+    DEEPSEEK_REQUEST_TIMEOUT,
+    NVIDIA_API_KEY, NVIDIA_MODEL, NVIDIA_BASE_URL, NVIDIA_TEMPERATURE, NVIDIA_MAX_OUTPUT_TOKENS,
+    NVIDIA_REQUEST_TIMEOUT
 )
 
 logger = logging.getLogger(__name__)
@@ -21,6 +25,7 @@ class LLMProvider:
     def __init__(self, model: str = None):
         self.model = model or GEMINI_MODEL
         self.temperature = GEMINI_TEMPERATURE
+        self.last_finish_reason = None  # set by providers that expose it (e.g. 'length' = truncated)
     
     def generate(self, prompt: str, **kwargs) -> str:
         """Generate text from a prompt"""
@@ -276,6 +281,232 @@ class OpenAIProvider(LLMProvider):
             return {}
 
 
+class DeepSeekProvider(LLMProvider):
+    """DeepSeek provider (OpenAI-compatible API, different base_url)"""
+
+    def __init__(self, api_key: str = DEEPSEEK_API_KEY, model: str = DEEPSEEK_MODEL):
+        super().__init__(model)
+        self.api_key = api_key
+        self.model = model
+        self.temperature = DEEPSEEK_TEMPERATURE
+        self.max_output_tokens = DEEPSEEK_MAX_OUTPUT_TOKENS
+
+        try:
+            from openai import OpenAI
+            self.client = OpenAI(api_key=api_key, base_url=DEEPSEEK_BASE_URL, timeout=DEEPSEEK_REQUEST_TIMEOUT)
+        except ImportError:
+            logger.error("openai library not installed. Install with: pip install openai")
+            raise
+
+    def generate(self, prompt: str, **kwargs) -> str:
+        """
+        Generate text using the DeepSeek API (OpenAI-compatible chat completions)
+
+        Args:
+            prompt: The prompt to send to the model
+            **kwargs: Additional parameters
+
+        Returns:
+            Generated text from the model
+        """
+        try:
+            print(f"\n{'='*80}")
+            print(f"[DEEPSEEK API CALL]")
+            print(f"{'='*80}")
+            print(f"Model: {self.model}")
+            print(f"Temperature: {self.temperature}")
+            print(f"Prompt Length: {len(prompt)} chars")
+            print(f"Prompt Preview (first 300 chars):\n{prompt[:300]}")
+            print(f"{'='*80}\n")
+
+            response = self.client.chat.completions.create(
+                model=self.model,
+                max_tokens=self.max_output_tokens,
+                temperature=self.temperature,
+                messages=[
+                    {"role": "user", "content": prompt}
+                ],
+                **kwargs
+            )
+            response_content = response.choices[0].message.content
+            self.last_finish_reason = response.choices[0].finish_reason
+            if self.last_finish_reason == 'length':
+                logger.warning(
+                    "DeepSeek response was truncated (finish_reason=length) - it hit "
+                    "DEEPSEEK_MAX_OUTPUT_TOKENS before finishing. Increase that setting "
+                    "or reduce how much content/how many questions are requested per call."
+                )
+
+            print(f"\n{'='*80}")
+            print(f"[DEEPSEEK RESPONSE]")
+            print(f"{'='*80}")
+            print(f"Response Length: {len(response_content) if response_content else 0}")
+            print(f"Response Preview:\n{response_content[:500] if response_content else 'EMPTY'}")
+            print(f"{'='*80}\n")
+
+            return response_content
+        except Exception as e:
+            logger.error(f"DeepSeek API Error: {str(e)}")
+            print(f"\n{'='*80}")
+            print(f"[DEEPSEEK ERROR]")
+            print(f"{'='*80}")
+            print(f"Error: {str(e)}")
+            print(f"{'='*80}\n")
+            raise
+
+    def generate_json(self, prompt: str, **kwargs) -> Dict[str, Any]:
+        """Generate JSON response from the model"""
+        json_prompt = f"""{prompt}
+
+IMPORTANT: Your response MUST be valid JSON only. Do not include any markdown formatting or explanations."""
+
+        response_text = self.generate(json_prompt, **kwargs)
+
+        if not response_text:
+            logger.error("Empty response from DeepSeek")
+            return {}
+
+        # Try to parse as is first
+        try:
+            return json.loads(response_text)
+        except json.JSONDecodeError:
+            pass
+
+        # Try to extract JSON from markdown code blocks
+        import re
+        json_match = re.search(r'```(?:json)?\s*(.*?)\s*```', response_text, re.DOTALL)
+        if json_match:
+            try:
+                return json.loads(json_match.group(1).strip())
+            except json.JSONDecodeError:
+                pass
+
+        # Try to find JSON object in response
+        try:
+            start = response_text.find('{')
+            end = response_text.rfind('}')
+            if start != -1 and end != -1 and end > start:
+                return json.loads(response_text[start:end + 1])
+        except json.JSONDecodeError:
+            pass
+
+        logger.error(f"Failed to parse JSON response: {response_text}")
+        return {}
+
+
+class NvidiaProvider(LLMProvider):
+    """NVIDIA NIM provider (OpenAI-compatible API, integrate.api.nvidia.com)"""
+
+    def __init__(self, api_key: str = NVIDIA_API_KEY, model: str = NVIDIA_MODEL):
+        super().__init__(model)
+        self.api_key = api_key
+        self.model = model
+        self.temperature = NVIDIA_TEMPERATURE
+        self.max_output_tokens = NVIDIA_MAX_OUTPUT_TOKENS
+
+        try:
+            from openai import OpenAI
+            self.client = OpenAI(api_key=api_key, base_url=NVIDIA_BASE_URL, timeout=NVIDIA_REQUEST_TIMEOUT)
+        except ImportError:
+            logger.error("openai library not installed. Install with: pip install openai")
+            raise
+
+    def generate(self, prompt: str, **kwargs) -> str:
+        """
+        Generate text using the NVIDIA NIM API (OpenAI-compatible chat completions)
+
+        Args:
+            prompt: The prompt to send to the model
+            **kwargs: Additional parameters
+
+        Returns:
+            Generated text from the model
+        """
+        try:
+            print(f"\n{'='*80}")
+            print(f"[NVIDIA API CALL]")
+            print(f"{'='*80}")
+            print(f"Model: {self.model}")
+            print(f"Temperature: {self.temperature}")
+            print(f"Prompt Length: {len(prompt)} chars")
+            print(f"Prompt Preview (first 300 chars):\n{prompt[:300]}")
+            print(f"{'='*80}\n")
+
+            response = self.client.chat.completions.create(
+                model=self.model,
+                max_tokens=self.max_output_tokens,
+                temperature=self.temperature,
+                messages=[
+                    {"role": "user", "content": prompt}
+                ],
+                **kwargs
+            )
+            response_content = response.choices[0].message.content
+            self.last_finish_reason = response.choices[0].finish_reason
+            if self.last_finish_reason == 'length':
+                logger.warning(
+                    "NVIDIA response was truncated (finish_reason=length) - it hit "
+                    "NVIDIA_MAX_OUTPUT_TOKENS before finishing. Increase that setting "
+                    "or reduce how much content/how many questions are requested per call."
+                )
+
+            print(f"\n{'='*80}")
+            print(f"[NVIDIA RESPONSE]")
+            print(f"{'='*80}")
+            print(f"Response Length: {len(response_content) if response_content else 0}")
+            print(f"Response Preview:\n{response_content[:500] if response_content else 'EMPTY'}")
+            print(f"{'='*80}\n")
+
+            return response_content
+        except Exception as e:
+            logger.error(f"NVIDIA API Error: {str(e)}")
+            print(f"\n{'='*80}")
+            print(f"[NVIDIA ERROR]")
+            print(f"{'='*80}")
+            print(f"Error: {str(e)}")
+            print(f"{'='*80}\n")
+            raise
+
+    def generate_json(self, prompt: str, **kwargs) -> Dict[str, Any]:
+        """Generate JSON response from the model"""
+        json_prompt = f"""{prompt}
+
+IMPORTANT: Your response MUST be valid JSON only. Do not include any markdown formatting or explanations."""
+
+        response_text = self.generate(json_prompt, **kwargs)
+
+        if not response_text:
+            logger.error("Empty response from NVIDIA")
+            return {}
+
+        # Try to parse as is first
+        try:
+            return json.loads(response_text)
+        except json.JSONDecodeError:
+            pass
+
+        # Try to extract JSON from markdown code blocks
+        import re
+        json_match = re.search(r'```(?:json)?\s*(.*?)\s*```', response_text, re.DOTALL)
+        if json_match:
+            try:
+                return json.loads(json_match.group(1).strip())
+            except json.JSONDecodeError:
+                pass
+
+        # Try to find JSON object in response
+        try:
+            start = response_text.find('{')
+            end = response_text.rfind('}')
+            if start != -1 and end != -1 and end > start:
+                return json.loads(response_text[start:end + 1])
+        except json.JSONDecodeError:
+            pass
+
+        logger.error(f"Failed to parse JSON response: {response_text}")
+        return {}
+
+
 class MockLLMProvider(LLMProvider):
     """Mock provider for testing without API calls"""
     
@@ -297,7 +528,7 @@ def get_llm_provider(provider: str = None, **kwargs) -> LLMProvider:
     Get an LLM provider instance
     
     Args:
-        provider: 'groq' (default), 'gemini', 'openai', 'mock', etc.
+        provider: 'groq' (default), 'gemini', 'openai', 'deepseek', 'nvidia', 'mock', etc.
         **kwargs: Additional parameters for the provider
     
     Returns:
@@ -319,6 +550,10 @@ def get_llm_provider(provider: str = None, **kwargs) -> LLMProvider:
             return OpenAIProvider(**kwargs)
     elif provider.lower() == "openai":
         return OpenAIProvider(**kwargs)
+    elif provider.lower() == "deepseek":
+        return DeepSeekProvider(**kwargs)
+    elif provider.lower() == "nvidia":
+        return NvidiaProvider(**kwargs)
     elif provider.lower() == "mock":
         return MockLLMProvider(**kwargs)
     else:

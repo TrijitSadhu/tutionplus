@@ -2,6 +2,7 @@ import json
 import logging
 from django.contrib import admin
 from django import forms
+from django.db import models
 from django.utils.html import format_html
 from django.urls import reverse, path
 from django.db.models import Q
@@ -12,7 +13,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from django.template.response import TemplateResponse
 from bank.admin import admin_site
-from .models import PDFUpload, CurrentAffairsGeneration, MathProblemGeneration, ProcessingTask, ProcessingLog, ContentSource, LLMPrompt, JobFetch, JsonImport
+from .models import PDFUpload, CurrentAffairsGeneration, MathProblemGeneration, ProcessingTask, ProcessingLog, ContentSource, LLMPrompt, JobFetch, JsonImport, MathPromptTemplate
 from .bulk_import import BulkImporter
 from genai.tasks.job_scraper import run_job_fetch
 
@@ -1491,13 +1492,34 @@ class BulkImportForm(forms.Form):
     )
 
 
+class MathPromptTemplateAdmin(admin.ModelAdmin):
+    """Reusable extraction prompts for the Math JSON generation page."""
+    list_display = ['name', 'is_default', 'updated_at', 'created_by']
+    list_filter = ['is_default']
+    search_fields = ['name', 'prompt_text']
+    readonly_fields = ['created_at', 'updated_at', 'created_by']
+
+    def save_model(self, request, obj, form, change):
+        if not change:
+            obj.created_by = request.user
+        super().save_model(request, obj, form, change)
+
+
 class JsonImportAdmin(admin.ModelAdmin):
     """Admin interface for JSON Import"""
     list_display = ['to_table_display', 'created_at', 'record_count', 'created_by']
     list_filter = ['to_table', 'created_at']
     search_fields = ['to_table']
     readonly_fields = ['created_at', 'updated_at', 'created_by']
-    
+    formfield_overrides = {
+        models.TextField: {
+            'widget': forms.Textarea(attrs={
+                'rows': 35,
+                'style': 'width:100%;font-family:monospace;font-size:12px;white-space:pre;'
+            })
+        },
+    }
+
     fieldsets = (
         ('Configuration', {
             'fields': ('to_table', 'json_data'),
@@ -1580,7 +1602,9 @@ class JsonImportAdmin(admin.ModelAdmin):
                 # Process each selected JsonImport record
                 success_count = 0
                 error_count = 0
-                
+                all_skipped_rules = []
+                all_batch_rule_conflicts = []
+
                 print(f"\n📥 [ADMIN] Processing {queryset.count()} JsonImport records...")
                 for idx, json_import in enumerate(queryset, 1):
                     print(f"\n   [{idx}/{queryset.count()}] Processing: {json_import.to_table}")
@@ -1610,15 +1634,53 @@ class JsonImportAdmin(admin.ModelAdmin):
                         print(f"      ❌ {len(result['errors'])} errors occurred")
                         for err in result['errors'][:3]:
                             print(f"         - {err}")
-                
+
+                    all_skipped_rules.extend(result.get('skipped_rules') or [])
+                    all_batch_rule_conflicts.extend(result.get('batch_rule_conflicts') or [])
+
                 print(f"\n✅ [ADMIN] Processing Complete")
                 print(f"   Total Created/Updated: {success_count}")
                 print(f"   Total Errors: {error_count}")
-                
+
                 # Show success message
                 message = f'✅ Bulk import completed! Records created/updated: {success_count}. Errors: {error_count}'
                 print(f"   Message: {message}")
                 self.message_user(request, message)
+
+                # Alert about rule_math rows that already existed and were NOT overwritten,
+                # so the user can manually copy the freshly generated text in if they want it.
+                if all_skipped_rules:
+                    from django.contrib import messages
+                    for skipped in all_skipped_rules:
+                        self.message_user(
+                            request,
+                            format_html(
+                                '⚠️ Rule "{}" for chapter "{}" already exists in rule_math and was '
+                                'NOT overwritten — the question(s) were linked to the existing rule. '
+                                'Generated text (copy manually if you want to update it):<br>'
+                                '<textarea readonly style="width:100%;height:100px;">{}</textarea>',
+                                skipped['rule_name'], skipped['chapter'], skipped['generated_html']
+                            ),
+                            level=messages.WARNING,
+                        )
+
+                # Alert about two different rule cards in this SAME import both claiming the same
+                # (chapter, rule_name) — this means the extraction likely mislabeled which rule
+                # something belongs to; the first one won, this shows what was discarded.
+                if all_batch_rule_conflicts:
+                    from django.contrib import messages
+                    for conflict in all_batch_rule_conflicts:
+                        self.message_user(
+                            request,
+                            format_html(
+                                '⚠️ Two different rule cards both claimed "{}" for chapter "{}" in '
+                                'this same import — only the first was kept. This discarded one '
+                                'was NOT saved (check if it\'s actually a different rule number):<br>'
+                                '<textarea readonly style="width:100%;height:100px;">{}</textarea>',
+                                conflict['rule_name'], conflict['chapter'], conflict['discarded_html']
+                            ),
+                            level=messages.WARNING,
+                        )
                 print(f"   [REDIRECT] Redirecting to {request.path}")
                 return redirect(request.path)
             elif form.is_bound:
@@ -1667,3 +1729,4 @@ admin_site.register(ContentSource, ContentSourceAdmin)
 admin_site.register(LLMPrompt, LLMPromptAdmin)
 admin_site.register(JobFetch, JobFetchAdmin)
 admin_site.register(JsonImport, JsonImportAdmin)
+admin_site.register(MathPromptTemplate, MathPromptTemplateAdmin)

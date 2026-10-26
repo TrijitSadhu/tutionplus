@@ -1,0 +1,192 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+    .mpg-wrap {
+        max-width: 1000px;
+        margin: 20px auto;
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 8px;
+    }
+    .mpg-section {
+        background: white;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+        border: 1px solid #dee2e6;
+    }
+    .mpg-section h3 {
+        margin-top: 0;
+        color: #417690;
+        border-bottom: 2px solid #417690;
+        padding-bottom: 10px;
+    }
+    .mpg-field { margin-bottom: 14px; }
+    .mpg-field label { display: block; font-weight: bold; margin-bottom: 4px; }
+    .mpg-field .help-text { font-size: 0.85em; color: #6c757d; }
+    .mpg-row-table { width: 100%; border-collapse: collapse; }
+    .mpg-row-table th, .mpg-row-table td { padding: 8px; border-bottom: 1px solid #eee; text-align: left; vertical-align: top; }
+    .mpg-row-table input, .mpg-row-table select { width: 100%; }
+    .mpg-remove-row { color: #ba2121; cursor: pointer; }
+    .mpg-add-row { margin-top: 10px; }
+    .errorlist { color: #ba2121; padding-left: 16px; margin: 4px 0; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="mpg-wrap">
+    <p>
+        Paste your extraction prompt once, upload the source PDF once, then add one row per
+        chapter/rule/page-range you want processed. One LLM call is made per row, using only
+        that row's page range (pages with no text layer are OCR'd automatically). Results are
+        merged and saved as a new <strong>JsonImport</strong> record for you to review — nothing
+        is written to the <code>math</code>/<code>rule_math</code> tables until you press
+        <strong>Insert into Math Table</strong> on that record's page. After you click
+        <strong>Generate JSON</strong> below, you'll be taken to a live progress page showing
+        what's happening row by row (page extraction, OCR fallback, the LLM call, parsing) —
+        the prompts sent and a link to the result appear there once it finishes.
+    </p>
+
+    <form method="post" enctype="multipart/form-data" id="mpg-form">
+        {% csrf_token %}
+
+        <div class="mpg-section">
+            <h3>1. Prompt &amp; PDF</h3>
+            <div class="mpg-field">
+                <label for="{{ form.saved_prompt.id_for_label }}">{{ form.saved_prompt.label }}</label>
+                {{ form.saved_prompt }}
+                <div class="help-text">{{ form.saved_prompt.help_text }}</div>
+            </div>
+            <div class="mpg-field">
+                <label for="{{ form.prompt_text.id_for_label }}">{{ form.prompt_text.label }}</label>
+                {{ form.prompt_text }}
+                <div class="help-text">{{ form.prompt_text.help_text }}</div>
+                {{ form.prompt_text.errors }}
+            </div>
+            <div class="mpg-field">
+                <label for="{{ form.save_prompt_as.id_for_label }}">{{ form.save_prompt_as.label }}</label>
+                {{ form.save_prompt_as }}
+                <div class="help-text">{{ form.save_prompt_as.help_text }}</div>
+            </div>
+            <div class="mpg-field">
+                <label style="font-weight:normal;display:flex;align-items:center;gap:6px;">
+                    {{ form.make_default_prompt }} {{ form.make_default_prompt.label }}
+                </label>
+            </div>
+            <div class="mpg-field">
+                <label for="{{ form.llm_provider.id_for_label }}">{{ form.llm_provider.label }}</label>
+                {{ form.llm_provider }}
+                <div class="help-text">{{ form.llm_provider.help_text }}</div>
+            </div>
+            <div class="mpg-field">
+                <label for="{{ form.delay_seconds.id_for_label }}">{{ form.delay_seconds.label }}</label>
+                {{ form.delay_seconds }}
+                <div class="help-text">{{ form.delay_seconds.help_text }}</div>
+                {{ form.delay_seconds.errors }}
+            </div>
+            <div class="mpg-field">
+                <label for="{{ form.pdf_file.id_for_label }}">{{ form.pdf_file.label }}</label>
+                {{ form.pdf_file }}
+                {{ form.pdf_file.errors }}
+            </div>
+        </div>
+
+        <div class="mpg-section">
+            <h3>2. Chapter / Rule / Page-range rows</h3>
+            {{ formset.management_form }}
+            {{ formset.non_form_errors }}
+            <table class="mpg-row-table" id="mpg-rows">
+                <thead>
+                    <tr>
+                        <th>Chapter</th>
+                        <th>Rule (optional)</th>
+                        <th>Page from</th>
+                        <th>Page to</th>
+                        <th>Difficulty</th>
+                        <th>Remove</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row_form in formset %}
+                    <tr class="mpg-row">
+                        <td>{{ row_form.chapter }}{{ row_form.chapter.errors }}</td>
+                        <td>{{ row_form.rule_name }}{{ row_form.rule_name.errors }}</td>
+                        <td>{{ row_form.page_from }}{{ row_form.page_from.errors }}</td>
+                        <td>{{ row_form.page_to }}{{ row_form.page_to.errors }}</td>
+                        <td>{{ row_form.difficulty }}{{ row_form.difficulty.errors }}</td>
+                        <td>
+                            {% if row_form.DELETE %}
+                                <label class="mpg-remove-row">{{ row_form.DELETE }} remove</label>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% if row_form.non_field_errors %}
+                    <tr><td colspan="6">{{ row_form.non_field_errors }}</td></tr>
+                    {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+            <button type="button" class="mpg-add-row" id="mpg-add-row">+ Add another row</button>
+        </div>
+
+        <input type="submit" class="default" value="Generate JSON">
+    </form>
+</div>
+
+<div id="mpg-empty-row-template" style="display:none">
+    <table><tbody>
+        <tr class="mpg-row">
+            <td>{{ formset.empty_form.chapter }}</td>
+            <td>{{ formset.empty_form.rule_name }}</td>
+            <td>{{ formset.empty_form.page_from }}</td>
+            <td>{{ formset.empty_form.page_to }}</td>
+            <td>{{ formset.empty_form.difficulty }}</td>
+            <td>{% if formset.empty_form.DELETE %}<label class="mpg-remove-row">{{ formset.empty_form.DELETE }} remove</label>{% endif %}</td>
+        </tr>
+    </tbody></table>
+</div>
+
+<script>
+(function() {
+    var totalForms = document.getElementById('id_rows-TOTAL_FORMS');
+    var addBtn = document.getElementById('mpg-add-row');
+    var rowsBody = document.querySelector('#mpg-rows tbody');
+    var emptyTemplate = document.getElementById('mpg-empty-row-template').innerHTML;
+
+    addBtn.addEventListener('click', function() {
+        var formIdx = parseInt(totalForms.value, 10);
+        var newHtml = emptyTemplate.replace(/__prefix__/g, formIdx);
+        var wrapper = document.createElement('tbody');
+        wrapper.innerHTML = newHtml;
+        var newRow = wrapper.querySelector('tr.mpg-row');
+        rowsBody.appendChild(newRow);
+        totalForms.value = formIdx + 1;
+    });
+})();
+</script>
+
+{{ prompt_templates|json_script:"mpg-prompt-templates" }}
+<script>
+(function() {
+    var templates = JSON.parse(document.getElementById('mpg-prompt-templates').textContent);
+    var savedPromptSelect = document.getElementById('{{ form.saved_prompt.id_for_label }}');
+    var promptTextArea = document.getElementById('{{ form.prompt_text.id_for_label }}');
+    var saveAsInput = document.getElementById('{{ form.save_prompt_as.id_for_label }}');
+
+    if (savedPromptSelect) {
+        savedPromptSelect.addEventListener('change', function() {
+            var name = savedPromptSelect.value;
+            if (name && templates[name] !== undefined) {
+                promptTextArea.value = templates[name];
+                if (saveAsInput) { saveAsInput.value = name; }
+            }
+        });
+    }
+})();
+</script>
+{% endblock %}
