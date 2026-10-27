@@ -1883,7 +1883,9 @@ def math_all(request,string,params):
     ]
     current_lang = request.session.get('math_lang', 'en')
 
-    mathh = list(math.objects.filter(chapter=string).select_related('rule').order_by('day')[p:mul])
+    # 'id' breaks ties between same-day rows; without it the database may return them in a
+    # different order on each request, so questions can repeat or go missing across pages.
+    mathh = list(math.objects.filter(chapter=string).select_related('rule').order_by('day', 'id')[p:mul])
 
     if current_lang != 'en':
         from .models import math_translation, rule_math_translation
