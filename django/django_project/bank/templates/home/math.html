@@ -664,7 +664,7 @@
 																					<input type="radio" name="radio1" id="{{forloop.counter}}1" value="option1">
 																					<label for="{{forloop.counter}}1">
 																					
-																					{% if math.a_img == none  %}
+																					{% if not math.a_img %}
 
 																					
 																						<span id="mathoa-{{forloop.counter}}">{% if math.trans %}{{math.trans.a}}{% else %}{{math.a}}{% endif %}</span>
