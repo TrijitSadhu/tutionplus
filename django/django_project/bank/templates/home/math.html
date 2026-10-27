@@ -635,7 +635,7 @@
 															  </div>
 															</div>
 																		
-										<button id="time{{forloop.counter}}" onClick="timer({{forloop.counter}},{{math.time}},{{forloop.counter}}1,
+										<button id="time{{forloop.counter}}" onClick="timer({{forloop.counter}},{{math.time|default:30}},{{forloop.counter}}1,
 														{{forloop.counter}}2,{{forloop.counter}}3,{{forloop.counter}}4,{{forloop.counter}}5,{{math.ans}},
 														solution{{forloop.counter}},{{forloop.counter}})"
 												style="text-align:center; color:#3e2525;margin-right:0;float:right;display:inline-block;
@@ -649,7 +649,7 @@
 												class="btn  btn-sm"
 														
 														
-														><i class="fa fa-clock-o" aria-hidden="true"></i>  {{math.time}} Sec</button> 
+														><i class="fa fa-clock-o" aria-hidden="true"></i>  {{math.time|default:30}} Sec</button>
 										
 										
 										<h4 style="text-align:left ;color:#F06292"><b><u>Options:</u></b></h4>

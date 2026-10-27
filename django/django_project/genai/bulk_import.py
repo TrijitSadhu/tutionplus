@@ -12,6 +12,32 @@ from decimal import Decimal
 logger = logging.getLogger(__name__)
 
 
+def estimate_math_seconds(record) -> int:
+    """
+    Exam-style time limit for a math question (20 s easy, 30 s medium, 45 s hard), judged from how much work its
+    quickest method needs: the givens in the question plus the operations, powers/roots and steps in the shortcut.
+    Questions without a usable shortcut are judged from the question alone.
+    """
+    import re
+
+    def plain(s):
+        return re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", s or "")).strip()
+
+    def math_parts(s):
+        return " ".join(a or b for a, b in re.findall(r"\\\((.*?)\\\)|\\\[(.*?)\\\]", s or "", re.S))
+
+    q = plain(record.get('question'))
+    work = math_parts(record.get('shortcut')) or math_parts(record.get('rule_based_explanation')) or plain(record.get('shortcut'))
+    givens = len(set(re.findall(r"\d+(?:\.\d+)?", re.sub(r"\\frac\{(\d+)\}\{(\d+)\}", r"\1/\2", q))))
+    awkward = 2 if re.search(r"\d\.\d|\\frac|\d/\d|%", q) else 0
+    if work:
+        ops = len(re.findall(r"\\times|\\div|\\cdot|\*|(?<![a-z])[+\-](?=\s*[\d(\\])", work)) + 2 * len(re.findall(r"\\frac", work))
+        score = givens + ops / 2 + 3 * len(re.findall(r"\^|\\sqrt|\\left\(", work)) + awkward + len(re.findall(r"\\Rightarrow|=", work)) / 2
+    else:
+        score = givens + awkward + len(q) / 80
+    return 20 if score <= 6 else 30 if score <= 10 else 45
+
+
 class BulkImporter:
     """Handles bulk import of JSON data to bank models"""
     
@@ -656,6 +682,8 @@ class BulkImporter:
                 'exam_and_year': record.get('exam_and_year', ''),
                 'from_json': record.get('from_json', True),
                 'day': self.form_date,
+                # Without a time the question page's timer gets "None" and breaks.
+                'time': record.get('time') or estimate_math_seconds(record),
             }
 
             rule_obj = rule_lookup.get((record.get('chapter'), record.get('rule_name')))
