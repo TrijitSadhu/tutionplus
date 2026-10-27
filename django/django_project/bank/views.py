@@ -1883,9 +1883,16 @@ def math_all(request,string,params):
     ]
     current_lang = request.session.get('math_lang', 'en')
 
-    # 'id' breaks ties between same-day rows; without it the database may return them in a
-    # different order on each request, so questions can repeat or go missing across pages.
-    mathh = list(math.objects.filter(chapter=string).select_related('rule').order_by('day', 'id')[p:mul])
+    # Questions follow their rule number ("Rule 3" -> 3, digits only, so an odd name cannot break the
+    # page), so a question added to an older rule later still appears with that rule. Questions with
+    # no rule come after all ruled ones. 'id' breaks ties between same-day rows; without it the
+    # database may return them in a different order on each request, so questions can repeat or go
+    # missing across pages.
+    from django.db.models import F, Func, IntegerField, Value
+    from django.db.models.functions import Cast, NullIf
+    rule_no = Cast(NullIf(Func(F('rule__rule_name'), Value(r'\D'), Value(''), Value('g'), function='regexp_replace'), Value('')), IntegerField())
+    mathh = list(math.objects.filter(chapter=string).select_related('rule').annotate(rule_no=rule_no)
+                 .order_by(F('rule_no').asc(nulls_last=True), 'day', 'id')[p:mul])
 
     if current_lang != 'en':
         from .models import math_translation, rule_math_translation
