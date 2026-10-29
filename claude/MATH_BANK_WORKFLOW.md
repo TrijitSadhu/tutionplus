@@ -140,7 +140,7 @@ add the Traditional Method, add what is missing, then push to the live site when
   95, JsonImports #180-#256, prompt #12; one `django_admin_log` row differed on both sides and was left out (admin history, not
   content); live dump before the push `db_backups/live/tutionplus_before_percentage_sync_2026-10-29.backup`; SQL builder
   `claude/runs/percentage/build_sync.py`; the `bank/models.py` page-counter fix was pushed to GitHub with it).
-  **Baseline for the next push: `db_backups/post_2026-10-29_1626.backup`** (local = live for content then).
+  Baseline then: `db_backups/post_2026-10-29_1626.backup` (superseded - see Permutation and Combination).
   The Miscellaneous set (rows 662-679 + 13 missing problems) is **not done yet** - local work, next push.
   The chapter had no cards; rows 583-661 copy the book's worked examples, 662-679 copy Miscellaneous problems, 47/56 are 2018 rows.
   Prompt **#12** "percentage_detail method + theorem" (not default). Work folder `claude/runs/percentage` (`book_map.json`, `gen_1_8.py`,
@@ -187,6 +187,54 @@ add the Traditional Method, add what is missing, then push to the live site when
   option holding 24 kg - fixed; 657 reworded to ask for both incomes its options give), 20 new questions in JsonImports #252-#256, ids
   2038-2057. Backup before: `post_2026-10-29_0030.backup`. **All 77 rules done:** 474 questions, 154 cards, page counter **95**.
   Left: the 31 Miscellaneous problems (18 in the DB as rule-less rows 662-679, shown last on pages 92-95; 13 not in the DB).
+- **Permutation and Combination** (`permutation_combination`, `permutaion combination.pdf` = book Chapter 25, pages 641-661, 21 pdf pages)
+  - **in progress, local only**. The book has two series, I. Permutations Rules 1-13 and II. Combinations Rules 1-23; on the site
+  they are **Rule 1-13 and Rule 14-36** (site = book Combination rule + 13; the owner chose this 2026-10-29). Miscellaneous: 2
+  problems (3 questions). Work folder `claude/runs/permutation` (`book_map.json` has every rule's page, exercise answers, misprints and
+  DB copies; `validate.py` here evaluates counting expressions such as `\frac{9!\times 8!}{3!}`, `{}^{15}C_{3}`, `2(4!\times 4!)` exactly
+  - `pc_value`; solvers count by brute force / seating-pattern enumeration). Prompt **#13** "permutation combination_detail method +
+  theorem" (not default). The 6 profit-and-loss rows 957-962 that were filed here were moved to `profit_n_loss` (now 179 questions,
+  page counter 36; backup `claude/backups/math_957_962_before_move_to_profit_n_loss.json`). The chapter had 70 rows (2019), no cards:
+  845-873 copy the book's worked examples, 874-914 are general P&C questions from other sources (link each to its nearest rule).
+  Book misprints: P Rule 6 Exr 1 (72 -> 84, not an option) and Exr 3 (240234x9! -> 239520x9!); P Rule 10 Exr 1 and 3 say "two
+  particular delegates" but answer for 3 and 5; C Rule 7 Exr 2 ("3, 20" -> 15, 20) and Exr 3 (4290 -> 12870); C Rule 5 Exr 2 needs a figure.
+  Old rows still to fix in later batches: 862 (40 lines, no option), 905 (25, no option), 875 (number of students lost: 15), 912 = 858.
+  **Rules 1-7 done** (2026-10-29, `gen_1_7.py`, `solve_1_7.py`): cards #217-#223, 19 old rows regenerated and linked (845, 885, 891,
+  893, 894, 899, 903 / 846, 897, 898, 904, 914 / 847, 887, 902 / 848 / 849 / 850 / 851); key fixed: 894 (ans 5 -> 9900, option added);
+  903's duplicate 720 option replaced; `$$` and display math cleaned; e = ''. 25 new questions (book exercises of Rules 1-7 + Rule 4's
+  2nd worked example, numbers changed) in JsonImports #257-#263, ids 2058-2082. Backup before: `db_backups/post_2026-10-29_1726.backup`.
+  95 questions, page counter **19**.
+  **Rules 8-13 done** (2026-10-29, `gen_8_13.py` reuses `gen_1_7.main`; `solve_8_13.py` counts words with a memoised letter-by-letter
+  count, circles by seat patterns / rotations, necklaces with bead 0 fixed and one of each mirror pair): cards #224-#229, 16 old rows
+  regenerated and linked (852, 901 / 853, 908 / 854, 909 / 888, 890, 892, 895, 896, 907 / 881, 882, 886, 889; all keys were right, options
+  written as LaTeX); Rule 8 had no row. 28 new questions (worked examples of Rules 8, 12 (two) and 13 + all exercises, words / numbers
+  changed; Rule 10 Exr 1 and 3 rewritten with three / four particular delegates) in JsonImports #264-#269, ids 2083-2110. Backup before:
+  `post_2026-10-29_1741.backup`. 123 questions, page counter **25**. Cosmetic: Rule 13's Theorem display formula is a little wider than the
+  solution box on desktop (shorten it if the owner wants; the 9 Rule 13 rows and card #229 would need a re-apply).
+  **Rules 14-21 done** (= book Combination Rules 1-8; 2026-10-29, `gen_14_21.py`, `solve_14_21.py` counts real selections with
+  itertools.combinations): cards #230-#237, 16 old rows regenerated and linked (855, 876, 905, 906 / 856, 911 / 857, 875, 913 / 858, 912 /
+  859, 874 / 860, 910 / 861); Rule 14 had no row. Fixed: 905 (key on the empty option e, no option held 25 - added), 875 (number of
+  students lost - 15 restored), 855 ("10 identical boxes" -> "10 different boxes", the answer 252 needs it; the book has the same slip).
+  912 still duplicates 858 (both kept, owner to decide). 26 new questions (Rule 14's and Rule 18's worked examples + all exercises,
+  numbers changed; Rule 18 Exr 2 written without the figure; Rule 20 Exr 2/3 with right answers) in JsonImports #270-#277,
+  ids 2111-2136. Backup before: `post_2026-10-29_1759.backup`. 149 questions, page counter **30**.
+  **Rules 22-29 done** (= book Combination Rules 9-16; 2026-10-29, `gen_22_29.py`, `solve_22_29.py`): cards #238-#245, 14 old rows
+  regenerated and linked (862 / 863 / 864 / 865, 877 / 866, 879, 880, 883, 884, 900 / 867 / 868 / 869). Fixed: 862 (key on the empty
+  option e, no option held 40 - added), 864 ("can't student fail"), 868 (display-math options inline). 29 new questions (all exercises,
+  numbers changed) in JsonImports #278-#285, ids 2137-2165. `validate.py` gained a **stray-LaTeX check** (`\frac`, `^{`, `{}^` outside
+  `\( \)` - an 880 draft had it) and `mutation_test.py` a matching `m_stray`; Rules 1-29 all pass it. Backup before:
+  `post_2026-10-29_1809.backup`. 178 questions, page counter **36**.
+  **Rules 30-36 + Miscellaneous done - CHAPTER COMPLETE locally** (2026-10-29, `gen_30_36.py`, `solve_30_36.py`): cards #246-#252, old rows
+  870, 878, 871, 872, 873 regenerated and linked (keys right); 24 new questions (Rule 31/35/36 worked examples + all exercises, numbers
+  changed) in JsonImports #286-#292, ids 2166-2189; the 2 Miscellaneous problems (3 questions, 'at least' committees, numbers changed)
+  under Rule 26 in `misc/rule26` (card #242 reused), JsonImport #293, ids 2190-2192. Backup before: `post_2026-10-29_1818.backup`.
+  **Final state: 205 questions, 36 cards (#217-#252), every row linked to a rule, Theorem + Traditional Method in every solution,
+  e = '' everywhere, no `$$`, answers spread a 51 / b 49 / c 55 / d 50, page counter 41; JsonImports #257-#293; prompt #13.**
+  **On live** (pushed 2026-10-29 with the selective sync: 286 rows = 211 math (76 updates incl. the 6 rows moved to profit_n_loss,
+  135 inserts), 36 cards, page counters (P&C 41, profit_n_loss 36), JsonImports #257-#293, prompt #13; no conflicts; live dump before the
+  push `db_backups/live/tutionplus_before_permutation_sync_2026-10-29.backup`; SQL builder `claude/runs/permutation/build_sync.py`).
+  **Baseline for the next push: `db_backups/post_2026-10-29_1823.backup`** (local = live for content). Scripts not committed yet.
+  Open items: 912 duplicates 858 (owner to decide); Rule 13 Theorem display formula slightly wide.
 - **Timers**: every question has a time, on live.
 - Open items the user has not decided: Alligation question 1074 duplicates 1071; Alligation Rule 28 answers mostly on option a
   (also noted earlier for Time and Distance Rules 15 and 18); the 5 "Miscellaneous" problems after Alligation Rule 29 are not added;
