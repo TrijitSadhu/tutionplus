@@ -233,9 +233,70 @@ add the Traditional Method, add what is missing, then push to the live site when
   **On live** (pushed 2026-10-29 with the selective sync: 286 rows = 211 math (76 updates incl. the 6 rows moved to profit_n_loss,
   135 inserts), 36 cards, page counters (P&C 41, profit_n_loss 36), JsonImports #257-#293, prompt #13; no conflicts; live dump before the
   push `db_backups/live/tutionplus_before_permutation_sync_2026-10-29.backup`; SQL builder `claude/runs/permutation/build_sync.py`).
-  **Baseline for the next push: `db_backups/post_2026-10-29_1823.backup`** (local = live for content). Scripts not committed yet.
+  Baseline then: `db_backups/post_2026-10-29_1823.backup` (superseded by `post_2026-10-29_2007.backup`, see the new chapters below).
+  Scripts committed in `f86a3496`.
   Open items: 912 duplicates 858 (owner to decide); Rule 13 Theorem display formula slightly wide.
-- **16 new book chapters added to the site code** (2026-10-29, local, NOT committed / not on live yet): `bank.models.NEW_MATH_CHAPTERS` =
+- **Rewording (copyright) - pilot done locally 2026-10-29, not on live:** 10 Time & Work rows (1232, 1255, 1258, 1268, 1292, 1296,
+  1306, 1311, 1323, 1397) got a fresh sentence + all-new numbers + new options, explanation regenerated with the same rule generator;
+  same row ids / rules. Work area `claude/runs/time_work/reword/` (`gen_reword_pilot.py`, `reword_check.py` = validate with the gate
+  on + mutation test incl. m_copy / m_old_number). Gate: `claude/tools/originality.py` (book wording <= 0.35 of 4-word phrases,
+  sentence vs the old question <= 0.55, no number > 3 kept from the old question, not the full number set of one book sentence).
+  Today 295 of 302 Time & Work questions fail the gate. Backup before: `post_2026-10-29_2014.backup`.
+  **Batch 1 done locally** (Rules 1-5, 47 rows; `reword/b1/gen_b1.py`, solver `reword/solve_rw.py` keyed by row id - label-based
+  for toys/trees; number sets chosen with `Book.numbers_together` so no book sentence has them). Backup before:
+  `post_2026-10-29_2033.backup`. Left: Rules 6-40 (~228 rows) + the Miscellaneous rows (261-277, 1682) in their own batch.
+  Pilot moved to `reword/pilot/`; `reword_check.py <batch>` runs validate (gate on) + mutations (incl. m_copy, m_old_number).
+  **Batch 2 done locally** (Rules 6-10, 50 rows; `reword/b2/gen_b2.py`; shared option builder `reword/rw_common.py`; solvers for
+  men/women/boys/children read numbers by label so sentences can be reordered; `try_q.py` tests draft sentences against the gate
+  first). Backup before: `post_2026-10-29_2125.backup`. Slip found and fixed: rows 203 and 1263 were applied with doubled backslashes
+  (raw LaTeX on the page) - fixed in the DB (`b2/fix_backslash.py`, backup `claude/backups/math_203_1263_before_backslash_fix.json`)
+  and `time_work/validate.py` now fails any doubled backslash (+ mutation `m_double_backslash`). `reword/compare_batches.py`
+  confirms the DB equals every applied batch file (pilot 10, b1 47, b2 50 rows). Note: the Theorem lines of some
+  rules (e.g. Rule 18) still follow the book's theorem sentence - owner to decide whether to reword those too.
+  **Batch 3 done locally** (2026-10-29, Rules 11-20, 51 rows; `reword/b3/gen_b3.py`; batch-3 solver types in `reword/solve_rw.py`,
+  label-based `k_faster`/`k_hours`/`k_c13q`/`k_good`/`k_mwb`/`k_builder`, search-based `k_left`/`k_absent`/`k_extra`). All 51 pass the
+  gate; validate 0 failed, all mutations caught (pilot/b1/b2 re-checked too). Backup before: `post_2026-10-29_2143.backup`.
+  `compare_batches.py` (BATCHES pilot..b3): DB equals all 158 applied rows; no doubled backslash in any time_n_work row; check_order
+  OK (302 shown); pages 23-34 have no raw LaTeX or MathJax errors. Left: Rules 21-40 (~127 rows) + the Miscellaneous rows (261-277, 1682).
+  **Simple style (owner, 2026-10-29 late: the reworded sentences read "too tough").** The reworded rows keep their new numbers,
+  options, keys and explanations; only the question sentence goes back to the book's easy pattern with the job/object changed
+  ("If 6 men or 8 women can paint a wall in 35 days, ..."). Gate `originality.check_question(..., simple=True)`: book wording <= 0.70,
+  vs the old question <= 0.90, same number rules (a numbers-only copy of the book sentence scores ~0.86/0.97 - all 158 such copies are
+  rejected). `validate.GATE_SIMPLE`, set by `reword_check.py simple/<batch>`. Folder `reword/simple/`: `<batch>_sentences.py` (SIMPLE =
+  {id: sentence}, numbers in the solver's order), `make_simple.py <batch>`, `apply_simple.py` (BATCH, DO_UPDATE; refuses rows that
+  differ from the applied batch, changes question + llm_used only). `compare_batches.py` checks the simple version when it exists.
+  **Pilot (10) and batch 1 (47) done** - backup before: `post_2026-10-29_2203.backup`, row backups `math_time_work_simple_<batch>_before.json`.
+  **Batches 2 (50) and 3 (51) done** - backup before: `post_2026-10-29_2216.backup`. All 158 reworded rows are now in the simple style;
+  compare_batches: DB equals every simple batch file; check_order OK. Write Rules 21-40 and the Miscellaneous rows in the simple
+  style directly (gen_bN.py sentences, `reword_check.py` with the simple gate).
+  **Batch 4 done locally** (2026-10-29, Rules 21-30, 52 rows; `reword/b4/gen_b4.py`, written in the simple style straight away; a
+  `SIMPLE_STYLE` marker file in the batch folder makes `reword_check.py` use the simple gate; each `ruleNN/solve.py` imports the
+  original `solve_21_30` solver, so the numbers keep the book's order). Validate 0 failed, all mutations caught. Backup before:
+  `post_2026-10-29_2230.backup`. compare_batches (pilot..b4, 210 rows) equal to the DB; check_order OK; pages 35-45 clean.
+  Left: Rules 31-40 (74 rows) + the Miscellaneous rows (261-277, 1682).
+  **Batch 5 done locally** (2026-10-29, Rules 31-40, 74 rows incl. Claude-added 1668-1681; `reword/b5/gen_b5.py`, simple style,
+  SIMPLE_STYLE marker; original `solve_31_35` / `solve_36_40` solvers, so each sentence keeps the phrase they use to tell the types
+  apart: "assist", "C finishes it", "helped on every", "C joins A", "joined B", "days less than B", "help of C", "B starts",
+  "working together", "B and C start", "together", "In all"). `rw_common.write_batch` now takes a ready options dict in place of the
+  unit (Rule 32 clock times and dates). Traps found: `helped31` needs a whole number of k-day cycles; solve32 treats any " am" as a
+  clock question (a worker named "Amit" broke it - renamed). 239/244 (same book question, both kept) got different numbers.
+  Backup before: `post_2026-10-29_2339.backup`. compare_batches (pilot..b5, 284 rows) equal to the DB; check_order OK; pages 45-61 clean.
+  **All 284 regular Time & Work rows are reworded.** Left: the 18 Miscellaneous rows (261-277, 1682).
+  **Miscellaneous done locally** (2026-10-29, 18 rows; `reword/misc/gen_misc_rw.py` = the `gen_misc.py` generators rewritten with
+  parameters (they had the book's numbers built in), same layout; solver `reword/misc/solve_misc_rw.py` = `solve_misc` + 274 with any
+  two fractions + 1682 read as "m4"; SIMPLE_STYLE marker). Backup before: `post_2026-10-29_2355.backup`.
+  **TIME & WORK REWORDING COMPLETE (local only):** all 302 rows have a reword note, compare_batches (pilot..misc) equal to the DB,
+  check_order OK, all 61 pages have balanced LaTeX, no doubled backslash, no NULL option e.
+  **ON LIVE** (pushed 2026-10-30 00:12 with the selective sync: three-way from `post_2026-10-29_2007.backup` gave exactly 302
+  bank_math push rows, all time_n_work, no conflicts; SQL builder `reword/build_sync_reword.py` (updates only, refuses anything else);
+  rehearsal on tutionplus_synctest 302/302 equal to local, 0 other rows changed; live verified 302/302, 0 other rows changed; live crawl
+  `live_check.py` 302 of 302 shown, 0 'None' options; live dump before the push
+  `db_backups/live/tutionplus_before_time_work_reword_sync_2026-10-30.backup`; scratch DBs dropped).
+  **Baseline for the next push: `db_backups/post_2026-10-30_0013.backup`** (taken right after this push). Scripts not committed yet.
+  Next: reword the other audited chapters (Alligation, Time & Distance, Percentage, P&C) the same way, in the simple style.
+- **16 new book chapters added to the site code** (2026-10-29, commit `2e05ddc4`, ON LIVE: migration 0039 ran on deploy; live backup
+  before it `db_backups/live/tutionplus_before_new_chapters_migration_2026-10-29.backup`). **Baseline for the next push is now
+  `db_backups/post_2026-10-29_2007.backup`** (taken after the migration; local and live total_math row 2 identical): `bank.models.NEW_MATH_CHAPTERS` =
   basic_calculation, number_system, hcf_lcm, trains, races_games, clocks, calendar, true_discount, bankers_discount, stocks_shares,
   binary_numbers, logarithm, height_distance, instalments, work_wages, area_perimeter (= Elementary Mensuration I; Mensuration II is the
   existing volume_n_surface_area). They are in MATH_CHAPTER_CHOICES (admin, genai forms), have `total_<ch>` / `total_<ch>_page` columns

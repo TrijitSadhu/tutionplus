@@ -10,6 +10,10 @@ from fractions import Fraction as F
 from html.parser import HTMLParser
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
+GATE = None            # set to originality.Book(...) by reword_check.py: every row must then be reworded and pass the gate
+GATE_SIMPLE = False    # True for the simple (book-like) rewording runs: looser wording limits, same number rules
+sys.path.insert(0, os.path.join(ROOT, "..", "..", "tools"))
+import originality  # noqa: E402
 BAD_TEXT = ("wait", "mistakenly", "let me", "i'll", "i will", "recalc", "approach:", "<b>answer:</b>", "<b>ans :</b>", "display=table")
 
 
@@ -175,6 +179,13 @@ def run(n):
                 report.append(f"FIX  {tag} {f}: {r[f]!r} -> {new[f]!r}")
         fails += check(latex_ok(q) and not raw_lt(q), f"{tag} question LaTeX balanced")
         fails += check_layout(tag, new, indep, x["answer"], check)
+        dbl = [f for f in ("question", "a", "b", "c", "d", "solution", "rule_based_explanation", "shortcut")
+               if chr(92) * 2 in (new.get(f, r.get(f)) or "")]
+        fails += check(not dbl, f"{tag} no doubled backslash (would show raw LaTeX) in {dbl or 'any field'}")
+        if GATE:                                     # rewording run: a fresh sentence and all-new numbers (claude/tools/originality.py)
+            fails += check("question" in new and new["question"] != r["question"], f"{tag} question was reworded")
+            problems = originality.check_question(q, GATE, r["question"], simple=GATE_SIMPLE)
+            fails += check(not problems, f"{tag} originality gate {originality.measures(q, GATE, r['question'])}" + (f" - {problems}" if problems else ""))
     if new_rows:
         json.dump(new_rows, open(new_path, "w", encoding="utf-8"), indent=2, ensure_ascii=False)
 
