@@ -985,10 +985,10 @@ class total_math(models.Model):
 
         if totall_percentage !=0:
             
-            if(int(totall_profit_n_loss)%5==0):
-                total_percentage_page=(int(totall_profit_n_loss)/5)
+            if(int(totall_percentage)%5==0):
+                total_percentage_page=(int(totall_percentage)/5)
             else:
-                total_percentage_page=(int(totall_profit_n_loss)/5)+1
+                total_percentage_page=(int(totall_percentage)/5)+1
 
             self.total_percentage_page= total_percentage_page        
 

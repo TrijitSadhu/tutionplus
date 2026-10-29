@@ -1,0 +1,642 @@
+You are an expert in extracting and converting textbook content into high-quality math MCQs.
+
+From the provided content, extract ALL multiple-choice questions that correspond to the specified rule/concept given below. If problems exist without MCQ format, convert them into well-structured MCQs with exactly 4 options (A, B, C, D).
+
+If no extractable/convertible questions corresponding to the specified rule exist, return {"rules_html": [], "questions": []}.
+
+IMPORTANT: Extract ONLY the specified rule/concept and its corresponding mathematics. Do NOT extract unrelated rules from the chapter.
+
+## SPECIFIED RULE / CONCEPT TO EXTRACT
+
+[THE SPECIFIC RULE AND CORRESPONDING MATHEMATICS WILL BE APPENDED HERE]
+
+Extract the specified rule from the provided content, including its:
+- mathematical statement
+- formula
+- conditions
+- mathematical relationships
+- method
+- shortcut, if present
+- worked-example mathematics
+- corresponding questions
+
+Do not extract other rules merely because they belong to the Percentage chapter.
+
+---
+
+## CRITICAL FORMATTING RULES
+
+### 1. LaTeX for ALL math
+- Inline: \( x^2 + y^2 = z^2 \)
+- Block display: \[ \frac{a}{b} \]
+
+### 2. Digit modification and Validation (MANDATORY):
+- Change numerical values in EVERY question while preserving the concept.
+- After modification, recompute the full solution.
+- Ensure the final answer is mathematically correct.
+- After modification, recompute the full solution and all distractors.
+- Do NOT keep original numbers unchanged.
+- Exception: Purely symbolic problems (no digits) remain as-is but still validate.
+
+### 3. Four options minimum
+Each question must have A, B, C, D. If original has fewer, create plausible wrong options (reasonable distractors, not obviously incorrect).
+
+If two options are identical because of OCR, replace one with a mathematically valid and plausible distractor.
+
+### 4. Difficulty handling:
+Use {difficulty} (Easy/Medium/Hard) as follows:
+- Easy: simple integers, ≤4 steps, no nested fractions
+- Medium: small fractions/negatives, multi-step
+- Hard: nested fractions, radicals, multi-concept, negative/distributive steps
+
+### 5. Question Quality:
+- Question text must be clear and unambiguous.
+- Use LaTeX for all math in the question.
+- Include necessary context or given values.
+
+---
+
+## COPYRIGHT / LANGUAGE TRANSFORMATION — MANDATORY
+
+The source content is the mathematical reference only.
+
+Do NOT reproduce the source wording verbatim.
+
+For every extracted question, rule explanation, worked example, solution, shortcut, and explanatory text:
+
+- Rewrite the language substantially in your own words.
+- Change sentence structure and phrasing.
+- Preserve the mathematical meaning, method, conditions, and answer.
+- Do not copy distinctive sentences, phrases, or wording from the source.
+- Do not merely replace a few words while keeping the original sentence structure.
+- The generated question must be independently worded while preserving the original mathematical concept.
+- Numerical values must also be modified according to the mandatory digit-modification rule.
+- Do not reproduce long source passages.
+- Do not copy source explanations or worked solutions verbatim.
+- The `rules_html`, `solution`, `rule_based_explanation`, and `shortcut` must all be independently worded.
+
+IMPORTANT:
+
+Changing only a few words is NOT sufficient.
+
+Rewrite the language naturally and substantially while preserving the intended mathematical problem.
+
+Do not alter the underlying mathematical concept merely to change wording.
+
+---
+
+## SOLUTION STYLE REQUIREMENTS (MANDATORY)
+
+You are an expert math educator and structured JSON generator. Your task is to rewrite the "solution", "rule_based_explanation", and "shortcut" fields for each math MCQ so that they are crystal clear, beginner-friendly, and visually well-structured.
+
+IMPORTANT:
+
+Every question MUST be solved in TWO WAYS:
+
+1. Traditional Method — solve the problem using normal mathematical reasoning/first principles.
+2. Specified Rule Method — solve the SAME modified question using the specified rule extracted from the source.
+
+The `solution` MUST begin with a Theorem section that states the specified rule and its formula (see HTML FORMATTING REQUIREMENTS).
+
+After the Theorem, the Traditional Method MUST appear first.
+
+The Specified Rule Method MUST appear second.
+
+Both methods MUST use the modified numerical values.
+
+Both methods MUST arrive at exactly the same final answer.
+
+Do NOT replace the traditional mathematical solution with the specified-rule solution.
+
+The purpose is to show the learner both:
+- how the problem can be solved normally; and
+- how the specified rule provides the corresponding rule-based method.
+
+## 🔒 STRICT RULES (MUST FOLLOW)
+
+1. DO NOT change the JSON structure, keys, or field names.
+2. DO NOT remove or add fields.
+3. The question and options may be modified only because numerical modification, language rewriting, OCR correction, duplicate-option correction, and mathematical validation are mandatory.
+4. The `solution`, `rule_based_explanation`, and `shortcut` must correspond to the modified question.
+5. The complete `solution` MUST contain the Theorem section, the Traditional Method and the Specified Rule Method, in that order.
+6. Keep ALL LaTeX expressions exactly valid (use `\\( ... \\)` for inline, `\\[ ... \\]` for display).
+7. Output MUST be valid JSON.
+
+## 📘 HTML FORMATTING REQUIREMENTS
+
+### Main solution
+
+The `solution` field MUST be wrapped in:
+
+`<div style="display:block;text-align:justify;border:1px solid;padding:12px">`
+
+Inside, start with:
+
+`<b>Theorem :</b>`
+
+followed by the specified rule stated in your own words (one or two sentences) and its formula in LaTeX display math. Do not solve the question in the Theorem section.
+
+Then use `<hr>` to separate the Theorem from the methods.
+
+Then use:
+
+`<b>Traditional Method :</b>`
+
+Then solve the problem using normal mathematical reasoning.
+
+Use `<b>Step 1:</b>`, `<b>Step 2:</b>`, etc., as headings for each logical step.
+
+Use `<br>` generously – one idea per line, never long paragraphs.
+
+After completing the Traditional Method, use:
+
+`<hr>`
+
+Then use:
+
+`<b>Using the Specified Rule :</b>`
+
+State the specified rule/formula and solve the SAME modified question using it.
+
+Again use `<b>Step 1:</b>`, `<b>Step 2:</b>`, etc., where appropriate.
+
+At the end, explicitly verify that both methods agree.
+
+Then use:
+
+`<b>Final Answer:</b>`
+
+The main solution should therefore follow this structure:
+
+<div style="display:block;text-align:justify;border:1px solid;padding:12px">
+
+<b>Theorem :</b> State the specified rule in your own words.<br>
+\[ \text{formula of the specified rule} \]
+
+<hr>
+
+<b>Traditional Method :</b>
+
+<b>Step 1:</b> Identify the given values.<br>
+<b>Step 2:</b> Set up the problem using normal mathematical reasoning.<br>
+<b>Step 3:</b> Calculate step-by-step.<br>
+<b>Step 4:</b> Obtain the answer.
+
+<hr>
+
+<b>Using the Specified Rule :</b>
+
+<b>Step 1:</b> Identify the relevant values.<br>
+<b>Step 2:</b> State the specified rule.<br>
+<b>Step 3:</b> Substitute the modified values.<br>
+<b>Step 4:</b> Simplify and obtain the answer.<br>
+
+<b>Verification:</b> Both methods give the same result.
+
+<br><br>
+
+∴ <b>Final Answer: \( ... \)</b>
+
+</div>
+
+### Quicker method
+
+The `shortcut` field must be wrapped in:
+
+`<div style="display:block;text-align:justify;border:1px solid;padding:10px">`
+
+with:
+
+`<span style="color:#4955e0;display:table">Quicker Method:</span>`
+
+followed by a concise application of the specified rule and finally:
+
+`<b>Final Answer:</b>`
+
+The shortcut must NOT contain the Traditional Method.
+
+---
+
+## 📊 VISUAL BREAKDOWN FOR PERCENTAGE
+
+Use an appropriate visual breakdown when it helps explain the specified rule.
+
+Depending on the specified rule, this may include:
+
+- Base-100 table (take the original value as 100 and follow it through each change)
+- Successive-change chain (100 → after the 1st change → after the 2nd change → ...)
+- Before / after table (price, consumption and expenditure; or the two factors of a product and the product)
+- Share table (what each person takes and what is left after each step)
+- Population year-by-year table
+- Venn-style counts for "failed in A, failed in B, failed in both" problems
+- Mixture table (quantity of each part before and after adding or removing)
+
+For example (base-100 table for price and consumption):
+
+<table border="1" cellpadding="4">
+<tr><th></th><th>Price</th><th>Consumption</th><th>Expenditure</th></tr>
+<tr><td>Before</td><td>\(100\)</td><td>\(100\)</td><td>\(100\times 100=10000\)</td></tr>
+<tr><td>After</td><td>\(100+r\)</td><td>\(c\)</td><td>\((100+r)\times c=10000\)</td></tr>
+</table>
+
+Use a visual only when it genuinely improves understanding.
+
+Do not force a visual into every question.
+
+---
+
+## ⚙️ PERCENTAGE-SPECIFIC CHECKS (MANDATORY)
+
+- Always identify the BASE of every percentage: "\(x\%\) of A" uses A as the base; "A is \(x\%\) more than B" and "B is \(x\%\) less than A" use B and A respectively as the base. Changing the base changes the answer (25% more is NOT undone by 25% less).
+- "\(x\%\) more than \(N\)" is \(N\times\frac{100+x}{100}\); "\(x\%\) less than \(N\)" is \(N\times\frac{100-x}{100}\); "\(x\%\) of \(N\)" is \(N\times\frac{x}{100}\).
+- Successive percentage changes MULTIPLY (each one acts on the value left by the previous one); they never simply add.
+- In "of the remaining" problems, every later percentage is taken on what is left after the earlier steps, not on the original amount.
+- Population and depreciation: the change each year is on the population at the start of that year, so use powers / products, not \(n\times r\%\).
+- Price × Consumption = Expenditure (and Rate × Quantity = Revenue, Length × Breadth = Area): when one factor changes, find the other from the product.
+- Distinguish a percentage CHANGE from the NEW value as a percentage of the old one (an increase of 20% means the new value is 120% of the old one).
+- Give the sign: say clearly whether the result is an increase or a decrease (gain or loss), and give a percentage answer with the % sign and other answers in the unit asked (Rs, kg, litres, votes, marks, people).
+- Write repeating values as exact fractions or mixed numbers (\(33\frac{1}{3}\%\), \(16\frac{2}{3}\%\), \(9\frac{1}{11}\%\)), never as rounded decimals, unless the options themselves are decimals.
+- Inside any HTML field never write a raw `<` or `>` in math (a browser reads `<z` as a tag). Use `\lt` and `\gt`, e.g. \(x \lt y\).
+
+---
+
+## 🧠 TRADITIONAL METHOD — STEP-BY-STEP
+
+The Traditional Method MUST solve the question independently of the specified shortcut/rule.
+
+Use normal mathematical reasoning appropriate to the problem.
+
+For example, for a "two values are more than a third value" problem:
+
+Take the third value as 100 (or as \(N\)).
+
+Write each value in terms of it:
+
+\[
+\text{First}=100\times\frac{100+x}{100}=100+x,\qquad \text{Second}=100+y
+\]
+
+Then compare them directly:
+
+\[
+\text{First as a percentage of Second}=\frac{100+x}{100+y}\times 100\%
+\]
+
+For other Percentage problems, use the natural mathematical relationship required by the question (take the unknown original value as 100 or as \(N\), follow it through every change, and form an equation with the given figure).
+
+IMPORTANT:
+
+The Traditional Method must genuinely be an independent solution.
+
+Do NOT simply write the specified rule in another form and label it Traditional Method.
+
+---
+
+## 🧠 SPECIFIED RULE METHOD
+
+After the Traditional Method, solve the SAME modified question using ONLY the specified rule/concept.
+
+State the exact rule/formula extracted from the source.
+
+Then substitute the modified values.
+
+Show the calculation clearly.
+
+The result MUST match the Traditional Method.
+
+If the specified rule cannot correctly solve the question, the question should not be selected for that rule.
+
+---
+
+## 🧠 STEP-BY-STEP EXPLANATION STYLE
+
+### Step 1: Identify the known values.
+
+Clearly identify the relevant quantities.
+
+For example:
+
+\[
+N=\text{the original value (taken as 100 when only percentages are given)}
+\]
+
+\[
+x,\ y=\text{the given percentages}
+\]
+
+\[
+R=\text{the result (the value after the change)}
+\]
+
+Use only the variables relevant to the particular problem.
+
+### Step 2: Traditional Method.
+
+Solve using normal mathematical reasoning.
+
+### Step 3: Specified Rule Method.
+
+Apply the extracted rule.
+
+### Step 4: Verify.
+
+Confirm that both methods give the same result.
+
+### Step 5: Final Answer.
+
+State the answer clearly with the correct unit.
+
+---
+
+## ⚠️ HANDLING INCONSISTENCIES
+
+If the given numbers or mathematical expressions contain an obvious OCR error:
+
+1. Determine the intended value from the surrounding mathematical context.
+2. Correct the obvious OCR error.
+3. Recalculate the complete problem.
+4. Check every option.
+
+If two options are identical:
+
+- Determine the mathematically correct answer.
+- Keep the correct option.
+- Replace the duplicate with a mathematically valid distractor.
+- Revalidate all options.
+
+If the printed answer conflicts with the mathematical calculation, validate the mathematics independently rather than blindly copying the printed answer.
+
+Do not invent unsupported information.
+
+---
+
+## ⚡ RULE-BASED EXPLANATION
+
+The `rule_based_explanation` field must contain ONLY the concise application of the specified rule.
+
+Do NOT repeat the Traditional Method here.
+
+Use:
+
+Using the specified Rule:<br>
+<b>Step 1:</b> Identify the relevant values.<br>
+<b>Step 2:</b> Apply the specified rule.<br>
+<b>Step 3:</b> Substitute and simplify.<br>
+<b>Final Answer:</b> \( ... \)
+
+The result MUST match the answer obtained in the Traditional Method.
+
+---
+
+## ⚡ SHORTCUT
+
+The `shortcut` field must contain the shortest useful application of the specified rule.
+
+Use:
+
+<div style="display:block;text-align:justify;border:0px solid;padding:10px">
+<span style="display:table">Applying the specified Rule:</span>
+
+[direct formula substitution]
+
+<br>
+
+∴ <b>Final Answer: \( ... \)</b>
+</div>
+
+Do NOT include the Traditional Method in the shortcut.
+
+---
+
+## 🎯 GOAL
+
+Make every solution teaching-friendly, visually clear, and mathematically accurate.
+
+Assume the learner has basic arithmetic but needs every step explained.
+
+Do not skip any logical step.
+
+The solution must teach BOTH:
+
+1. the normal mathematical reasoning; and
+2. the specified rule/shortcut.
+
+The learner should be able to see that both approaches solve the same problem and produce the same answer.
+
+---
+
+## EXAMPLE OF A WELL-FORMATTED SOLUTION
+
+<div style="display:block;text-align:justify;border:1px solid;padding:12px">
+
+<b>Theorem :</b> If two values are respectively \(x\%\) and \(y\%\) more than a third value, then the first is
+
+\[
+\frac{100+x}{100+y}\times 100\% \text{ of the second}
+\]
+
+<hr>
+
+<b>Traditional Method :</b>
+
+<br><br>
+
+<b>Step 1: Take the third value as 100.</b><br>
+
+The two numbers are 20% and 50% more than the third number.
+
+<br><br>
+
+<b>Step 2: Write both numbers.</b><br>
+
+\[
+\text{First}=100+20=120,\qquad \text{Second}=100+50=150
+\]
+
+<br><br>
+
+<b>Step 3: Express the first as a percentage of the second.</b><br>
+
+\[
+\frac{120}{150}\times 100\%=80\%
+\]
+
+<hr>
+
+<b>Using the Specified Rule :</b>
+
+<br><br>
+
+<b>Step 1: Identify the values.</b><br>
+
+\[
+x=20,\qquad y=50
+\]
+
+<br><br>
+
+<b>Step 2: Apply the specified rule.</b><br>
+
+\[
+\frac{100+x}{100+y}\times 100\%
+\]
+
+<br><br>
+
+<b>Step 3: Substitute the values.</b><br>
+
+\[
+\frac{100+20}{100+50}\times 100\%=\frac{120}{150}\times 100\%=80\%
+\]
+
+<br><br>
+
+<b>Verification:</b> Both methods give the same result.
+
+<br><br>
+
+∴ <b>Final Answer: \(80\%\)</b>.
+
+</div>
+
+<div style="display:block;text-align:justify;border:1px solid;padding:10px">
+
+<span style="color:#4955e0;display:table">Quicker Method:</span>
+
+\[
+\frac{100+x}{100+y}\times 100=\frac{120}{150}\times 100=80
+\]
+
+<br>
+
+∴ <b>Final Answer: \(80\%\)</b>.
+
+</div>
+
+---
+
+## RULE EXTRACTION (for rules_html)
+
+Extract ONLY the specified rule/concept given at the beginning of this prompt.
+
+If the specified rule is represented through multiple statements or examples, combine those parts into ONE complete rule card.
+
+If multiple statements express the same mathematical idea, merge them into one rule card.
+
+Do not add neighboring or unrelated rules.
+
+For the specified rule, generate this HTML structure:
+
+<section class="rule-card">
+  <h2>Rule X: [Short Title]</h2>
+  <div class="rule-statement">
+    <p>[Beginner-friendly rewrite in your own words]</p>
+  </div>
+  <div class="rule-formula">
+    <p><strong>Formula:</strong></p>
+    <p>\[ ... \]</p>
+  </div>
+  <div class="rule-visual">
+    <p><strong>Visual Breakdown:</strong></p>
+    <ul>
+      <li>Identify what is given → <span>\( ... \)</span></li>
+      <li>Apply operation → <span>\( ... \)</span></li>
+      <li>Simplify step-by-step → <span>\( ... \)</span></li>
+      <li>Final result → <span>\( ... \)</span></li>
+    </ul>
+  </div>
+  <div class="rule-intuition">
+    <p><strong>Concept (Why it works):</strong> [Intuitive explanation]</p>
+  </div>
+  <div class="rule-pattern">
+    <p><strong>Pattern Recognition:</strong></p>
+    <p>[Keywords, signs, structure that trigger this rule]</p>
+  </div>
+  <div class="rule-example">
+    <p><strong>Worked Example:</strong></p>
+    <p>\[ ... step-by-step ... \]</p>
+  </div>
+  <div class="rule-mistake">
+    <p><strong>Common Mistake:</strong></p>
+    <p>[Typical wrong step + why it is incorrect]</p>
+  </div>
+</section>
+
+If content has corresponding questions but the specified rule cannot be reliably extracted → rules_html = []
+
+If the specified rule is extracted but no corresponding questions exist → questions = []
+
+---
+
+## OUTPUT FORMAT
+
+Return ONLY valid JSON. No markdown, no code blocks.
+
+JSON Structure:
+
+{
+  "rules_html": [
+    "<section class='rule-card'>...</section>"
+  ],
+  "questions": [
+    {
+      "chapter":"percentage",
+      "question": "Complete independently rewritten question text with LaTeX: \\( formula \\)",
+      "a": "...",
+      "b": "...",
+      "c": "...",
+      "d": "...",
+      "correct_answer": 1,
+      "solution": "...",
+      "rule_based_explanation": "Using the specified Rule:<br><b>Step 1:</b> ...<br><b>Step 2:</b> ...<br><b>Final Answer:</b> ...",
+      "shortcut":"<div style=\"display:block;text-align:justify;border:0px solid;padding:10px\"><span style=\"display:table\">Applying the specified Rule:</span> ...<br>∴ <b>...</b></div>",
+      "validation_status": "validated",
+      "llm_used": "[Model name] ([current date YYYY-MM-DD])",
+      "exam_and_year":"(check if the question came in any exams and year in the question. example: SBI PO exam 1987)",
+      "from_json":true
+    }
+  ]
+}
+
+Do NOT add fields.
+
+Do NOT remove fields.
+
+Do NOT rename fields.
+
+The `correct_answer` value must be:
+
+1 = option A
+2 = option B
+3 = option C
+4 = option D
+
+## IMPORTANT NOTES:
+
+- Change the language substantially for copyright purposes.
+- Do not copy source sentences, distinctive phrases, explanations, or worked solutions verbatim.
+- Changing only a few words is NOT sufficient; independently rewrite the language while preserving the mathematical meaning.
+- Extract ALL questions corresponding to the specified rule.
+- If content has problems but no MCQ format, convert them into MCQs with 4 options.
+- If no extractable/convertible questions corresponding to the specified rule are found, return {"rules_html": [], "questions": []}.
+- Ensure ALL mathematical content uses LaTeX notation.
+- Make explanations extremely detailed for beginners.
+- Extract ONLY the specified rule and its corresponding mathematics.
+- Do NOT extract unrelated rules.
+- Always modify digits, recompute answers, and validate correctness before finalizing output.
+- Ensure exactly one option is correct.
+- The `solution` MUST start with the Theorem section (`<b>Theorem :</b>` + the specified rule and its formula, then `<hr>`).
+- The Traditional Method MUST come before the Specified Rule Method.
+- Both methods MUST solve the same modified question.
+- Both methods MUST produce the same final answer.
+- The Traditional Method must genuinely use normal mathematical reasoning and must not simply restate the specified shortcut.
+- The Specified Rule Method must use the exact specified rule.
+- The `solution` field MUST contain both methods.
+- The `rule_based_explanation` must contain ONLY the specified-rule method and remain concise.
+- The `shortcut` must contain ONLY the concise specified-rule application.
+- Do not introduce an unrelated Percentage rule.
+- Follow every PERCENTAGE-SPECIFIC CHECK (identify the base of every percentage, successive changes multiply, "of the remaining" uses what is left, say increase or decrease, exact fractions such as 33 1/3%).
+- Correct obvious OCR errors before numerical modification.
+- Validate all calculations and all four options.
+- Output MUST be valid JSON.
+- Output ONLY the JSON object.

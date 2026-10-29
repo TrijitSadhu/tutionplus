@@ -122,7 +122,7 @@ add the Traditional Method, add what is missing, then push to the live site when
 - **Time and Work** (`time_n_work`, `Time and Wor.pdf` = book Chapter 15, pages 359-390): Rules 1-40 + the 18 Miscellaneous problems done
   and **on live** (pushed 2026-10-28 with the selective sync: 328 rows = 312 math, 7 cards, page counters, JsonImports #173-#179, prompt #11;
   live dump before the push `db_backups/live/tutionplus_before_time_work_sync_2026-10-28.backup`; SQL builder `claude/runs/time_work/build_sync.py`;
-  live page check `claude/runs/time_work/live_check.py`). **Baseline for the next push: `db_backups/post_2026-10-28_2050.backup`** (local = live then). 302 questions, all linked to a rule, all with Theorem + Traditional Method + Specified
+  live page check `claude/runs/time_work/live_check.py`). Baseline then: `db_backups/post_2026-10-28_2050.backup` (superseded - see Percentage). 302 questions, all linked to a rule, all with Theorem + Traditional Method + Specified
   Rule; 40 cards (Rule 32 "alternate days" card #139 created - built on counting two-day cycles, because the book's "nearest whole number
   p" shortcut is wrong for some numbers); prompt **#11** "time and work_detail method + theorem" (not default); JsonImports #173-#179
   (20 new questions: missing book exercises with changed numbers + Misc M4); page counter **61**. 15 wrong keys fixed (1322-1325, 1373-1376,
@@ -135,6 +135,58 @@ add the Traditional Method, add what is missing, then push to the live site when
 - **Profit and Loss** got the 10 profit questions that had been filed under Time and Work (946-955, moved 2026-10-28, rule-less, not audited);
   its page counter is now 35 (on live). Its old rows still show many "None" 5th options (139 on live) and display math in options (79) - fix
   them when that chapter is audited (same treatment as Time and Work: `fix_empty_e.py`, inline fractions).
+- **Percentage** (`percentage`, `Percentage.pdf`, 42 pdf pages = 77 rules + 31 Miscellaneous problems) - **Rules 1-77 on live**
+  (pushed 2026-10-29 with the selective sync: 612 rows = 456 math (81 updates, 375 inserts), 77 cards #140-#216, page counter
+  95, JsonImports #180-#256, prompt #12; one `django_admin_log` row differed on both sides and was left out (admin history, not
+  content); live dump before the push `db_backups/live/tutionplus_before_percentage_sync_2026-10-29.backup`; SQL builder
+  `claude/runs/percentage/build_sync.py`; the `bank/models.py` page-counter fix was pushed to GitHub with it).
+  **Baseline for the next push: `db_backups/post_2026-10-29_1626.backup`** (local = live for content then).
+  The Miscellaneous set (rows 662-679 + 13 missing problems) is **not done yet** - local work, next push.
+  The chapter had no cards; rows 583-661 copy the book's worked examples, 662-679 copy Miscellaneous problems, 47/56 are 2018 rows.
+  Prompt **#12** "percentage_detail method + theorem" (not default). Work folder `claude/runs/percentage` (`book_map.json`, `gen_1_8.py`,
+  `solve_1_8.py`, same validate/apply/insert scripts as Time and Work). **Rules 1-8 done** (2026-10-28): cards #140-#147, 16 old rows
+  regenerated and linked (keys fixed: 56 -> 5 questions, 596 -> 27%; display math and "o f" OCR cleaned; e = ''), 48 new questions
+  (all book exercises of Rules 1-8 with changed numbers) in JsonImports #180-#187, ids 1683-1730. Book misprint: Rule 7 Exr 3 answer (b) is
+  wrong (new price is Rs 15). Backup before the batch: `db_backups/post_2026-10-28_2247.backup`.
+  **Rules 9-16 done** (2026-10-28, `gen_9_16.py`, `solve_9_16.py`): cards #148-#155, old rows 597-604 regenerated and linked (all keys
+  were right; 599/602 options cleaned), 37 new questions in JsonImports #188-#195, ids 1731-1767. Backup before: `post_2026-10-28_2255.backup`.
+  184 questions, page counter **37**. **Code bug fixed locally (not committed yet):** `total_math.save()` in `bank/models.py` recomputes
+  every chapter's page counter on each save, and the percentage block used the profit_n_loss count (that is why it was 35). Saving
+  row 2 now sets the percentage counter correctly (`claude/runs/percentage/save_page_counters.py`). Live still has the bug until it is pushed.
+  **Rules 17-24 done** (2026-10-28, `gen_17_24.py`, `solve_17_24.py`): cards #156-#163, old rows 605-612 regenerated and linked (606 had
+  no option holding Rs 576 - fixed; 607's "Rs 10001" option replaced), 36 new questions in JsonImports #196-#203, ids 1768-1803.
+  Backup before: `post_2026-10-28_2307.backup`. 220 questions, page counter **44**.
+  **Rules 25-32 done** (2026-10-28, `gen_25_32.py`, `solve_25_32.py`): cards #164-#171, old rows 613-620 regenerated and linked (all keys
+  right; odd distractors 20001/18004/200005 replaced, 620's display-math options made inline), 34 new questions (incl. Rule 27's second
+  worked example) in JsonImports #204-#211, ids 1804-1837. Backup before: `post_2026-10-28_2332.backup`. 254 questions, page counter **51**.
+  **Rules 33-40 done** (2026-10-28, `gen_33_40.py`, `solve_33_40.py`): cards #172-#179, old rows 621-628 regenerated and linked (625 had no
+  option holding "4.5% increase" - fixed; 624/625 options now say Increase/Decrease), 53 new questions (incl. 5 worked examples of Rules
+  36-37) in JsonImports #212-#219, ids 1838-1890. `validate.py` got an answer kind **"signed"** (options/answers that say increase/decrease,
+  profit/loss; the Final Answer must show the size AND the right direction word) and `mutation_test.py` a matching `m_direction`.
+  Backup before: `post_2026-10-28_2341.backup`. 307 questions, page counter **62**.
+  **Rules 41-48 done** (2026-10-28, `gen_41_48.py`, `solve_41_48.py`): cards #180-#187, old rows 629-636 regenerated and linked; keys fixed:
+  635 (was 31%, right 21%), 634 (no option held 37.5%), 631 (NULL option, none held 6.25% fall), 630 ("8%" vs "-8%" - now "Decrease of 8%");
+  Rules 42-47 (effect on a product) are "signed" answers with Increase/Decrease options. 37 new questions (incl. worked examples of Rules 42
+  and 48) in JsonImports #220-#227, ids 1891-1927. Book misprint: Rule 48 Exr 4 answer (a) 300 is wrong (250). Backup before:
+  `post_2026-10-28_2350.backup`. 344 questions, page counter **69**.
+  **Rules 49-56 done** (2026-10-29, `gen_49_56.py`, `solve_49_56.py`): cards #188-#195, old rows 637 (R49 - a copy of Exr 5, not the
+  worked example), 638 (R53), 639 (R54), 640 (R55), 641 (R56) regenerated and linked (all keys right); Rules 50-52 had no rows at all.
+  44 new questions (incl. worked examples of Rules 49-52) in JsonImports #228-#235, ids 1928-1971. Rule 50 (area error) is "signed" with
+  excess/deficit words (added to `validate.py`); `mutation_test.py` skips row mutations for rules with no old rows and gained
+  `m_new_answer` / `m_new_option`. Book misprint: Rule 56 Exr 5 numbers are inconsistent (answer not a whole number). Backup before:
+  `post_2026-10-29_0001.backup`. 388 questions, page counter **78**.
+  **Rules 57-64 done** (2026-10-29, `gen_57_64.py`, `solve_57_64.py`): cards #196-#203, old rows 642-649 regenerated and linked (642 had no
+  option holding Rs 25 - fixed; 646's rounded "80.76%" written exactly as 80 10/13%), 31 new questions in JsonImports #236-#243, ids
+  1972-2002. Book misprints: Rule 62 Exr 3 and 4 divide by the OLD price (right answers 38 8/9% and 25%). Backup before:
+  `post_2026-10-29_0010.backup`. 419 questions, page counter **84**.
+  **Rules 65-72 done** (2026-10-29, `gen_65_72.py`, `solve_65_72.py`): cards #204-#211, old rows 650-656 regenerated and linked (all keys right;
+  650 had a NULL option, 655's "failed = .., passed = .." options reduced to the pass % asked); Rule 70 had no row. 35 new questions (incl.
+  Rule 70's worked example) in JsonImports #244-#251, ids 2003-2037. The book rounds Rule 68 Exr 1 (32.825%) and Rule 69 Exr 1 (27.325%).
+  Backup before: `post_2026-10-29_0021.backup`. 454 questions, page counter **91**.
+  **Rules 73-77 done** (2026-10-29, `gen_73_77.py`, `solve_73_77.py`): cards #212-#216, old rows 657-661 regenerated and linked (660 had no
+  option holding 24 kg - fixed; 657 reworded to ask for both incomes its options give), 20 new questions in JsonImports #252-#256, ids
+  2038-2057. Backup before: `post_2026-10-29_0030.backup`. **All 77 rules done:** 474 questions, 154 cards, page counter **95**.
+  Left: the 31 Miscellaneous problems (18 in the DB as rule-less rows 662-679, shown last on pages 92-95; 13 not in the DB).
 - **Timers**: every question has a time, on live.
 - Open items the user has not decided: Alligation question 1074 duplicates 1071; Alligation Rule 28 answers mostly on option a
   (also noted earlier for Time and Distance Rules 15 and 18); the 5 "Miscellaneous" problems after Alligation Rule 29 are not added;
