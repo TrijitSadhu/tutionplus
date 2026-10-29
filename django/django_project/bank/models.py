@@ -679,6 +679,15 @@ MATH_CHAPTER_CHOICES = (
     ("line_graph", "line_graph"),
 )
 
+# Book chapters added 2026-10-29 ("Practice Book on Quicker Maths" chapters the site had no page for).
+# Their page counters are kept by the loop at the end of total_math.save(); URLs are /math/<code with - for _>/<page>/.
+NEW_MATH_CHAPTERS = (
+    "basic_calculation", "number_system", "hcf_lcm", "trains", "races_games", "clocks", "calendar",
+    "true_discount", "bankers_discount", "stocks_shares", "binary_numbers", "logarithm", "height_distance",
+    "instalments", "work_wages", "area_perimeter",
+)
+MATH_CHAPTER_CHOICES = MATH_CHAPTER_CHOICES + tuple((ch, ch) for ch in NEW_MATH_CHAPTERS)
+
 RULE_NAME_CHOICES = tuple(("Rule %d" % i, "Rule %d" % i) for i in range(1, 51))
 
 
@@ -911,7 +920,41 @@ class total_math(models.Model):
 
     total_line_graph = models.IntegerField (db_index=True,default=5)
     total_line_graph_page = models.IntegerField (db_index=True,default=5)
-    
+
+    # NEW_MATH_CHAPTERS (an empty chapter has 1 page, so its pager shows no further pages)
+    total_basic_calculation = models.IntegerField(db_index=True, default=0)
+    total_basic_calculation_page = models.IntegerField(db_index=True, default=1)
+    total_number_system = models.IntegerField(db_index=True, default=0)
+    total_number_system_page = models.IntegerField(db_index=True, default=1)
+    total_hcf_lcm = models.IntegerField(db_index=True, default=0)
+    total_hcf_lcm_page = models.IntegerField(db_index=True, default=1)
+    total_trains = models.IntegerField(db_index=True, default=0)
+    total_trains_page = models.IntegerField(db_index=True, default=1)
+    total_races_games = models.IntegerField(db_index=True, default=0)
+    total_races_games_page = models.IntegerField(db_index=True, default=1)
+    total_clocks = models.IntegerField(db_index=True, default=0)
+    total_clocks_page = models.IntegerField(db_index=True, default=1)
+    total_calendar = models.IntegerField(db_index=True, default=0)
+    total_calendar_page = models.IntegerField(db_index=True, default=1)
+    total_true_discount = models.IntegerField(db_index=True, default=0)
+    total_true_discount_page = models.IntegerField(db_index=True, default=1)
+    total_bankers_discount = models.IntegerField(db_index=True, default=0)
+    total_bankers_discount_page = models.IntegerField(db_index=True, default=1)
+    total_stocks_shares = models.IntegerField(db_index=True, default=0)
+    total_stocks_shares_page = models.IntegerField(db_index=True, default=1)
+    total_binary_numbers = models.IntegerField(db_index=True, default=0)
+    total_binary_numbers_page = models.IntegerField(db_index=True, default=1)
+    total_logarithm = models.IntegerField(db_index=True, default=0)
+    total_logarithm_page = models.IntegerField(db_index=True, default=1)
+    total_height_distance = models.IntegerField(db_index=True, default=0)
+    total_height_distance_page = models.IntegerField(db_index=True, default=1)
+    total_instalments = models.IntegerField(db_index=True, default=0)
+    total_instalments_page = models.IntegerField(db_index=True, default=1)
+    total_work_wages = models.IntegerField(db_index=True, default=0)
+    total_work_wages_page = models.IntegerField(db_index=True, default=1)
+    total_area_perimeter = models.IntegerField(db_index=True, default=0)
+    total_area_perimeter_page = models.IntegerField(db_index=True, default=1)
+
 
     
    
@@ -1143,14 +1186,19 @@ class total_math(models.Model):
             else:
                 total_line_graph_page=(int(totall_line_graph)/5)+1
 
-            self.total_line_graph_page= total_line_graph_page        
+            self.total_line_graph_page= total_line_graph_page
 
-    
+        for ch in NEW_MATH_CHAPTERS:                  # questions and pages (5 per page, at least 1) of the newer chapters
+            n = math.objects.filter(chapter=ch).count()
+            setattr(self, 'total_' + ch, n)
+            setattr(self, 'total_' + ch + '_page', max(1, (n + 4) // 5))
 
-                
 
 
-            
+
+
+
+
         super(total_math, self).save(*args, **kwargs)
 
 class job(models.Model):

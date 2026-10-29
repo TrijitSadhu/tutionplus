@@ -1267,6 +1267,28 @@ def word(request,string,no):
     return render(request,'home/english.html',{'job': jobs,'form':userform,'login':login,'params':params_int,'p':day,'page':page,'params':word1,'next':next,'previous':previous,'word1':word1,'word_e1':word_e1,'word2':word2,'word_e2':word_e2,'header1':header1,'header2':header2,'header_e1':header_e1,'header_e2':header_e2,'list_day':list_day})
 
 
+# Display names of the book chapters added 2026-10-29 (bank.models.NEW_MATH_CHAPTERS); their URL slug is the code
+# with '-' for '_' (math_all turns it back). Merged into the chapter maps below.
+NEW_MATH_CHAPTER_DISPLAY = {
+    'basic_calculation': 'Basic Calculations',
+    'number_system':     'Number System',
+    'hcf_lcm':           'HCF & LCM',
+    'trains':            'Trains',
+    'races_games':       'Races & Games',
+    'clocks':            'Clocks',
+    'calendar':          'Calendar',
+    'true_discount':     'True Discount',
+    'bankers_discount':  "Banker's Discount",
+    'stocks_shares':     'Stocks & Shares',
+    'binary_numbers':    'Binary Numbers',
+    'logarithm':         'Logarithm',
+    'height_distance':   'Height & Distance',
+    'instalments':       'Instalments',
+    'work_wages':        'Work & Wages',
+    'area_perimeter':    'Area & Perimeter',
+}
+
+
 def math_home(request):
     """Math chapter home page showing all chapters with question counts."""
     from django.db.models import Count
@@ -1290,6 +1312,7 @@ def math_home(request):
         'time_n_distance':        'time-and-distance',
         'time_n_work':            'time-and-work',
         'volume_n_surface_area':  'volume-and-surface-area',
+        **{ch: ch.replace('_', '-') for ch in NEW_MATH_CHAPTER_DISPLAY},
     }
 
     CHAPTER_DISPLAY_MAP = {
@@ -1310,6 +1333,7 @@ def math_home(request):
         'time_n_distance':        'Time & Distance',
         'time_n_work':            'Time & Work',
         'volume_n_surface_area':  'Volume & Surface Area',
+        **NEW_MATH_CHAPTER_DISPLAY,
     }
 
     # Counts from DB (exclude None and 'any')
@@ -1328,6 +1352,8 @@ def math_home(request):
     chapters = []
     for slug, display in CHAPTER_DISPLAY_MAP.items():
         cnt = db_counts.get(slug, 0)
+        if cnt == 0:
+            continue
         url_slug = CHAPTER_URL_MAP.get(slug, slug.replace('_', '-'))
         chapters.append({
             'slug':    slug,
@@ -1372,6 +1398,7 @@ def math_rules(request, chapter):
         'time_n_distance':         'Time & Distance',
         'time_n_work':             'Time & Work',
         'volume_n_surface_area':   'Volume & Surface Area',
+        **NEW_MATH_CHAPTER_DISPLAY,
     }
 
     chapter_display = CHAPTER_DISPLAY_MAP.get(chapter, chapter.replace('_', ' ').title())
@@ -1416,6 +1443,7 @@ def math_rule_detail(request, chapter, rule_id):
         'time_n_distance':         'Time & Distance',
         'time_n_work':             'Time & Work',
         'volume_n_surface_area':   'Volume & Surface Area',
+        **NEW_MATH_CHAPTER_DISPLAY,
     }
 
     rule = get_object_or_404(RuleMath, id=rule_id, chapter=chapter)

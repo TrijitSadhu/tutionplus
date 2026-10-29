@@ -235,6 +235,14 @@ add the Traditional Method, add what is missing, then push to the live site when
   push `db_backups/live/tutionplus_before_permutation_sync_2026-10-29.backup`; SQL builder `claude/runs/permutation/build_sync.py`).
   **Baseline for the next push: `db_backups/post_2026-10-29_1823.backup`** (local = live for content). Scripts not committed yet.
   Open items: 912 duplicates 858 (owner to decide); Rule 13 Theorem display formula slightly wide.
+- **16 new book chapters added to the site code** (2026-10-29, local, NOT committed / not on live yet): `bank.models.NEW_MATH_CHAPTERS` =
+  basic_calculation, number_system, hcf_lcm, trains, races_games, clocks, calendar, true_discount, bankers_discount, stocks_shares,
+  binary_numbers, logarithm, height_distance, instalments, work_wages, area_perimeter (= Elementary Mensuration I; Mensuration II is the
+  existing volume_n_surface_area). They are in MATH_CHAPTER_CHOICES (admin, genai forms), have `total_<ch>` / `total_<ch>_page` columns
+  (migration `bank/0039_add_book_math_chapters`, defaults 0 / 1) kept by a loop at the end of `total_math.save()`, display names in
+  `views.NEW_MATH_CHAPTER_DISPLAY` (home, rules pages), icons in `math/math_home.html`. URL = code with `-` (`/math/number-system/1/`).
+  The math home page now hides chapters with no questions, so a new chapter appears there once it has questions. All have 0 questions.
+  On deploy, `migrate` adds the columns on live by itself (no data sync needed for them).
 - **Timers**: every question has a time, on live.
 - Open items the user has not decided: Alligation question 1074 duplicates 1071; Alligation Rule 28 answers mostly on option a
   (also noted earlier for Time and Distance Rules 15 and 18); the 5 "Miscellaneous" problems after Alligation Rule 29 are not added;
