@@ -43,6 +43,8 @@ for n in RULES:
         tmp = tempfile.mkdtemp()
         dst = os.path.join(tmp, f"rule{n:02d}")
         shutil.copytree(os.path.join(HERE, f"rule{n:02d}"), dst)
+        if mut in (m_copy, m_old_number, m_double_backslash) + tuple(getattr(mt, "ROW_MUTATIONS", ())) and not mt.load(os.path.join(dst, "2_new_rows.json")):
+            shutil.rmtree(tmp); continue                 # a folder with new questions only (the Miscellaneous run)
         if mut(dst) is False:
             shutil.rmtree(tmp); continue
         validate.ROOT = tmp

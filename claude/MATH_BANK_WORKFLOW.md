@@ -380,6 +380,23 @@ add the Traditional Method, add what is missing, then push to the live site when
   belong to the planned Percentage Miscellaneous job (START_HERE section 1: link to rules, fix keys, add the 13 missing problems,
   owner approval first); several need real fixes (663/664/667 offer "Data inadequate", 673 has "30% of 80" in display math,
   pages 92-95 still show "None" 5th options). Not on live, not committed.
+  **Percentage Miscellaneous DONE (2026-10-30 14:32, local only)** - `reword/misc/gen_misc.py`, solver `reword/misc/solve_misc.py`
+  (keyed by row id / m01 ...), extra check `reword/misc/check_new.py` (gate on the new questions + stray LaTeX on everything;
+  `reword_check.py` only gates old rows and now skips row mutations for folders with new questions only). All 31 problems: the 18
+  old rows 662-679 rewritten in the simple style with all-new numbers and linked to the card they use (675 R1; 665, 670, 671, 673,
+  679 R3; 664, 666, 674 R4; 669, 672 R5; 668 R6; 663 R17; 677 R35; 676 R36; 678 R37; 667 R74; 662 R75), e = '', no display math,
+  the "Data inadequate" options gone; M8 (667, book answer "Data inadequate") rewritten with a total so it has a number for an
+  answer. The 13 missing ones added on the same cards (JsonImports #379-#383, ids 2593-2605): M9-M13 (one passage written into
+  each, R3), M22 + M28 (R6), M26 + M30 (R34), M27 (R36, numeric), M1 + M2 + M31 (R53; M1/M2 kept to the counts the question
+  needs). Backup before: `post_2026-10-30_1432.backup`. **487 questions, page counter 98, none rule-less, no NULL e; all 487 pass
+  the gate against the book**; compare_batches b1-b9 + misc equal; check_order OK; all 98 pages balanced LaTeX, no stray LaTeX,
+  no "None" option, no display math in options.
+  **ON LIVE (pushed 2026-10-30 14:41)** - selective sync: live dump before `db_backups/live/tutionplus_before_percentage_misc_sync_2026-10-30.backup`
+  (live on a0dddf99); baseline `post_2026-10-30_1413.backup` -> three-way: no conflicts; push = 37 rows (bank_math 18 updates + 13
+  inserts, all percentage; total_math row 2; JsonImports #379-#383); SQL builder `claude/runs/percentage/build_sync_misc.py`
+  (`sync_percentage_misc.sql` - never commit). Rehearsal 37/37 equal, 0 other rows changed; live had not drifted; live verified
+  37/37, 0 other rows changed; live crawl: percentage 487 of 487 shown, rule order kept, 0 "None" options, 0 display math in
+  options. Scratch DBs dropped. **Baseline for the next push: `db_backups/post_2026-10-30_1442.backup`.** Scripts not committed yet.
 - **P&C rewording COMPLETE (2026-10-30 ~04:10, local only):** 43 of 205 rows failed the simple gate against
   `permutation/pdf_text.txt`; all reworded in 2 batches, **all 205 now pass**. Tooling `claude/runs/permutation/reword/` (copies of
   the Percentage reword tools); `permutation/validate.py` got the GATE hook + doubled-backslash check (Rules 1-36 still pass).
@@ -552,13 +569,88 @@ add the Traditional Method, add what is missing, then push to the live site when
   changed; live crawl (`time_work/live_check.py`, BASE = live URL) all six audited chapters every question once, rule order kept.
   Left "None" options on live are old rows the push did not touch: Alligation 1074 (duplicate of 1071, NULL e), Time & Distance
   817-824 + junk 835, Percentage Misc 662-679 (18). Scratch DBs dropped on the server.
-  **Baseline for the next push: `db_backups/post_2026-10-30_1413.backup`** (taken right after this push). Scripts not committed yet.
+  **Baseline for the next push: `db_backups/post_2026-10-30_1413.backup`** (taken right after this push).
+  **Scripts committed and pushed: `a0dddf99`** (472 files: the four chapters' reword folders, `claude/runs/profit/` incl. misc /
+  extra35, the Alligation audit scripts, the edited Percentage / P&C validators, this file; deploy ran, site OK, live counts
+  unchanged). Left out as usual: book text, pages, json dumps / payloads, reports, sql, backups - and `claude/tools/` (never
+  committed; `crawl_none.py` has the live server address written in it - parameterise it before committing the tools).
+  `CLAUDE.md` and `claude/START_HERE.md` are still untracked too.
   Note: `popts` gives duplicate options when the answer is 5% (5+5 = 2x5) - pick other numbers.
   Rule 41 fix after the apply: its Theorem's two formulas were on one display line, cut off at the right of the solution box
   at 800 px -> two lines in `gen_41.py`; `fix_rule41_theorem.py` wrote the new solution of rows 335, 2348-2352 and card #292
   (backup `claude/backups/profit_rule41_before_theorem_split.json`, full backup `post_2026-10-30_0941.backup`). JsonImport #329
   still holds the one-line version (history only). Only pages 48 and 52 were opened in the browser; the other new pages were
   checked by script (balanced LaTeX, no doubled backslash) - a wide formula on them would not show up there.
+- **Average audit (`average`, `Average 8.1.pdf` + `Average 8.2.pdf` = 23 pdf pages, 43 rules + Miscellaneous) - STARTED 2026-10-30
+  afternoon, local only.** Inventory: 61 old rows (467-526 + 956), none on a rule, no cards, every option e NULL ("None" on the
+  page), keys on option e in 485, 516, 525; **row 956 ("product of 5892 multiplied by 11") is not an Average question** - move it
+  (owner to say where). Work folder `claude/runs/average` (`pdf_text.txt` + `pages/` = book, never commit; toolkit copied from
+  Profit with the chapter switched: common, dump_rows, apply_rows, apply_cards, save_and_insert, save_page_counters, validate (with
+  the stray-LaTeX check), mutation_test, compare_applied, gate_check, fix_new_questions, inventory; `helpers.py` = result /
+  formatters / rotating option positions). Prompt **#15** "average_detail method + theorem" (`make_prompt.py` from prompt #9 with an
+  Average visual + AVERAGE-SPECIFIC CHECKS; not default). Old rows mapped to rules: R1 467-472, R2 473-485, R3 486-489, R4 490-496
+  + 498, R5 500-502, R6 480?/503/504, R8 505, R12/13 506/507, R14 508, R16 509, R17 510, R18-21 511-513/515, R22/23 514, R24 516,
+  R25 517, R26 518, R32 519, R33 520, R34 521, R35 522, R38 523, R40 524, R41 525, R43 526 (497, 499 still to place).
+  **Rules 1-3 done** (`gen_1_3.py`, `solve_1_3.py`): cards #341-#343; 23 old rows (467-489) rewritten in the simple style with
+  all-new numbers (470's algebraic "a + 4" became a number question); keys: all right except **485** (key on option e, no option
+  held Rs 48000); 5 new (the book exercises with no copy; JsonImports #384-#386, ids 2606-2610). Backup before:
+  `post_2026-10-30_1451.backup`. 66 questions, page counter 14; compare_applied Rules 1-3 equal; check_order OK.
+  **Rules 4-5 done** (`gen_4_5.py`, `solve_4_5.py` - the solver lists every member and averages them): cards #344-#345; 13 old rows
+  (490-499 R4 incl. 497 (week of passengers) and 499 (newcomers' average worked back); 500-502 R5); keys: all right except **491**
+  (keyed "Rs 138", the answer was Rs 27); 14 new (R4: the book's second example + exercises 3-6, 14-16; R5: exercises 1, 2, 5-7;
+  JsonImports #387-#388, ids 2611-2624). Small number sets often match a book passage - larger ones pass. Backup before:
+  `post_2026-10-30_1459.backup`. **80 questions, page counter 16**; compare_applied Rules 1-5 equal; check_order OK; audited
+  pages 1-11 clean (pages 12-16 still show "None" options: the old rows not done yet).
+  **Rules 6-17 done** (`gen_6_11.py` / `solve_6_11.py`, `gen_12_17.py` / `solve_12_17.py` - the solvers build an uneven list of
+  members with the stated average and make the change the story describes, try every head count for pass/fail, every whole
+  number for the middle result; algebra answers checked at x = 7, y = 3): cards #346-#357; 8 old rows (503, 504 R6; 505 R8;
+  506 R12; 507 R13; 508 R14; 509 R16; 510 R17 - all keys were right) rewritten in the simple style; 71 new questions (the
+  worked examples and exercises with no copy; Rules 7, 9, 10, 11, 15 had no row) in JsonImports #389-#400, ids 2625-2695.
+  Book misprints: Rule 8 Exr 3 answer 69 is wrong (71); Rule 14 Exr 2-5 have inconsistent numbers (the middle number comes out
+  negative) - the new questions use consistent numbers; Rule 14 Exr 6 is a Rule 15 question and is filed under Rule 15. Backup
+  before: `post_2026-10-30_1755.backup`. **151 questions, page counter 31**; compare_applied equal; check_order OK; pages 12-26
+  balanced LaTeX, no "None", no MathJax errors. Apply slip (no harm done): `apply_cards.py` crashed on a rule with no old rows
+  (Rule 7), and the shell loop carried on because a pipe through grep hid the error. Rows 505-510 failed on the placeholder
+  card id and were left unchanged; the inserts created the cards #348-#357 themselves. The rows were then applied with
+  `_retry` labels. A second insert run was refused by the duplicate guard. `apply_cards.py` now skips rules without
+  `2_new_rows.json`; run apply loops with `set -o pipefail`. `mutation_test.py` skips row mutations when that file is missing.
+  **Rules 18-43 done** (2026-10-30 18:15; `gen_18_30.py` / `solve_18_30.py`, `gen_31_43.py` / `solve_31_43.py` - `gen_31_43` reuses
+  `gen_18_30.main`; the solvers time a real 1000 km trip stretch by stretch, try every head count, build the actual number lists /
+  squares / cubes and average them, try every whole number for the geometric mean and every start for consecutive numbers):
+  cards #358-#383; 16 old rows (511 R18, 512 R19, 513 R20, 515 R21, 514 R22, 516 R24, 517 R25, 518 R26, 519 R32, 520 R33, 521 R34,
+  522 R35, 523 R38, 524 R40, 525 R41, 526 R43) rewritten in the simple style; keys: all right except **516** (key on option e,
+  no option held Rs 420) and **525** (key on option e, no option held 29). 128 new questions (the examples and exercises with no
+  copy; Rule 28's eight sub-exercises one question each) in JsonImports #401-#426, ids 2696-2823. Book slips: Rule 23 Exr 5
+  asks the whole class but prints the number of boys (30, not 60); Rule 36 Exr 4 (420, not
+  408); Rule 40 Exr 3 (5040/319, not 5040/299); Rule 41 Exr (i) leaves 34 out of its series; Rule 43 says "consecutive numbers"
+  where its formula needs consecutive odd (or even) numbers - the new questions say odd / even. Gate traps: listing "2, 4, 6",
+  small speed / temperature / GM / HM sets and the book's "Find the average of ..." frames fail - the new series use 3-digit
+  numbers and other frames. Backup before: `post_2026-10-30_1815.backup`. **279 questions, page counter 56**; compare_applied equal
+  (28 rule folders); check_order OK (279 shown, rule order kept); pages 26-56 balanced LaTeX, no doubled backslash, no "None"
+  except row 956 on page 56; no solution box wider than the page on pages 31, 41, 46, 53.
+  **Every Average row is now on a rule card except 956** (not an Average question - owner to say where it goes).
+  **Miscellaneous done - AVERAGE CHAPTER COMPLETE locally** (2026-10-30 18:27; `misc/sentences.py` (the 20 sentences, gate-tested
+  first), `misc/gen_misc.py`, `misc/solve_misc.py` keyed m01-m20; folders `misc/ruleNN/` checked with `PROFIT_RULE_ROOT=misc`; each
+  folder's `solve.py` puts the misc folder on the path by absolute path, because the mutation test copies the folder to a temp
+  dir). None of the book's 20 Miscellaneous problems had a copy in the DB, so all 20 are new, with all-new numbers, filed on the
+  stored card of the rule each one uses (no new card): R2 #342 (M5, M8, M10, M15, M16, M17, M20), R4 #344 (M2, M7), R5 #345 (M9,
+  M14), R8 #348 (M1, M11, M12, M13, M19), R11 #351 (M18), R20 #360 (M3), R39 #379 (M6), R40 #380 (M4); JsonImports #427-#434, ids
+  2824-2843. M2 / M3 have algebraic answers (checked at x = 7, y = 3), M15 / M20 triple answers. M12 and M19 are the same book
+  problem - different numbers. Book note: M6 ("average rate of increase" of a population over 3 years) divides the 3-year total by 3
+  (38.67%); the new question asks for the one compound yearly rate (geometric mean, Rule 39). Backup before:
+  `post_2026-10-30_1827.backup`.
+  **Final state: 299 questions, 43 cards (#341-#383), every row on a rule card except 956, Theorem + Traditional Method + Specified
+  Rule in every solution, no NULL option e, no key on option e, page counter 60; JsonImports #384-#434; prompt #15.** compare_applied
+  equal (28 rule folders); check_order OK (299 shown, rule order kept); all 60 pages balanced LaTeX, no doubled backslash, no
+  "None" except row 956 (page 60).
+  **ON LIVE (pushed 2026-10-30 18:33)** - selective sync: live dump before `db_backups/live/tutionplus_before_average_sync_2026-10-30.backup`
+  (live on a0dddf99); baseline `post_2026-10-30_1442.backup` -> three-way: no conflicts; push = 394 rows: bank_math 60 updates
+  (467-526) + 238 inserts, all average; 43 cards #341-#383 (inserts); total_math row 2; JsonImports #384-#434; prompt #15. Rows
+  changed only on live (auth_user 2, django_admin_log 8360/8361, django_migrations 215, one session) left as they are. SQL builder
+  `claude/runs/average/build_sync.py` (`sync_average.sql` - never commit; it is not git-ignored). Rehearsal on tutionplus_synctest
+  394/394 equal to local, 0 other rows changed; live had not drifted; live verified 394/394, 0 other rows changed; live crawl:
+  average 299 of 299 shown, rule order kept, 0 "None" options, 0 display math in options. Scratch DBs dropped on the server.
+  **Baseline for the next push: `db_backups/post_2026-10-30_1835.backup`.** Scripts not committed yet.
 - **16 new book chapters added to the site code** (2026-10-29, commit `2e05ddc4`, ON LIVE: migration 0039 ran on deploy; live backup
   before it `db_backups/live/tutionplus_before_new_chapters_migration_2026-10-29.backup`). **Baseline for the next push is now
   `db_backups/post_2026-10-29_2007.backup`** (taken after the migration; local and live total_math row 2 identical): `bank.models.NEW_MATH_CHAPTERS` =
