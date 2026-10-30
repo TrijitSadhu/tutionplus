@@ -73,7 +73,8 @@ def m_direction(folder):   # a signed answer's Final Answer says increase instea
     if x["answer"][0] != "signed":
         return False
     s = x["new"]["shortcut"]
-    swap = {"a decrease": "an increase", "an increase": "a decrease", "a loss": "a profit", "a profit": "a loss"}
+    swap = {"a decrease": "an increase", "an increase": "a decrease", "a loss": "a profit", "a profit": "a loss",
+            "excess": "deficit", "deficit": "excess"}
     i = s.rfind("Final Answer")
     word = next(w for w in swap if w in s[i:])
     x["new"]["shortcut"] = s[:i] + s[i:].replace(word, swap[word], 1); save(p, d)

@@ -294,6 +294,271 @@ add the Traditional Method, add what is missing, then push to the live site when
   `db_backups/live/tutionplus_before_time_work_reword_sync_2026-10-30.backup`; scratch DBs dropped).
   **Baseline for the next push: `db_backups/post_2026-10-30_0013.backup`** (taken right after this push). Scripts not committed yet.
   Next: reword the other audited chapters (Alligation, Time & Distance, Percentage, P&C) the same way, in the simple style.
+- **Alligation rewording (2026-10-30, local only):** 134 of the 169 rows fail the simple gate against `alligation/pdf_text.txt`
+  (94 wording, 11 book number sets, 29 both); the other 35 already differ from the book and are left as they are.
+  Tooling `claude/runs/alligation/reword/` = the Time & Work tools pointed at Alligation (`rw_common.py`, `dump_batch.py`,
+  `compare_batches.py`, `try_q.py`, `reword_check.py` - always the simple gate, Time & Work mutations + m_copy / m_old_number /
+  m_double_backslash); `alligation/validate.py` got the GATE hook and the doubled-backslash check (Rules 1-29 still pass).
+  Each batch rule folder's `solve.py` loads the applied rule solver by absolute path and turns a solver crash into "unsolved"
+  (rule02 also maps rows 1641-1649 to their payload keys E1-E9). The solvers are keyed by row id and read numbers in order, so
+  the new sentences keep each row's number order (Rule 1 "basic" rows exactly three numbers; Rule 3 only three numbers).
+  **Batch 1 done** (Rules 1-5, 45 rows; `reword/b1/gen_b1.py` calls the rule generators with new numbers). Backup before:
+  `post_2026-10-30_0029.backup`. compare_batches equal; check_order OK (169 shown); all 34 pages balanced LaTeX.
+  Left: Rules 6-29 (89 rows: R6 1, R7-R10 20, R11-R12 2, R13-R16 13, R17 5, R18 1, R19-R22 16, R23-R29 31).
+  **Batch 2 done** (Rules 6-16, 36 rows; `reword/b2/gen_b2.py` with the `gen_5_10` / `gen_11_18` builders; sentences keep the
+  solver phrases "kilolitre", "water to milk", "each litre", "by bus?" / "by train?", "ratio", "respectively", "chickens and goats",
+  "How many rabbits/pigeons"). Backup before: `post_2026-10-30_0036.backup`. compare_batches b1+b2 equal; check_order OK; 34 pages clean.
+  Left: Rules 17-29 (53 rows: R17 5, R18 1, R19-R22 16, R23-R29 31).
+  **Batch 3 done** (Rules 17-22, 22 rows; `reword/b3/gen_b3.py`; Rule 17 solver reads only a:b ratios or \(p\%\), Rule 19 every
+  "<n> litres", plain "p%" and "<n> litres of water is added", Rule 21 "whisky"). Small ratio digits (4-7) often repeat an old
+  number or form a book set - searched sets instead. Backup before: `post_2026-10-30_0043.backup`. compare_batches b1-b3 equal;
+  check_order OK; 34 pages clean. Left: Rules 23-29 (31 rows).
+  **Batch 4 done** (Rules 23-29, 31 rows; `reword/b4/gen_b4.py`; `released` / `capacity` only accept ratios from their own square
+  table, so the new ratios come from it; Rule 28 uses a new solver `reword/b4/solve28_rw.py` (draw-by-draw, reads "<word> times in
+  all" and fraction words) - the book solver only knew three fraction words and the counts 2/3/5; a helper file must not start with
+  "rule" (reword_check takes every rule* entry as a rule folder)). Backup before: `post_2026-10-30_0050.backup`.
+  **ALLIGATION REWORDING COMPLETE (local only):** 134 rows reworded in 4 batches; all 169 rows now pass the simple gate against the
+  book (0 failing); compare_batches b1-b4 equal to the DB; check_order OK (169 shown); all 34 pages balanced LaTeX. Not on live, not
+  committed. The next push = selective sync from baseline `post_2026-10-30_0013.backup` (only alligation_n_mixture math rows expected).
+- **Time & Distance rewording - started 2026-10-30, nothing changed in the DB yet.** Book text extracted to
+  `claude/runs/td_reword/pdf_text.txt` (never commit). 121 of 260 rows fail the simple gate (59 wording, 39 book number sets,
+  23 both; 26 of them rule-less). Unlike Alligation there are NO parameterised generators for Rules 1-30 (the audit only inserted
+  hand-written Traditional Methods; `td_new/gen_*.py` have their data built in), so each failing row needs a new builder
+  (Theorem reused from the row, Traditional Method + Specified Rule built from the new numbers) and an independent solver.
+  Toolkit `claude/runs/td_reword/` set up: `common.py`, `dump_rows.py`, `apply_rows.py`, `validate.py` (copies of the Alligation
+  ones, chapter time_n_distance) and `reword/` (rw_common, dump_batch, compare_batches, reword_check, try_q). Batch 1 = Rules 1-3
+  (27 rows) dumped to `reword/b1/` - next: write `b1/gen_b1.py` builders + solvers, check, apply. Note: the dump's `rule_card`
+  has no `rule_name` key (use the folder's rule number).
+  **Batch 1 done locally** (2026-10-30, Rules 1-3, 27 rows; `reword/b1/gen_b1.py` = new builders `dist_st`, `time_ds`, `speed_dt`,
+  `kmh_to_ms`, `ms_to_kmh`, `metres_to_kmh`, `compare`, `signal`, `wheel`, `sound`, `prop_dist`, `kmh_min_to_m`, `new_speed`,
+  `avg_speed`, `return_speed`, `rests`, `rests_every` (Theorem lines kept, 1442's names its new interval); independent solver
+  `reword/b1/solve_b1.py` (metres/seconds, simulated trips, minute-by-minute walking); SIMPLE_STYLE marker; times answered as
+  pairs "h hrs m min" written in `\text{}` inside math). Backup before: `post_2026-10-30_0223.backup`. compare_batches equal;
+  check_order OK (260 shown); all 52 pages balanced LaTeX. Left: 94 failing rows - Rules 4-11 (21), 14-29 (24), 34-48 (23) and
+  the 26 rule-less rows.
+  **Batch 2 done** (Rules 4-11, 21 rows; `reword/b2/gen_b2.py`: `late_early`, `still_late`, `there_back`, `halves`, `head_start_meet`,
+  `late_start_total` (new Theorem for 1468), `slow_walk`, `catch_up`; solver `b2/solve_b2.py` searches for the distance). Backup
+  before: `post_2026-10-30_0231.backup`.
+  **Batch 3 done** (Rules 14-29, 23 rows; `reword/b3/gen_b3.py`: `meet_return`, `cross_times` (rule step shows \(\sqrt{b/a} : 1\)),
+  `two_speeds_gap`, `round_uniform`, `fog`, `walk_ride`, `cross_after`, `inverse_speed`, `rest_speed`, `ride_walk`, `air_train`,
+  `early_slow`; solver `b3/solve_b3.py` - 1487/1488 in two stages, 1520 by a linear root: stepping a solver in small time steps
+  was not exact). Backup before: `post_2026-10-30_0238.backup`.
+  **Batch 4 done** (Rules 34-48, 24 rows; `reword/b4/gen_b4.py`: `faster_slower`, `avg_dist_time`, `avg_dist_speed`, `avg_time_speed`,
+  `faster_time`, `split_two`, `frac_distance`, `thief`, `ratio_times` (pair answer, plain options), `frac_avg`, `hare`; solver
+  `b4/solve_b4.py` searches speeds/distances that make the story's times agree, counts leaps). First drafts kept the old sentence
+  frame and failed "too close to the old question" - rebuilt the sentence order. Backup before: `post_2026-10-30_0247.backup`.
+  **Batch 5 done** (the 26 rule-less 2018 rows 801-816, 825-834; `reword/b5/gen_b5.py` loads the b1-b3 builders and adds
+  `meet_later` (R9), `later_faster` (R11), `ride_both` (R20), `meet_second_later` (R21), `halt` (R24), `late_flight` (R28); its own
+  write loop links every row to its rule card - 801-805 R1, 806-807 R2, 808 R3, 809 R4, 810 R5, 811 R6, 812 R7, 813 R8, 814 R9,
+  815 R10, 816 R11, 825 R20, 826 R21, 827 R22, 828 R23, 829 R24, 830 R25, 831 R26, 832 R27, 833 R28, 834 R29; e = '' (was NULL,
+  printed "None"); Theorem + Traditional Method + Specified Rule in each). Old keys that were wrong: 834 pointed at option e and no
+  option held the answer (24 km/hr); 831 had two "20 km" options; 813/814 asked "how far and at what time" with time-only options
+  (now ask the distance). `td_reword/validate.py` now reports an old key on option e instead of crashing. Backup before:
+  `post_2026-10-30_0257.backup`.
+  **TIME & DISTANCE REWORDING COMPLETE (local only):** 121 rows reworded in 5 batches; all 260 rows pass the simple gate against the
+  book (0 failing); compare_batches b1-b5 equal to the DB; check_order OK (260 shown, rule order never goes back); all 52 pages
+  balanced LaTeX, no doubled backslash. Not on live, not committed. Still rule-less and old style (they pass the gate, so left as
+  they are - owner to decide): 817-824 and 835, shown last on pages 51-52 with a "None" 5th option (NULL e). 818's key is on
+  option e and no option holds the right answer (19.5 km); **835 is a junk test row** ("zzzz..." question, option a "None").
+  The next push = selective sync from baseline `post_2026-10-30_0013.backup` (alligation_n_mixture + time_n_distance math rows).
+- **Percentage rewording (2026-10-30 early morning, local only - IN PROGRESS):** 312 of 474 rows failed the simple gate against
+  `percentage/pdf_text.txt` (mostly the Claude-added rows, which changed the book's numbers but kept its sentences). Tooling
+  `claude/runs/percentage/reword/` (rw_common with an option builder that takes the row's formatter P / Rs / Num / ..., dump_batch,
+  compare_batches, reword_check, try_q); `percentage/validate.py` got the GATE hook + doubled-backslash check (Rules 1-77 still
+  pass) and `mutation_test.m_direction` now also swaps excess/deficit. Each batch calls the gen_X_Y.py builders with new numbers;
+  each rule folder's solve.py wraps the original solve_X_Y solver in try/except (a mutated question must count as unsolved, not
+  crash the check). Number sets are searched with a scratch grid search against `Book.numbers_together` - the Percentage book is
+  dense with round per cents, so most triples of common per cents are a "book set". Solver phrases to keep: see each gen_bN.py
+  docstring (e.g. Rule 25-30 verbs grows/rises/falls/increased/decreased - not "rose"/"fell"; plain-digit "x% in excess" for
+  Rules 50-52; "gets N marks and fails by M" for Rule 48). Batches applied (backup before each): b1 Rules 2-8 (25 rows,
+  `post_2026-10-30_0306`), b2 Rules 12-16 (27, new label solver `b2/solve_b2.py`, `_0313`), b3 Rules 18-24 (23, `_0318`), b4 Rules
+  25-32 (31, `_0325`), b5 Rules 33-37 (34, `_0330`), b6 Rules 41-48 (35, extra product contexts fare/wage/rent/crop/shop, `_0336`),
+  b7 Rules 49-56 (49, `_0346`), b8 Rules 57-64 (28, sentences in `b8/sent_b8.py`, `_0352`), b9 Rules 65-76 (46, `b9/sent_b9.py`,
+  `_0358`). **298 rows reworded; every rule row of Rules 1-77 now passes the gate** (460 of 474 pass); compare_batches b1-b9
+  equal to the DB; check_order OK (474 shown); pages 1-91 balanced LaTeX, no "None" option, no doubled backslash.
+  **Not reworded on purpose:** the 14 failing rule-less Miscellaneous rows (662-668, 670, 671, 673, 674, 676, 678, 679) - they
+  belong to the planned Percentage Miscellaneous job (START_HERE section 1: link to rules, fix keys, add the 13 missing problems,
+  owner approval first); several need real fixes (663/664/667 offer "Data inadequate", 673 has "30% of 80" in display math,
+  pages 92-95 still show "None" 5th options). Not on live, not committed.
+- **P&C rewording COMPLETE (2026-10-30 ~04:10, local only):** 43 of 205 rows failed the simple gate against
+  `permutation/pdf_text.txt`; all reworded in 2 batches, **all 205 now pass**. Tooling `claude/runs/permutation/reword/` (copies of
+  the Percentage reword tools); `permutation/validate.py` got the GATE hook + doubled-backslash check (Rules 1-36 still pass).
+  The gate counts every digit except 1, 2, 3 - including 0 - so the digit questions of Rules 2-3 use digit sets without any old
+  digit above 3 and without 0 (Rule 2 case tables written in `b1/gen_b1.py`; 2068 became a plain "4-digit numbers with repeats"
+  question because its range form needs 0). b1 = Rules 2, 3, 13, 16, 26, 27 (20 rows, brute-force solver `b1/solve_b1.py` keyed by
+  row id; backup before `post_2026-10-30_0408`), b2 = Rules 30, 32-36 (23 rows, original solve_30_36 solvers; `_0411`).
+  compare_batches b1-b2 equal; check_order OK (205 shown); all 41 pages balanced LaTeX, no "None" option.
+- **ALL FIVE AUDITED CHAPTERS ARE NOW REWORDED** (Time & Work on live; Alligation, Time & Distance, Percentage Rules 1-77 and
+  P&C local only). The next push = selective sync from baseline `post_2026-10-30_0013.backup`: expected only bank_math rows of
+  alligation_n_mixture, time_n_distance, percentage and permutation_combination (updates, plus the 26 T&D rows that now have a
+  rule link). Scripts of all four chapters not committed yet.
+- **Profit and Loss audit (`profit_n_loss`, `profit.pdf` = book Chapter 10, 54 pdf pages = 89 rules + Miscellaneous) - STARTED
+  2026-10-30 morning, local only.** Inventory: 179 old rows, none linked to a rule, 5 keys on option e (308, 312, 319, 391, 400),
+  duplicate pairs 283/918, 285/920, 286/924, 287/923, 288/925, 302/306 (and 282/917, 284/919 near-copies), empty / duplicate
+  options in several rows, a stray card **#114 "Rule 29: Early Departure with Reduced Speed"** (a Time & Distance card) filed under
+  profit_n_loss and used by nothing - replace or delete it when Profit Rule 29 is done. Work folder `claude/runs/profit`
+  (`pdf_text.txt` + `pages/` = book, never commit; toolkit copied from Percentage: common, dump_rows, apply_rows, apply_cards,
+  save_and_insert, save_page_counters, validate, mutation_test (m_direction also swaps "a gain"), compare_applied;
+  `gate_check.py N...` = the simple originality gate on regenerated rows AND new payload questions). Prompt **#14**
+  "profit and loss_detail method + theorem" (from prompt #9 by `make_prompt.py`, not default; adds the simple-style /
+  all-new-numbers line). Every old row copies the book, so the audit rewrites it in the simple style with all-new numbers
+  straight away (gate on), and new questions (book exercises with no copy) are written the same way.
+  **Rules 1-3 done** (`gen_1_3.py`, `solve_1_3.py`): cards #253-#255, 28 old rows (278-289 + 916-931; the duplicate pairs got
+  different numbers), 5 new questions (JsonImports #294-#295, ids 2199-2203). Backup before: `post_2026-10-30_0755.backup`.
+  **Rules 4-7 done** (`gen_4_7.py`, `solve_4_7.py`): cards #256-#259, 27 old rows (290-293 + 932-954), no new questions (every
+  exercise had a copy). Backup before: `post_2026-10-30_0802.backup`. (Its mutation test was finished right after the apply - the
+  first run stopped on the missing "a gain" swap; all mutations caught.)
+  **Rules 8-12 done** (`gen_8_12.py`, `solve_8_12.py`): cards #260-#264, 8 old rows (294-300, 955), 23 new questions (JsonImports
+  #296-#300, ids 2204-2226). Backup before: `post_2026-10-30_0808.backup`. 207 questions, page counter **42**; compare_applied
+  Rules 1-12 equal; check_order OK.
+  **Rules 13-17 done** (`gen_13_17.py`, `solve_13_17.py` - the chain solvers solve the linear price chain from two trial costs;
+  a 10^7-step search was far too slow for the mutation test): cards #265-#269, 11 old rows (301-308; 355-357 are discount /
+  mark-up rows that use Rule 13; fixed: 306 had no option holding the answer, 308's key was on option e, 355 had four empty
+  options), 20 new questions (JsonImports #301-#305, ids 2227-2246). Backup before: `post_2026-10-30_0826.backup`.
+  227 questions, page counter **46**.
+  **Rules 18-21 done** (`gen_18_21.py`, `solve_18_21.py`): cards #270-#273, 6 old rows (309-313, 957; 312's key was on option e),
+  18 new (JsonImports #306-#309, ids 2247-2264). Backup before: `post_2026-10-30_0831.backup`.
+  **Rules 22-24 done** (`gen_22_24.py`, `solve_22_24.py`): cards #274-#276, 7 old rows (314-317, 958-960; 315 was the book's
+  "can't be determined" exercise, now solvable with the new numbers; 959 was a garbled Rs 5 copy), 15 new (JsonImports
+  #310-#312, ids 2265-2279). The book's "had he bought it at y% less and sold it for Rs X more" frame fails the gate - new
+  frames + searched number sets. Backup before: `post_2026-10-30_0837.backup`. 260 questions, page counter 52.
+  **Rules 25-30 done** (`gen_25_30.py` + sentences `sent_25_30.py` + PICKS, `solve_25_30.py`): cards #277-#280, **#114** (the stray
+  Time & Distance card was REPLACED by the Profit Rule 29 card - backup `claude/backups/rule_math_114_before_rule29_card.json`;
+  no row and no translation used it), #281; 7 old rows (318-323, 961; 319's key was on option e), 23 new (JsonImports
+  #313-#318, ids 2280-2302). Backup before: `post_2026-10-30_0845.backup`.
+  **Rules 31-35 done** (`gen_31_35.py` + `sent_31_35.py`, `solve_31_35.py`): cards #282-#286, 6 old rows (324-328, 962), 20 new
+  (JsonImports #319-#323, ids 2303-2322); Rule 35 exercises 3-5 (book pdf page 19) not added yet. Backup before:
+  `post_2026-10-30_0851.backup`. **303 questions, page counter 61**; compare_applied Rules 1-35 equal; check_order OK; the 44
+  audited pages are clean (balanced LaTeX, no "None", no doubled backslash). Number search: scratch `pf_search.py` + a spec per
+  batch (templates, candidate grid, "nice" test) - the Profit book is full of numbers, so most hand-picked sets hit a book passage.
+  **Rules 36, 37, 38 done** (one rule per batch: `gen_36.py`/`solve_36.py`, `gen_37.py`/`solve_37.py`, `gen_38.py`/`solve_38.py`;
+  the solvers solve the two-item system / price one article at Re 1 / solve the linear cost equation from two trial costs):
+  cards #287-#289; old rows 329 (R36), 330 + 331 (R37; 331 is "SP of 9/10 of the stock = CP of all"), 332 (R38); 5 new each
+  (JsonImports #324-#326, ids 2323-2337). Backups before: `post_2026-10-30_0856` / `_0900` / `_0903.backup`.
+  **318 questions, page counter 64**; compare_applied Rules 1-38 equal; check_order OK (318 shown, rule-less last).
+  **Rules 39-45, 47, 48 done** (2026-10-30 09:10-09:39; `gen_39.py`, `gen_40.py`, `gen_41.py`, `gen_42.py`, `gen_43_44.py`
+  (= Rules 39/40 with losses, built with `r39`/`r40` and a `theorem` argument), `gen_45.py`, `gen_47_48.py`; solvers `solve_39`
+  (two trial values), `solve_40` (signs each part by its profit/loss word), `solve_41`, `solve_42` / `solve_45` / `solve_47_48`
+  (real money: cost, takings per part)). Cards #290-#298; old rows 333 (R39), 334 (R40), 335 (R41; asked for both costs but
+  its key held one - now pair options), 336 + 337 (R42; **337 had no option holding the right 13%**), 338 (R43), 339 (R44),
+  340 (R45), 342 (R47), 343 (R48); new questions 5 + 5 + 5 + 3 + 3 + 5 + 4 + 5 + 5 (JsonImports #327-#335, ids 2338-2377).
+  **Rows 338 / 339 moved:** they were first applied under Rules 39 / 40 (same formula), then moved to Rules 43 / 44, whose book
+  examples they are; their reworded sentences were kept. `rule43/` and `rule44/` hold `0_original_rows.json` (the text before
+  rewording) and `gate_check.py` now gates moved rows against it. `gen_39` / `gen_40` advance the answer-position counter
+  `_k` once where the moved row was, so they still reproduce the applied payloads; their `2_new_rows.json` carry the applied
+  card ids again (#290, #291). Backups before: `post_2026-10-30_0910` / `_0914` / `_0918` / `_0921` / `_0927` / `_0932` /
+  `_0936.backup`. **358 questions, page counter 72**; compare_applied equal for every applied rule; check_order OK.
+  **Rule 46 + Rule 35 exercises 3-5 done** (2026-10-30 10:23; `gen_46.py`/`solve_46.py`: card #299, row 341, 5 new (JsonImport
+  #336, ids 2378-2382) - the book's example and exercises all ask for a gain, so these do too; `gen_35_extra.py`: 3 new questions
+  on the stored card #286 from folder `extra35/rule35/` (JsonImport #337, ids 2383-2385). validate / gate_check / mutation_test
+  take `PROFIT_RULE_ROOT=<folder>` to check such a folder; save_and_insert takes `ROOT`. Backup before: `post_2026-10-30_1023.backup`.
+  **Rules 49-50 done** (`gen_49_50.py`, `solve_49_50.py` - counts the rupees article by article / for several equal counts):
+  cards #300-#301, rows 344 (R49), 345-347 (R50; 347 had two identical "2% profit" options, 346's four options were near-copies),
+  5 + 9 new (JsonImports #338-#339, ids 2386-2399); signed answers ("Profit of / Loss of"). Backup before: `post_2026-10-30_1028`.
+  **Rules 51-52 done** (`gen_51_52.py`, `solve_51_52.py`): cards #302-#303, rows 348 (R51, two gains, same price - pair answer)
+  and 349 (R52, how many a rupee - tries counts until the gain matches), 5 + 4 new (JsonImports #340-#341, ids 2400-2408).
+  Backup before: `post_2026-10-30_1033.backup`. **389 questions, page counter 78**; compare_applied Rules 1-52 equal;
+  check_order OK; all 78 pages balanced LaTeX, no doubled backslash.
+  **Rules 53-56 done** (2026-10-30 10:44; `gen_53_56.py`, `solve_53_56.py` - one solver for the four, told apart by their words:
+  R53 tries whole-rupee prices, R54 tries counts, R55 works on a cost of 100, R56 tries costs): cards #304-#307; old rows 350-352
+  (R53; **350's key was wrong** - it pointed at "horse Rs 550, ox Rs 350", the right answer was Rs 750 / Rs 300), 353 (R54),
+  354 / 358 / 371 (R55; 358's word options "gains / loses" became a signed gain-or-loss question), 359 (R56); new questions 6 + 4 +
+  7 + 5 (JsonImports #342-#345, ids 2409-2430): R53 = the book's three loss / profit cases of its Notes + exercises 1, 2 (selling
+  price given), 3, 5 (exercise 4 is row 352); R54's exercise 3 is the book's "not possible" trick (the sale gives a gain) - written
+  here as a gain question with an answer; R55 = example 2 (mark-up needed) + exercises 1-6. Backup before: `post_2026-10-30_1044`.
+  **411 questions, page counter 83**; compare_applied Rules 1-56 equal; check_order OK; all 83 pages balanced LaTeX.
+  **Rules 57-60 done** (2026-10-30 10:55; `gen_57_60.py`, `solve_57_60.py` - one solver: R57 tries counts, R58/R59 find the cost
+  from two trial costs then price / compare in rupees (per kg when sold by weight), spoiled stock counted on 100 quintals, R60 on a
+  list price of 100): cards #308-#311; old rows 360 (R57), 361-363 (R58), 364-367 (R59; **364's key pointed at "Rs 90, Rs 25"
+  and no option held the new price Rs 250**; 365 is the book's "10% spoiled" example; 367 "loses 1/7 of his outlay"), 368-369
+  (R60; 369 sells above the price paid and asks the profit on the list price - own builder `r60_list`); new questions 5 + 3 + 7
+  + 3 (JsonImports #346-#349, ids 2431-2448). Two Rule 59 exercise sentences ("If x% is lost by selling ...") had to be reworded -
+  the book's frame scores 0.86-1.0. Backup before: `post_2026-10-30_1055.backup`.
+  **429 questions, page counter 86**; compare_applied Rules 1-60 equal; check_order OK; all 86 pages balanced LaTeX.
+  **Rules 61-64 done** (2026-10-30 11:25; `gen_61_64.py`, `solve_61_64.py` - R61/R63 reuse the Rule 60 / Rule 55 solvers, R62 follows
+  A's money, R64 tries quantities): cards #312-#315; old rows 369 (R61) and 371 (R63) are those rules' book examples - they had been
+  filed under Rules 60 and 55 and were **moved** (sentences kept; `rule61/` and `rule63/` hold `0_original_rows.json` with the text
+  before rewording); 370 (R62, pair "A loses ..%, B gains ..%"), 372 (R64, milkman); new questions 3 + 4 + 4 + 3 (JsonImports
+  #350-#353, ids 2449-2462). gen_53_56 / gen_57_60 got `MOVED` counters (answer positions unchanged) and their old dumps a
+  `moved_out` note; the same note was added to the rule39 / rule40 dumps for rows 338 / 339 (validate failed "every dumped row was
+  regenerated" there since the morning move - it passes again). All their files still equal the applied ones. Backup before:
+  `post_2026-10-30_1125.backup`. **443 questions, page counter 89**; compare_applied Rules 1-64 equal; check_order OK; all 89
+  pages balanced LaTeX.
+  **Rules 65-68 done** (2026-10-30 13:00; `gen_65_68.py`, `solve_65_68.py` - R65 linear from two trial costs, R66 spreads the one known
+  price along the 'costs as much as' links (graph walk; "A gets Rs a as often as B gets Rs b" has its own builder `r66_gets`), R67 on an
+  income of 100, R68 both costs from the common price): cards #316-#319; old rows 373 (R65), 374-378 (R66: the two worked examples +
+  exercises 1, 2, 5), 379 (R67), 380, 381, 405 (R68: examples 1, 2 and Note 2); new questions 4 + 3 + 3 + 7 (JsonImports #354-#357,
+  ids 2463-2479; R68 = Note 3's example + exercises 1-6 - the book's exercise 3 is garbled: its options fit neither its numbers nor
+  a profit/loss reading). All old keys were right. Writing a patch script through a bash heredoc turned `\t` / `\f` into tab /
+  form-feed again - caught before running; patch with the Edit tool or a quoted python heredoc without backslashes. Backup before:
+  `post_2026-10-30_1300.backup`. **460 questions, page counter 92**; compare_applied Rules 1-68 equal; check_order OK; all 92
+  pages balanced LaTeX.
+  **Rules 69-72 done** (2026-10-30 13:11; `gen_69_72.py`, `solve_69_72.py` - R69 and R70 linear from two trial values, R71 rupee profit
+  then the cost with the same rupee loss, R72 on a marked price of 100): cards #320-#323; old rows 406 (R69), 407 (R71), 408 (R72) -
+  keys right; Rule 70 had no row; new questions 6 + 6 + 5 + 5 (JsonImports #358-#361, ids 2480-2501; R69 includes the Note's
+  same-per-cent example, R70 = the worked example + exercises 1-5, written with signed rupee options "Gain of Rs .. / Loss of Rs .."
+  (`rsopts`)). Three card examples first reused book numbers (R69 30%/25%, R70 20%/25%, R72 10%/20%) - changed. Backup before:
+  `post_2026-10-30_1311.backup`. **482 questions, page counter 97**; compare_applied Rules 1-72 equal; check_order OK; all 97
+  pages balanced LaTeX.
+  **Rules 73-76 done** (2026-10-30 13:19; `gen_73_76.py`, `solve_73_76.py` - R73 tries whole-rupee costs, R74 on a cost of 100, R75
+  tries costs until the gain per cents differ by d, R76 follows 100 grams bought and sold): cards #324-#327; old rows 409 (R74) and 410
+  (R75; **its key pointed at Rs 300, the answer was Rs 200**); Rules 73 and 76 had no row; new questions 3 + 5 + 5 + 6 (JsonImports
+  #362-#365, ids 2502-2520). R75's book frame "d% more is gained by selling ... for Rs .. than by selling it for Rs .." scores 0.74-0.78
+  against the book - written as "A man sells a .. for Rs S2. Had he sold it for Rs S1, his gain per cent would have been d less.";
+  R75's exercise 5 ("not possible") and R73's decimal exercises were written as ordinary solvable questions. Backup before:
+  `post_2026-10-30_1319.backup`. **501 questions, page counter 101**; compare_applied Rules 1-76 equal; check_order OK; all 101
+  pages balanced LaTeX.
+  **Rules 77-80 done** (2026-10-30 13:28; `gen_77_80.py`, `solve_77_80.py` - cost of 100 / a stock of 1200 priced part by part / trial
+  cost per kg / selling price of 100): cards #328-#331; no old rows; new questions 5 + 5 + 7 + 6 (JsonImports #366-#369, ids 2521-2543).
+  Rule 78 = parts of a stock at gains and losses (the book's example prints "18% loss" though its working gives an 18% gain) and its two
+  "had he sold all of it at r% he would have made Rs D more - cost per kg" exercises; Rule 79 exercise 6 asks the selling price.
+  **Found in the browser after the apply:** the two Rule 78 cost-per-kg questions (2527, 2528) had a step with LaTeX outside \( \) (raw
+  \frac on the page), then a display line wider than the box. `validate.py` now has the P&C **stray-LaTeX check** (`stray_tex`, +
+  mutation `m_stray`); Rules 1-80 and extra35 pass it, and a scan of all 501 audited profit_n_loss rows and every card found nothing
+  else. Fixed with `fix_new_questions.py` (RULE, BACKUP, DO_UPDATE: writes regenerated solution / rbe / shortcut of inserted new
+  questions, matched by question text; refuses changed options / keys) - row backups `claude/backups/profit_rule78_2527_2528_before_*.json`.
+  Backups before: `post_2026-10-30_1328` (batch), `_1334`, `_1335` (fixes). **524 questions, page counter 105**; compare_applied
+  Rules 1-80 equal; check_order OK; all 105 pages balanced LaTeX.
+  **Rules 81-84 done** (2026-10-30 13:38; `gen_81_84.py`, `solve_81_84.py` - Re 1 a metre (price or cost) for 81-83, cost of 100 /
+  marked price for 84): cards #332-#335; no old rows; new questions 4 + 5 + 5 + 5 (JsonImports #370-#373, ids 2544-2562); sentences
+  "A draper sells N metres of .., and his profit / loss equals what he gets for n metres" (81/82), "his profit is equal to the cost
+  of n metres" (83); Rule 84 = the rupee-saving example + mark-up needed (x2), profit, discount rate. All passed the gate first time.
+  Backup before: `post_2026-10-30_1338.backup`. **543 questions, page counter 109**; compare_applied Rules 1-84 equal; check_order
+  OK; all 109 pages balanced LaTeX and no stray LaTeX (page-level check).
+  **Rules 85-89 done - ALL 89 RULES COMPLETE** (2026-10-30 13:46; `gen_85_89.py`, `solve_85_89.py`): cards #336-#340; no old rows;
+  new questions 6 + 6 + 5 + 7 + 6 (JsonImports #374-#378, ids 2563-2592). Rules 85 / 88 use the same formula, as do 52 / 89 (the
+  book repeats them; each keeps its own card). Backup before: `post_2026-10-30_1346.backup`. **573 questions, page counter 115**;
+  compare_applied Rules 1-89 equal; check_order OK; all 115 pages balanced LaTeX and no stray LaTeX.
+  **Miscellaneous done - PROFIT AND LOSS CHAPTER COMPLETE locally** (2026-10-30 14:00; `misc/gen_misc.py`, `misc/solve_misc.py` keyed
+  by row id): the book's 23 Miscellaneous problems are exactly rows 382-404 (M1 = 382 ... M23 = 404), so nothing was missing. Each row
+  is linked to the existing card of the rule it uses (no new card, no JsonImport) and rewritten in the simple style with all-new
+  numbers: 391 R1; 384, 394, 395 R2; 389, 396 R3; 403 R4; 393 R7; 392 R18; 390 R20; 383, 397, 399 R21; 386 R53; 382, 385 R58;
+  388, 404 R59; 400 R72; 387 R79; 401, 402 R84; 398 R85 (folders `misc/ruleNN/`, checked with `PROFIT_RULE_ROOT=misc`; `m_stray`
+  now breaks an old row when a folder has no payload). **Old keys that were wrong:** 388 (key on an empty option; answer Rs 2160),
+  391 (key on option e, no option held the Rs 10 gain), 400 (key on option e, no option held Rs 750), 401 (keyed 45:46; answer
+  45:56). Number sets searched with scratch `misc_search.py` (small sets kept hitting book passages). Backup before:
+  `post_2026-10-30_1400.backup`.
+  **Final state: 573 questions, every row linked to a rule (89 cards #253-#340 incl. #114), Theorem + Traditional Method +
+  Specified Rule in every solution, no NULL option e, no key on option e, page counter 115; compare_applied (Rules 1-89 + misc)
+  equal; check_order OK; all 115 pages balanced LaTeX, no stray LaTeX, no "None" option. JsonImports #294-#378; prompt #14.**
+  **ON LIVE (pushed 2026-10-30 14:10, together with the Alligation / Time & Distance / Percentage / P&C rewording)** - selective
+  sync: live dump before `db_backups/live/tutionplus_before_five_chapters_sync_2026-10-30.backup` (live ran the same commit
+  ae2e4988); baseline `post_2026-10-30_0013.backup` -> three-way: no conflicts; push = 1345 rows: bank_math 775 updates
+  (percentage 298, profit_n_loss 179, alligation 134, time_n_distance 121, permutation 43) + 394 inserts (profit_n_loss), 89 cards
+  (88 new + #114 replaced, all profit_n_loss), total_math row 2, JsonImports #294-#378, prompt #14; rows changed only on live
+  (auth_user 2, django_admin_log 8360/8361, django_migrations 215, one session) left as they are. SQL builder
+  `claude/runs/profit/build_sync.py` (five-chapter allow list; `sync_five_chapters.sql` - never commit). Rehearsal on
+  tutionplus_synctest: 1345/1345 equal to local, 0 other rows changed; live had not drifted; live verified 1345/1345, 0 other rows
+  changed; live crawl (`time_work/live_check.py`, BASE = live URL) all six audited chapters every question once, rule order kept.
+  Left "None" options on live are old rows the push did not touch: Alligation 1074 (duplicate of 1071, NULL e), Time & Distance
+  817-824 + junk 835, Percentage Misc 662-679 (18). Scratch DBs dropped on the server.
+  **Baseline for the next push: `db_backups/post_2026-10-30_1413.backup`** (taken right after this push). Scripts not committed yet.
+  Note: `popts` gives duplicate options when the answer is 5% (5+5 = 2x5) - pick other numbers.
+  Rule 41 fix after the apply: its Theorem's two formulas were on one display line, cut off at the right of the solution box
+  at 800 px -> two lines in `gen_41.py`; `fix_rule41_theorem.py` wrote the new solution of rows 335, 2348-2352 and card #292
+  (backup `claude/backups/profit_rule41_before_theorem_split.json`, full backup `post_2026-10-30_0941.backup`). JsonImport #329
+  still holds the one-line version (history only). Only pages 48 and 52 were opened in the browser; the other new pages were
+  checked by script (balanced LaTeX, no doubled backslash) - a wide formula on them would not show up there.
 - **16 new book chapters added to the site code** (2026-10-29, commit `2e05ddc4`, ON LIVE: migration 0039 ran on deploy; live backup
   before it `db_backups/live/tutionplus_before_new_chapters_migration_2026-10-29.backup`). **Baseline for the next push is now
   `db_backups/post_2026-10-29_2007.backup`** (taken after the migration; local and live total_math row 2 identical): `bank.models.NEW_MATH_CHAPTERS` =
