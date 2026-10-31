@@ -129,6 +129,26 @@
   color: #fff !important;
   border-color: #3F51B5 !important;
 }
+
+/* Long formulas scroll sideways inside their box instead of widening the page on phones */
+[id^="mathsol-"], [id^="mathrbe-"], [id^="mathsc-"], .rule-panel-body {
+  overflow-x: auto;
+}
+@media (max-width: 991px) {
+  /* .MJXc-display is display:inline further down; inline-block keeps the same flow and lets each formula scroll by itself */
+  .mjx-chtml.MJXc-display {
+    display: inline-block;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 2px 0 4px;
+    vertical-align: middle;
+  }
+  /* The row of page numbers wraps too, or it alone widens the page */
+  .pagination {
+    flex-wrap: wrap;
+  }
+}
 </style>
 
 <style>
