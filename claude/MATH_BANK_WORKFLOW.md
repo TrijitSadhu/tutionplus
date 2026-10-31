@@ -651,6 +651,173 @@ add the Traditional Method, add what is missing, then push to the live site when
   394/394 equal to local, 0 other rows changed; live had not drifted; live verified 394/394, 0 other rows changed; live crawl:
   average 299 of 299 shown, rule order kept, 0 "None" options, 0 display math in options. Scratch DBs dropped on the server.
   **Baseline for the next push: `db_backups/post_2026-10-30_1835.backup`.** Scripts not committed yet.
+- **Ratio and Proportion audit (`ratio_n_proportion`, `Ratio and Proportion.1.pdf` + `.2.pdf` = 29 pdf pages, 39 rules +
+  Miscellaneous) - STARTED 2026-10-30 evening, local only.** Findings: `claude/runs/ratio/FINDINGS.md` (49 old rows 708-758, none on a
+  rule, every option e NULL; 708-745 copy the worked examples in book order, 746-758 Miscellaneous problems; wrong keys 715, 730, 733,
+  744, 752, 753). Work folder `claude/runs/ratio` (`extract_book.py` -> `pdf_text.txt` + `pages/`, never commit; toolkit copied from
+  Average by `copy_toolkit.py`; `fmt.py` = number / ratio / pair formatters and option builders). Prompt **#16** "ratio and
+  proportion_detail method + theorem" (`make_prompt.py`, RATIO-SPECIFIC CHECKS; not default).
+  **Rules 1-5 done** (`gen_1_5.py`, `solve_1_5.py` - proportions found by bisection on the difference of the two ratios and snapped
+  to the exact fraction, rule-of-three questions worked through unit rates / man-days, shares by a linear solve): cards #384-#388;
+  7 old rows (708 R2, 709-710 R3, 711-712 R4, 713-714 R5; all keys right) rewritten in the simple style with all-new numbers; 51
+  new questions (R1 example + 7 exercises, R2 13, R3 7, R4 the fort and compound-proportion examples + 16 exercises, R5 5) in
+  JsonImports #435-#439, ids 2844-2894. Book answers of Rules 1-5 all right. Backup before: `post_2026-10-30_1851.backup`.
+  **100 questions, page counter 20**; compare_applied equal; check_order OK; pages 1-11 clean (page 12 on: old rows not done yet).
+  **Rules 6-11 done** (`gen_6_11.py` reuses `gen_1_5.main`; `solve_6_11.py` - coins: the count tried until the money adds up;
+  mixtures: real litres poured and measured; numbers: the multiplier tried 1, 2, 3 ... until the difference / sum fits): cards
+  #389-#394; 5 old rows (715 R6 - **its key was on option e, no option held 20 coins of each**; 716 R7, 717 R8, 719 R10, 720 R11) rewritten;
+  Rule 9 had no row; 37 new (R6 example 2 + 6 exercises, R7 5, R8 5, R9 example + 5, R10 example 2 + 7, R11 6) in JsonImports
+  #440-#445, ids 2895-2931. Book answers of Rules 6-11 all right. The book is full of small ratios (2 : 3, 5 : 7 ...), so most
+  small sets hit a book passage - the new questions use two-digit terms (searched with scratch `ratio_search.py`). Rule 9's
+  formula is written as a Water line and a Milk line (one line was too wide). Slip found and fixed: re-running `gen_1_5.py`
+  after adding `triple_opts` put the `NEW_RULE_N` placeholders back into the applied `rule02-05/2_new_rows.json` - the card ids
+  were restored and compare_applied is equal again (do not re-run an applied generator). Backup before: `post_2026-10-30_1900.backup`.
+  **137 questions, page counter 28**; compare_applied equal (Rules 2-8, 10, 11); check_order OK; pages 1-20 clean.
+  **Rules 12-17 done** (`gen_12_17.py`, `solve_12_17.py` - alloys: real kilograms melted, the mixing ratio found by trying every
+  x, y up to 60; joined ratios: the middle number tried one by one / the chain of fractions walked; hound and hare: ground covered
+  in the same time): cards #395-#400; 5 old rows (722 R13, 723 R14, 724 R15, 725 R16, 726 R17; keys right) rewritten; Rule 12 had
+  no row; 31 new (R12 example + 4, R13 5, R14 4, R15 example 2 + 5, R16 example 2 + 5, R17 5) in JsonImports #446-#451, ids
+  2932-2962. `validate.py` got an answer kind **"terms"** (ratios of 3+ terms such as 15 : 18 : 28 : 32, compared in lowest terms,
+  the Final Answer must show every term in order); `fmt.terms_opts`; Rules 1-11 still pass. Book misprints: Rule 12 Exr 2 and 3
+  cannot be solved (the wanted ratio lies outside the two alloys, and they ask for 'gold' in a silver-copper alloy) - left out;
+  Rule 12 Exr 5 (book answer "can't be determined") written with a wanted ratio that can be made. Backup before:
+  `post_2026-10-30_1908.backup`. **168 questions, page counter 34**; compare_applied equal (14 folders); check_order OK; pages 1-27 clean.
+  **Rules 18-25 done** (`gen_18_25.py`, `solve_18_25.py` - efficiency in work units a day; water / milk tried in half-litre
+  steps until the ratio fits; the multiplier tried 1, 2, 3 ... for shares and changed numbers; squares and cubes of actual lengths):
+  cards #401-#408; 7 old rows (727 R19, 728 R20, 729 R21, 730 R22 - **its key said 1 : 9, the area grows 9 times: 9 : 1** -, 731 R23,
+  732 R24, 733 R25 - **key on option e, no option held 18 and 24**) rewritten; Rule 18 had no row; 58 new (R18 example + 5, R19
+  example 2 + 8, R20 example 2 + 5, R21 example 2 + 5, R22 examples 2-3 + 10, R23 5, R24 6, R25 example 2 + 7) in JsonImports
+  #452-#459, ids 2963-3020. Book misprints: Rule 18 Exr 5 says "25% more efficient" but answers for 25% less; Rule 22 Exr 5 asks
+  old : new and marks 25 : 1 (it is 1 : 25). Rules 20, 24 and 25 sets were searched (scratch `ratio_search2.py`, shuffled, one ratio
+  used once) - nearly every small set is a book passage. `fmt.pair_opts` now skips a repeated wrong option (88 and 96 differ by one
+  step). Backup before: `post_2026-10-30_1921.backup`. **226 questions, page counter 46**; compare_applied equal (21 folders);
+  check_order OK; pages 1-40 clean.
+  **Rules 26-33 done** (`gen_26_33.py` with the searched sets in `PICK` - scratch `ratio_search3.py` searched every set first, so
+  the gate passed 57 / 57 at once; `solve_26_33.py` - incomes from 'income - expense = saving' for both persons, k tried until the
+  new ratio fits, a real distance / job shared out for inverse proportion): cards #409-#416; 7 old rows (734 R26, 735 R27, 736 R29,
+  737 R30, 738 R31, 739 R32, 740 R33; keys right) rewritten; Rule 28 had no row; 50 new (R26 5, R27 5, R28 example + 5, R29 7,
+  R30 6, R31 6, R32 example 2 + 7 incl. the 'least number of marbles' exercise, R33 7) in JsonImports #460-#467, ids 3021-3070.
+  Book answers of Rules 26-33 all right. Rupee pairs now show "Rs" in the options too (`build_opts` kind "pair_rs"). Backup
+  before: `post_2026-10-30_2247.backup`. **276 questions, page counter 56**; compare_applied equal (28 folders); check_order OK;
+  pages 1-51 clean.
+  **Rules 34-39 done - ALL 39 RULES** (`gen_34_39.py` with searched sets in `PICK` (scratch `ratio_search4.py`); `solve_34_39.py` -
+  every whole number tried for Rules 34-35, every vessel size tried with the mixture actually drawn off and topped up, workers x pay,
+  candles checked minute by minute): cards #417-#422; 5 old rows (741 R34, 742 R35, 743 R37, 744 R38 - **its key said 21 : 10, the bill
+  falls 21 : 20** -, 745 R39) rewritten; Rule 36 had no row; 34 new (R34 6, R35 7, R36 example + 5, R37 5, R38 5, R39 5) in JsonImports
+  #468-#473, ids 3071-3104. Rule 38 questions ask the ratio of the old wage bill to the new one (the explanation says whether it rises
+  or falls); Rule 39 answers are hours and minutes (pairs). Book misprint: Rule 37 Exr 2 (5 : 4 with liquid A poured in cannot become
+  4 : 5; its answer 72 litres gives 2 : 1) - written with numbers that work. One Rule 39 pick equalled a book exercise's numbers (7, 3,
+  3 : 1 - passes the gate only because 3 and 1 do not count) and was replaced. Backup before: `post_2026-10-30_2302.backup`.
+  **310 questions, page counter 62**; compare_applied equal (33 folders); check_order OK; pages 1-59 clean.
+  **Miscellaneous done - RATIO AND PROPORTION CHAPTER COMPLETE locally** (2026-10-30 23:20; `misc/sentences.py` (36 sentences,
+  gate-tested first), `misc/gen_misc.py`, `misc/solve_misc.py` keyed by row id / m02b ... m35; folders `misc/ruleNN/` checked with
+  `PROFIT_RULE_ROOT=misc`, each `solve.py` with the absolute misc path). The book has 35 Miscellaneous problems: 13 are the old rows
+  746-758 (M1, M2(i), M3, M4, M6, M7, M9-M14, M26), rewritten; the other 23 had no copy and were added (JsonImports #474-#482, ids
+  3105-3127). All filed on stored cards (no new card): R1 #384 (M22, M25), R2 #385 (750, M27, M30-M32, M34), R4 #387 (M17), R5 #388
+  (748, 755-757, M23, M28), R6 #389 (M24, M35), R11 #394 (746, 758, M8, M16, M20, M29, M33), R12 #395 (753), R15 #398 (751, 754, M5,
+  M15, M18, M21), R16 #399 (747, M2(ii)), R19 #402 (752), R25 #408 (M19), R32 #415 (749). **Old keys that were wrong:** 752 (key on
+  option e, 81 ml in no option), 753 (keyed 2 : 3, it is 3 : 2). M29 and M33 ('data inadequate' - no total given) were written with a
+  total; M23 with x and y (algebra answer); M13-style 756 asks which ratio cannot be. Backup before: `post_2026-10-30_2320.backup`.
+  **Final state: 333 questions, 39 cards (#384-#422), every row on a rule card, Theorem + Traditional Method + Specified Rule in
+  every solution, no NULL option e, no key on option e, page counter 67; JsonImports #435-#482; prompt #16.** compare_applied equal
+  (33 rule folders + 8 misc folders); check_order OK (333 shown, rule order kept); all 67 pages balanced LaTeX, no "None", no
+  doubled backslash. Not on live, not committed. Next push = selective sync from `post_2026-10-30_1835.backup` (expected:
+  ratio_n_proportion bank_math rows - 49 updates + 284 inserts -, 39 cards, total_math row 2, JsonImports #435-#482, prompt #16).
+- **Simple Interest audit (`simple_interest`, `Simple Interes.pdf` = 23 pdf pages, 39 rules + 5 Miscellaneous) - STARTED 2026-10-30
+  night, local only.** Findings: `claude/runs/simple_interest/FINDINGS.md` (42 old rows 759-800, none on a rule, every option e NULL;
+  they copy the worked examples in book order; wrong / broken keys 764, 782, 775). Work folder `claude/runs/simple_interest`
+  (`extract_book.py` -> `pdf_text.txt` + `pages/`, never commit - the text layer misses the headings of Rules 5, 18, 19, 22; toolkit
+  copied from Ratio by `copy_toolkit.py` (incl. `fmt.py` and the "terms" validator kind); `gen_1_6.py` also holds the shared
+  `main()` / `build_opts()` (percent options `pct_opts`, interest-and-amount pairs "pair_rs") for the later batches). Prompt **#17**
+  "simple interest_detail method + theorem" (`make_prompt.py`, SIMPLE-INTEREST CHECKS; not default).
+  **Rules 1-6 done** (`gen_1_6.py`, `solve_1_6.py` - interest added month by month (or day by day), unknown principal / rate by a
+  linear solve of that total, unknown time by counting months): cards #423-#428; 10 old rows (759-763 R1, 764 R2, 765 R3, 766 R4,
+  767 R5, 768 R6) rewritten in the simple style with all-new numbers (764's text said Rs 4 where the book has Rs 40, so its key 0.5%
+  did not fit its own numbers); 37 new (R1 16 exercises, R2 4, R3 5, R4 5, R5 3, R6 4) in JsonImports #483-#488, ids 3128-3164.
+  Book answers of Rules 1-6 all right. The book's short frames ("Find the simple interest on Rs X for Y years at Z per cent", "In what
+  time will Rs X amount to ...") score 0.8-1.0 on the gate - the new sentences give each question a setting (a shopkeeper's loan, a
+  deposit, a farmer). Backup before: `post_2026-10-30_2336.backup`. **79 questions, page counter 16**; compare_applied equal;
+  check_order OK; pages 1-9 clean (page 10 on: old rows not done yet).
+  **Rules 7-13 done** (2026-10-30 23:48; `gen_7_13.py` + sentences `sent_7_13.py` + `PICK` (number sets searched against the book),
+  `solve_7_13.py` - follows each yearly payment to the due date (R7), steps month by month through the rate periods (R8), counts
+  months on Rs 100 (R9), tries times month by month until one sum fits both amounts (R10/R11), compares two rates on a trial sum (R12),
+  tries rates in 1/4 % steps until one sum fits both amounts (R13)): cards #429-#435; old rows 769 (R7), 770 (R8), 771 (R9), 772 (R10),
+  773 (R11), 774 (R12), 775 (R13) rewritten (old keys all right; 775 asked "the sum and the rate" with rate-only options - now
+  sum-and-rate options); 41 new (R7 6, R8 5, R9 9 = its second example, the Note's example + 7 exercises, R10 5, R11 4, R12 5, R13 7)
+  in JsonImports #489-#495, ids 3165-3205. Book: R7 Exr 2's printed options miss the right answer (answer d "none"), R10 Exr 4 is the
+  "not possible" trick - both written as ordinary solvable questions. Gate traps: "becomes x times itself in t years" (0.78-0.81) and
+  "the rate for the first t1 years ..." frames - reworded. Backup before: `post_2026-10-30_2348.backup`. **120 questions, page counter
+  24**; compare_applied equal; check_order OK (rule-less rows from page 20); pages 1-19 balanced LaTeX, no MathJax errors.
+  **Rules 14-20 done** (2026-10-30 23:56; `gen_14_20.py` + `sent_14_20.py` + `PICK` (scratch `si_search_14_20.py`, random candidates,
+  all 44 passed the gate first time), `solve_14_20.py` - two rates on a trial sum (R14), a linear solve of the two parts' month-by-month
+  interest (R15), the old rate found from the first amount and the new rate run month by month (R16/R17), a trial principal at the rate
+  the first interest needs, then the bigger principal run (R18/R19), the common interest that makes the parts add up (R20)): cards
+  #436-#442; old rows 776 (R14), 777 (R15), 778 (R16), 779 (R17), 780 (R18), 781 (R19), 782 (R20 - **its key was on the empty option e
+  and no option held the two parts**) rewritten; 37 new (R14 5, R15 6 - incl. the 'some more money at r2%, total borrowed' and
+  'two loans for t years' exercises -, R16 5, R17 7, R18 4, R19 5, R20 5 incl. the three-part difference) in JsonImports #496-#502, ids
+  3206-3242. Book: R16 Exr 3 is the "rate falls to 0%" trick (answer = the sum itself) - written as an ordinary question; all other
+  printed answers right. `gen_14_20` stacks its `build_opts` wrapper (kind "pair_money": "Rs a and Rs b") on the gen_7_13 one.
+  Backup before: `post_2026-10-30_2356.backup`. **157 questions, page counter 32**; compare_applied equal; check_order OK (rule-less
+  from page 28); pages 1-27 balanced LaTeX, no MathJax errors, no wide formulas (pages 21, 23, 26, 27 opened).
+  **Rules 21-27 done** (2026-10-31 00:08; `gen_21_27.py` + `sent_21_27.py` + `PICK` (scratch `si_search_21_27.py`), `solve_21_27.py` -
+  months counted on Rs 100 for the time / rate (R21, R27), months counted for the second sum and the first grown over the same months
+  (R22), the sum found and months counted to the new amount (R23), the common amount that makes the parts add up (R24), the
+  month-by-month amount / sum-minus-interest solved for the sum (R25, R26)): cards #443-#449; old rows 783 (R21), 784 (R22), 785 (R23),
+  786 (R24, ratio of three parts - "terms" answer), 787 (R25), 788 (R26), 789 (R27) rewritten (old keys all right); 36 new (R21 5,
+  R22 5, R23 5, R24 5 = difference / three parts / three rates-and-times / the father's two sons, R25 5, R26 5, R27 6) in JsonImports
+  #503-#509, ids 3243-3278. Book answers of Rules 21-27 all right. Solver trap: R21's month counting needs the common time
+  100(n-1)/r to be a whole number of months - 783's first set (4 times at 7%: 42 6/7 years) was replaced. A patch through a bash
+  heredoc turned `\f` into a form-feed again - nothing was written; patched with the Edit tool. New option kind "triple_money"
+  ("Rs a, Rs b and Rs c"), stacked on the gen_14_20 wrapper. Backup before: `post_2026-10-31_0008.backup`. **193 questions, page
+  counter 39**; compare_applied equal; check_order OK (rule-less from page 37); pages 1-36 balanced LaTeX, no MathJax errors, no wide
+  formulas (pages 30, 32, 33, 36 opened).
+  **Rules 28-33 done** (2026-10-31 00:18; `gen_28_33.py` + `sent_28_33.py` + `PICK` (scratch `si_search_28_33.py`, all sets passed
+  first time), `solve_28_33.py` - months counted until the two loans' interests differ by A (R28), month-by-month interests solved
+  linearly (R29, R30, R33), rates tried in 1/4 % steps until one sum fits both amounts (R31), the loan run month by month with the part
+  payment taken off the principal (R32)): cards #450-#455; old rows 790 (R28), 791 (R29), 792 (R30), 793 (R31), 794 (R32), 795 (R33)
+  rewritten (old keys all right); 30 new (R28 5, R29 6 incl. a months one and two same-rate ones, R30 5, R31 7 incl. "after n more
+  years", R32 4, R33 3) in JsonImports #510-#515, ids 3279-3308. Book: R32 Exr 3 and 4 only work if the part payment and the settling
+  date fall in the same year (t1 = t2), and R33 Exr 1 / 2 have fractional answers (Rs 5000/3, Rs 6000/7) - the new questions use
+  t1 < t2 and whole answers. Solver slip caught by validate: the R29 months sentence writes D before m2, r2 - the solver read them in
+  the wrong order. Backup before: `post_2026-10-31_0018.backup`. **223 questions, page counter 45**; compare_applied equal;
+  check_order OK (rule-less from page 44); pages 1-43 balanced LaTeX, no MathJax errors, no wide formulas (pages 38, 41, 42, 43 opened).
+  **Rules 34-39 done - ALL 39 RULES** (2026-10-31 00:27; `gen_34_39.py` + `sent_34_39.py` (numbers written with `nm()`, so a
+  fraction such as 3 1/8 goes inside \( \)) + `PICK` (scratch `si_search_34_39.py`), `solve_34_39.py` - the three parts of a trial
+  capital lent month by month (R34), rates tried in twelfths with the years run as months (R35), the sum found from the interest and
+  added back (R36), the two loans solved for the rate (R37), months counted for the first deposit and the second run over them (R38),
+  months counted on Rs 100 (R39)): cards #456-#461; old rows 796 (R34), 797 (R35), 798 (R37), 799 (R38), 800 (R39) rewritten (old keys
+  all right); Rule 36 had no row; 30 new (R34 6, R35 5, R36 the worked example + 4, R37 5 - Exr 6 repeats Exr 1 and was not added -,
+  R38 5, R39 4) in JsonImports #516-#521, ids 3309-3338. Book answers of Rules 34-39 all right; R36 Exr 1's numbers are unreadable on
+  the scan (written new). The gate does not stop a one-number copy of a book exercise ("double in 8 years", "treble at 3 1/8%" were
+  picked first) - the Rule 39 search now leaves out the book's own values. Apply slip (no harm): the copied apply script ran
+  `compare_applied` with Rule 36, which has no `2_new_rows.json`, and stopped there (after the page counter); compare and crawl were run
+  by hand, and `compare_applied.py` now skips such rules. Backup before: `post_2026-10-31_0027.backup`. **253 questions, page counter
+  51, every row on a rule card (no rule-less row left)**; compare_applied equal for all 38 rule folders; check_order OK (253 shown,
+  rule order kept); all 51 pages balanced LaTeX, no "None", no doubled backslash; pages 44, 47, 49, 51 opened - no MathJax errors, no
+  wide formulas.
+  **Miscellaneous done - SIMPLE INTEREST CHAPTER COMPLETE locally** (2026-10-31 00:36; `misc/sentences.py`, `misc/gen_misc.py` (calls
+  `gen_1_6.main` with the stored card ids), `misc/solve_misc.py` keyed m01-m05; folders `misc/ruleNN/` checked with
+  `PROFIT_RULE_ROOT=misc`, each `solve.py` with the absolute misc path - written by a python one-liner, because bash `printf` turned
+  the `\U`, `\n`, `\t` of the Windows path into escapes). None of the book's 5 Miscellaneous problems had a copy, so all 5 are new,
+  filed on stored cards (no new card): M1 rate rises, income up - capital (R6 #428), M2 rate from one sum, amount of another (R1 #423),
+  M3 two sums at rates 1% apart - both rates, pair answer (R3 #425), M4 interest for 12 years, principal 3 times after 6 (R18 #440),
+  M5 the book's 'x is the SI on y, y the SI on z: y^2 = xz' written with numbers - find the first interest (R1 #423); JsonImports
+  #522-#525, ids 3339-3343. Book answers all right. The M3 solver first read the "1%" of "a rate 1% higher" as the years (caught by
+  validate). Backup before: `post_2026-10-31_0036.backup`.
+  **Final state: 258 questions, 39 cards (#423-#461), every row on a rule card, Theorem + Traditional Method + Specified Rule in every
+  solution, no NULL option e, no key on option e, keys spread a 65 / b 64 / c 66 / d 63, page counter 52; JsonImports #483-#525; prompt
+  #17.** compare_applied equal for all 38 rule folders with old rows; check_order OK (258 shown, rule order kept); all 52 pages balanced
+  LaTeX, no "None", no doubled backslash.
+  **ON LIVE (pushed 2026-10-31 ~08:56, Ratio and Proportion + Simple Interest together)** - selective sync: live dump before
+  `db_backups/live/tutionplus_before_ratio_si_sync_2026-10-31.backup` (live on b8fe1ebe); baseline `post_2026-10-30_1835.backup` ->
+  three-way: no conflicts; push = 763 rows: bank_math 91 updates + 500 inserts (ratio_n_proportion 333, simple_interest 258), 78 cards
+  #384-#461 (inserts), total_math row 2 (only the two page counters differed: Ratio 10 -> 67, Simple Interest 9 -> 52), JsonImports
+  #435-#525, prompts #16-#17. Rows changed only on live (auth_user 2, django_admin_log 8360/8361, django_migrations 215, one session)
+  left as they are. SQL builder `claude/runs/simple_interest/build_sync.py` (refuses other chapters and any other push counts;
+  `sync_ratio_si.sql` - never commit; it is not git-ignored). Rehearsal on tutionplus_synctest 763/763 equal to local, 0 other rows
+  changed; live had not drifted; live verified 763/763, 0 other rows changed; live crawl: ratio 333 of 333 and simple interest 258 of
+  258 shown, rule order kept, 0 "None" options, 0 display math in options. Scratch DBs dropped on the server.
+  **Baseline for the next push: `db_backups/post_2026-10-31_0857.backup`.** Scripts not committed yet.
 - **16 new book chapters added to the site code** (2026-10-29, commit `2e05ddc4`, ON LIVE: migration 0039 ran on deploy; live backup
   before it `db_backups/live/tutionplus_before_new_chapters_migration_2026-10-29.backup`). **Baseline for the next push is now
   `db_backups/post_2026-10-29_2007.backup`** (taken after the migration; local and live total_math row 2 identical): `bank.models.NEW_MATH_CHAPTERS` =
